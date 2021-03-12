@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileGenerator", "FileGenera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{D329CDF6-3395-4ADD-8515-337623AEFD4E}"
 EndProject
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTLibrary", "ASTLibrary\ASTLibrary.csproj", "{B588F089-3F78-4AA0-8E33-D29871918BF1}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTLib", "ASTLib\ASTLib.csproj", "{B588F089-3F78-4AA0-8E33-D29871918BF1}"
+>>>>>>> parent of c86d9f8... Remove throws, change argument for FileGenerator.Export, removed UTestLib
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
