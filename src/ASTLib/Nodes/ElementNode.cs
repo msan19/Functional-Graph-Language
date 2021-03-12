@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ASTLib.Nodes
 {
-    public abstract class ElementNode : Node
+    public class ElementNode: Node
     {
         public string ElementIdentifier { get; private set; }
         public List<string> IndexIdentifiers { get; private set; }
