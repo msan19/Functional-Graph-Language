@@ -7,6 +7,7 @@ namespace ASTLib.Nodes
     public abstract class FunctionNode: Node
     {
         public int Index { get; private set; }
+        public List<>
 
         public FunctionNode()
         {
