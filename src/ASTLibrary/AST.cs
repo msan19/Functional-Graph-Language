@@ -1,8 +1,9 @@
-﻿using ASTLibrary.Nodes;
+﻿using ASTLib.Nodes;
+using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
 
-namespace ASTLibrary
+namespace ASTLib
 {
     public class AST: Node
     {

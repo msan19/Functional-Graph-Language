@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ASTLibrary.Nodes
+namespace ASTLib.Nodes
 {
     public abstract class ExportNode: Node
     {

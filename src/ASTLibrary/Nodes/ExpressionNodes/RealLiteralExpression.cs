@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ASTLibrary.Nodes.ExpressionNodes
+namespace ASTLib.Nodes.ExpressionNodes
 {
     public class RealLiteralExpression : ExpressionNode
     {
