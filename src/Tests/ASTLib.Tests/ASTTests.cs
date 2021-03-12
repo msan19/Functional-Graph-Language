@@ -1,13 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace MainTests
+namespace ASTLib.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class ASTTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Test()
         {
 
         }
