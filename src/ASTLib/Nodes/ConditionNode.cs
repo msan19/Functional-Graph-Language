@@ -11,11 +11,9 @@ namespace ASTLib.Nodes
         public ExpressionNode ReturnExpression { get; private set; }
         public List<ElementNode> Elements { get; private set; }
 
-        public ConditionNode(ExpressionNode condition, ExpressionNode returnExpression, List<ElementNode> elements)
+        public ConditionNode(ExpressionNode returnExpression)
         {
-            Condition = condition;
             ReturnExpression = returnExpression;
-            Elements = elements;
         }
     }
 }
