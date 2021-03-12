@@ -16,7 +16,10 @@ namespace LexParserLib
         public AST Run()
         {
             // Creates the lexer and parser
-            GrammarLexer lexer = new GrammarLexer("export 5.5 + 33.3 export 5.5 + 33.3");
+            string functionInput = "func: (integer, integer, integer, integer) -> integer " +
+                                   "func(i, z, k, p) = i * i";
+            string exportInput = "export 5.5 + 33.3 export 5.5 + 33.3";
+            GrammarLexer lexer = new GrammarLexer(functionInput);
             GrammarParser parser = new GrammarParser(lexer);
             // Executes the parsing
             ParseResult result = parser.Parse();
