@@ -6,12 +6,12 @@ namespace LexParserLib
 {
     public class LexParser
     {
+        private ASTBuilder _astBuilder;
+        
         public LexParser(ASTBuilder astBuilder)
         {
             _astBuilder = astBuilder;
         }
-        
-        private ASTBuilder _astBuilder;
         
         public AST Run()
         {
