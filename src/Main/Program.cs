@@ -21,7 +21,7 @@ namespace Main
             AST ast = lexParse.Run();
             referenceHandler.InsertReferences(ast);
             typeChecker.CheckTypes(ast);
-            string output = interpreter.Interpret(ast);
+            var output = interpreter.Interpret(ast);
             fileGenerator.Export(output);
         }
     }
