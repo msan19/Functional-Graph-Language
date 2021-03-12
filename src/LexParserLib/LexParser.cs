@@ -16,7 +16,7 @@ namespace LexParserLib
         public AST Run()
         {
             // Creates the lexer and parser
-            GrammarLexer lexer = new GrammarLexer("export 2.2 + 2.3");
+            GrammarLexer lexer = new GrammarLexer("export 5.5 + 33.3 export 5.5 + 33.3");
             GrammarParser parser = new GrammarParser(lexer);
             // Executes the parsing
             ParseResult result = parser.Parse();
@@ -27,6 +27,7 @@ namespace LexParserLib
 
         private static void Print(ASTNode node, bool[] crossings)
         {
+            ASTNode node1 = node;
             for (int i = 0; i < crossings.Length - 1; i++)
                 Console.Write(crossings[i] ? "|   " : "    ");
             if (crossings.Length > 0)

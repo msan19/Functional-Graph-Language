@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ASTLib.Nodes
 {
-    public class ExportNode: Node
+    public class ExportNode : Node
     {
         public ExpressionNode ExportValue { get; private set; }
         public ExpressionNode FileName { get; private set; }
