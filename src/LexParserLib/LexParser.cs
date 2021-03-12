@@ -27,6 +27,7 @@ namespace LexParserLib
 
         private static void Print(ASTNode node, bool[] crossings)
         {
+            ASTNode node1 = node;
             for (int i = 0; i < crossings.Length - 1; i++)
                 Console.Write(crossings[i] ? "|   " : "    ");
             if (crossings.Length > 0)

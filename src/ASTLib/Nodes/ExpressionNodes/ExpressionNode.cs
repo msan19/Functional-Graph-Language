@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public abstract class ExpressionNode: Node
+    public abstract class ExpressionNode : Node
     {
         public List<ExpressionNode> Children { get; private set; }
         

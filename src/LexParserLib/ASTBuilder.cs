@@ -7,6 +7,7 @@ namespace LexParserLib
     {
         public AST GetAST(ASTNode root)
         {
+            
             return new AST();
         }
     }
