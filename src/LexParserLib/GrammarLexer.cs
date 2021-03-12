@@ -8,7 +8,7 @@ using System.IO;
 using Hime.Redist;
 using Hime.Redist.Lexer;
 
-namespace Grammar
+namespace LexParserLib
 {
 	/// <summary>
 	/// Represents a lexer

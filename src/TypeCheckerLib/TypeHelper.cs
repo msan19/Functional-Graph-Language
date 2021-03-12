@@ -6,7 +6,7 @@ namespace TypeCheckerLib
     {
         public void CheckTypes(AST root)
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

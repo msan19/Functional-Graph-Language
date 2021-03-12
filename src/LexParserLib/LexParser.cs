@@ -1,12 +1,18 @@
 using System;
-using ASTLibrary;
+using ASTLib;
 using Hime.Redist;
-using Grammar;
 
-namespace LexParse
+namespace LexParserLib
 {
     public class LexParser
     {
+        private ASTBuilder _astBuilder;
+        
+        public LexParser(ASTBuilder astBuilder)
+        {
+            _astBuilder = astBuilder;
+        }
+        
         public AST Run()
         {
             // Creates the lexer and parser
@@ -16,7 +22,7 @@ namespace LexParse
             ParseResult result = parser.Parse();
             // Prints the produced syntax tree
             Print(result.Root, new bool[] {});
-            return new AST();
+            return _astBuilder.GetAST(result.Root);
         }
 
         private static void Print(ASTNode node, bool[] crossings)

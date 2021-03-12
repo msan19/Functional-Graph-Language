@@ -9,9 +9,9 @@ namespace FileGeneratorLib
             _helper = helper;
         }
 
-        public void Export(string output)
+        public void Export(object output) // TODO: Determine type of argument
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

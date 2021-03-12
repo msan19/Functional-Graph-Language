@@ -6,12 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ASTLibrary\ASTLibrary.csproj" />
-      <ProjectReference Include="..\FileGenerator\FileGenerator.csproj" />
-      <ProjectReference Include="..\Interpreter\Interpreter.csproj" />
-      <ProjectReference Include="..\LexParse\LexParse.csproj" />
-      <ProjectReference Include="..\ReferenceHandler\ReferenceHandler.csproj" />
-      <ProjectReference Include="..\TypeChecker\TypeChecker.csproj" />
+      <ProjectReference Include="..\ASTLib\ASTLib.csproj" />
+      <ProjectReference Include="..\FileGeneratorLib\FileGeneratorLib.csproj" />
+      <ProjectReference Include="..\InterpreterLib\InterpreterLib.csproj" />
+      <ProjectReference Include="..\LexParserLib\LexParserLib.csproj" />
+      <ProjectReference Include="..\ReferenceHandlerLib\ReferenceHandlerLib.csproj" />
+      <ProjectReference Include="..\TypeCheckerLib\TypeCheckerLib.csproj" />
     </ItemGroup>
 
 </Project>

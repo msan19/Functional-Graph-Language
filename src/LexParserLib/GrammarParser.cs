@@ -7,7 +7,7 @@ using System.CodeDom.Compiler;
 using Hime.Redist;
 using Hime.Redist.Parsers;
 
-namespace Grammar
+namespace LexParserLib
 {
 	/// <summary>
 	/// Represents a parser
@@ -148,7 +148,7 @@ namespace Grammar
 		}
 
 		/// <summary>
-		/// Walk the ASTLibrary of a result using a visitor
+		/// Walk the ASTLib of a result using a visitor
 		/// <param name="result">The parse result</param>
 		/// <param name="visitor">The visitor to use</param>
 		/// </summary>
@@ -158,9 +158,9 @@ namespace Grammar
 		}
 
 		/// <summary>
-		/// Walk the sub-ASTLibrary from the specified node using a visitor
+		/// Walk the sub-ASTLib from the specified node using a visitor
 		/// </summary>
-		/// <param name="node">The ASTLibrary node to start from</param>
+		/// <param name="node">The ASTLib node to start from</param>
 		/// <param name="visitor">The visitor to use</param>
 		public static void VisitASTNode(ASTNode node, Visitor visitor)
 		{

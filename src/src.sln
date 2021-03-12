@@ -5,23 +5,17 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Main", "Main\Main.csproj", "{9422E595-8974-4B11-9859-FE4B35939AEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexParse", "LexParse\LexParse.csproj", "{B8AC9F41-0CF8-4DD4-A1AA-148BDFEA220B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexParserLib", "LexParserLib\LexParserLib.csproj", "{B8AC9F41-0CF8-4DD4-A1AA-148BDFEA220B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceHandler", "ReferenceHandler\ReferenceHandler.csproj", "{73F95FFD-D779-4BBE-833F-BD6971CA532C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceHandlerLib", "ReferenceHandlerLib\ReferenceHandlerLib.csproj", "{73F95FFD-D779-4BBE-833F-BD6971CA532C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeChecker", "TypeChecker\TypeChecker.csproj", "{CA4C9E24-4B0B-4E36-83E4-D1BB26F00F28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeCheckerLib", "TypeCheckerLib\TypeCheckerLib.csproj", "{CA4C9E24-4B0B-4E36-83E4-D1BB26F00F28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interpreter", "Interpreter\Interpreter.csproj", "{6604B964-256D-4C0A-B722-ED1EF1CF012A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterpreterLib", "InterpreterLib\InterpreterLib.csproj", "{6604B964-256D-4C0A-B722-ED1EF1CF012A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileGenerator", "FileGenerator\FileGenerator.csproj", "{841F7BBA-550C-4701-B587-2E88FEE54907}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileGeneratorLib", "FileGeneratorLib\FileGeneratorLib.csproj", "{841F7BBA-550C-4701-B587-2E88FEE54907}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{D329CDF6-3395-4ADD-8515-337623AEFD4E}"
-EndProject
-<<<<<<< HEAD
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTLibrary", "ASTLibrary\ASTLibrary.csproj", "{B588F089-3F78-4AA0-8E33-D29871918BF1}"
-=======
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTLib", "ASTLib\ASTLib.csproj", "{B588F089-3F78-4AA0-8E33-D29871918BF1}"
->>>>>>> parent of c86d9f8... Remove throws, change argument for FileGenerator.Export, removed UTestLib
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +47,6 @@ Global
 		{841F7BBA-550C-4701-B587-2E88FEE54907}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{841F7BBA-550C-4701-B587-2E88FEE54907}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{841F7BBA-550C-4701-B587-2E88FEE54907}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D329CDF6-3395-4ADD-8515-337623AEFD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D329CDF6-3395-4ADD-8515-337623AEFD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D329CDF6-3395-4ADD-8515-337623AEFD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D329CDF6-3395-4ADD-8515-337623AEFD4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B588F089-3F78-4AA0-8E33-D29871918BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B588F089-3F78-4AA0-8E33-D29871918BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B588F089-3F78-4AA0-8E33-D29871918BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
