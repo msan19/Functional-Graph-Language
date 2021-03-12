@@ -256,8 +256,6 @@ backend/docs/latex/*graph.pdf
 backend/docs/latex/Makefile
 backend/docs/latex/*.md5
 
-## NodeJS stuff 
-backend/PopulateMainPage.js
-backend/node_modules
-backend/package.json
-backend/package-lock.json
+
+#Alan
+.DS_Store
