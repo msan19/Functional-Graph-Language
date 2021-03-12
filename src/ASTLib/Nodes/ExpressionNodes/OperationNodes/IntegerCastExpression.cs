@@ -6,8 +6,6 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class IntegerCastExpression : ExpressionNode
     {
-        public double Value { get; set; }
-
-        public IntegerCastExpression(ExpressionNode child) : base(new List<ExpressionNode> { child }) {}
+          public IntegerCastExpression(ExpressionNode child) : base(new List<ExpressionNode> { child }) {}
     }
 }
