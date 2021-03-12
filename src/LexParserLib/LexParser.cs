@@ -16,7 +16,7 @@ namespace LexParserLib
         public AST Run()
         {
             // Creates the lexer and parser
-            GrammarLexer lexer = new GrammarLexer("export 2.2 + 2.3");
+            GrammarLexer lexer = new GrammarLexer("export 5.5 + 33.3");
             GrammarParser parser = new GrammarParser(lexer);
             // Executes the parsing
             ParseResult result = parser.Parse();

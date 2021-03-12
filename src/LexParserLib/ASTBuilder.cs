@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Nodes;
 using Hime.Redist;
 
 namespace LexParserLib
@@ -7,8 +9,10 @@ namespace LexParserLib
     {
         public AST GetAST(ASTNode root)
         {
-            
-            return new AST();
+
+            List<FunctionNode> functionNodes = new List<FunctionNode>();
+            List<ExportNode> exportNodes = new List<ExportNode>();
+            return new AST(functionNodes, exportNodes);
         }
     }
 }
