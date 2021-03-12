@@ -1,4 +1,4 @@
-namespace FileGenerator
+namespace FileGeneratorLib
 {
     public class FileGenerator
     {
