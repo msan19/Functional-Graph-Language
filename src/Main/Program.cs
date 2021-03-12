@@ -1,4 +1,6 @@
 ﻿using System;
+using ASTLibrary;
+using LexParse;
 
 namespace Main
 {
@@ -6,7 +8,9 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            LexParser lexParse = new LexParser();
+            AST ast = lexParse.Run();
+            
         }
     }
 }

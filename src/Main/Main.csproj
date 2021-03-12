@@ -5,4 +5,13 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ASTLibrary\ASTLibrary.csproj" />
+      <ProjectReference Include="..\FileGenerator\FileGenerator.csproj" />
+      <ProjectReference Include="..\Interpreter\Interpreter.csproj" />
+      <ProjectReference Include="..\LexParse\LexParse.csproj" />
+      <ProjectReference Include="..\ReferenceHandler\ReferenceHandler.csproj" />
+      <ProjectReference Include="..\TypeChecker\TypeChecker.csproj" />
+    </ItemGroup>
+
 </Project>

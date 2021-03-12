@@ -4,4 +4,17 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+        <!-- so that name.bin name.bin are included -->
+        <EmbeddedResource Include="*.bin" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Hime.Redist" Version="3.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ASTLibrary\ASTLibrary.csproj" />
+    </ItemGroup>
+
 </Project>
