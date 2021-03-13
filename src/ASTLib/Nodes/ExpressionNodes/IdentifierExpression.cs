@@ -6,10 +6,14 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class IdentifierExpression : ExpressionNode
     {
-        public int reference { get; set; }
+        public int Reference { get; set; }
 
-        public string id { get; }
+        public string Id { get; }
 
-        public IdentifierExpression(String id) : base(null) {}
+        public IdentifierExpression(String id, int line, int letter) : base(null, line, letter) 
+        {
+            Id = id;
+        }
+
     }
 }

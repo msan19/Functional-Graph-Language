@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public class SubstractionExpression : ExpressionNode
+    public class SubtractionExpression : ExpressionNode
     {
-        public SubstractionExpression(ExpressionNode leftExpression, ExpressionNode rightExpression) 
-            : base(new List<ExpressionNode> { leftExpression, rightExpression }) {}
+        public SubtractionExpression(ExpressionNode leftExpression, ExpressionNode rightExpression, int line, int letter) 
+            : base(new List<ExpressionNode> { leftExpression, rightExpression }, line, letter) {}
     }
 }

@@ -6,9 +6,9 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public abstract class ExpressionNode : Node
     {
-        public List<ExpressionNode> Children { get; private set; }
+        public List<ExpressionNode> Children { get; }
 
-        public ExpressionNode(List<ExpressionNode> children)
+        public ExpressionNode(List<ExpressionNode> children, int line, int letter) : base(line, letter)
         {
             Children = children;
         }

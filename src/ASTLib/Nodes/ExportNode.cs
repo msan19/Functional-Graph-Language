@@ -7,12 +7,12 @@ namespace ASTLib.Nodes
 {
     public class ExportNode : Node
     {
-        public ExpressionNode ExportValue { get; private set; }
-        public ExpressionNode FileName { get; private set; }
-        public List<ExpressionNode> VertexLabels { get; private set; }
-        public List<ExpressionNode> EdgeLabels { get; private set; }
+        public ExpressionNode ExportValue { get; }
+        public ExpressionNode FileName { get; }
+        public List<ExpressionNode> VertexLabels { get; }
+        public List<ExpressionNode> EdgeLabels { get; }
 
-        public ExportNode(ExpressionNode exportValue)
+        public ExportNode(ExpressionNode exportValue, int line, int letter) : base(line, letter)
         {
             ExportValue = exportValue;
         }

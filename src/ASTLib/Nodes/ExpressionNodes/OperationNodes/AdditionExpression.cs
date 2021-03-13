@@ -6,7 +6,7 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class AdditionExpression : ExpressionNode
     {
-        public AdditionExpression(ExpressionNode leftExpression, ExpressionNode rightExpression) 
-            : base(new List<ExpressionNode> { leftExpression, rightExpression }) {}
+        public AdditionExpression(ExpressionNode leftExpression, ExpressionNode rightExpression, int line, int letter) 
+            : base(new List<ExpressionNode> { leftExpression, rightExpression }, line, letter) {}
     }
 }

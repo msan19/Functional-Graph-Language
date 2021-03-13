@@ -7,12 +7,13 @@ namespace ASTLib.Nodes
 {
     public class FunctionNode : Node
     {
-        public int Index { get; private set; }
-        public List<ConditionNode> Conditions { get; private set; }
-        public List<String> ParameterIdentifiers { get; private set; }
-        public FunctionTypeNode FunctionType { get; private set; }
+        public int Index { get; }
+        public List<ConditionNode> Conditions { get; }
+        public List<String> ParameterIdentifiers { get; }
+        public FunctionTypeNode FunctionType { get; }
 
-        public FunctionNode(ConditionNode condition, List<String> parameterIdentifiers, FunctionTypeNode functionType)
+        public FunctionNode(ConditionNode condition, List<String> parameterIdentifiers, 
+            FunctionTypeNode functionType, int line, int letter) : base(line, letter)
         {
             Conditions = new List<ConditionNode> { condition };
             ParameterIdentifiers = parameterIdentifiers;

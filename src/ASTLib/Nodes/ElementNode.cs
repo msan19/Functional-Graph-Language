@@ -7,10 +7,10 @@ namespace ASTLib.Nodes
 {
     public class ElementNode: Node
     {
-        public string ElementIdentifier { get; private set; }
-        public List<string> IndexIdentifiers { get; private set; }
+        public string ElementIdentifier { get; }
+        public List<string> IndexIdentifiers { get; }
 
-        public ElementNode(string elementName, List<string> identifiers)
+        public ElementNode(string elementName, List<string> identifiers, int line, int letter) : base(line, letter)
         {
             ElementIdentifier = elementName;
             IndexIdentifiers = identifiers;

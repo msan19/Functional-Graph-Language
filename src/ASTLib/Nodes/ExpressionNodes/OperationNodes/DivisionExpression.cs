@@ -6,7 +6,7 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class DivisionExpression : ExpressionNode
     {
-        public DivisionExpression(ExpressionNode devidend, ExpressionNode devisor) 
-            : base(new List<ExpressionNode> { devidend, devisor }) {}
+        public DivisionExpression(ExpressionNode devidend, ExpressionNode devisor, int line, int letter) 
+            : base(new List<ExpressionNode> { devidend, devisor }, line, letter) {}
     }
 }

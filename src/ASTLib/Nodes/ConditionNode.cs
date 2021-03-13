@@ -5,13 +5,13 @@ using System.Text;
 
 namespace ASTLib.Nodes
 {
-    public abstract class ConditionNode : Node
+    public class ConditionNode : Node
     {
-        public ExpressionNode Condition { get; private set; }
-        public ExpressionNode ReturnExpression { get; private set; }
-        public List<ElementNode> Elements { get; private set; }
+        public ExpressionNode Condition { get; }
+        public ExpressionNode ReturnExpression { get; }
+        public List<ElementNode> Elements { get; }
 
-        public ConditionNode(ExpressionNode returnExpression)
+        public ConditionNode(ExpressionNode returnExpression, int line, int letter) : base(line, letter)
         {
             ReturnExpression = returnExpression;
         }

@@ -13,9 +13,9 @@ namespace ASTLib.Nodes.TypeNodes
     
     public class TypeNode: Node
     {
-        public Type Type { get; private set; }
+        public Type Type { get; }
 
-        public TypeNode(Type type)
+        public TypeNode(Type type, int line, int letter) : base(line, letter)
         {
             Type = type;
         }

@@ -16,9 +16,9 @@ namespace LexParserLib
         public AST Run()
         {
             // Creates the lexer and parser
-            string functionInput = "func: (integer, integer, integer, integer) -> integer " +
-                                   "func(i, z, k, p) = i * i";
-            string exportInput = "export 5.5 + 33.3 export 5.5 + 33.3";
+            string functionInput = "export 5.5 + 33.3 export 5.5 + 33.3 " +
+                                   "func: (integer) -> integer " +
+                                   "func(p) = |z| * y + x / i ^ (17 - 0.1 mod 2)";
             GrammarLexer lexer = new GrammarLexer(functionInput);
             GrammarParser parser = new GrammarParser(lexer);
             // Executes the parsing

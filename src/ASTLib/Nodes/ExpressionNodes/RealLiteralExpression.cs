@@ -7,9 +7,9 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class RealLiteralExpression : ExpressionNode
     {
-        public double Value { get; set; }
+        public double Value { get; }
 
-        public RealLiteralExpression(string token) : base(null) 
+        public RealLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
         {
             Value = ConvertToDouble(token);
         }
@@ -22,7 +22,7 @@ namespace ASTLib.Nodes.ExpressionNodes
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Unable to parse string '{str}'");
+                Console.WriteLine($"Unable to parse string '{str}' to a real");
             }
             return result;
         }

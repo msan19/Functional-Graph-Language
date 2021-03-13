@@ -6,9 +6,9 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class IntegerLiteralExpression : ExpressionNode
     {
-        public int Value { get; set; }
+        public int Value { get; }
 
-        public IntegerLiteralExpression(string token) : base(null) 
+        public IntegerLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
         {
             Value = ConvertToInt(token);
         }
@@ -21,7 +21,7 @@ namespace ASTLib.Nodes.ExpressionNodes
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Unable to parse string '{str}'");
+                Console.WriteLine($"Unable to parse string '{str}' to an integer");
             }
             return result;
         }
