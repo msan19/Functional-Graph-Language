@@ -186,10 +186,7 @@ namespace LexParserLib
 
         private ExpressionNode VisitExponent(ASTNode himeNode)
         {
-            if (himeNode.Children[0].Value == "|")
-                return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
-                    himeNode.Position.Line, himeNode.Position.Column);
-            else if (himeNode.Children[0].Value == "(") 
+            if (himeNode.Children[0].Value == "(") 
                 return DispatchExpression(himeNode.Children[1]);
             else if(himeNode.Children[0].Value == "|") 
                 return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
