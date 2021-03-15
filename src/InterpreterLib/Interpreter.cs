@@ -14,7 +14,7 @@ namespace InterpreterLib
 
         public string Interpret(AST root)
         {
-            return _helper.Interpret(root);
+            throw new NotImplementedException();
         }
     }
 }
