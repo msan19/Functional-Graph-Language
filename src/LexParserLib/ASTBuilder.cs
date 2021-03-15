@@ -57,15 +57,20 @@ namespace LexParserLib
             return new ExportNode(expressionNode, himeNode.Position.Line, himeNode.Position.Column);
         }
         
-        private FunctionNode CreateFunctionNode(ASTNode himeNode)
+        private FunctionNode CreateFunctionNode(ASTNode himeDeclerationNode)
         {
-            ASTNode himeFuncNode = himeNode.Children[0];
-            ASTNode himeExpressionNode = himeNode.Children[2];
+            ASTNode himeFuncNode = himeDeclerationNode.Children[0];
+            ASTNode himeExpressionNode = himeDeclerationNode.Children[2];
+
             List<string> parameterIdentifiers = VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
             FunctionTypeNode type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
-            return new FunctionNode(new ConditionNode(DispatchExpression(himeExpressionNode),
-                                                      himeNode.Position.Line, himeNode.Position.Column),
-                                    parameterIdentifiers, type, himeNode.Position.Line, himeNode.Position.Column);
+
+            ConditionNode condition = new ConditionNode(DispatchExpression(himeExpressionNode), 
+                                                        himeDeclerationNode.Position.Line, 
+                                                        himeDeclerationNode.Position.Column);
+
+            return new FunctionNode(condition, parameterIdentifiers, type, 
+                                    himeDeclerationNode.Position.Line, himeDeclerationNode.Position.Column);
         }
 
         public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
@@ -173,26 +178,24 @@ namespace LexParserLib
 
         private ExpressionNode VisitFactor(ASTNode himeNode)
         {
-            if (himeNode.Children[1].Value == "^")
-            {
-                ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
-                ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
-                return new PowerExpression(leftOperant, rightOperant,
-                                              himeNode.Position.Line, himeNode.Position.Column);
-            }
-            else return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
-                                                  himeNode.Position.Line, himeNode.Position.Column);
+            ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
+            ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
+            return new PowerExpression(leftOperant, rightOperant,
+                                          himeNode.Position.Line, himeNode.Position.Column);
         }
 
         private ExpressionNode VisitExponent(ASTNode himeNode)
         {
             if (himeNode.Children[0].Value == "(") 
                 return DispatchExpression(himeNode.Children[1]);
+            else if(himeNode.Children[0].Value == "|") 
+                return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
+                                                  himeNode.Position.Line, himeNode.Position.Column);
             else
             {
                 List<ExpressionNode> expressions = himeNode.Children.Count == CONSTANT_FUNCTION_CALL ?
-                                               new List<ExpressionNode>() :
-                                               VisitExpressions(himeNode.Children[EXPRESSIONS_POS]);
+                                                   new List<ExpressionNode>() :
+                                                   VisitExpressions(himeNode.Children[EXPRESSIONS_POS]);
                 return new FunctionCallExpression(himeNode.Children[0].Value, expressions, 
                                                   himeNode.Position.Line, himeNode.Position.Column);
             }
