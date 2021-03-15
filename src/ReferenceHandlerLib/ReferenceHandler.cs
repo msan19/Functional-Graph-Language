@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Nodes.ExpressionNodes;
 
 namespace ReferenceHandlerLib
 {
@@ -18,7 +20,10 @@ namespace ReferenceHandlerLib
             //_helper.Visit(root.Functions);
         }
 
-
+        public void Dispatch(ExpressionNode node, List<string> parameters)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

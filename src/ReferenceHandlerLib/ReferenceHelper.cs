@@ -1,5 +1,7 @@
 using ASTLib;
 using ASTLib.Nodes;
+using ASTLib.Nodes.ExpressionNodes;
+using System;
 using System.Collections.Generic;
 
 namespace ReferenceHandlerLib
@@ -10,21 +12,24 @@ namespace ReferenceHandlerLib
 
         public void VisitExport(ExportNode node)
         {
+            throw new NotImplementedException();
 
         }
 
         public void VisitFunction(FunctionNode node)
         {
-
+            throw new NotImplementedException();
         }
 
         private void VisitCondition(ConditionNode node, List<string> identifiers)
         {
-
+            throw new NotImplementedException();
         }
-    
-        public 
 
+        public void VisitNonIdentifiers(ExpressionNode node, List<string> identifiers)
+        {
+            throw new NotImplementedException();
+        }
 
 
 

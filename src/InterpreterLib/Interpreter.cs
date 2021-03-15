@@ -15,6 +15,11 @@ namespace InterpreterLib
             _helper.interpreter = this;
         }
 
+        public List<double> Interpret(AST node)
+        {
+            throw new NotImplementedException();
+        }
+
         public int DispatchInt(ExpressionNode node)
         {
             throw new NotImplementedException();
