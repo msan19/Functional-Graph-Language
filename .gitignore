@@ -259,3 +259,7 @@ backend/docs/latex/*.md5
 
 #Alan
 .DS_Store
+
+
+# Ignore hime folder
+hime-3.5.1

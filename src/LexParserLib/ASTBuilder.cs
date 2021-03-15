@@ -173,20 +173,18 @@ namespace LexParserLib
 
         private ExpressionNode VisitFactor(ASTNode himeNode)
         {
-            if (himeNode.Children[1].Value == "^")
-            {
-                ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
-                ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
-                return new PowerExpression(leftOperant, rightOperant,
-                                              himeNode.Position.Line, himeNode.Position.Column);
-            }
-            else return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
-                                                  himeNode.Position.Line, himeNode.Position.Column);
+            ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
+            ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
+            return new PowerExpression(leftOperant, rightOperant,
+                himeNode.Position.Line, himeNode.Position.Column);
         }
 
         private ExpressionNode VisitExponent(ASTNode himeNode)
         {
-            if (himeNode.Children[0].Value == "(") 
+            if (himeNode.Children[0].Value == "|")
+                return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
+                    himeNode.Position.Line, himeNode.Position.Column);
+            else if (himeNode.Children[0].Value == "(") 
                 return DispatchExpression(himeNode.Children[1]);
             else
             {

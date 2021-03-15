@@ -1,0 +1,70 @@
+grammar Grammar
+{
+    options
+    {
+        Axiom = "Prog";
+        Separator = "SEPARATOR";
+    }
+
+    terminals
+    {
+        id            -> [a-zA-Z] [a-zA-Z0-9]* ;
+        realNumber    -> [0-9]+ '.' [0-9]+ ;
+        integerNumber -> [0-9]+ ;
+
+        WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C ;
+        SEPARATOR -> WHITE_SPACE+ ;
+    }
+
+    rules
+    {
+        Prog          -> Declarations ;
+
+        Declarations  -> Declarations Declaration
+                      |  Declaration ;
+
+        Declaration   -> 'export' Expression
+                      |  Func '=' Expression ;
+
+        Func          -> id ':' FuncTypeDecl id '(' ')'
+                      |  id ':' FuncTypeDecl id '(' Ids ')' ;
+
+        FuncTypeDecl  -> '(' Types ')' '->' Type
+                      |  '(' ')' '->' Type ;
+
+        Types  	      -> Types ',' Type
+                      |  Type ;
+
+        Type          -> 'integer'
+                      |  'real'
+                      |  FuncTypeDecl ;
+
+        Ids 	      -> Ids ',' id
+                      |  id ;
+
+        Expression    -> Expression '+' Term
+                      |  Expression '-' Term
+                      |  Term ;
+
+        Term          -> Term '*' Factor
+                      |  Term '/' Factor
+                      |  Term 'mod' Factor
+                      |  Factor ;
+
+        Factor        -> Factor '^' Exponent
+                      |  Exponent ;
+
+        Exponent      -> id
+                      |  '|' Expression '|'
+                      |  '(' Expression ')'
+                      |  Literal
+                      |  id '(' Expressions ')'
+                      |  id '(' ')' ;
+
+        Expressions   -> Expression ',' Expressions
+                      |  Expression ;
+
+        Literal	      -> realNumber
+                      |  integerNumber ;
+    }
+}

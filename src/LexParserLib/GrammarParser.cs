@@ -148,7 +148,7 @@ namespace LexParserLib
 		}
 
 		/// <summary>
-		/// Walk the ASTLib of a result using a visitor
+		/// Walk the AST of a result using a visitor
 		/// <param name="result">The parse result</param>
 		/// <param name="visitor">The visitor to use</param>
 		/// </summary>
@@ -158,9 +158,9 @@ namespace LexParserLib
 		}
 
 		/// <summary>
-		/// Walk the sub-ASTLib from the specified node using a visitor
+		/// Walk the sub-AST from the specified node using a visitor
 		/// </summary>
-		/// <param name="node">The ASTLib node to start from</param>
+		/// <param name="node">The AST node to start from</param>
 		/// <param name="visitor">The visitor to use</param>
 		public static void VisitASTNode(ASTNode node, Visitor visitor)
 		{
