@@ -13,7 +13,7 @@ namespace LexParserLib.Tests
     {
         #region Check dobule value 33.3
         [TestMethod]
-        public void Export_2Doubles_lastNode_LineNum()
+        public void Export_2Doubles_lastNode_LetterNum()
         {
             string input = "export 5.5 + 33.3";
 
@@ -36,7 +36,7 @@ namespace LexParserLib.Tests
 
         #region Check int value 2
         [TestMethod]
-        public void Export_2Doubles2Ints_2ndLastNode_LineNum()
+        public void Export_2Doubles2Ints_2ndLastNode_LetterNum()
         {
             string input = "export 5.5 + 33.3 + 2 + 1";
 
