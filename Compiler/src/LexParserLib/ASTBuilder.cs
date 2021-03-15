@@ -46,7 +46,7 @@ namespace LexParserLib
             }
             else
             {
-                FunctionNode functionNode = CreateFunctionNode(himeNode);
+                FunctionNode functionNode = CreateFunctionNode(himeNode, ast.Functions.Count);
                 ast.Functions.Add(functionNode);
             }
         }
@@ -57,7 +57,7 @@ namespace LexParserLib
             return new ExportNode(expressionNode, himeNode.Position.Line, himeNode.Position.Column);
         }
         
-        private FunctionNode CreateFunctionNode(ASTNode himeDeclerationNode)
+        private FunctionNode CreateFunctionNode(ASTNode himeDeclerationNode, int index)
         {
             ASTNode himeFuncNode = himeDeclerationNode.Children[0];
             ASTNode himeExpressionNode = himeDeclerationNode.Children[2];
@@ -75,7 +75,7 @@ namespace LexParserLib
 
             if (typeID != functionID) throw new Exception($"{typeID} and {functionID} should be equivalent");
 
-            return new FunctionNode(typeID, condition, parameterIdentifiers, type, 
+            return new FunctionNode(typeID, index, condition, parameterIdentifiers, type, 
                                     himeDeclerationNode.Position.Line, himeDeclerationNode.Position.Column);
         }
 
