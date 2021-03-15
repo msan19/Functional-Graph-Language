@@ -31,6 +31,15 @@ namespace ReferenceHandlerLib
             throw new NotImplementedException();
         }
 
+        public void VisitIdentifier(IdentifierExpression node, List<string> identifiers)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }
