@@ -10,11 +10,16 @@ namespace ReferenceHandlerLib
         public ReferenceHandler(ReferenceHelper helper)
         {
             _helper = helper;
+            _helper.Handler = this;
         }
 
         public void InsertReferences(AST root)
         {
-            _helper.InsertReferences(root);
+            //_helper.Visit(root.Functions);
         }
+
+
+
+
     }
 }
