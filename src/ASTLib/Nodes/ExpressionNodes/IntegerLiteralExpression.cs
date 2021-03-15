@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ASTLib.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public class IntegerLiteralExpression : ExpressionNode
+    public class IntegerLiteralExpression : ExpressionNode, INonIdentifierExpression
     {
         public int Value { get; }
 
