@@ -21,20 +21,27 @@ namespace LexParserLib
 
         public AST VisitDeclarations(ASTNode himeNode)
         {
+            AST ast;
+            int declarationIndex;
             if (himeNode.Children.Count == 1)
             {
-                List<FunctionNode> functionNodes = new List<FunctionNode>();
-                List<ExportNode> exportNodes = new List<ExportNode>();
-                AST ast = new AST(functionNodes, exportNodes, himeNode.Position.Line, himeNode.Position.Column);
-                InsertDeclaration(ast, himeNode.Children[0]);
-                return ast;
+                ast = GetNewAst(himeNode);
+                declarationIndex = 0;
             }
             else
             {
-                AST ast = VisitDeclarations(himeNode.Children[0]);
-                InsertDeclaration(ast, himeNode.Children[1]);
-                return ast;
+                ast = VisitDeclarations(himeNode.Children[0]);
+                declarationIndex = 1;
             }
+            InsertDeclaration(ast, himeNode.Children[declarationIndex]);
+            return ast;
+        }
+
+        private AST GetNewAst(ASTNode himeNode)
+        {
+            List<FunctionNode> functionNodes = new List<FunctionNode>();
+            List<ExportNode> exportNodes = new List<ExportNode>();
+            return new AST(functionNodes, exportNodes, himeNode.Position.Line, himeNode.Position.Column);
         }
 
         private void InsertDeclaration(AST ast, ASTNode himeNode)
@@ -57,26 +64,63 @@ namespace LexParserLib
             return new ExportNode(expressionNode, himeNode.Position.Line, himeNode.Position.Column);
         }
         
-        private FunctionNode CreateFunctionNode(ASTNode himeDeclerationNode, int index)
+        private FunctionNode CreateFunctionNode(ASTNode himeDeclNode, int index)
         {
-            ASTNode himeFuncNode = himeDeclerationNode.Children[0];
-            ASTNode himeExpressionNode = himeDeclerationNode.Children[2];
+            var himeFuncNode = GetHimeFuncNode(himeDeclNode);
+            var himeExprNode = GetHimeExprNode(himeDeclNode);
 
-            List<string> parameterIdentifiers = himeFuncNode.Children.Count == CONSTANT_FUNCTION_DECLARATION ?
-                                                new List<string>() :
-                                                VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
-            FunctionTypeNode type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
+            var parameterIdentifiers = GetParameterIdentifiers(himeFuncNode);
+            var condition = GetConditionNode(himeDeclNode, himeExprNode);
+            string typeID = GetTypeID(himeFuncNode);
+            string functionID = GetFunctionID(himeFuncNode);
+            
+            var type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
 
-            ConditionNode condition = new ConditionNode(DispatchExpression(himeExpressionNode), 
-                                                        himeDeclerationNode.Position.Line, 
+            if (typeID != functionID) 
+                throw new Exception($"{typeID} and {functionID} should be equivalent");
+
+            return new FunctionNode(typeID, index, condition, parameterIdentifiers, type,
+                                    himeDeclNode.Position.Line, himeDeclNode.Position.Column);
+        }
+
+        private ConditionNode GetConditionNode(ASTNode himeDeclerationNode, ASTNode himeExprNode)
+        {
+            return new ConditionNode(DispatchExpression(himeExprNode),
+                                                        himeDeclerationNode.Position.Line,
                                                         himeDeclerationNode.Position.Column);
-            string typeID = himeFuncNode.Children[0].Value;
-            string functionID = himeFuncNode.Children[3].Value;
+        }
 
-            if (typeID != functionID) throw new Exception($"{typeID} and {functionID} should be equivalent");
+        private static ASTNode GetHimeExprNode(ASTNode himeDeclerationNode)
+        {
+            return himeDeclerationNode.Children[2];
+        }
 
-            return new FunctionNode(typeID, index, condition, parameterIdentifiers, type, 
-                                    himeDeclerationNode.Position.Line, himeDeclerationNode.Position.Column);
+        private static ASTNode GetHimeFuncNode(ASTNode himeDeclerationNode)
+        {
+            return himeDeclerationNode.Children[0];
+        }
+
+        private string GetFunctionID(ASTNode himeFuncNode)
+        {
+            return himeFuncNode.Children[3].Value;
+        }
+
+        private string GetTypeID(ASTNode himeFuncNode)
+        {
+            return himeFuncNode.Children[0].Value;
+        }
+
+        private List<string> GetParameterIdentifiers(ASTNode himeFuncNode)
+        {
+            if (IsFunctionDeclaration(himeFuncNode))
+                return new List<string>();
+            else
+                return VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
+        }
+
+        private bool IsFunctionDeclaration(ASTNode himeFuncNode)
+        {
+            return himeFuncNode.Children.Count == CONSTANT_FUNCTION_DECLARATION;
         }
 
         public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
