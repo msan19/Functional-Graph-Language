@@ -12,7 +12,7 @@ namespace LexParserLib
     {
         private const int PARAMETER_IDs_POS = 5, FUNCTIONTYPE_POS = 2, 
                           RETURNTYPE_POS = 4, CONSTANT_FUNCTION_CALL = 3,
-                          EXPRESSIONS_POS = 4;
+                          EXPRESSIONS_POS = 4, CONSTANT_FUNCTION_DECLARATION = 6;
         
         public AST GetAST(ASTNode root)
         {
@@ -62,14 +62,20 @@ namespace LexParserLib
             ASTNode himeFuncNode = himeDeclerationNode.Children[0];
             ASTNode himeExpressionNode = himeDeclerationNode.Children[2];
 
-            List<string> parameterIdentifiers = VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
+            List<string> parameterIdentifiers = himeFuncNode.Children.Count == CONSTANT_FUNCTION_DECLARATION ?
+                                                new List<string>() :
+                                                VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
             FunctionTypeNode type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
 
             ConditionNode condition = new ConditionNode(DispatchExpression(himeExpressionNode), 
                                                         himeDeclerationNode.Position.Line, 
                                                         himeDeclerationNode.Position.Column);
+            string typeID = himeFuncNode.Children[0].Value;
+            string functionID = himeFuncNode.Children[3].Value;
 
-            return new FunctionNode(condition, parameterIdentifiers, type, 
+            if (typeID != functionID) throw new Exception($"{typeID} and {functionID} should be equivalent");
+
+            return new FunctionNode(typeID, condition, parameterIdentifiers, type, 
                                     himeDeclerationNode.Position.Line, himeDeclerationNode.Position.Column);
         }
 

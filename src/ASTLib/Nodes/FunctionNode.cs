@@ -11,13 +11,15 @@ namespace ASTLib.Nodes
         public List<ConditionNode> Conditions { get; }
         public List<String> ParameterIdentifiers { get; }
         public FunctionTypeNode FunctionType { get; }
+        public string Identifier { get; }
 
-        public FunctionNode(ConditionNode condition, List<String> parameterIdentifiers, 
+        public FunctionNode(string identifier, ConditionNode condition, List<String> parameterIdentifiers, 
             FunctionTypeNode functionType, int line, int letter) : base(line, letter)
         {
             Conditions = new List<ConditionNode> { condition };
             ParameterIdentifiers = parameterIdentifiers;
             FunctionType = functionType;
+            Identifier = identifier;
         }
     }
 }
