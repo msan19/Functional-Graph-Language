@@ -11,7 +11,7 @@ namespace LexParserLib
     public class ASTBuilder
     {
         private const int PARAMETER_IDs_POS = 5, FUNCTIONTYPE_POS = 2, 
-                          RETURNTYPE_POS = 4, CONSTANT_FUNCTION_CALL = 4,
+                          RETURNTYPE_POS = 4, CONSTANT_FUNCTION_CALL = 3,
                           EXPRESSIONS_POS = 4;
         
         public AST GetAST(ASTNode root)
