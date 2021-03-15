@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using ASTLib.Interfaces;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public class RealLiteralExpression : ExpressionNode
+    public class RealLiteralExpression : ExpressionNode, INonIdentifierExpression
     {
         public double Value { get; }
 
