@@ -10,11 +10,17 @@ namespace TypeCheckerLib
         public TypeChecker(TypeHelper helper)
         {
             _helper = helper;
+            _helper.TypeChecker = this;
         }
 
         public void CheckTypes(AST root)
         {
             _helper.CheckTypes(root);
+        }
+
+        public void Dispatch()
+        {
+            // Call visit methods in a switch
         }
     }
 }
