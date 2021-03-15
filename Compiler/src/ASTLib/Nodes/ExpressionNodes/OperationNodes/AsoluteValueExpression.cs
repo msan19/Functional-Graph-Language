@@ -7,7 +7,9 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class AbsoluteValueExpression : ExpressionNode, INonIdentifierExpression
     {
-          public AbsoluteValueExpression(ExpressionNode child, int line, int letter) 
+        public Type Type { get; set; }
+
+        public AbsoluteValueExpression(ExpressionNode child, int line, int letter) 
             : base(new List<ExpressionNode> { child }, line, letter) {}
     }
 }
