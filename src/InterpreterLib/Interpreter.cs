@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Nodes.ExpressionNodes;
 
 namespace InterpreterLib
 {
@@ -10,11 +12,28 @@ namespace InterpreterLib
         public Interpreter(InterpretorHelper helper)
         {
             _helper = helper;
+            _helper.interpreter = this;
         }
 
-        public string Interpret(AST root)
+        public List<double> Interpret(AST node)
         {
             throw new NotImplementedException();
         }
+
+        public int DispatchInt(ExpressionNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double DispatchReal(ExpressionNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int DispatchFunction(ExpressionNode node)
+        { 
+            throw new NotImplementedException();
+        }
+
     }
 }
