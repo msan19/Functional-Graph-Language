@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Main\Main.csproj" />
+    <ProjectReference Include="..\..\src\Main\Main.csproj" />
   </ItemGroup>
 
 </Project>
