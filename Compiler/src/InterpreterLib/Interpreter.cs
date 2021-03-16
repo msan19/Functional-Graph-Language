@@ -12,7 +12,7 @@ namespace InterpreterLib
         public Interpreter(InterpretorHelper helper)
         {
             _helper = helper;
-            _helper.interpreter = this;
+            _helper.Interpreter = this;
         }
 
         public List<double> Interpret(AST node)
