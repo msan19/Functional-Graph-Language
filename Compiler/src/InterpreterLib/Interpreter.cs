@@ -20,17 +20,17 @@ namespace InterpreterLib
             throw new NotImplementedException();
         }
 
-        public int DispatchInt(ExpressionNode node)
+        public int DispatchInt(ExpressionNode node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }
 
-        public double DispatchReal(ExpressionNode node)
+        public double DispatchReal(ExpressionNode node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }
 
-        public int DispatchFunction(ExpressionNode node)
+        public int DispatchFunction(ExpressionNode node, List<Object> parameters)
         { 
             throw new NotImplementedException();
         }
