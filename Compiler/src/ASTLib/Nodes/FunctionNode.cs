@@ -13,9 +13,10 @@ namespace ASTLib.Nodes
         public FunctionTypeNode FunctionType { get; }
         public string Identifier { get; }
 
-        public FunctionNode(string identifier, ConditionNode condition, List<string> parameterIdentifiers, 
+        public FunctionNode(string identifier, int index, ConditionNode condition, List<string> parameterIdentifiers, 
             FunctionTypeNode functionType, int line, int letter) : base(line, letter)
         {
+            Index = index;
             Conditions = new List<ConditionNode> { condition };
             ParameterIdentifiers = parameterIdentifiers;
             FunctionType = functionType;

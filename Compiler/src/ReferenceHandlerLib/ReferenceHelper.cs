@@ -13,7 +13,6 @@ namespace ReferenceHandlerLib
         public void VisitExport(ExportNode node)
         {
             throw new NotImplementedException();
-
         }
 
         public void VisitFunction(FunctionNode node)
