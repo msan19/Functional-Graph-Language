@@ -12,7 +12,7 @@ namespace InterpreterLib
         public Interpreter(InterpretorHelper helper)
         {
             _helper = helper;
-            _helper.interpreter = this;
+            _helper.Interpreter = this;
         }
 
         public List<double> Interpret(AST node)
@@ -20,17 +20,17 @@ namespace InterpreterLib
             throw new NotImplementedException();
         }
 
-        public int DispatchInt(ExpressionNode node)
+        public int DispatchInt(ExpressionNode node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }
 
-        public double DispatchReal(ExpressionNode node)
+        public double DispatchReal(ExpressionNode node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }
 
-        public int DispatchFunction(ExpressionNode node)
+        public int DispatchFunction(ExpressionNode node, List<Object> parameters)
         { 
             throw new NotImplementedException();
         }

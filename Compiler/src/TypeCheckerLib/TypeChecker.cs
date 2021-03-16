@@ -1,5 +1,7 @@
 ﻿using System;
 using ASTLib;
+using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib
 {
@@ -18,9 +20,9 @@ namespace TypeCheckerLib
             _helper.CheckTypes(root);
         }
 
-        public void Dispatch()
+        public TypeNode Dispatch(ExpressionNode node)
         {
-            // Call visit methods in a switch
+            throw new NotImplementedException();
         }
     }
 }
