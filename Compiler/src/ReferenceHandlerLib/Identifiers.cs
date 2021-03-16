@@ -1,6 +1,6 @@
 ﻿namespace ReferenceHandlerLib
 {
-    public class identifiers
+    public class Identifiers
     {
     }
 }
