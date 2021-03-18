@@ -8,8 +8,6 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        public ReferenceHandler Handler { get; set; }
-
         public void VisitExport(ExportNode node)
         {
             throw new NotImplementedException();
