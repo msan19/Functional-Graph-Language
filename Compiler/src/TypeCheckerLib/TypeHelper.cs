@@ -9,12 +9,7 @@ namespace TypeCheckerLib
     public class TypeHelper : ITypeHelper
     {
         public ITypeChecker TypeChecker { get; set; }
-
-        public void CheckTypes(AST root)
-        {
-            // Call dispatch
-        }
-
+        
         public void VisitExport(ExportNode exportNode)
         {
 
