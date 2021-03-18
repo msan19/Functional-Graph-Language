@@ -3,11 +3,11 @@ using ASTLib;
 
 namespace TypeCheckerLib
 {
-    public class TypeChecker
+    public class TypeChecker : ITypeChecker
     {
-        private readonly TypeHelper _helper;
+        private readonly ITypeHelper _helper;
 
-        public TypeChecker(TypeHelper helper)
+        public TypeChecker(ITypeHelper helper)
         {
             _helper = helper;
             _helper.TypeChecker = this;
