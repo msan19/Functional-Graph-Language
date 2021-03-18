@@ -24,8 +24,8 @@ namespace TypeCheckerLib
 
         public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
         {
-            var left = GetType(binaryNode.Children[0]);
-            var right = GetType(binaryNode.Children[1]);
+            TypeNode left = GetType(binaryNode.Children[0]);
+            TypeNode right = GetType(binaryNode.Children[1]);
 
             if (left.Type == right.Type)
                 return new TypeNode(left.Type, 0, 0);
@@ -74,7 +74,7 @@ namespace TypeCheckerLib
 
         private void InsertCastNode(IBinaryNumberOperator binaryNode, int child, TypeEnum type)
         {
-            var cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
+            CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
             binaryNode.Children[child] = cast;
         }
     }
