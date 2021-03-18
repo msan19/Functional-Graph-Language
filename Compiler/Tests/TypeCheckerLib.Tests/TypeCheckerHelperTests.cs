@@ -1,5 +1,6 @@
 ﻿using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
