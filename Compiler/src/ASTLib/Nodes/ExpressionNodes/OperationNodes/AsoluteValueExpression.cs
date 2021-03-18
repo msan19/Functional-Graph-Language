@@ -1,10 +1,7 @@
-﻿using ASTLib.Interfaces;
-using ASTLib.Nodes.TypeNodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes
+namespace ASTLib.Nodes.ExpressionNodes.OperationNodes
 {
     public class AbsoluteValueExpression : ExpressionNode, INonIdentifierExpression
     {
