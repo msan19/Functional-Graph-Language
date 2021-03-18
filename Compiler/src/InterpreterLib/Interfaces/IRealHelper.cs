@@ -1,11 +1,9 @@
-using ASTLib;
+using System.Collections.Generic;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using System;
-using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
-namespace InterpreterLib.Helpers
+namespace InterpreterLib.Interfaces
 {
     public interface IRealHelper
     {
