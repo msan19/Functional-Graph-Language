@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ReferenceHandlerLib
 {
-    public class ReferenceHelper
+    public class ReferenceHelper : IReferenceHelper
     {
         public ReferenceHandler Handler { get; set; }
 
