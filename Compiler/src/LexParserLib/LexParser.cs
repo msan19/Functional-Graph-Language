@@ -4,15 +4,15 @@ using Hime.Redist;
 
 namespace LexParserLib
 {
-    public class LexParser
+    public class LexParser : ILexParser
     {
         private ASTBuilder _astBuilder;
-        
+
         public LexParser(ASTBuilder astBuilder)
         {
             _astBuilder = astBuilder;
         }
-        
+
         public AST Run(string input)
         {
             GrammarLexer lexer = new GrammarLexer(input);
@@ -20,7 +20,7 @@ namespace LexParserLib
             // Executes the parsing
             ParseResult result = parser.Parse();
             // Prints the produced syntax tree
-            Print(result.Root, new bool[] {});
+            Print(result.Root, new bool[] { });
             return _astBuilder.GetAST(result.Root);
         }
 
