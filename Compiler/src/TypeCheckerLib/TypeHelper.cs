@@ -6,9 +6,9 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib
 {
-    public class TypeHelper
+    public class TypeHelper : ITypeHelper
     {
-        public TypeChecker TypeChecker;
+        public TypeChecker TypeChecker { get; set; }
 
         public void CheckTypes(AST root)
         {
