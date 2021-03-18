@@ -1,6 +1,6 @@
 namespace ASTLib.Interfaces
 {
-    public interface IBinaryNumberOperator
+    public interface IBinaryNumberOperator : IExpressionNode
     {
         
     }

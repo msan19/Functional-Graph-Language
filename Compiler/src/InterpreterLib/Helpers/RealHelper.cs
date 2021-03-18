@@ -70,7 +70,7 @@ namespace InterpreterLib.Helpers
             throw new NotImplementedException();
         }
 
-        public double CastIntegerToReal(IntegerCastExpression node, List<object> parameters)
+        public double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
         }

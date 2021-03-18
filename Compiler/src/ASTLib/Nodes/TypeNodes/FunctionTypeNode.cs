@@ -9,7 +9,7 @@ namespace ASTLib.Nodes.TypeNodes
         public TypeNode ReturnType { get; }
         public List<TypeNode> ParameterTypes { get; }
 
-        public FunctionTypeNode(TypeNode returnType, List<TypeNode> parameterTypes, int line, int letter) : base(Type.Function, line, letter)
+        public FunctionTypeNode(TypeNode returnType, List<TypeNode> parameterTypes, int line, int letter) : base(TypeEnum.Function, line, letter)
         {
             ReturnType = returnType;
             ParameterTypes = parameterTypes;

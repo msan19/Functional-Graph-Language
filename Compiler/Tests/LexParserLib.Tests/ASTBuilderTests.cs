@@ -89,7 +89,7 @@ namespace LexParserLib.Tests
             AST ast = new LexParser(new ASTBuilder()).Run(input);
 
             var func = ast.Functions[0];
-            Assert.AreEqual(ASTLib.Nodes.TypeNodes.Type.Integer, func.FunctionType.ParameterTypes[0].Type);
+            Assert.AreEqual(ASTLib.Nodes.TypeNodes.TypeEnum.Integer, func.FunctionType.ParameterTypes[0].Type);
         }
         [TestMethod]
         public void Function_int_int_OutputType()
@@ -100,7 +100,7 @@ namespace LexParserLib.Tests
             AST ast = new LexParser(new ASTBuilder()).Run(input);
 
             var func = ast.Functions[0];
-            Assert.AreEqual(ASTLib.Nodes.TypeNodes.Type.Integer, func.FunctionType.ReturnType.Type);
+            Assert.AreEqual(ASTLib.Nodes.TypeNodes.TypeEnum.Integer, func.FunctionType.ReturnType.Type);
         }
         #endregion
     }

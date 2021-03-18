@@ -8,7 +8,7 @@ namespace TypeCheckerLib
 {
     public class TypeHelper : ITypeHelper
     {
-        public TypeChecker TypeChecker { get; set; }
+        public ITypeChecker TypeChecker { get; set; }
 
         public void CheckTypes(AST root)
         {
@@ -17,29 +17,24 @@ namespace TypeCheckerLib
 
         public void VisitExport(ExportNode exportNode)
         {
-            
+
         }
-        
+
         public void VisitFunction(FunctionNode functionNode)
         {
-            
+
         }
 
-        public TypeNode VisitExpression(ExpressionNode expressionNode)
+        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
         {
             return null;
         }
 
-        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryOpNode)
+        public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
             return null;
         }
 
-        public TypeNode VisitFunctionCall(FunctionCallExpression fCallExpNode)
-        {
-            return null;
-        }
-        
         public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)
         {
             return null;
@@ -49,7 +44,7 @@ namespace TypeCheckerLib
         {
             return null;
         }
-        
+
         public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode)
         {
             return null;

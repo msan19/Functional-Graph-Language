@@ -32,7 +32,7 @@ namespace InterpreterLib.Helpers
 
         double LiteralReal(RealLiteralExpression node, List<object> parameters);
 
-        double CastIntegerToReal(IntegerCastExpression node, List<object> parameters);
+        double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters);
 
         double FunctionCallReal(FunctionCallExpression node, List<object> parameters);
 

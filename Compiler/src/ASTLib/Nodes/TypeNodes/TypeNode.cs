@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ASTLib.Nodes.TypeNodes
 {
-    public enum Type
+    public enum TypeEnum
     {
         Real,
         Integer,
@@ -13,9 +13,9 @@ namespace ASTLib.Nodes.TypeNodes
     
     public class TypeNode: Node
     {
-        public Type Type { get; }
+        public TypeEnum Type { get; }
 
-        public TypeNode(Type type, int line, int letter) : base(line, letter)
+        public TypeNode(TypeEnum type, int line, int letter) : base(line, letter)
         {
             Type = type;
         }

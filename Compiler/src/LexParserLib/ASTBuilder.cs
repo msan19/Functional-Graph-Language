@@ -134,9 +134,9 @@ namespace LexParserLib
         {
             return himeNode.Children[0].Symbol.Name switch
             {
-                "integer" => new TypeNode(ASTLib.Nodes.TypeNodes.Type.Integer,
+                "integer" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Integer,
                                                        himeNode.Position.Line, himeNode.Position.Column),
-                "real" => new TypeNode(ASTLib.Nodes.TypeNodes.Type.Real,
+                "real" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Real,
                                        himeNode.Position.Line, himeNode.Position.Column),
                 "FuncTypeDecl" => CreateFunctionTypeNode(himeNode.Children[0]),
                 _ => throw new Exception($"'{himeNode.Children[0].Symbol.Name}' is not an accepted type"),
