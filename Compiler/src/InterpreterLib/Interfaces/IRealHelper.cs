@@ -15,39 +15,27 @@ namespace InterpreterLib.Helpers
 
         double FunctionReal(FunctionNode node, List<object> parameters);
 
-        public double AdditionReal(AdditionExpression node, List<object> parameters);
+        double AdditionReal(AdditionExpression node, List<object> parameters);
 
-        public double SubtractionReal(SubtractionExpression node, List<object> parameters);
+        double SubtractionReal(SubtractionExpression node, List<object> parameters);
 
-        public double MultiplicationReal(MultiplicationExpression node, List<object> parameters);
+        double MultiplicationReal(MultiplicationExpression node, List<object> parameters);
 
-        public double DivisionReal(DivisionExpression node, List<object> parameters);
+        double DivisionReal(DivisionExpression node, List<object> parameters);
 
-        public double ModuloReal(ModuloExpression node, List<object> parameters);
+        double ModuloReal(ModuloExpression node, List<object> parameters);
 
-        public double AbsoluteReal(AbsoluteValueExpression node, List<object> parameters);
+        double AbsoluteReal(AbsoluteValueExpression node, List<object> parameters);
 
-        public double PowerReal(PowerExpression node, List<object> parameters);
+        double PowerReal(PowerExpression node, List<object> parameters);
 
-        public double IdentifierReal(IdentifierExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        double IdentifierReal(IdentifierExpression node, List<object> parameters);
 
-        public double LiteralReal(RealLiteralExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        double LiteralReal(RealLiteralExpression node, List<object> parameters);
 
-        public double CastIntegerToReal(IntegerCastExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        double CastIntegerToReal(IntegerCastExpression node, List<object> parameters);
 
-        public double FunctionCallReal(FunctionCallExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        double FunctionCallReal(FunctionCallExpression node, List<object> parameters);
 
     }
 }
