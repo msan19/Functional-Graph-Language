@@ -8,7 +8,6 @@ namespace InterpreterLib.Helpers
 {
     public interface IRealHelper
     {
-
         Interpreter Interpreter { get; set; }
 
         double ExportReal(ExportNode node, List<object> parameters);

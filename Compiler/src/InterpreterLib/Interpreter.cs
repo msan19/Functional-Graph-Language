@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes.ExpressionNodes;
+using InterpreterLib.Helpers;
 
 namespace InterpreterLib
 {
-    public class Interpreter
+    public class Interpreter : IInterpreter
     {
-        private readonly InterpretorHelper _helper;
+        private readonly IFunctionHelper _functionHelper;
+        private readonly IIntegerHelper _integerHelper;
+        private readonly IRealHelper _realHelper;
 
-        public Interpreter(InterpretorHelper helper)
+        public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper)
         {
-            _helper = helper;
-            _helper.Interpreter = this;
+            _functionHelper = functionHelper;
+            _functionHelper.Interpreter = this;
+
+            _integerHelper = integerHelper;
+            _integerHelper.Interpreter = this;
+
+            _realHelper = realHelper;
+            _realHelper.Interpreter = this;
         }
 
         public List<double> Interpret(AST node)
@@ -31,7 +40,7 @@ namespace InterpreterLib
         }
 
         public int DispatchFunction(ExpressionNode node, List<Object> parameters)
-        { 
+        {
             throw new NotImplementedException();
         }
     }
