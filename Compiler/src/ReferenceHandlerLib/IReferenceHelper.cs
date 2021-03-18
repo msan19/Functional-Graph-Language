@@ -6,8 +6,6 @@ namespace ReferenceHandlerLib
 {
     public interface IReferenceHelper
     {
-        ReferenceHandler Handler { get; set; }
-
         void VisitExport(ExportNode node);
         void VisitFunction(FunctionNode node);
         void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers);
