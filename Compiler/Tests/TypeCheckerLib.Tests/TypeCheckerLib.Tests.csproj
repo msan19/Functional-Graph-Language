@@ -7,12 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="Moq" Version="4.15.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
+    <PackageReference Include="coverlet.collector" Version="3.0.3"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+<PrivateAssets>all</PrivateAssets>
+</PackageReference>
     <PackageReference Include="NSubstitute" Version="4.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ASTLib\ASTLib.csproj" />
+    <ProjectReference Include="..\ASTLib.Tests\ASTLib.Tests.csproj" />
+    <ProjectReference Include="..\..\src\FileGeneratorLib\FileGeneratorLib.csproj" />
+    <ProjectReference Include="..\FileGeneratorLib.Tests\FileGeneratorLib.Tests.csproj" />
+    <ProjectReference Include="..\..\src\InterpreterLib\InterpreterLib.csproj" />
+    <ProjectReference Include="..\InterpreterLib.Tests\InterpreterLib.Tests.csproj" />
+    <ProjectReference Include="..\..\src\LexParserLib\LexParserLib.csproj" />
+    <ProjectReference Include="..\LexParserLib.Tests\LexParserLib.Tests.csproj" />
+    <ProjectReference Include="..\..\src\Main\Main.csproj" />
+    <ProjectReference Include="..\Main.Tests\Main.Tests.csproj" />
+    <ProjectReference Include="..\..\src\ReferenceHandlerLib\ReferenceHandlerLib.csproj" />
+    <ProjectReference Include="..\ReferenceHandlerLib.Tests\ReferenceHandlerLib.Tests.csproj" />
+    <ProjectReference Include="..\..\src\TypeCheckerLib\TypeCheckerLib.csproj" />
+  </ItemGroup>
 </Project>
