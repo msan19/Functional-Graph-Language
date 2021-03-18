@@ -9,67 +9,29 @@ namespace InterpreterLib.Helpers
     public interface IIntegerHelper
     {
 
-        public Interpreter Interpreter { get; set; }
+        Interpreter Interpreter { get; set; }
 
-        public int FunctionInteger(FunctionNode node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int FunctionInteger(FunctionNode node, List<Object> parameters);
 
-        private int ConditionInteger(ConditionNode node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int AdditionInteger(AdditionExpression node, List<Object> parameters);
 
-        public int AdditionInteger(AdditionExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int SubtractionInteger(SubtractionExpression node, List<Object> parameters);
 
-        public int SubtractionInteger(SubtractionExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int MultiplicationInteger(MultiplicationExpression node, List<Object> parameters);
 
-        public int MultiplicationInteger(MultiplicationExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int DivisionInteger(DivisionExpression node, List<Object> parameters);
 
-        public int DivisionInteger(DivisionExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int ModuloInteger(ModuloExpression node, List<Object> parameters);
 
-        public int ModuloInteger(ModuloExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters);
 
-        public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int PowerInteger(PowerExpression node, List<Object> parameters);
 
-        public int PowerInteger(PowerExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int IdentifierInteger(IdentifierExpression node, List<Object> parameters);
 
-        public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters);
 
-        public int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters);
 
     }
 }
