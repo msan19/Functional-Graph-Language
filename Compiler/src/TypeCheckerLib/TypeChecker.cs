@@ -17,7 +17,15 @@ namespace TypeCheckerLib
 
         public void CheckTypes(AST root)
         {
-            _helper.CheckTypes(root);
+            foreach (var exportNode in root.Exports)
+            {
+                _helper.VisitExport(exportNode);
+            }
+            
+            foreach (var functionNode in root.Functions)
+            {
+                _helper.VisitFunction(functionNode);
+            }
         }
 
         public TypeNode Dispatch(ExpressionNode node)
