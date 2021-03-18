@@ -3,6 +3,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
+using InterpreterLib.Interfaces;
 
 namespace InterpreterLib.Helpers
 {

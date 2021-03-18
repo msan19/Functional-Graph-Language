@@ -4,6 +4,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using InterpreterLib.Interfaces;
 
 namespace InterpreterLib.Helpers
 {
@@ -51,7 +52,7 @@ namespace InterpreterLib.Helpers
         {
             throw new NotImplementedException();
         }
-
+        
         public int PowerInteger(PowerExpression node, List<Object> parameters)
         {
             throw new NotImplementedException();

@@ -1,10 +1,9 @@
-using ASTLib;
-using ASTLib.Nodes;
-using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
+using ASTLib.Nodes;
+using ASTLib.Nodes.ExpressionNodes;
 
-namespace InterpreterLib.Helpers
+namespace InterpreterLib.Interfaces
 {
     public interface IFunctionHelper
     {

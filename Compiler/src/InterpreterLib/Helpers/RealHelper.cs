@@ -4,6 +4,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using InterpreterLib.Interfaces;
 
 namespace InterpreterLib.Helpers
 {

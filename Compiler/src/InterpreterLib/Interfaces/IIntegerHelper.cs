@@ -1,11 +1,10 @@
-using ASTLib;
-using ASTLib.Nodes;
-using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
+using ASTLib.Nodes;
+using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
-namespace InterpreterLib.Helpers
+namespace InterpreterLib.Interfaces
 {
     public interface IIntegerHelper
     {
@@ -25,7 +24,7 @@ namespace InterpreterLib.Helpers
         int ModuloInteger(ModuloExpression node, List<Object> parameters);
 
         int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters);
-
+        
         int PowerInteger(PowerExpression node, List<Object> parameters);
 
         int IdentifierInteger(IdentifierExpression node, List<Object> parameters);

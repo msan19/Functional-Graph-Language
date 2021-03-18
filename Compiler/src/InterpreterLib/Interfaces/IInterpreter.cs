@@ -1,8 +1,8 @@
-﻿using ASTLib;
+﻿using System.Collections.Generic;
+using ASTLib;
 using ASTLib.Nodes.ExpressionNodes;
-using System.Collections.Generic;
 
-namespace InterpreterLib
+namespace InterpreterLib.Interfaces
 {
     public interface IInterpreter
     {
