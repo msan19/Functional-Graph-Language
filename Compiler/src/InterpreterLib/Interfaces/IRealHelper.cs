@@ -26,10 +26,8 @@ namespace InterpreterLib.Helpers
         public double ModuloReal(ModuloExpression node, List<object> parameters);
 
         public double AbsoluteReal(AbsoluteValueExpression node, List<object> parameters);
-        public double PowerReal(PowerExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+
+        public double PowerReal(PowerExpression node, List<object> parameters);
 
         public double IdentifierReal(IdentifierExpression node, List<object> parameters)
         {
