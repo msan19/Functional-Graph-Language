@@ -53,11 +53,6 @@ namespace InterpreterLib.Helpers
             throw new NotImplementedException();
         }
         
-        public int PowerInteger(PowerExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
         public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)
         {
             throw new NotImplementedException();
