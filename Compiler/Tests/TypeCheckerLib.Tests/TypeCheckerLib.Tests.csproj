@@ -19,17 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ASTLib\ASTLib.csproj" />
-    <ProjectReference Include="..\ASTLib.Tests\ASTLib.Tests.csproj" />
-    <ProjectReference Include="..\..\src\FileGeneratorLib\FileGeneratorLib.csproj" />
-    <ProjectReference Include="..\FileGeneratorLib.Tests\FileGeneratorLib.Tests.csproj" />
-    <ProjectReference Include="..\..\src\InterpreterLib\InterpreterLib.csproj" />
-    <ProjectReference Include="..\InterpreterLib.Tests\InterpreterLib.Tests.csproj" />
-    <ProjectReference Include="..\..\src\LexParserLib\LexParserLib.csproj" />
-    <ProjectReference Include="..\LexParserLib.Tests\LexParserLib.Tests.csproj" />
-    <ProjectReference Include="..\..\src\Main\Main.csproj" />
-    <ProjectReference Include="..\Main.Tests\Main.Tests.csproj" />
-    <ProjectReference Include="..\..\src\ReferenceHandlerLib\ReferenceHandlerLib.csproj" />
-    <ProjectReference Include="..\ReferenceHandlerLib.Tests\ReferenceHandlerLib.Tests.csproj" />
     <ProjectReference Include="..\..\src\TypeCheckerLib\TypeCheckerLib.csproj" />
   </ItemGroup>
 </Project>
