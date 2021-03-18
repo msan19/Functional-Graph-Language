@@ -8,33 +8,17 @@ namespace InterpreterLib.Helpers
 {
     public interface IFunctionHelper
     {
-
         public Interpreter Interpreter { get; set; }
 
-        public int FunctionFunction(FunctionNode node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int FunctionFunction(FunctionNode node, List<Object> parameters);
 
-        private int ConditionFunction(ConditionNode node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int ConditionFunction(ConditionNode node, List<Object> parameters);
 
-        public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int IdentifierFunction(IdentifierExpression node, List<Object> parameters);
 
-        public int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters);
 
-        public double FunctionCallReal(FunctionCallExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
+        double FunctionCallReal(FunctionCallExpression node, List<Object> parameters);
 
     }
 }
