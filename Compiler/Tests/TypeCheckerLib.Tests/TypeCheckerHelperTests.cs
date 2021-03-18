@@ -64,9 +64,9 @@ namespace TypeCheckerLib.Tests
         public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_LeftNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression realLit = new IntegerLiteralExpression("2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
+            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
@@ -85,9 +85,9 @@ namespace TypeCheckerLib.Tests
         public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_RightNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression realLit = new IntegerLiteralExpression("2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
+            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
@@ -126,9 +126,9 @@ namespace TypeCheckerLib.Tests
         public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_ReturnsIntTypeNode()
         {
             var expected = TypeEnum.Integer;
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
+            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
