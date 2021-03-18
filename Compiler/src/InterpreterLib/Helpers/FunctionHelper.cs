@@ -9,7 +9,7 @@ namespace InterpreterLib.Helpers
     public class FunctionHelper
     {
 
-        public Interpreter Interpreter { get; set; }
+        public IInterpreter Interpreter { get; set; }
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)
         {

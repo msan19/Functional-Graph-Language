@@ -9,7 +9,7 @@ namespace InterpreterLib.Helpers
     public class RealHelper
     {
 
-        public Interpreter Interpreter { get; set; }
+        public IInterpreter Interpreter { get; set; }
 
         public double ExportReal(ExportNode node, List<object> parameters)
         {
