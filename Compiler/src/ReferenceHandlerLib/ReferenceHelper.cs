@@ -8,7 +8,7 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        public ReferenceHandler Handler { get; set; }
+        public IReferenceHandler ReferenceHandler { get; set; }
 
         public void VisitExport(ExportNode node)
         {

@@ -6,7 +6,7 @@ namespace ReferenceHandlerLib
 {
     public interface IReferenceHelper
     {
-        ReferenceHandler Handler { get; set; }
+        IReferenceHandler ReferenceHandler { get; set; }
 
         void VisitExport(ExportNode node);
         void VisitFunction(FunctionNode node);

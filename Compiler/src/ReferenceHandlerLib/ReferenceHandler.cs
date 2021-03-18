@@ -12,7 +12,7 @@ namespace ReferenceHandlerLib
         public ReferenceHandler(IReferenceHelper helper)
         {
             _helper = helper;
-            _helper.Handler = this;
+            _helper.ReferenceHandler = this;
         }
 
         public void InsertReferences(AST root)
