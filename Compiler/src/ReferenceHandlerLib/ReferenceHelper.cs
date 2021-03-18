@@ -10,6 +10,7 @@ namespace ReferenceHandlerLib
     public class ReferenceHelper : IReferenceHelper
     {
         public IReferenceHandler ReferenceHandler { get; set; }
+        private Dictionary<string, FunctionNode> _functionTable;
 
         public void BuildTable(List<FunctionNode> functions)
         {
