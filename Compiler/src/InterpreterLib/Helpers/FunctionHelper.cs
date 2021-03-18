@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace InterpreterLib.Helpers
 {
-    public class FunctionHelper
+    public class FunctionHelper : IFunctionHelper
     {
 
         public IInterpreter Interpreter { get; set; }

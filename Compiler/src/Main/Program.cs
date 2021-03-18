@@ -2,6 +2,7 @@
 using ASTLib;
 using FileGeneratorLib;
 using InterpreterLib;
+using InterpreterLib.Helpers;
 using LexParserLib;
 using ReferenceHandlerLib;
 using TypeCheckerLib;
@@ -20,7 +21,7 @@ namespace Main
             LexParser lexParse = new LexParser(new ASTBuilder());
             ReferenceHandler referenceHandler = new ReferenceHandler(new ReferenceHelper());
             TypeChecker typeChecker = new TypeChecker(new TypeHelper());
-            Interpreter interpreter = new Interpreter(new InterpretorHelper());
+            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
             string input = "export 5.5 + 33.3 export 5.5 + 33.3 " +

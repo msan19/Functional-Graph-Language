@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace InterpreterLib.Helpers
 {
-    public class IntegerHelper
+    public class IntegerHelper : IIntegerHelper
     {
 
         public IInterpreter Interpreter { get; set; }
