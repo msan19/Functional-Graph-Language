@@ -1,4 +1,5 @@
 using ASTLib;
+using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using System;
@@ -9,6 +10,11 @@ namespace ReferenceHandlerLib
     public class ReferenceHelper : IReferenceHelper
     {
         public IReferenceHandler ReferenceHandler { get; set; }
+
+        public void BuildTable(List<FunctionNode> functions)
+        {
+            throw new NotImplementedException();
+        }
 
         public void VisitExport(ExportNode node)
         {
@@ -25,7 +31,7 @@ namespace ReferenceHandlerLib
             throw new NotImplementedException();
         }
 
-        public void VisitNonIdentifiers(ExpressionNode node, List<string> identifiers)
+        public void VisitNonIdentifier(INonIdentifierExpression node, List<string> identifiers)
         {
             throw new NotImplementedException();
         }
