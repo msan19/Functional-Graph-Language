@@ -5,11 +5,11 @@ using ASTLib.Nodes.ExpressionNodes;
 
 namespace ReferenceHandlerLib
 {
-    public class ReferenceHandler
+    public class ReferenceHandler : IReferenceHandler
     {
-        private readonly ReferenceHelper _helper;
+        private readonly IReferenceHelper _helper;
 
-        public ReferenceHandler(ReferenceHelper helper)
+        public ReferenceHandler(IReferenceHelper helper)
         {
             _helper = helper;
             _helper.Handler = this;
