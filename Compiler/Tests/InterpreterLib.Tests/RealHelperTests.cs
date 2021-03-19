@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -37,16 +38,15 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-        #region FunctionReal
+        #region ConditionReal
         [DataRow(1.0, 1.0)]
         [DataRow(-1.0, -1.0)]
         [DataRow(0.0, 0.0)]
         [TestMethod]
-        public void FunctionReal_Real_ReturnsCorrectResult(double input, double expected)
+        public void ConditionReal_Real_ReturnsCorrectResult(double input, double expected)
         {
             RealLiteralExpression realLit = new RealLiteralExpression(input.ToString(), 1, 1);
             ConditionNode conditionNode = new ConditionNode(realLit, 1, 1);
-            FunctionNode functionNode = new FunctionNode("test", 1, conditionNode, new List<string>(), new FunctionTypeNode(new TypeNode(TypeEnum.Real, 1, 1), new List<TypeNode>(), 1, 1), 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = new RealHelper()
@@ -54,7 +54,7 @@ namespace InterpreterLib.Tests
                 Interpreter = parent
             };
 
-            double res = realHelper.FunctionReal(functionNode, new List<object>());
+            double res = realHelper.ConditionReal(conditionNode, new List<object>());
 
             Assert.AreEqual(expected, res);
         }
@@ -75,7 +75,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper(new AST(null, null, 1, 1))
+            RealHelper realHelper = new RealHelper()
             {
                 Interpreter = parent
             };

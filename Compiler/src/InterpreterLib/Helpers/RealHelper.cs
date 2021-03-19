@@ -91,7 +91,6 @@ namespace InterpreterLib.Helpers
 
         public double IdentifierReal(IdentifierExpression node, List<object> parameters)
         {
-            // G?r noget med parameters[Reference]
             List<double> doubleParameters = new List<double>();
             foreach (object obj in parameters) doubleParameters.Add(Convert.ToDouble(obj));
             return doubleParameters[node.Reference];
