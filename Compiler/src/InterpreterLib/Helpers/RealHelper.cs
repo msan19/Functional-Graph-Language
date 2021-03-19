@@ -13,6 +13,7 @@ namespace InterpreterLib.Helpers
     {
 
         public IInterpreter Interpreter { get; set; }
+
         private AST _root;
 
         public void SetASTRoot(AST root)
@@ -25,12 +26,7 @@ namespace InterpreterLib.Helpers
             return Interpreter.DispatchReal(node.ExportValue, parameters);
         }
 
-        public double FunctionReal(FunctionNode node, List<object> parameters)
-        {
-            return ConditionReal(node.Conditions[0], parameters);
-        }
-
-        private double ConditionReal(ConditionNode node, List<object> parameters)
+        public double ConditionReal(ConditionNode node, List<object> parameters)
         {
             return Interpreter.DispatchReal(node.ReturnExpression, parameters);
         }
@@ -95,7 +91,7 @@ namespace InterpreterLib.Helpers
 
         public double IdentifierReal(IdentifierExpression node, List<object> parameters)
         {
-            // Gør noget med parameters[Reference]
+            // G?r noget med parameters[Reference]
             List<double> doubleParameters = new List<double>();
             foreach (object obj in parameters) doubleParameters.Add(Convert.ToDouble(obj));
             return doubleParameters[node.Reference];

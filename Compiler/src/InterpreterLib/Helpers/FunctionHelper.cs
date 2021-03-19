@@ -11,12 +11,7 @@ namespace InterpreterLib.Helpers
     {
         public IInterpreter Interpreter { get; set; }
 
-        public int FunctionFunction(FunctionNode node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        private int ConditionFunction(ConditionNode node, List<Object> parameters)
+        public int ConditionFunction(ConditionNode node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }

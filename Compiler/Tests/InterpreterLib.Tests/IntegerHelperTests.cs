@@ -18,12 +18,10 @@ namespace InterpreterLib.Tests
         #region FunctionInteger
         [DataRow(2, 2)]
         [TestMethod]
-        public void FunctionInteger_Integer_ReturnsCorrectResult(int input, int expected)
+        public void ConditionInteger_Integer_ReturnsCorrectResult(int input, int expected)
         {
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ConditionNode conditionNode = new ConditionNode(intLit, 1, 1);
-            FunctionNode functionNode = new FunctionNode(null, 1, conditionNode, null,
-                                                            new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), null, 1,1), 1,1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = new IntegerHelper()
@@ -31,7 +29,7 @@ namespace InterpreterLib.Tests
                 Interpreter = parent
             };
 
-            int res = integerHelper.FunctionInteger(functionNode, new List<object>());
+            int res = integerHelper.ConditionInteger(conditionNode, new List<object>());
 
             Assert.AreEqual(expected, res);
         }

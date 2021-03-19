@@ -21,12 +21,7 @@ namespace InterpreterLib.Helpers
             _root = root;
         }
 
-        public int FunctionInteger(FunctionNode node, List<Object> parameters)
-        {
-            return ConditionInteger(node.Conditions[0], parameters);  
-        }
-
-        private int ConditionInteger(ConditionNode node, List<Object> parameters)
+        public int ConditionInteger(ConditionNode node, List<Object> parameters)
         {
             return Interpreter.DispatchInt(node.ReturnExpression, parameters);
         }
