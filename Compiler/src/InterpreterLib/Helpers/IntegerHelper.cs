@@ -73,7 +73,7 @@ namespace InterpreterLib.Helpers
 
         private int ModuloCalculation(int leftOperand, int rightOperand)
         {
-            return leftOperand - rightOperand * (leftOperand / rightOperand);
+            return leftOperand - rightOperand * leftOperand / rightOperand;
         }
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
@@ -104,6 +104,5 @@ namespace InterpreterLib.Helpers
         {
             throw new NotImplementedException();
         }
-
     }
 }
