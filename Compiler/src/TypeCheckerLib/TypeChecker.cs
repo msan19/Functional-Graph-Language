@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ASTLib;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -17,6 +17,7 @@ namespace TypeCheckerLib
 
         public void CheckTypes(AST root)
         {
+            _helper.SetAstRoot(root);
             foreach (var exportNode in root.Exports)
                 _helper.VisitExport(exportNode);
             
