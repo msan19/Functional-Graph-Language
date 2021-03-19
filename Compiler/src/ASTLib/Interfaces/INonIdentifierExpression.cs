@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ASTLib.Interfaces
 {
-    interface INonIdentifierExpression : IExpressionNode
+    public interface INonIdentifierExpression : IExpressionNode
     {
     }
 }

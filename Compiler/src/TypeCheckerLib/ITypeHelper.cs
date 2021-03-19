@@ -10,7 +10,7 @@ namespace TypeCheckerLib
     {
         ITypeChecker TypeChecker { get; set; }
 
-        void CheckTypes(AST root);
+        void SetAstRoot(AST root);
         TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode);
         void VisitExport(ExportNode exportNode);
         void VisitFunction(FunctionNode functionNode);
