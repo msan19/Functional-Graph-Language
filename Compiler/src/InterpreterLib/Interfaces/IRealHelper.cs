@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -8,6 +9,8 @@ namespace InterpreterLib.Interfaces
     public interface IRealHelper
     {
         IInterpreter Interpreter { get; set; }
+
+        public void SetASTRoot(AST root);
 
         double ExportReal(ExportNode node, List<object> parameters);
 
