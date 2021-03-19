@@ -26,8 +26,7 @@ namespace InterpreterLib.Tests
                                                             new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), null, 1,1), 1,1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -49,8 +48,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -74,8 +72,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -99,8 +96,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -123,8 +119,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -147,8 +142,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -169,8 +163,7 @@ namespace InterpreterLib.Tests
             absExpr.Type = TypeEnum.Integer;
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -189,8 +182,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root)
+            IntegerHelper integerHelper = new IntegerHelper()
             {
                 Interpreter = parent
             };
@@ -208,13 +200,36 @@ namespace InterpreterLib.Tests
             IdentifierExpression identifierExpr = new IdentifierExpression("This is a test", 1, 1);
             identifierExpr.Reference = 0;
             List<object> parameters = new List<object> { 0 };
-            AST root = new AST(null, null, 1, 1);
-            IntegerHelper integerHelper = new IntegerHelper(root);
+            int expected = (int)parameters[0];
+            IntegerHelper integerHelper = new IntegerHelper();
 
             int res = integerHelper.IdentifierInteger(identifierExpr, parameters);
 
-            Assert.AreEqual(parameters[0], res);
+            Assert.AreEqual(expected, res);
         }
         #endregion
+
+
+        #region FunctionCallInteger
+        [DataRow(2, 2)]
+        [TestMethod]
+        public void FunctionCallInteger_FunctionCallExpressionNode_ReturnsCorrectFunctionCallResult(int input, int expected)
+        {
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("This is a test", null, 1, 1);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
+            IntegerHelper integerHelper = new IntegerHelper()
+            {
+                Interpreter = parent
+            };
+
+            int res = integerHelper.FunctionCallInteger(funcCallExpr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+
+        }
+        #endregion
+
     }
 }

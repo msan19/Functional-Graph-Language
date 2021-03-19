@@ -14,9 +14,9 @@ namespace InterpreterLib.Helpers
 
         public IInterpreter Interpreter { get; set; }
 
-        private readonly AST _root;
+        private AST _root;
 
-        public IntegerHelper(AST root)
+        public void SetAstRoot(AST root)
         {
             _root = root;
         }
@@ -68,7 +68,12 @@ namespace InterpreterLib.Helpers
             int leftOperand = Interpreter.DispatchInt(node.Children[0], parameters);
             int rightOperand = Interpreter.DispatchInt(node.Children[1], parameters);
 
-            return leftOperand % rightOperand;
+            return ModuloCalculation(leftOperand, rightOperand);
+        }
+
+        private int ModuloCalculation(int leftOperand, int rightOperand)
+        {
+            return leftOperand - rightOperand * (leftOperand / rightOperand);
         }
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
