@@ -49,12 +49,12 @@ namespace TypeCheckerLib
 
         public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode)
         {
-            return null;
+            return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
         public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode)
         {
-            return null;
+            return new TypeNode(TypeEnum.Real, 0, 0);
         }
 
         /// 

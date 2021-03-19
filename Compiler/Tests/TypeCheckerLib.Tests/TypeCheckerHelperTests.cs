@@ -15,6 +15,7 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Function
+
         #endregion
 
         #region Binary Num Operator
@@ -25,7 +26,7 @@ namespace TypeCheckerLib.Tests
         // Int Int  -> Return Int
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_InsertedIntToRealCastNode()
         {
             var expected = typeof(CastFromIntegerExpression);
             IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
@@ -46,7 +47,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithIntAndReal_AppendedIntNodeToTypeCast()
+        public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_AppendedIntNodeToTypeCast()
         {
             var expected = typeof(IntegerLiteralExpression);
             IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
@@ -67,7 +68,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_LeftNodeIsReal()
+        public void BinaryNumOp_MultiplicationExpressionWithTwoInt_LeftNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
@@ -88,7 +89,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_RightNodeIsReal()
+        public void BinaryNumOp_MultiplicationExpressionWithTwoInt_RightNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
@@ -109,7 +110,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithIntAndReal_ReturnsRealTypeNode()
+        public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_ReturnsRealTypeNode()
         {
             var expected = TypeEnum.Real;
             IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
@@ -129,7 +130,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void VisitBinaryNumOp_MultiplicationExpressionWithTwoInt_ReturnsIntTypeNode()
+        public void BinaryNumOp_MultiplicationExpressionWithTwoInt_ReturnsIntTypeNode()
         {
             var expected = TypeEnum.Integer;
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
@@ -156,9 +157,33 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Integer 
+        // Returns Integer
+        [TestMethod]
+        public void Int_IntLiteral_IntTypeNode()
+        {
+            var expected = TypeEnum.Integer;
+            IntegerLiteralExpression input1 = new IntegerLiteralExpression("2", 2, 2);
+            TypeHelper typeHelper = new TypeHelper();
+
+            var res = typeHelper.VisitIntegerLiteral(input1).Type;
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
 
         #region Real 
+        // Returns Real
+        [TestMethod]
+        public void Real_RealLiteral_RealTypeNode()
+        {
+            var expected = TypeEnum.Real;
+            RealLiteralExpression input1 = new RealLiteralExpression("2.2", 2, 2);
+            TypeHelper typeHelper = new TypeHelper();
+
+            var res = typeHelper.VisitRealLiteral(input1).Type;
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
 
     }
