@@ -15,7 +15,5 @@ namespace InterpreterLib.Interfaces
 
         int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters);
 
-        double FunctionCallReal(FunctionCallExpression node, List<Object> parameters);
-
     }
 }
