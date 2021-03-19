@@ -78,8 +78,9 @@ namespace TypeCheckerLib.Tests
         
         # region Dispatch
 
+            # region IBinaryNumberOperator
         [TestMethod]
-        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_correctVisitMethodCalled()
+        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_CorrectVisitMethodCalled()
         {
             IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
             IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
@@ -95,7 +96,7 @@ namespace TypeCheckerLib.Tests
         }
         
         [TestMethod]
-        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_correctNodePassedOntoVisit()
+        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_CorrectNodePassedToVisit()
         {
             IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
             IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
@@ -125,8 +126,52 @@ namespace TypeCheckerLib.Tests
             
             expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
         }
-        
+            # endregion
  
+            
+            # region FunctionCallExpression
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsFunctionCallExpression_CorrectVisitMethodCalled()
+        {
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
+            bool visitFunctionCallWasCalled = false;
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(exp => visitFunctionCallWasCalled = true));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(funcCallExpr); 
+            
+            Assert.IsTrue(visitFunctionCallWasCalled);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsFunctionCallExpression_CorrectNodePassedToVisit()
+        {
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            FunctionCallExpression actualNode = null;
+            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(expNode => actualNode = expNode));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(funcCallExpr); 
+            
+            funcCallExpr.Should().BeEquivalentTo(actualNode);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsFunctionCallExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Function, 1, 1);
+            typeHelper.VisitFunctionCall(Arg.Any<FunctionCallExpression>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            TypeNode actualTypeNode = typeChecker.Dispatch(funcCallExpr); 
+            
+            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+        }
+            # endregion
 
         # endregion
 

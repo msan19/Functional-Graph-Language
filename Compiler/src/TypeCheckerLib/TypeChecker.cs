@@ -33,7 +33,8 @@ namespace TypeCheckerLib
             {
                 case IBinaryNumberOperator n:
                     return _helper.VisitBinaryNumOp(n);
-
+                case FunctionCallExpression n:
+                    return _helper.VisitFunctionCall(n);
                 default:
                     throw new ArgumentException("The argument was not a recognized ExpressionNode");
                     
