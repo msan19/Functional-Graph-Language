@@ -177,38 +177,6 @@ namespace ReferenceHandlerLib.Tests
         }
         #endregion
 
-        /*
-        [TestMethod]
-        public void Dispatch_XXXXXXAndStringList_CorrectListPassed()
-        {
-            List<string> expected = new List<string>() { "id" };
-            XXX input1 = new XXX;
-            List<string> input2 = new List<string>() { "id" };
-            IReferenceHelper helper = Substitute.For<IReferenceHelper>();
-            ReferenceHandler refHandler = new ReferenceHandler(helper);
-            List<string> res = null;
-            helper.VisitXXX(Arg.Any<XXX>(), Arg.Do<List<string>>(x => res = x));
-
-            refHandler.Dispatch(input1, input2);
-
-            res.Should().BeEquivalentTo(expected);
-        }
         
-        [TestMethod]
-        public void Dispatch_XXXXXAndStringList_CorrectXXXPassed()
-        {
-            XXX expected = new XXX;
-            XXX input1 = expected;
-            List<string> input2 = new List<string>() { "id" };
-            IReferenceHelper helper = Substitute.For<IReferenceHelper>();
-            ReferenceHandler refHandler = new ReferenceHandler(helper);
-            XXX res = null;
-            helper.VisitXXX(Arg.Do<XXX>(x => res = x), Arg.Any<List<string>>());
-
-            refHandler.Dispatch(input1, input2);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-        */
     }
 }

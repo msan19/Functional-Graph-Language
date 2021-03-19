@@ -5,13 +5,20 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using System;
+using System.Collections.Generic;
 
 namespace TypeCheckerLib
 {
     public class TypeHelper : ITypeHelper
     {
         public ITypeChecker TypeChecker { get; set; }
-        
+        private List<FunctionNode> _functions;
+
+        public void SetAstRoot(AST root)
+        {
+            _functions = root.Functions;
+        }
+
         public void VisitExport(ExportNode exportNode)
         {
 
@@ -37,9 +44,74 @@ namespace TypeCheckerLib
             }
         }
 
+        // func(((real) -> real) -> int
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
-            return null;
+            // Find list of functions
+            // Get Type 
+                // Children
+            // Expression used to call 
+            // No Casting 
+            // Return its type (int/real/function)
+            // Depending on what function it matches 
+
+            var matches = GetMatchingFunction(funcCallExpNode);
+            if (matches.Count != 1)
+                throw new Exception("No overload matched");
+
+            return matches[0].FunctionType.ReturnType;
+        }
+
+        private List<FunctionNode> GetMatchingFunction(FunctionCallExpression funcCallExpNode)
+        {
+            List<FunctionNode> matches = new List<FunctionNode>();
+            foreach (var i in funcCallExpNode.References)
+            {
+                var func = _functions[i];
+                if (FunctionIsMatch(func.FunctionType.ParameterTypes, funcCallExpNode))
+                    matches.Add(func);
+            }
+
+            return matches;
+        }
+
+        private bool FunctionIsMatch(List<TypeNode> parameterTypes, FunctionCallExpression funcCallExpNode)
+        {
+            for (int i = 0; i < parameterTypes.Count; i++)
+            {
+                var typeNode = TypeChecker.Dispatch(funcCallExpNode.Children[i]);
+                if(!TypesAreEqual(typeNode, parameterTypes[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool TypesAreEqual(TypeNode a, TypeNode b)
+        {
+            if (a.GetType() == typeof(FunctionTypeNode))
+            {
+                if (b.GetType() == typeof(FunctionTypeNode))
+                   return IsFunctionTypesEqual((FunctionTypeNode)a, (FunctionTypeNode)b);
+                else
+                    return false;
+            }
+
+            return a.Type == b.Type;
+        }
+
+        private bool IsFunctionTypesEqual(FunctionTypeNode a, FunctionTypeNode b)
+        {
+            if (!TypesAreEqual(a.ReturnType, b.ReturnType))
+                return false;
+            if (a.ParameterTypes.Count != b.ParameterTypes.Count)
+                return false;
+
+            for (int i = 0; i < a.ParameterTypes.Count; i++)
+            {
+                if (!TypesAreEqual(a.ParameterTypes[i], b.ParameterTypes[i]))
+                    return false;
+            }
+            return true;
         }
 
         public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)
@@ -49,12 +121,12 @@ namespace TypeCheckerLib
 
         public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode)
         {
-            return null;
+            return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
         public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode)
         {
-            return null;
+            return new TypeNode(TypeEnum.Real, 0, 0);
         }
 
         /// 

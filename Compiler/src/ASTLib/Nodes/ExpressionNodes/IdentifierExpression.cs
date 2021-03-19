@@ -13,6 +13,7 @@ namespace ASTLib.Nodes.ExpressionNodes
         public IdentifierExpression(String id, int line, int letter) : base(null, line, letter) 
         {
             Id = id;
+            Reference = -1;
         }
 
     }
