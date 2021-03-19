@@ -124,7 +124,7 @@ namespace TypeCheckerLib.Tests
             
             TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode); 
             
-            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
             # endregion
  
@@ -169,7 +169,7 @@ namespace TypeCheckerLib.Tests
             
             TypeNode actualTypeNode = typeChecker.Dispatch(funcCallExpr); 
             
-            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);        
         }
             # endregion
 
@@ -215,11 +215,53 @@ namespace TypeCheckerLib.Tests
             
             TypeNode actualTypeNode = typeChecker.Dispatch(idExpressionNode); 
             
-            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);        
         }
             # endregion
 
             # region IntegerLiteralExpression
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIntegerLiteralExpression_CorrectVisitMethodCalled()
+        {
+            IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
+            bool visitIntegerLiteralWasCalled = false;
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(exp => visitIntegerLiteralWasCalled = true));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(intLiteralExpression); 
+            
+            Assert.IsTrue(visitIntegerLiteralWasCalled);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIntegerLiteralExpression_CorrectNodePassedToVisit()
+        {
+            IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            IntegerLiteralExpression actualNode = null;
+            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(intLitNode => actualNode = intLitNode));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(intLiteralExpression); 
+            
+            Assert.AreEqual(intLiteralExpression, actualNode);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIntegerLiteralExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
+
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitIntegerLiteral(Arg.Any<IntegerLiteralExpression>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            TypeNode actualTypeNode = typeChecker.Dispatch(intLiteralExpression); 
+            
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
+        }
             # endregion
             
             # region RealLiteralExpression
