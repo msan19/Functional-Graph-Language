@@ -9,7 +9,6 @@ namespace InterpreterLib.Helpers
 {
     public class FunctionHelper : IFunctionHelper
     {
-
         public IInterpreter Interpreter { get; set; }
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)
@@ -28,11 +27,6 @@ namespace InterpreterLib.Helpers
         }
 
         public int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public double FunctionCallReal(FunctionCallExpression node, List<Object> parameters)
         {
             throw new NotImplementedException();
         }

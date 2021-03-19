@@ -42,7 +42,11 @@ namespace InterpreterLib
 
         public int DispatchFunction(ExpressionNode node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            return node switch
+            {
+                FunctionCallExpression e => _functionHelper.FunctionCallFunction(e, parameters),
+                _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
+            };
         }
     }
 }
