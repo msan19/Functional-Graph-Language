@@ -37,6 +37,8 @@ namespace TypeCheckerLib
                     return _helper.VisitFunctionCall(n);
                 case IdentifierExpression n:
                     return _helper.VisitIdentifier(n);
+                case IntegerLiteralExpression n:
+                    return _helper.VisitIntegerLiteral(n);
                 default:
                     throw new ArgumentException("The argument was not a recognized ExpressionNode");
                     
