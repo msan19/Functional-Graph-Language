@@ -49,17 +49,69 @@ namespace TypeCheckerLib
         {
             // Find list of functions
             // Get Type 
-            // Children
+                // Children
             // Expression used to call 
             // No Casting 
             // Return its type (int/real/function)
             // Depending on what function it matches 
 
-            var func = _functions[funcCallExpNode.References[0]];
-            if (TypeChecker.Dispatch(funcCallExpNode.Children[0]).Type == func.FunctionType.ParameterTypes[0].Type)
-                return func.FunctionType.ReturnType;
+            var matches = GetMatchingFunction(funcCallExpNode);
+            if (matches.Count != 1)
+                throw new Exception("No overload matched");
 
-            return null;
+            return matches[0].FunctionType.ReturnType;
+        }
+
+        private List<FunctionNode> GetMatchingFunction(FunctionCallExpression funcCallExpNode)
+        {
+            List<FunctionNode> matches = new List<FunctionNode>();
+            foreach (var i in funcCallExpNode.References)
+            {
+                var func = _functions[i];
+                if (FunctionIsMatch(func.FunctionType.ParameterTypes, funcCallExpNode))
+                    matches.Add(func);
+            }
+
+            return matches;
+        }
+
+        private bool FunctionIsMatch(List<TypeNode> parameterTypes, FunctionCallExpression funcCallExpNode)
+        {
+            for (int i = 0; i < parameterTypes.Count; i++)
+            {
+                var typeNode = TypeChecker.Dispatch(funcCallExpNode.Children[i]);
+                if(!TypesAreEqual(typeNode, parameterTypes[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool TypesAreEqual(TypeNode a, TypeNode b)
+        {
+            if (a.GetType() == typeof(FunctionTypeNode))
+            {
+                if (b.GetType() == typeof(FunctionTypeNode))
+                   return IsFunctionTypesEqual((FunctionTypeNode)a, (FunctionTypeNode)b);
+                else
+                    return false;
+            }
+
+            return a.Type == b.Type;
+        }
+
+        private bool IsFunctionTypesEqual(FunctionTypeNode a, FunctionTypeNode b)
+        {
+            if (!TypesAreEqual(a.ReturnType, b.ReturnType))
+                return false;
+            if (a.ParameterTypes.Count != b.ParameterTypes.Count)
+                return false;
+
+            for (int i = 0; i < a.ParameterTypes.Count; i++)
+            {
+                if (!TypesAreEqual(a.ParameterTypes[i], b.ParameterTypes[i]))
+                    return false;
+            }
+            return true;
         }
 
         public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)

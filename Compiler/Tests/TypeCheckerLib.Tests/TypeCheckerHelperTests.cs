@@ -344,11 +344,9 @@ namespace TypeCheckerLib.Tests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.References = new List<int>() { 1 };
-
             var ast = GetAst();
             ast.Functions.Add(new FunctionNode("id", 0, null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
             ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real })), 0, 0));
-
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
             TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
@@ -369,11 +367,9 @@ namespace TypeCheckerLib.Tests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.References = new List<int>() { 1 };
-
             var ast = GetAst();
             ast.Functions.Add(new FunctionNode("id", 0, null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
             ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer })), 0, 0));
-
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
             TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
