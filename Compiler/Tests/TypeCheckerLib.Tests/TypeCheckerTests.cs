@@ -1,9 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using FluentAssertions;
 using NSubstitute;
 
 namespace TypeCheckerLib.Tests
@@ -71,10 +74,60 @@ namespace TypeCheckerLib.Tests
 
             Assert.AreEqual(expectedNumVisitFunctionCalls, actualNumVisitFunctionCalls);
         }
-        
         # endregion
         
         # region Dispatch
+
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_correctVisitMethodCalled()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
+            bool visitBinaryNumOpWasCalled = false;
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(exp => visitBinaryNumOpWasCalled = true));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(multExpNode); 
+            
+            Assert.IsTrue(visitBinaryNumOpWasCalled);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_correctNodePassedOntoVisit()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            IBinaryNumberOperator actualNode = null;
+            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(expNode => actualNode = expNode));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(multExpNode); 
+            
+            Assert.AreEqual(multExpNode, actualNode);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIBinaryNumberOperator_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitBinaryNumOp(Arg.Any<IBinaryNumberOperator>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode); 
+            
+            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+        }
+        
+ 
+
         # endregion
 
     }
