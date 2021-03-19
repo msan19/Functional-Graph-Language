@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
@@ -13,6 +14,8 @@ namespace InterpreterLib.Interfaces
         int DispatchInt(ExpressionNode node, List<object> parameters);
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
+
+        object Dispatch(ExpressionNode node, List<object> parameters, TypeNode typeNode);
 
         List<double> Interpret(AST node);
 

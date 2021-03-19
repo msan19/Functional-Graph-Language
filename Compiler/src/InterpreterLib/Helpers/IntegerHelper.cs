@@ -97,7 +97,17 @@ namespace InterpreterLib.Helpers
 
         public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            List<object> listOfParam = new List<object>();
+
+            FunctionNode funcNode = _root.Functions[node.References[0]];
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                TypeNode parameterType = funcNode.FunctionType.ParameterTypes[i];
+                listOfParam.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+            }
+
+            return Interpreter.FunctionInteger(funcNode, listOfParam);
         }
     }
 }
