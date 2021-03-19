@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using ASTLib;
+using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib
@@ -27,7 +29,19 @@ namespace TypeCheckerLib
 
         public TypeNode Dispatch(ExpressionNode node)
         {
-            throw new NotImplementedException();
+            switch (node)
+            {
+                case IBinaryNumberOperator n:
+                    return _helper.VisitBinaryNumOp(n);
+                case FunctionCallExpression n:
+                    return _helper.VisitFunctionCall(n);
+                case IdentifierExpression n:
+                    return _helper.VisitIdentifier(n);
+                default:
+                    throw new ArgumentException("The argument was not a recognized ExpressionNode");
+                    
+            }
         }
+
     }
 }

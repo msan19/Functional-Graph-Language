@@ -5,13 +5,20 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using System;
+using System.Collections.Generic;
 
 namespace TypeCheckerLib
 {
     public class TypeHelper : ITypeHelper
     {
         public ITypeChecker TypeChecker { get; set; }
-        
+        private List<FunctionNode> _functions;
+
+        public void SetAstRoot(AST root)
+        {
+            _functions = root.Functions;
+        }
+
         public void VisitExport(ExportNode exportNode)
         {
 
@@ -37,8 +44,21 @@ namespace TypeCheckerLib
             }
         }
 
+        // func(((real) -> real) -> int
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
+            // Find list of functions
+            // Get Type 
+            // Children
+            // Expression used to call 
+            // No Casting 
+            // Return its type (int/real/function)
+            // Depending on what function it matches 
+
+            var func = _functions[funcCallExpNode.References[0]];
+            if (TypeChecker.Dispatch(funcCallExpNode.Children[0]).Type == func.FunctionType.ParameterTypes[0].Type)
+                return func.FunctionType.ReturnType;
+
             return null;
         }
 
