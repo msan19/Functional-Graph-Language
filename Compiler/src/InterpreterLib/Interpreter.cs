@@ -38,10 +38,14 @@ namespace InterpreterLib
         {
             return node switch
             {
+                IntegerLiteralExpression e  => _integerHelper.LiteralInteger(e, parameters),
+                IdentifierExpression e      => _integerHelper.IdentifierInteger(e, parameters),
                 SubtractionExpression e     => _integerHelper.SubtractionInteger(e, parameters),
                 AdditionExpression e        => _integerHelper.AdditionInteger(e, parameters),
                 MultiplicationExpression e  => _integerHelper.MultiplicationInteger(e, parameters),
                 DivisionExpression e        => _integerHelper.DivisionInteger(e, parameters),
+                ModuloExpression e          => _integerHelper.ModuloInteger(e, parameters),
+                AbsoluteValueExpression e   => _integerHelper.AbsoluteInteger(e, parameters),
                 FunctionCallExpression e    => _integerHelper.FunctionCallInteger(e, parameters),
                 _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
             };
@@ -49,7 +53,21 @@ namespace InterpreterLib
 
         public double DispatchReal(ExpressionNode node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            return node switch
+            {
+                PowerExpression e           => _realHelper.PowerReal(e, parameters),
+                CastFromIntegerExpression e => _realHelper.CastIntegerToReal(e, parameters),
+                RealLiteralExpression e     => _realHelper.LiteralReal(e, parameters),
+                IdentifierExpression e      => _realHelper.IdentifierReal(e, parameters),
+                SubtractionExpression e     => _realHelper.SubtractionReal(e, parameters),
+                AdditionExpression e        => _realHelper.AdditionReal(e, parameters),
+                MultiplicationExpression e  => _realHelper.MultiplicationReal(e, parameters),
+                DivisionExpression e        => _realHelper.DivisionReal(e, parameters),
+                ModuloExpression e          => _realHelper.ModuloReal(e, parameters),
+                AbsoluteValueExpression e   => _realHelper.AbsoluteReal(e, parameters),
+                FunctionCallExpression e    => _realHelper.FunctionCallReal(e, parameters),
+                _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
+            };
         }
 
         public int DispatchFunction(ExpressionNode node, List<Object> parameters)
