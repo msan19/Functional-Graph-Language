@@ -14,19 +14,14 @@ namespace InterpreterLib.Helpers
 
         public IInterpreter Interpreter { get; set; }
 
-        private readonly AST _root;
+        private AST _root;
 
-        public IntegerHelper(AST root)
+        public void SetASTRoot(AST root)
         {
             _root = root;
         }
 
-        public int FunctionInteger(FunctionNode node, List<Object> parameters)
-        {
-            return ConditionInteger(node.Conditions[0], parameters);  
-        }
-
-        private int ConditionInteger(ConditionNode node, List<Object> parameters)
+        public int ConditionInteger(ConditionNode node, List<Object> parameters)
         {
             return Interpreter.DispatchInt(node.ReturnExpression, parameters);
         }
@@ -68,7 +63,12 @@ namespace InterpreterLib.Helpers
             int leftOperand = Interpreter.DispatchInt(node.Children[0], parameters);
             int rightOperand = Interpreter.DispatchInt(node.Children[1], parameters);
 
-            return leftOperand % rightOperand;
+            return ModuloCalculation(leftOperand, rightOperand);
+        }
+
+        private int ModuloCalculation(int leftOperand, int rightOperand)
+        {
+            return leftOperand - rightOperand * leftOperand / rightOperand;
         }
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
@@ -97,8 +97,17 @@ namespace InterpreterLib.Helpers
 
         public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
-        }
+            List<object> listOfParam = new List<object>();
 
+            FunctionNode funcNode = _root.Functions[node.References[0]];
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                TypeNode parameterType = funcNode.FunctionType.ParameterTypes[i];
+                listOfParam.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+            }
+
+            return Interpreter.FunctionInteger(funcNode, listOfParam);
+        }
     }
 }

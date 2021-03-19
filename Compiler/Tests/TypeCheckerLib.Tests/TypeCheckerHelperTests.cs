@@ -334,6 +334,7 @@ namespace TypeCheckerLib.Tests
             Assert.AreEqual(expectedFuncInput, res.ParameterTypes[0].Type);
         }
 
+        // func(((real) -> real) -> int
         [TestMethod]
         public void FunctionCall_PerfectMatchFunctionInput_IntType()
         {
@@ -426,6 +427,45 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Identifier
+        // Global
+        // G(F)
+        // Function             -> Int
+        // Function             -> Real
+        // Function             -> Function
+        // No Function          -> Throw Error
+        // Multiple Functions   -> Throw Error
+
+        // Local
+        // G(x, F) = x + F(2)
+        // Function Parameter -> Int
+        // Function Parameter -> Real
+        // Function Parameter -> Function
+        // No Parameter found -> Throw Error
+
+        // Function Parameter -> Int
+        [TestMethod]
+        public void Identifier_NoMatchFunctionInput_IntType()
+        {
+            TypeEnum expected = TypeEnum.Integer;
+
+            IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
+
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }, new List<string>(){ "x" }));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            var res = typeHelper.VisitIdentifier(input1).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private FunctionNode GetFunctionNodeWithParameters(string id, int index, TypeEnum returnType, List<TypeEnum> inputTypes, List<string> parameterIds)
+        {
+            var functType = GetFunctionType(returnType, inputTypes);
+            return new FunctionNode(id, index, null, parameterIds, functType, 0, 0);
+        }
         #endregion
 
         #region Integer 

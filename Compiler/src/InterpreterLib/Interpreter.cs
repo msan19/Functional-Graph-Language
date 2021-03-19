@@ -4,6 +4,7 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 
@@ -78,6 +79,32 @@ namespace InterpreterLib
                 FunctionCallExpression e => _functionHelper.FunctionCallFunction(e, parameters),
                 _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
             };
+        }
+
+        public object Dispatch(ExpressionNode node, List<object> parameters, TypeNode typeNode)
+        {
+            return typeNode.Type switch
+            {
+                TypeEnum.Integer => DispatchInt(node, parameters),
+                TypeEnum.Real => DispatchReal(node, parameters),
+                TypeEnum.Function => DispatchFunction(node, parameters),
+                _ => throw new Exception("no type")
+            };
+        }
+
+        public int FunctionInteger(FunctionNode node, List<Object> parameters)
+        {
+            return _integerHelper.ConditionInteger(node.Conditions[0], parameters);
+        }
+
+        public double FunctionReal(FunctionNode node, List<object> parameters)
+        {
+            return _realHelper.ConditionReal(node.Conditions[0], parameters);
+        }
+
+        public int FunctionFunction(FunctionNode node, List<Object> parameters)
+        {
+            return _functionHelper.ConditionFunction(node.Conditions[0], parameters);
         }
     }
 }

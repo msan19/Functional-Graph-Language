@@ -7,9 +7,9 @@ namespace InterpreterLib.Interfaces
 {
     public interface IFunctionHelper
     {
-        public IInterpreter Interpreter { get; set; }
+        IInterpreter Interpreter { get; set; }
 
-        int FunctionFunction(FunctionNode node, List<Object> parameters);
+        int ConditionFunction(ConditionNode node, List<Object> parameters);
 
         int IdentifierFunction(IdentifierExpression node, List<Object> parameters);
 

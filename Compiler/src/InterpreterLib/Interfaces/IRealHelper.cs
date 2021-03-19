@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -9,9 +10,11 @@ namespace InterpreterLib.Interfaces
     {
         IInterpreter Interpreter { get; set; }
 
+        public void SetASTRoot(AST root);
+
         double ExportReal(ExportNode node, List<object> parameters);
 
-        double FunctionReal(FunctionNode node, List<object> parameters);
+        double ConditionReal(ConditionNode node, List<object> parameters);
 
         double AdditionReal(AdditionExpression node, List<object> parameters);
 

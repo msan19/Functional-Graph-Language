@@ -13,6 +13,7 @@ namespace TypeCheckerLib
     {
         public ITypeChecker TypeChecker { get; set; }
         private List<FunctionNode> _functions;
+        private int _currentFunction;
 
         public void SetAstRoot(AST root)
         {
@@ -26,7 +27,7 @@ namespace TypeCheckerLib
 
         public void VisitFunction(FunctionNode functionNode)
         {
-
+            //_currentFunction = functionNode.Index;
         }
 
         public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
@@ -44,25 +45,16 @@ namespace TypeCheckerLib
             }
         }
 
-        // func(((real) -> real) -> int
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
-            // Find list of functions
-            // Get Type 
-                // Children
-            // Expression used to call 
-            // No Casting 
-            // Return its type (int/real/function)
-            // Depending on what function it matches 
-
-            var matches = GetMatchingFunction(funcCallExpNode);
+            var matches = GetMatchingFunctions(funcCallExpNode);
             if (matches.Count != 1)
                 throw new Exception("No overload matched");
 
             return matches[0].FunctionType.ReturnType;
         }
 
-        private List<FunctionNode> GetMatchingFunction(FunctionCallExpression funcCallExpNode)
+        private List<FunctionNode> GetMatchingFunctions(FunctionCallExpression funcCallExpNode)
         {
             List<FunctionNode> matches = new List<FunctionNode>();
             foreach (var i in funcCallExpNode.References)
@@ -116,6 +108,21 @@ namespace TypeCheckerLib
 
         public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)
         {
+            // Get current Function
+            // Get Parameter index
+            // Return Parameter type
+
+            // TODO: This works, but plz remove :D
+            var func = _functions[_currentFunction];
+            var index = -1; ;
+            for (int i = 0; i < func.ParameterIdentifiers.Count; i++)
+            {
+                string id = func.ParameterIdentifiers[i];
+                if (id.Equals(idExpressionNode.Id))
+                    index = i;
+            }
+
+            return func.FunctionType.ParameterTypes[index];
             return null;
         }
 
