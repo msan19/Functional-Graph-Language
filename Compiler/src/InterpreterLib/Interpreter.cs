@@ -61,5 +61,20 @@ namespace InterpreterLib
                 _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
             };
         }
+
+        public int FunctionInteger(FunctionNode node, List<Object> parameters)
+        {
+            return _integerHelper.ConditionInteger(node.Conditions[0], parameters);
+        }
+
+        public double FunctionReal(FunctionNode node, List<object> parameters)
+        {
+            return _realHelper.ConditionReal(node.Conditions[0], parameters);
+        }
+
+        public int FunctionFunction(FunctionNode node, List<Object> parameters)
+        {
+            return _functionHelper.ConditionFunction(node.Conditions[0], parameters);
+        }
     }
 }

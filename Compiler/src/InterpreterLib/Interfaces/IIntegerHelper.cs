@@ -12,9 +12,9 @@ namespace InterpreterLib.Interfaces
 
         IInterpreter Interpreter { get; set; }
 
-        void SetAstRoot(AST root);
+        void SetASTRoot(AST root);
 
-        int FunctionInteger(FunctionNode node, List<Object> parameters);
+        int ConditionInteger(ConditionNode node, List<Object> parameters);
 
         int AdditionInteger(AdditionExpression node, List<Object> parameters);
 

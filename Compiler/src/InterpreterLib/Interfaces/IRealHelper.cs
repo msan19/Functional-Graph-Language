@@ -14,7 +14,7 @@ namespace InterpreterLib.Interfaces
 
         double ExportReal(ExportNode node, List<object> parameters);
 
-        double FunctionReal(FunctionNode node, List<object> parameters);
+        double ConditionReal(ConditionNode node, List<object> parameters);
 
         double AdditionReal(AdditionExpression node, List<object> parameters);
 

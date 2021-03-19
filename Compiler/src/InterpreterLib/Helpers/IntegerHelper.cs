@@ -16,7 +16,7 @@ namespace InterpreterLib.Helpers
 
         private AST _root;
 
-        public void SetAstRoot(AST root)
+        public void SetASTRoot(AST root)
         {
             _root = root;
         }
