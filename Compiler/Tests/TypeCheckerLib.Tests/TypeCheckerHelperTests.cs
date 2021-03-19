@@ -11,6 +11,12 @@ namespace TypeCheckerLib.Tests
     [TestClass]
     public class TypeCheckerHelperTests
     {
+        #region Export
+        #endregion
+
+        #region Function
+        #endregion
+
         #region Binary Num Operator
         // Int Real -> Cast Node
         // Int Real -> Append Int to Cast Node
@@ -142,5 +148,18 @@ namespace TypeCheckerLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
+
+        #region Function Call
+        #endregion
+
+        #region Identifier
+        #endregion
+
+        #region Integer 
+        #endregion
+
+        #region Real 
+        #endregion
+
     }
 }
