@@ -173,6 +173,58 @@ namespace TypeCheckerLib.Tests
         }
             # endregion
 
+            
+            # region IdentifierExpression
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIdentifierExpression_CorrectVisitMethodCalled()
+        {
+            IdentifierExpression idExpressionNode = new IdentifierExpression("i", 1, 1);
+            bool visitIdentifierWasCalled = false;
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(exp => visitIdentifierWasCalled = true));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(idExpressionNode); 
+            
+            Assert.IsTrue(visitIdentifierWasCalled);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIdentifierExpression_CorrectNodePassedToVisit()
+        {
+            IdentifierExpression idExpressionNode = new IdentifierExpression("i", 1, 1);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            IdentifierExpression actualNode = null;
+            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(expNode => actualNode = expNode));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            typeChecker.Dispatch(idExpressionNode); 
+            
+            Assert.AreEqual(idExpressionNode, actualNode);
+        }
+        
+        [TestMethod]
+        public void Dispatch_ExpressionNodeIsIdentifierExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IdentifierExpression idExpressionNode = new IdentifierExpression("i", 1, 1);
+
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitIdentifier(Arg.Any<IdentifierExpression>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            
+            TypeNode actualTypeNode = typeChecker.Dispatch(idExpressionNode); 
+            
+            expectedTypeNode.Should().BeEquivalentTo(actualTypeNode);
+        }
+            # endregion
+
+            # region IntegerLiteralExpression
+            # endregion
+            
+            # region RealLiteralExpression
+            # endregion
+            
         # endregion
 
     }
