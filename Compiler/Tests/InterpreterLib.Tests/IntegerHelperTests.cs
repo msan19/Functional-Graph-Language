@@ -12,12 +12,36 @@ using NSubstitute;
 namespace InterpreterLib.Tests
 {
     [TestClass]
-    public class IntergerlHelperTests
+    public class IntegerlHelperTests
     {
+
+        #region FunctionInteger
+        [DataRow(2, 2)]
+        [TestMethod]
+        public void FunctionInteger_Integer_ReturnsCorrectResult(int input, int expected)
+        {
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
+            ConditionNode conditionNode = new ConditionNode(intLit, 1, 1);
+            FunctionNode functionNode = new FunctionNode(null, 1, conditionNode, null,
+                                                            new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), null, 1,1), 1,1);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
+            AST root = new AST(null, null, 1, 1);
+            IntegerHelper integerHelper = new IntegerHelper(root)
+            {
+                Interpreter = parent
+            };
+
+            int res = integerHelper.FunctionInteger(functionNode, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
         #region AdditionInteger
         [DataRow(2, 2, 4)]
         [TestMethod]
-        public void AdditionInteger_TwoIntegers_Correct(int input1, int input2, int expected)
+        public void AdditionInteger_TwoIntegers_ReturnsCorrectResultOfAddition(int input1, int input2, int expected)
         {
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
@@ -42,7 +66,7 @@ namespace InterpreterLib.Tests
         [DataRow(10, 8, 2)]
         [DataRow(8, 10, -2)]
         [TestMethod]
-        public void SubtractionInteger_TwoIntegers_Correct(int input1, int input2, int expected)
+        public void SubtractionInteger_TwoIntegers_ReturnsCorrectResultOfSubtraction(int input1, int input2, int expected)
         {
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
@@ -62,13 +86,12 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-
         #region MultiplicationInteger
         [DataRow(2, 2, 4)]
         [DataRow(10, 8, 80)]
         [DataRow(-2, 2, -4)]
         [TestMethod]
-        public void MultiplicationInteger_TwoIntegers_Correct(int input1, int input2, int expected)
+        public void MultiplicationInteger_TwoIntegers_ReturnsCorrectResultOfMultiplication(int input1, int input2, int expected)
         {
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
@@ -92,7 +115,7 @@ namespace InterpreterLib.Tests
         [DataRow(2, 2, 1)]
         [DataRow(8, 2, 4)]
         [TestMethod]
-        public void DivisionInteger_TwoIntegers_Correct(int input1, int input2, int expected)
+        public void DivisionInteger_TwoIntegers_ReturnsCorrectResultOfDivision(int input1, int input2, int expected)
         {
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
@@ -116,7 +139,7 @@ namespace InterpreterLib.Tests
         [DataRow(2, 2, 0)]
         [DataRow(2, 8, 2)]
         [TestMethod]
-        public void ModuloInteger_TwoIntegers_Correct(int input1, int input2, int expected)
+        public void ModuloInteger_TwoIntegers_ReturnsCorrectResultOfModulo(int input1, int input2, int expected)
         {
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
@@ -139,13 +162,13 @@ namespace InterpreterLib.Tests
         #region AbsoluteInteger
         [DataRow(-2, 2)]
         [TestMethod]
-        public void AbsoluteInteger_Integer_AbsoluteValue(int input1, int expected)
+        public void AbsoluteInteger_Integer_ReturnsAbsoluteValue(int input, int expected)
         {
-            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
-            AbsoluteValueExpression absExpr = new AbsoluteValueExpression(intLit1, 1, 1);
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
+            AbsoluteValueExpression absExpr = new AbsoluteValueExpression(intLit, 1, 1);
             absExpr.Type = TypeEnum.Integer;
             IInterpreter parent = Substitute.For<IInterpreter>();
-            parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
+            parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             AST root = new AST(null, null, 1, 1);
             IntegerHelper integerHelper = new IntegerHelper(root)
             {
@@ -158,6 +181,40 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
+        #region LiteralInteger
+        [DataRow(2, 2)]
+        [TestMethod]
+        public void LiteralInteger_GivenInteger_ReturnsIntegerLiteral(int input, int expected)
+        {
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
+            AST root = new AST(null, null, 1, 1);
+            IntegerHelper integerHelper = new IntegerHelper(root)
+            {
+                Interpreter = parent
+            };
 
+            int res = integerHelper.LiteralInteger(intLit, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
+        #region IdentifierInteger
+        [TestMethod]
+        public void IdentifierInteger_IdentifierNode_ReturnsCorrectResult()
+        {
+            IdentifierExpression identifierExpr = new IdentifierExpression("This is a test", 1, 1);
+            identifierExpr.Reference = 0;
+            List<object> parameters = new List<object> { 0 };
+            AST root = new AST(null, null, 1, 1);
+            IntegerHelper integerHelper = new IntegerHelper(root);
+
+            int res = integerHelper.IdentifierInteger(identifierExpr, parameters);
+
+            Assert.AreEqual(parameters[0], res);
+        }
+        #endregion
     }
 }

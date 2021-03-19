@@ -1,4 +1,5 @@
 ﻿using ASTLib.Interfaces;
+using ASTLib.Nodes.TypeNodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace ASTLib.Nodes.ExpressionNodes
     public class IntegerLiteralExpression : ExpressionNode, INonIdentifierExpression
     {
         public int Value { get; }
+        public FunctionTypeNode Type { get; set; }
 
         public IntegerLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
         {
