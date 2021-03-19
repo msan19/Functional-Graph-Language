@@ -44,6 +44,7 @@ namespace TypeCheckerLib
             }
         }
 
+        // func(((real) -> real) -> int
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
             // Find list of functions

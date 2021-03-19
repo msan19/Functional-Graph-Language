@@ -87,7 +87,7 @@ namespace InterpreterLib.Helpers
         
         public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            return (int)parameters[node.Reference];
         }
 
         public int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters)
