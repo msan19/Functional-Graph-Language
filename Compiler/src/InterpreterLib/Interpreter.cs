@@ -85,9 +85,9 @@ namespace InterpreterLib
         {
             return typeNode.Type switch
             {
-                TypeEnum.Integer => DispatchInt(node, parameters),
-                TypeEnum.Real => DispatchReal(node, parameters),
-                TypeEnum.Function => DispatchFunction(node, parameters),
+                TypeEnum.Integer    => (object) DispatchInt(node, parameters),
+                TypeEnum.Real       => (object) DispatchReal(node, parameters),
+                TypeEnum.Function   => (object) DispatchFunction(node, parameters),
                 _ => throw new Exception("no type")
             };
         }
