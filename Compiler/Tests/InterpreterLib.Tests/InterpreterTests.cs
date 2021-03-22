@@ -1302,8 +1302,13 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
+<<<<<<< HEAD
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Integer);
 
+=======
+            int res = (int) interpreter.Dispatch(input1, input2, TypeEnum.Integer);
+            
+>>>>>>> de10097f8226ae65cf11d0c6273f254a04ecee13
             Assert.AreEqual(expected, res);
         }
         #endregion
@@ -1356,7 +1361,11 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
+<<<<<<< HEAD
             double res = (double)interpreter.Dispatch(input1, input2, TypeEnum.Real);
+=======
+            double res = (double) interpreter.Dispatch(input1, input2, TypeEnum.Real);
+>>>>>>> de10097f8226ae65cf11d0c6273f254a04ecee13
 
             Assert.AreEqual(expected, res);
         }
@@ -1410,7 +1419,11 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
+<<<<<<< HEAD
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Function);
+=======
+            int res = (int) interpreter.Dispatch(input1, input2, TypeEnum.Function);
+>>>>>>> de10097f8226ae65cf11d0c6273f254a04ecee13
 
             Assert.AreEqual(expected, res);
         }
