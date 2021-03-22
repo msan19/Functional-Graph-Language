@@ -63,9 +63,9 @@ namespace InterpreterLib
             };
         }
 
-        public object Dispatch(ExpressionNode node, List<object> parameters, TypeNode typeNode)
+        public object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type)
         {
-            return typeNode.Type switch
+            return type switch
             {
                 TypeEnum.Integer => DispatchInt(node, parameters),
                 TypeEnum.Real => DispatchReal(node, parameters),

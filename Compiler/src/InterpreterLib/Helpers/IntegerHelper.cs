@@ -103,7 +103,7 @@ namespace InterpreterLib.Helpers
 
             for (int i = 0; i < node.Children.Count; i++)
             {
-                TypeNode parameterType = funcNode.FunctionType.ParameterTypes[i];
+                TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
                 listOfParam.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
             }
 

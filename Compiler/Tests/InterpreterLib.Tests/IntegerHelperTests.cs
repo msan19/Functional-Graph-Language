@@ -207,7 +207,6 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-
         #region FunctionCallInteger
         [DataRow(2, 2)]
         [TestMethod]
@@ -215,6 +214,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("This is a test", null, 1, 1);
+            List<object> parameters = new List<object> { 0 };
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = new IntegerHelper()
@@ -222,7 +222,7 @@ namespace InterpreterLib.Tests
                 Interpreter = parent
             };
 
-            int res = integerHelper.FunctionCallInteger(funcCallExpr, new List<object>());
+            int res = integerHelper.FunctionCallInteger(funcCallExpr, parameters);
 
             Assert.AreEqual(expected, res);
 
