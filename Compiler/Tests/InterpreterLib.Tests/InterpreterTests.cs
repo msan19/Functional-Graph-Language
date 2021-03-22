@@ -1267,7 +1267,7 @@ namespace InterpreterLib.Tests
             List<Object> res = null;
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
-            interpreter.Dispatch(input1, expected, new TypeNode(TypeEnum.Integer, 0, 0));
+            interpreter.Dispatch(input1, expected, TypeEnum.Integer);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1285,7 +1285,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression res = null;
             ihelper.LiteralInteger(Arg.Do<IntegerLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
-            interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Integer, 0, 0));
+            interpreter.Dispatch(input1, input2, TypeEnum.Integer);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1302,7 +1302,7 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = (int) interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Integer, 0, 0));
+            int res = (int) interpreter.Dispatch(input1, input2, TypeEnum.Integer);
             
             Assert.AreEqual(expected, res);
         }
@@ -1321,7 +1321,7 @@ namespace InterpreterLib.Tests
             List<Object> res = null;
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
-            interpreter.Dispatch(input1, expected, new TypeNode(TypeEnum.Real, 0, 0));
+            interpreter.Dispatch(input1, expected, TypeEnum.Real);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1339,7 +1339,7 @@ namespace InterpreterLib.Tests
             AdditionExpression res = null;
             rhelper.AdditionReal(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
-            interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Real, 0, 0));
+            interpreter.Dispatch(input1, input2, TypeEnum.Real);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1356,7 +1356,7 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            double res = (double) interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Real, 0, 0));
+            double res = (double) interpreter.Dispatch(input1, input2, TypeEnum.Real);
 
             Assert.AreEqual(expected, res);
         }
@@ -1375,7 +1375,7 @@ namespace InterpreterLib.Tests
             List<Object> res = null;
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
-            interpreter.Dispatch(input1, expected, new TypeNode(TypeEnum.Function, 0, 0));
+            interpreter.Dispatch(input1, expected, TypeEnum.Function);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1393,7 +1393,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression res = null;
             fhelper.IdentifierFunction(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
-            interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Function, 0, 0));
+            interpreter.Dispatch(input1, input2, TypeEnum.Function);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -1410,7 +1410,7 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = (int) interpreter.Dispatch(input1, input2, new TypeNode(TypeEnum.Function, 0, 0));
+            int res = (int) interpreter.Dispatch(input1, input2, TypeEnum.Function);
 
             Assert.AreEqual(expected, res);
         }
