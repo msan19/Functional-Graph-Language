@@ -45,6 +45,7 @@ namespace TypeCheckerLib
             }
         }
 
+        // TODO: Match Local Call reference 
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
         {
             var matches = GetMatchingFunctions(funcCallExpNode);
@@ -57,7 +58,7 @@ namespace TypeCheckerLib
         private List<FunctionNode> GetMatchingFunctions(FunctionCallExpression funcCallExpNode)
         {
             List<FunctionNode> matches = new List<FunctionNode>();
-            foreach (var i in funcCallExpNode.References)
+            foreach (var i in funcCallExpNode.GlobalReferences)
             {
                 var func = _functions[i];
                 if (FunctionIsMatch(func.FunctionType.ParameterTypes, funcCallExpNode))

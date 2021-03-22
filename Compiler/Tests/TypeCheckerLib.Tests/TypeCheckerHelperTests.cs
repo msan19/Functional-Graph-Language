@@ -154,6 +154,8 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Function Call
+        // Todo: Remove irrelevant references 
+
         // Function with no input           -> Return Int
         // One perfect match                -> Return Real
         // One perfect one normal matches   -> Return Real
@@ -170,7 +172,7 @@ namespace TypeCheckerLib.Tests
         {
             TypeEnum expected = TypeEnum.Integer;
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
-            input1.References = new List<int>() { 0 };
+            input1.GlobalReferences = new List<int>() { 0 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()));
             TypeHelper typeHelper = new TypeHelper();
@@ -190,7 +192,7 @@ namespace TypeCheckerLib.Tests
                 new IntegerLiteralExpression("0", 0, 0)
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 0 };
+            input1.GlobalReferences = new List<int>() { 0 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
@@ -211,7 +213,7 @@ namespace TypeCheckerLib.Tests
                 new IntegerLiteralExpression("0", 0, 0)
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 0, 1 };
+            input1.GlobalReferences = new List<int>() { 0, 1 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
             ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
@@ -238,7 +240,7 @@ namespace TypeCheckerLib.Tests
                 new RealLiteralExpression("1.1", 0, 0),
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 0, 1 };
+            input1.GlobalReferences = new List<int>() { 0, 1 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()
             {
@@ -268,7 +270,7 @@ namespace TypeCheckerLib.Tests
                 new IntegerLiteralExpression("0", 0, 0)
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 0, 1 };
+            input1.GlobalReferences = new List<int>() { 0, 1 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }));
             ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
@@ -290,7 +292,7 @@ namespace TypeCheckerLib.Tests
                 new IntegerLiteralExpression("0", 0, 0)
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 0 };
+            input1.GlobalReferences = new List<int>() { 0 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
@@ -307,7 +309,7 @@ namespace TypeCheckerLib.Tests
         public void FunctionCall_NoMatch_ThrowError()
         {
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
-            input1.References = new List<int>() { };
+            input1.GlobalReferences = new List<int>() { };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
             TypeHelper typeHelper = new TypeHelper();
@@ -322,7 +324,7 @@ namespace TypeCheckerLib.Tests
             TypeEnum expectedFuncOutput = TypeEnum.Integer;
             TypeEnum expectedFuncInput = TypeEnum.Real;
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
-            input1.References = new List<int>() { 0 };
+            input1.GlobalReferences = new List<int>() { 0 };
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNodeWithFunctionOutput(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }, new List<TypeEnum>()));
             TypeHelper typeHelper = new TypeHelper();
@@ -344,7 +346,7 @@ namespace TypeCheckerLib.Tests
                 new IdentifierExpression("0", 0, 0) { Reference = 0 }
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 1 };
+            input1.GlobalReferences = new List<int>() { 1 };
             var ast = GetAst();
             ast.Functions.Add(new FunctionNode("id", 0, null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
             ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real })), 0, 0));
@@ -367,7 +369,7 @@ namespace TypeCheckerLib.Tests
                 new IdentifierExpression("0", 0, 0) { Reference = 0 }
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
-            input1.References = new List<int>() { 1 };
+            input1.GlobalReferences = new List<int>() { 1 };
             var ast = GetAst();
             ast.Functions.Add(new FunctionNode("id", 0, null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
             ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer })), 0, 0));

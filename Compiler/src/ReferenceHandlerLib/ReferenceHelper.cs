@@ -80,7 +80,7 @@ namespace ReferenceHandlerLib
 
         public void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers)
         {
-            node.References = _functionTable[node.Children.Count + node.Identifier];
+            node.GlobalReferences = _functionTable[node.Children.Count + node.Identifier];
         }
 
 

@@ -15,7 +15,7 @@ namespace InterpreterLib.Interfaces
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
 
-        object Dispatch(ExpressionNode node, List<object> parameters, TypeNode typeNode);
+        object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 
         List<double> Interpret(AST node);
 

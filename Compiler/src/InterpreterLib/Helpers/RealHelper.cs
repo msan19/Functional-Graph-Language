@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using InterpreterLib.Interfaces;
 using System.Linq;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -108,7 +109,21 @@ namespace InterpreterLib.Helpers
 
         public double FunctionCallReal(FunctionCallExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            List<object> funcParameterValues = new List<object>();
+
+            FunctionNode funcNode;
+            if (node.GlobalReferences.Count >= 1)
+                funcNode = _root.Functions[node.GlobalReferences[0]];
+            else
+                funcNode = _root.Functions[Convert.ToInt32(parameters[node.LocalReference])];
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
+                funcParameterValues.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+            }
+
+            return Interpreter.FunctionInteger(funcNode, funcParameterValues);
         }
 
     }
