@@ -113,7 +113,7 @@ namespace InterpreterLib.Helpers
 
             FunctionNode funcNode;
             if (node.GlobalReferences.Count >= 1)
-                funcNode = _root.Functions[node.References[0]];
+                funcNode = _root.Functions[node.GlobalReferences[0]];
             else
                 funcNode = _root.Functions[Convert.ToInt32(parameters[node.LocalReference])];
 
