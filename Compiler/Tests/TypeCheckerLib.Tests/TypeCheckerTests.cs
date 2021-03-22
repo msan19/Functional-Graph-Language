@@ -17,64 +17,65 @@ namespace TypeCheckerLib.Tests
         
         # region CheckTypes
         [TestMethod]
-        public void CheckTypes_TwoExportNodesAndNoFunctionNodes_CalledCorrectNumberOfTimes()
+        public void CheckTypes_NoFunctionNodesAndTwoExportNodes_CalledCorrectNumberOfTimes()
         {
-            int actualNumVisitExportCalls = 0;
-            int expectedNumVisitExportCalls = 2;
-            
-            // Mock type helper
+            int actualNumberOfCallToVisitExport = 0;
+            int expectedNumberOfCallsToVisitExport = 2;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitExport(Arg.Do<ExportNode>(exp => actualNumVisitExportCalls++));
-
+            typeHelper.VisitExport(Arg.Do<ExportNode>(exp => actualNumberOfCallToVisitExport++));
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
-            
-            // Create AST with TwoExportNodesAndNoFunctionNodes
-            FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
-            List<ExportNode> exportNodes = new List<ExportNode>()
-            {
-                new ExportNode(funcCallExpr, 1, 1),
-                new ExportNode(funcCallExpr, 2, 2)
-            };
-            AST ast = new AST(new List<FunctionNode>(), exportNodes, 1, 1);
+            AST ast = CreateAst(0, 2);
 
             typeChecker.CheckTypes(ast);
 
-            Assert.AreEqual(expectedNumVisitExportCalls, actualNumVisitExportCalls);
+            Assert.AreEqual(expectedNumberOfCallsToVisitExport, actualNumberOfCallToVisitExport);
+        }
+
+        [TestMethod]
+        public void CheckTypes_ThreeFunctionNodesAndNoExportNodes_CalledCorrectNumberOfTimes()
+        {
+            int actualNumberOfCallsToVisitFunction = 0;
+            int expectedNumberOfCallsToVisitFunction = 3;
+            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
+            typeHelper.VisitFunction(Arg.Do<FunctionNode>(exp => actualNumberOfCallsToVisitFunction++));
+            ITypeChecker typeChecker = new TypeChecker(typeHelper);
+            AST ast = CreateAst(3, 0);
+
+            typeChecker.CheckTypes(ast);
+
+            Assert.AreEqual(expectedNumberOfCallsToVisitFunction, actualNumberOfCallsToVisitFunction);
         }
         
-        [TestMethod]
-        public void CheckTypes_NoExportNodesAndThreeFunctionNodes_CalledCorrectNumberOfTimes()
+        // Utility methods  
+        private AST CreateAst(int numberOfFunctionNodes, int numberOfExportNodes)
         {
-            int actualNumVisitFunctionCalls = 0;
-            int expectedNumVisitFunctionCalls = 3;
-            
-            // Mock type helper
-            ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitFunction(Arg.Do<FunctionNode>(exp => actualNumVisitFunctionCalls++));
+            List<FunctionNode> functionNodes = new List<FunctionNode>();
+            List<ExportNode> exportNodes = new List<ExportNode>();
 
-            ITypeChecker typeChecker = new TypeChecker(typeHelper);
-            
-            // Create AST with NoExportNodesAndThreeFunctionNodes
-            FunctionCallExpression funcCallExpr = new FunctionCallExpression("g", new List<ExpressionNode>(), 1, 1);
-            FunctionTypeNode funcTypeNode =
-                new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), new List<TypeNode>(), 1, 1);
-            
-            ConditionNode conditionNode = new ConditionNode(funcCallExpr, 1, 1); 
-            
-            List<FunctionNode> funcNodes = new List<FunctionNode>()
-            {
-                new FunctionNode("f1", 1, conditionNode, new List<string>(), funcTypeNode, 1, 1),
-                new FunctionNode("f2", 2, conditionNode, new List<string>(), funcTypeNode, 1, 1),
-                new FunctionNode("f2", 3, conditionNode, new List<string>(), funcTypeNode, 1, 1),
-                
-            };
-            AST ast = new AST(funcNodes, new List<ExportNode>(), 1, 1);
+            functionNodes = CreateFunctionNodes(numberOfFunctionNodes);
+            exportNodes = CreateExportNodes(numberOfExportNodes);
 
-            typeChecker.CheckTypes(ast);
-
-            Assert.AreEqual(expectedNumVisitFunctionCalls, actualNumVisitFunctionCalls);
+            return new AST(functionNodes, exportNodes, 0, 0);
         }
+
+        private List<FunctionNode> CreateFunctionNodes(int numberOfNodes)
+        {
+            List<FunctionNode> functionNodes = new List<FunctionNode>();
+            for (int i = 0; i < numberOfNodes; i++)
+                functionNodes.Add(new FunctionNode("f", 0, null, null, null, 0, 0));
+            return functionNodes;
+        }
+        
+        private List<ExportNode> CreateExportNodes(int numberOfNodes)
+        {
+            List<ExportNode> exportNodes = new List<ExportNode>();
+            for (int i = 0; i < numberOfNodes; i++)
+                exportNodes.Add(new ExportNode(null, 0, 0));
+            return exportNodes;
+        }
+        
         # endregion
+
         
         # region Dispatch
 
@@ -310,6 +311,5 @@ namespace TypeCheckerLib.Tests
             # endregion
             
         # endregion
-
     }
 }

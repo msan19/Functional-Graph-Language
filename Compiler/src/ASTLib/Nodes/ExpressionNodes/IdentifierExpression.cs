@@ -8,6 +8,8 @@ namespace ASTLib.Nodes.ExpressionNodes
     {
         public int Reference { get; set; }
 
+        public bool IsLocal { get; set; }
+
         public string Id { get; }
 
         public IdentifierExpression(String id, int line, int letter) : base(null, line, letter) 
