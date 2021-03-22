@@ -120,7 +120,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -182,7 +182,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -213,7 +213,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 1 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -247,7 +247,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -282,7 +282,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 1 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         [TestMethod]
@@ -316,7 +316,7 @@ namespace ReferenceHandlerLib.Tests
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
-            expected.Should().BeEquivalentTo(input1.References);
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
         #endregion
