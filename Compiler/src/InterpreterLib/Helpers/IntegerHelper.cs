@@ -99,7 +99,7 @@ namespace InterpreterLib.Helpers
         {
             List<object> listOfParam = new List<object>();
 
-            FunctionNode funcNode = _root.Functions[node.References[0]];
+            FunctionNode funcNode = _root.Functions[node.GlobalReferences[0]];
 
             for (int i = 0; i < node.Children.Count; i++)
             {
