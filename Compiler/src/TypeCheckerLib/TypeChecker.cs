@@ -22,9 +22,12 @@ namespace TypeCheckerLib
             _helper.SetAstRoot(root);
             foreach (var exportNode in root.Exports)
                 _helper.VisitExport(exportNode);
-            
-            foreach (var functionNode in root.Functions)
+
+            for (var index = 0; index < root.Functions.Count; index++)
+            {
+                var functionNode = root.Functions[index];
                 _helper.VisitFunction(functionNode);
+            }
         }
 
         public TypeNode Dispatch(ExpressionNode node)
