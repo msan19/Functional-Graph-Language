@@ -8,6 +8,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using FluentAssertions;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -91,12 +92,241 @@ namespace ReferenceHandlerLib.Tests
         }
         #endregion
 
+        #region BuildTable
+        [TestMethod]
+        public void BuildTable_1FunctionNode_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
+            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 0 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesSameFunctionNamesAndSameParameterCount_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
+            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 0 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc1_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
+            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func1", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 0 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc2_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
+            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func2", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 1 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithTwoParams_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers1 = new List<string> { "a", "b" };
+            List<string> parameterIdentifiers2 = new List<string> { "a", "b", "c" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes1 = new List<TypeNode>() { typeNode, typeNode };
+            List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
+            FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
+            FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 0 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithThreeParams_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers1 = new List<string> { "a", "b" };
+            List<string> parameterIdentifiers2 = new List<string> { "a", "b", "c" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes1 = new List<TypeNode>() { typeNode, typeNode };
+            List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
+            FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
+            FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression3 = new IntegerLiteralExpression("3", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2, integerLiteralExpression3 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b", "c" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 1 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndDifferentParameterCount_Correct()
+        {
+            // Setup for BuildTable
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
+            List<string> parameterIdentifiers1 = new List<string> { "a", "b" };
+            List<string> parameterIdentifiers2 = new List<string> { "a", "b", "c" };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<TypeNode> parameterTypes1 = new List<TypeNode>() { typeNode, typeNode };
+            List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
+            FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
+            FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
+            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
+
+            // Setup for VisitFunctionCall
+            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
+            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
+            FunctionCallExpression input1 = new FunctionCallExpression("func1", children, 1, 1);
+            List<string> input2 = new List<string>() { "a", "b" };
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+
+            referenceHelper.BuildTable(functions);
+            referenceHelper.VisitFunctionCall(input1, input2);
+
+            List<int> expected = new List<int>() { 0 };
+            expected.Should().BeEquivalentTo(input1.GlobalReferences);
+        }
+
+        #endregion
+
         #region VisitIdentifier
         [TestMethod]
         public void VisitIdentifier()
         {
             System.Type expected = typeof(IdentifierExpression);
-            IdentifierExpression input1 = new IdentifierExpression("1", 1, 1);
+            IdentifierExpression input1 = new IdentifierExpression("a", 1, 1);
             List<string> input2 = new List<string>() { "a", "b" };
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
@@ -109,26 +339,6 @@ namespace ReferenceHandlerLib.Tests
         }
         #endregion
 
-        #region VisitFunctionCall
-        [TestMethod]
-        public void VisitFunctionCall()
-        {
-            System.Type expected = typeof(FunctionCallExpression);
-            IntegerLiteralExpression integerLiteralExpression1 = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression integerLiteralExpression2 = new IntegerLiteralExpression("2", 1, 1);
-            List<ExpressionNode> children = new List<ExpressionNode>() { integerLiteralExpression1, integerLiteralExpression2 };
-            FunctionCallExpression input1 = new FunctionCallExpression("func1", children, 1,1);
-            List<string> input2 = new List<string>() { "a", "b" };
-            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
-
-            System.Type result = null;
-            parent.Dispatch(Arg.Do<FunctionCallExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
-            referenceHelper.VisitFunctionCall(input1, input2);
-
-            Assert.AreEqual(expected, result);
-        }
-        #endregion
     }
 
 

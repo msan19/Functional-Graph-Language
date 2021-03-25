@@ -33,6 +33,5 @@ namespace InterpreterLib.Interfaces
         int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters);
 
         int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters);
-
     }
 }

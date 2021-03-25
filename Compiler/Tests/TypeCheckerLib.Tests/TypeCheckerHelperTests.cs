@@ -154,6 +154,8 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Function Call
+        // Todo: Remove irrelevant references 
+
         // Function with no input           -> Return Int
         // One perfect match                -> Return Real
         // One perfect one normal matches   -> Return Real

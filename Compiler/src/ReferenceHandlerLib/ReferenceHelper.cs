@@ -15,7 +15,20 @@ namespace ReferenceHandlerLib
 
         public void BuildTable(List<FunctionNode> functions)
         {
-            throw new NotImplementedException();
+            Dictionary<string, List<int>> table = new Dictionary<string, List<int>>();
+            for (int i = 0; i < functions.Count; i++)
+            {
+                string name = functions[i].ParameterIdentifiers.Count + functions[i].Identifier;
+                if (!table.ContainsKey(name))
+                {
+                    table.Add(name, new List<int>() { i });
+                }
+                else
+                {
+                    table[name].Add(i);
+                }
+            }
+            _functionTable = table;
         }
 
         public void VisitExport(ExportNode node)

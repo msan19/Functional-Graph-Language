@@ -313,7 +313,7 @@ namespace InterpreterLib.Tests
         [DataRow(-1, -1.0)]
         [DataRow(0, 0.0)]
         [TestMethod]
-        public void CastIntegerToReal_Real_ReturnsCorrectResult(int input, double expected)
+        public void CastIntegerToReal_Int_ReturnsCorrectResult(int input, double expected)
         {
             IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             CastFromIntegerExpression castExpr = new CastFromIntegerExpression(realLit, 1, 1);
@@ -327,6 +327,20 @@ namespace InterpreterLib.Tests
             double res = realHelper.CastIntegerToReal(castExpr, new List<object>());
 
             Assert.AreEqual(expected, res);
+        }
+        #endregion
+
+        #region FunctionCallReal
+        [TestMethod]
+        public void FunctionCallReal_Real_ReturnsCorrectResult()
+        {
+            // GENERALISER HER SÅ DET VIRKER PÅ EN LISTE MED ALLE TYPER
+            RealLiteralExpression realLit = new RealLiteralExpression("1.0", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { realLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns(1.0);
         }
         #endregion
     }

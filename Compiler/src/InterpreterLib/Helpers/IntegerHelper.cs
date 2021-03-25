@@ -97,17 +97,25 @@ namespace InterpreterLib.Helpers
 
         public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
         {
-            List<object> listOfParam = new List<object>();
+            FunctionNode funcNode;
 
-            FunctionNode funcNode = _root.Functions[node.GlobalReferences[0]];
+            _ = node.LocalReference > 0 ? funcNode = _root.Functions[(int)parameters[node.LocalReference]]
+                                        : funcNode = _root.Functions[node.GlobalReferences[0]];
+
+            return FunctionCallIntegerIterator(node, funcNode, parameters);
+        }
+
+        private int FunctionCallIntegerIterator(FunctionCallExpression node, FunctionNode funcNode, List<Object> parameters)
+        {
+            List<object> listOfFuncParam = new List<object>();
 
             for (int i = 0; i < node.Children.Count; i++)
             {
-                TypeNode parameterType = funcNode.FunctionType.ParameterTypes[i];
-                listOfParam.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+                TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
+                listOfFuncParam.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
             }
 
-            return Interpreter.FunctionInteger(funcNode, listOfParam);
+            return Interpreter.FunctionInteger(funcNode, listOfFuncParam);
         }
     }
 }
