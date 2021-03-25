@@ -267,7 +267,7 @@ namespace TypeCheckerLib.Tests
             
             
             # region RealLiteralExpression
-                    [TestMethod]
+        [TestMethod]
         public void Dispatch_ExpressionNodeIsRealLiteralExpression_CorrectVisitMethodCalled()
         {
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("1.0", 1, 1);

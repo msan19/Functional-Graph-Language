@@ -164,6 +164,9 @@ namespace TypeCheckerLib.Tests
         // One perfect match                        -> Return Function
         // One perfect match with function as input -> Return Int
         // One match with function as input         -> Throw Error
+        
+        // Existence of both local and global reference: Check removal of global refs (multiple)
+        // Existence of both local and global reference: Check removal of local refs
 
         [TestMethod]
         public void FunctionCall_NoChildren_IntegerType()
@@ -379,6 +382,28 @@ namespace TypeCheckerLib.Tests
             var res = typeHelper.VisitFunctionCall(input1).Type;
         }
 
+        // Existence of both local and global reference: Check removal of global refs (multiple)
+        [TestMethod]
+        public void FunctionCall_LocGlob_()
+        {
+            bool globalReferenceRemoved = false; 
+            IdentifierExpression input = new IdentifierExpression("a", 0, 0);
+            
+            var ast = GetAst();
+            var funcTypeDecl = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer});
+            
+            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", 0, TypeEnum.Integer, new List<TypeNode>() {funcTypeDecl},
+                new List<string>() {"a"}));
+            ast.Functions.Add(GetFunctionNodeWithParameters("a", 1, TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            // new FunctionCallExpression()
+            // typeHelper.VisitFunctionCall()
+                
+        }
+        
         private FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
         {
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
@@ -441,7 +466,11 @@ namespace TypeCheckerLib.Tests
         // Function Parameter -> Real
         // Function Parameter -> Function
         // No Parameter found -> Throw Error
-
+        
+        // TODO: EDIT TEST CASEs 
+        // Existence of both local and global reference: Check removal of global refs (multiple)
+        // Existence of both local and global reference: Check removal of local refs
+        
         // Function Parameter -> Int
         [TestMethod]
         public void Identifier_NoMatchFunctionInput_IntType()
@@ -460,12 +489,102 @@ namespace TypeCheckerLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
+        // Function Parameter -> Real
+        [TestMethod]
+        public void VisitIdentifier_IdentifierExpressionInFuncDef_RealType()
+        {
+            TypeEnum expected = TypeEnum.Real;
+
+            IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
+
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            var res = typeHelper.VisitIdentifier(input1).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        // Function Parameter -> Function
+        // Case:
+        //  F: (int -> int) -> int
+        //  F(G) = G(2) + H(1)
+        [TestMethod]
+        public void VisitIdentifier_IdentifierExpressionInFuncDef_FunctionType()
+        {
+            TypeEnum expected = TypeEnum.Function;
+
+            IdentifierExpression input1 = new IdentifierExpression("G", 0, 0);
+
+            var ast = GetAst();
+            var funcTypeDecl = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer});
+
+            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", 0, TypeEnum.Integer, new List<TypeNode>() { funcTypeDecl }, new List<string>(){ "G" }));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            var res = typeHelper.VisitIdentifier(input1).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        // No Parameter found -> Throw Error
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void VisitIdentifier_IdentifierExpressionInFuncDef_NoParameterFoundCausesError()
+        {
+            IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
+
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>(), new List<string>()));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            var res = typeHelper.VisitIdentifier(input1).Type;
+        }
+
+        // TODO: EDIT TEST CASE 'Existence of both local and global reference: Check removal of global refs (multiple)'
+        [TestMethod]
+        public void Identifier_LocGlob_()
+        {
+            bool globalReferenceRemoved = false; 
+            IdentifierExpression input = new IdentifierExpression("a", 0, 0);
+            
+            var ast = GetAst();
+            var funcTypeDecl = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer});
+            
+            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", 0, TypeEnum.Integer, new List<TypeNode>() {funcTypeDecl},
+                new List<string>() {"a"}));
+            ast.Functions.Add(GetFunctionNodeWithParameters("a", 1, TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
+
+            TypeHelper typeHelper = new TypeHelper();
+            typeHelper.SetAstRoot(ast);
+
+            // typeHelper.
+                
+        }
+
+        private FunctionNode GetFunctionNodeWithFunctionInput(string id, int index, TypeEnum returnType, List<TypeNode> inputTypes, List<string> parameterIds)
+        {
+            var returnNode = new TypeNode(returnType, 0, 0);
+            var inputTypeNode = new FunctionTypeNode(returnNode, inputTypes, 0, 0);
+            return new FunctionNode(id, index, null, parameterIds, inputTypeNode, 0, 0);
+        }
 
         private FunctionNode GetFunctionNodeWithParameters(string id, int index, TypeEnum returnType, List<TypeEnum> inputTypes, List<string> parameterIds)
         {
             var functType = GetFunctionType(returnType, inputTypes);
             return new FunctionNode(id, index, null, parameterIds, functType, 0, 0);
         }
+        
+        
+        
         #endregion
 
         #region Integer 
