@@ -113,7 +113,7 @@ namespace InterpreterLib.Tests
             FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetAST(ast);
             FunctionNode res = null;
@@ -137,7 +137,7 @@ namespace InterpreterLib.Tests
             FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetAST(ast);
             FunctionNode res = null;
@@ -185,7 +185,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.LocalReference = -1;
             FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetAST(ast);
             List<object> res = new List<object>();

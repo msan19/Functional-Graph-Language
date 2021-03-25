@@ -30,6 +30,9 @@ namespace InterpreterLib
 
         public List<double> Interpret(AST node)
         {
+            _functionHelper.SetAST(node);
+            _integerHelper.SetASTRoot(node);
+            _realHelper.SetASTRoot(node);
             List<double> results = new List<double>();
             foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<object>()));
             return results;

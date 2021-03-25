@@ -345,7 +345,7 @@ namespace InterpreterLib.Tests
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             FunctionNode res = null;
@@ -369,7 +369,7 @@ namespace InterpreterLib.Tests
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             FunctionNode res = null;
@@ -414,7 +414,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.LocalReference = -1;
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             List<object> res = new List<object>();
