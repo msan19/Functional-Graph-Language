@@ -92,9 +92,7 @@ namespace InterpreterLib.Helpers
 
         public double IdentifierReal(IdentifierExpression node, List<object> parameters)
         {
-            List<double> doubleParameters = new List<double>();
-            foreach (object obj in parameters) doubleParameters.Add(Convert.ToDouble(obj));
-            return doubleParameters[node.Reference];
+            return (double) parameters[node.Reference];
         }
 
         public double LiteralReal(RealLiteralExpression node, List<object> parameters)
@@ -115,7 +113,7 @@ namespace InterpreterLib.Helpers
             if (node.GlobalReferences.Count >= 1)
                 funcNode = _root.Functions[node.GlobalReferences[0]];
             else
-                funcNode = _root.Functions[Convert.ToInt32(parameters[node.LocalReference])];
+                funcNode = _root.Functions[(int)parameters[node.LocalReference]];
 
             for (int i = 0; i < node.Children.Count; i++)
             {
@@ -123,7 +121,7 @@ namespace InterpreterLib.Helpers
                 funcParameterValues.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
             }
 
-            return Interpreter.FunctionInteger(funcNode, funcParameterValues);
+            return Interpreter.FunctionReal(funcNode, funcParameterValues);
         }
 
     }
