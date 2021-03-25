@@ -381,15 +381,17 @@ namespace InterpreterLib.Tests
         }
 
         [DataRow(new Object[] { 1.0, 1 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Integer })]
+        [DataRow(new Object[] { 1.0, 2.0, 3.0 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Real, TypeEnum.Real })]
+        [DataRow(new Object[] { 1, 2, 3 }, new TypeEnum[] { TypeEnum.Integer, TypeEnum.Integer, TypeEnum.Integer })]
+        [DataRow(new Object[] { }, new TypeEnum[] { })]
         [TestMethod]
-        public void FunctionCallReal_f_f(Object[] numbers, TypeEnum[] types)
+        public void FunctionCallReal_DifferentParameters_PassesCorrectParameterValuesToFunctionReal(Object[] numbers, TypeEnum[] types)
         {
             List<Object> expected = numbers.ToList();
             List<TypeEnum> exTypes = types.ToList();
             List<ExpressionNode> funcParams = new List<ExpressionNode>();
             IInterpreter parent = Substitute.For<IInterpreter>();
             List<TypeNode> typeNodes = new List<TypeNode>();
-
             for (int i = 0; i < expected.Count; i++)
             {
                 switch (expected[i])
@@ -406,9 +408,6 @@ namespace InterpreterLib.Tests
                 parent.Dispatch(funcParams[i], Arg.Any<List<object>>(), exTypes[i]).Returns(expected[i]);
                 typeNodes.Add(new TypeNode(exTypes[i], 1, 1));
             }
-
-
-
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
