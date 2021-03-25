@@ -242,10 +242,10 @@ namespace InterpreterLib.Tests
             {
                 Interpreter = parent
             };
-            FunctionNode functionNode = new FunctionNode("", 1, null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
+            FunctionNode functionNode = new FunctionNode("", null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
             AST astRoot = new AST(new List<FunctionNode> { functionNode }, null, 1, 1);
             integerHelper.SetASTRoot(astRoot);
-            FunctionNode res = new FunctionNode("", 1, null, null, null, 1, 1);
+            FunctionNode res = new FunctionNode("", null, null, null, 1, 1);
             parent.FunctionInteger(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
             integerHelper.FunctionCallInteger(funcCallExpr, new List<Object>());
@@ -269,7 +269,7 @@ namespace InterpreterLib.Tests
                 Interpreter = parent
             };
             parent.Dispatch(funcParams[0], Arg.Any<List<Object>>(), TypeEnum.Integer).Returns(1);
-            FunctionNode functionNode = new FunctionNode("", 1, null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
+            FunctionNode functionNode = new FunctionNode("", null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
             AST astRoot = new AST(new List<FunctionNode> { functionNode }, null, 1, 1);
             integerHelper.SetASTRoot(astRoot);
 
@@ -313,7 +313,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.LocalReference = -1;
             IntegerHelper integerHelper = new IntegerHelper() { Interpreter = parent };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             integerHelper.SetASTRoot(ast);
             List<object> res = new List<object>();
