@@ -1,4 +1,4 @@
-﻿using ASTLib;
+using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -161,6 +161,7 @@ namespace TypeCheckerLib.Tests
         // Int Int  -> Still ints as children
         // Int Real -> Return Real
         // Int Int  -> Return Int
+        // Int Func -> Throw Error 
 
         [TestMethod]
         public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_InsertedIntToRealCastNode()
@@ -285,6 +286,27 @@ namespace TypeCheckerLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
+        // Int Func -> Throw Error 
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void BinaryNumOp_MultiplicationExpressionWithIntAndFunc_ThrowsException()
+        {
+            
+            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
+            IdentifierExpression func = new IdentifierExpression("f", 0, 0);
+            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, func, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<IdentifierExpression>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            var res = typeHelper.VisitBinaryNumOp(input1).Type;
+        }
+        
         #endregion
 
         #region Function Call
