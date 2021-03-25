@@ -1,4 +1,4 @@
-using ASTLib;
+﻿using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -312,13 +312,17 @@ namespace TypeCheckerLib.Tests
         #region Function Call
         // Todo: Remove irrelevant references 
 
-        // Function with no input           -> Return Int
-        // One perfect match                -> Return Real
-        // One perfect one normal matches   -> Return Real
-        // One perfect one normal matches multiple inputs   -> Return Real
-        // Two perfect matches              -> Throw Error
-        // One match wrong type             -> Throw Error
-        // No match                         -> Throw Error 
+        // Only global references
+        // 1 glob ref, 1 match with no input            -> Return Int
+        // 1 glob ref, 1 match with input               -> Return Real
+        // 2 glob ref, 1 match                          -> Return Real
+        
+        // 2 glob ref, 1 match with multiple input      -> Return Real
+        // 2 glob ref, 2 matches                        -> Throw Error
+        // 1 glob ref, 0 match                          -> Throw Error
+        // 0 matches                                    -> Throw Error
+        
+        
         // One perfect match                        -> Return Function
         // One perfect match with function as input -> Return Int
         // One match with function as input         -> Throw Error
@@ -327,7 +331,7 @@ namespace TypeCheckerLib.Tests
         // Existence of both local and global reference: Check removal of local refs
 
         [TestMethod]
-        public void FunctionCall_NoChildren_IntegerType()
+        public void FunctionCall_OneGlobalRefAndOneMatchWithNoInput_IntegerType()
         {
             TypeEnum expected = TypeEnum.Integer;
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
@@ -343,7 +347,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void FunctionCall_OnePerfectMatchOneWithIntChild_RealType()
+        public void FunctionCall_OneGlobalReferenceAndOneMatchWithInput_RealType()
         {
             TypeEnum expected = TypeEnum.Real;
             var children = new List<ExpressionNode>
@@ -364,7 +368,7 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        public void FunctionCall_TwoMatchesAndOnePerfectMatchWithOneIntChild_RealType()
+        public void FunctionCall_TwoGlobalRefsAndOneMatch_RealType()
         {
             TypeEnum expected = TypeEnum.Real;
             var children = new List<ExpressionNode>
@@ -373,9 +377,11 @@ namespace TypeCheckerLib.Tests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
+            
             var ast = GetAst();
             ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
             ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<RealLiteralExpression>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
