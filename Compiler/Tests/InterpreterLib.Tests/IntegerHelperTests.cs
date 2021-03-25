@@ -128,11 +128,29 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+
+        [DataRow(3, 0)]
+        [TestMethod]
+        public void DivisionReal_DivisorIsZero_ThrowsException(int input1, int input2)
+        {
+            RealLiteralExpression intLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
+            RealLiteralExpression intLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            DivisionExpression divisionExpr = new DivisionExpression(intLit1, intLit2, 1, 1);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.DispatchReal(intLit1, Arg.Any<List<object>>()).Returns(input1);
+            parent.DispatchReal(intLit2, Arg.Any<List<object>>()).Returns(input2);
+            RealHelper realHelper = new RealHelper()
+            {
+                Interpreter = parent
+            };
+
+            Assert.ThrowsException<Exception>(() => realHelper.DivisionReal(divisionExpr, new List<object>()));
+        }
         #endregion
 
         #region ModuloInteger
         [DataRow(2, 2, 0)]
-        //[DataRow(2, 8, 2)]
+        [DataRow(2, 8, 2)]
         [TestMethod]
         public void ModuloInteger_TwoIntegers_ReturnsCorrectResultOfModulo(int input1, int input2, int expected)
         {
@@ -210,7 +228,57 @@ namespace InterpreterLib.Tests
         #endregion
 
         #region FunctionCallInteger
+        [TestMethod]
+        public void FunctionCallInteger_FunctionCallExpressionNodeAndParameterListOfIntegers_CorrectFunctionNodePassed()
+        {
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { intLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.GlobalReferences = new List<int> { 0 };
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
+            IntegerHelper integerHelper = new IntegerHelper()
+            {
+                Interpreter = parent
+            };
+            FunctionNode functionNode = new FunctionNode("", 1, null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
+            AST astRoot = new AST(new List<FunctionNode> { functionNode }, null, 1, 1);
+            integerHelper.SetASTRoot(astRoot);
+            FunctionNode res = new FunctionNode("", 1, null, null, null, 1, 1);
+            parent.FunctionInteger(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+
+            integerHelper.FunctionCallInteger(funcCallExpr, new List<Object>());
+
+            res.Should().BeEquivalentTo(functionNode);
+        }
         #endregion
 
+        #region 
+        [TestMethod]
+        public void FunctionCallInteger_LocalReference_CorrectFunctionNodeToFunctionInteger()
+        {
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { intLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("1", funcParams, 1, 1);
+            funcCallExpr.LocalReference = 0;
+            funcCallExpr.GlobalReferences = new List<int>();
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            IntegerHelper integerHelper = new IntegerHelper()
+            {
+                Interpreter = parent
+            };
+            parent.Dispatch(funcParams[0], Arg.Any<List<Object>>(), TypeEnum.Integer).Returns(1);
+            FunctionNode functionNode = new FunctionNode("", 1, null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
+            AST astRoot = new AST(new List<FunctionNode> { functionNode }, null, 1, 1);
+            integerHelper.SetASTRoot(astRoot);
+
+            FunctionNode res = null;
+            parent.FunctionInteger(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<Object>>());
+            integerHelper.FunctionCallInteger(funcCallExpr, new List<Object> { 0 });
+
+            res.Should().BeEquivalentTo(functionNode);
+
+        }
+        #endregion
     }
 }
