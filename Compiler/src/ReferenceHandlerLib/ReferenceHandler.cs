@@ -19,7 +19,7 @@ namespace ReferenceHandlerLib
 
         public void InsertReferences(AST root)
         {
-            _helper.BuildTable(root.Functions);
+            _helper.BuildTables(root.Functions);
             foreach (FunctionNode f in root.Functions) 
                 _helper.VisitFunction(f);
 

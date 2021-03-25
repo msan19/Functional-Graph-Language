@@ -9,7 +9,7 @@ namespace ReferenceHandlerLib
     {
         IReferenceHandler ReferenceHandler { get; set; }
 
-        void BuildTable(List<FunctionNode> functions);
+        void BuildTables(List<FunctionNode> functions);
         void VisitExport(ExportNode node);
         void VisitFunction(FunctionNode node);
         void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers);
