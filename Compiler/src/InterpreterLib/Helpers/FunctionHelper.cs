@@ -4,6 +4,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
 using InterpreterLib.Interfaces;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -29,7 +30,21 @@ namespace InterpreterLib.Helpers
 
         public int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            List<object> funcParameterValues = new List<object>();
+
+            FunctionNode funcNode;
+            if (node.GlobalReferences.Count >= 1)
+                funcNode = _functions[node.GlobalReferences[0]];
+            else
+                funcNode = _functions[(int)parameters[node.LocalReference]];
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
+                funcParameterValues.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+            }
+
+            return Interpreter.FunctionFunction(funcNode, funcParameterValues);
         }
 
     }
