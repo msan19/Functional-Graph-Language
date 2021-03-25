@@ -1,5 +1,7 @@
+using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
@@ -94,6 +96,104 @@ namespace InterpreterLib.Tests
             int res = fhelper.IdentifierFunction(identifier, array.ToList());
 
             Assert.AreEqual(res, expected);
+        }
+        #endregion
+
+        #region FunctionCallFunction
+        [TestMethod]
+        public void FunctionCallFunction_UsingGlobalReferences_PassesCorrectFunctionNodeToFunctionFunction()
+        {
+            IntegerLiteralExpression functionLit = new IntegerLiteralExpression("1.0", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { functionLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.GlobalReferences = new List<int> { 0 };
+            funcCallExpr.LocalReference = -1;
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
+            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            functionHelper.SetAST(ast);
+            FunctionNode res = null;
+            parent.FunctionFunction(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+
+            functionHelper.FunctionCallFunction(funcCallExpr, new List<Object>());
+
+            res.Should().BeEquivalentTo(funcNode);
+        }
+
+        [TestMethod]
+        public void FunctionCallFunction_UsingLocalReference_PassesCorrectFunctionNodeToFunctionFunction()
+        {
+            IntegerLiteralExpression functionLit = new IntegerLiteralExpression("1.0", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { functionLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.LocalReference = 0;
+            funcCallExpr.GlobalReferences = new List<int>();
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
+            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            functionHelper.SetAST(ast);
+            FunctionNode res = null;
+            parent.FunctionFunction(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+
+            functionHelper.FunctionCallFunction(funcCallExpr, new List<object> { 0 });
+
+            res.Should().BeEquivalentTo(funcNode);
+        }
+
+        [DataRow(new Object[] { 1.0, 1 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Integer })]
+        [DataRow(new Object[] { }, new TypeEnum[] { })]
+        [DataRow(new Object[] { 17, 1 }, new TypeEnum[] { TypeEnum.Integer, TypeEnum.Integer })]
+        [DataRow(new Object[] { 0 }, new TypeEnum[] { TypeEnum.Function })]
+        [TestMethod]
+        public void FunctionCallFunction_f_f(Object[] numbers, TypeEnum[] types)
+        {
+            List<Object> expected = numbers.ToList();
+            List<TypeEnum> exTypes = types.ToList();
+            List<ExpressionNode> funcParams = new List<ExpressionNode>();
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            List<TypeNode> typeNodes = new List<TypeNode>();
+
+            for (int i = 0; i < expected.Count; i++)
+            {
+                switch (expected[i])
+                {
+                    case int x:
+                        funcParams.Add(new IntegerLiteralExpression(x.ToString(), 1, 1));
+                        break;
+                    case double x:
+                        funcParams.Add(new RealLiteralExpression(x.ToString(), 1, 1));
+                        break;
+                    default:
+                        throw new Exception("Unexpected shit");
+                }
+                parent.Dispatch(funcParams[i], Arg.Any<List<object>>(), exTypes[i]).Returns(expected[i]);
+                typeNodes.Add(new TypeNode(exTypes[i], 1, 1));
+            }
+
+
+
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.GlobalReferences = new List<int> { 0 };
+            funcCallExpr.LocalReference = -1;
+            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            functionHelper.SetAST(ast);
+            List<object> res = new List<object>();
+            parent.FunctionFunction(Arg.Any<FunctionNode>(), Arg.Do<List<object>>(x => res = x));
+
+            functionHelper.FunctionCallFunction(funcCallExpr, new List<Object>());
+
+            res.Should().BeEquivalentTo(expected);
         }
         #endregion
     }
