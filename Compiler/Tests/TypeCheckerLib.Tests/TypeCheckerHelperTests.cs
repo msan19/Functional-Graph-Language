@@ -15,10 +15,144 @@ namespace TypeCheckerLib.Tests
     public class TypeCheckerHelperTests
     {
         #region Export
+        // Real     -> 
+        // Integer  ->  
+        // Integer  -> Insert Cast Node
+        // Func     -> Throw Exception
+        [TestMethod]
+        public void Export_Real_Nothing()
+        {
+            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitExport(input1);
+        }
+        [TestMethod]
+        public void Export_Integer_Nothing()
+        {
+            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitExport(input1);
+        }
+        [TestMethod]
+        public void Export_Integer_InsertCastNode()
+        {
+            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitExport(input1);
+            var res = input1.ExportValue.GetType();
+
+            Assert.AreEqual(typeof(CastFromIntegerExpression), res);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Export_Func_ThrowException()
+        {
+            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitExport(input1);
+        }
         #endregion
 
         #region Function
+        // Condition ReturnType RHS
+        // IntegerInteger   -> Nothing
+        // RealInteger      -> Insert Cast Node
+        // IntegerReal      -> Throw Exception
+        // RealFunction     -> Throw Exception
 
+        /* Not in version 1
+            // Conditions LHS booleans
+            // Boolean      -> Nothing
+            // Real         -> Throw Exception
+            // Function     -> Throw Exception
+        */
+        [DataRow(TypeEnum.Integer, TypeEnum.Integer)]
+        [DataRow(TypeEnum.Real, TypeEnum.Real)]
+        [DataRow(TypeEnum.Function, TypeEnum.Function)]
+        [TestMethod]
+        public void Function_Type_CorrectType(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
+        {
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(dispatcherReturnType, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitFunction(input1);
+        }
+
+        [DataRow(TypeEnum.Integer, TypeEnum.Real)]
+        [DataRow(TypeEnum.Real, TypeEnum.Function)]
+        [DataRow(TypeEnum.Function, TypeEnum.Integer)]
+        [DataRow(TypeEnum.Function, TypeEnum.Real)]
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Function_Type_WrongTypeAndThrowException(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
+        {
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(dispatcherReturnType, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Function_ReturnRealGetInteger_InsertCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = GetFunctionType(TypeEnum.Real, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitFunction(input1);
+            var res = input1.Conditions[0].ReturnExpression.GetType();
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
 
         #region Binary Num Operator
