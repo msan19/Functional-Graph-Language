@@ -10,15 +10,21 @@ namespace InterpreterLib.Helpers
     public class FunctionHelper : IFunctionHelper
     {
         public IInterpreter Interpreter { get; set; }
+        private List<FunctionNode> _functions;
+
+        public void SetAST(AST root)
+        {
+            _functions = root.Functions;
+        }
 
         public int ConditionFunction(ConditionNode node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            return Interpreter.DispatchFunction(node.ReturnExpression, parameters);         
         }
 
         public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
+            return node.IsLocal ? (int) parameters[node.Reference] : node.Reference;
         }
 
         public int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters)
