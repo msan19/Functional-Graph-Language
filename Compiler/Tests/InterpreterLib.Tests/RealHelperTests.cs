@@ -6,6 +6,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using FluentAssertions;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,7 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void ExportReal_Real_ReturnsCorrectResult(double input, double expected)
         {
-            RealLiteralExpression realLit = new RealLiteralExpression(input.ToString(), 1, 1);
+            IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ExportNode exportNode = new ExportNode(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
@@ -45,7 +46,7 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void ConditionReal_Real_ReturnsCorrectResult(double input, double expected)
         {
-            RealLiteralExpression realLit = new RealLiteralExpression(input.ToString(), 1, 1);
+            IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ConditionNode conditionNode = new ConditionNode(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
@@ -69,8 +70,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void AdditionReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             AdditionExpression additionExpr = new AdditionExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -95,8 +96,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void SubtractionReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             SubtractionExpression subtractionExpr = new SubtractionExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -121,8 +122,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void MultiplicationReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             MultiplicationExpression multiplicationExpr = new MultiplicationExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -147,8 +148,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void DivisionReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             DivisionExpression divisionExpr = new DivisionExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -167,8 +168,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void DivisionReal_DivisorIsZero_ThrowsException(double input1, double input2)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             DivisionExpression divisionExpr = new DivisionExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -191,8 +192,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void ModuloReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             ModuloExpression moduloExpr = new ModuloExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -211,8 +212,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void ModuloReal_DivisorIsZero_ThrowsException(double input1, double input2)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             ModuloExpression moduloExpr = new ModuloExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -234,7 +235,7 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void AbsoluteReal_Real_ReturnsCorrectResult(double input, double expected)
         {
-            RealLiteralExpression realLit = new RealLiteralExpression(input.ToString(), 1, 1);
+            IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             AbsoluteValueExpression absoluteExpr = new AbsoluteValueExpression(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
@@ -258,8 +259,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void PowerReal_TwoReals_ReturnsCorrectResult(double input1, double input2, double expected)
         {
-            RealLiteralExpression realLit1 = new RealLiteralExpression(input1.ToString(), 1, 1);
-            RealLiteralExpression realLit2 = new RealLiteralExpression(input2.ToString(), 2, 2);
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             PowerExpression powExpr = new PowerExpression(realLit1, realLit2, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
@@ -332,15 +333,96 @@ namespace InterpreterLib.Tests
 
         #region FunctionCallReal
         [TestMethod]
-        public void FunctionCallReal_Real_ReturnsCorrectResult()
+        public void FunctionCallReal_UsingGlobalReferences_PassesCorrectFunctionNodeToFunctionReal()
         {
-            // GENERALISER HER SÅ DET VIRKER PÅ EN LISTE MED ALLE TYPER
-            RealLiteralExpression realLit = new RealLiteralExpression("1.0", 1, 1);
+            IntegerLiteralExpression realLit = new IntegerLiteralExpression("1.0", 1, 1);
             List<ExpressionNode> funcParams = new List<ExpressionNode> { realLit };
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.GlobalReferences = new List<int> { 0 };
+            funcCallExpr.LocalReference = -1;
             IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
+            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            realHelper.SetASTRoot(ast);
+            FunctionNode res = null;
+            parent.FunctionReal(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
-            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns(1.0);
+            realHelper.FunctionCallReal(funcCallExpr, new List<Object>());
+
+            res.Should().BeEquivalentTo(funcNode);
+        }
+
+        [TestMethod]
+        public void FunctionCallReal_UsingLocalReference_PassesCorrectFunctionNodeToFunctionReal()
+        {
+            IntegerLiteralExpression realLit = new IntegerLiteralExpression("1.0", 1, 1);
+            List<ExpressionNode> funcParams = new List<ExpressionNode> { realLit };
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.LocalReference = 0;
+            funcCallExpr.GlobalReferences = new List<int>();
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
+            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            realHelper.SetASTRoot(ast);
+            FunctionNode res = null;
+            parent.FunctionReal(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+
+            realHelper.FunctionCallReal(funcCallExpr, new List<object> { 0 });
+
+            res.Should().BeEquivalentTo(funcNode);
+        }
+
+        [DataRow(new Object[] { 1.0, 1 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Integer })]
+        [TestMethod]
+        public void FunctionCallReal_f_f(Object[] numbers, TypeEnum[] types)
+        {
+            List<Object> expected = numbers.ToList();
+            List<TypeEnum> exTypes = types.ToList();
+            List<ExpressionNode> funcParams = new List<ExpressionNode>();
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            List<TypeNode> typeNodes = new List<TypeNode>();
+
+            for (int i = 0; i < expected.Count; i++)
+            {
+                switch (expected[i])
+                {
+                    case int x:
+                        funcParams.Add(new IntegerLiteralExpression(x.ToString(), 1, 1));
+                        break;
+                    case double x:
+                        funcParams.Add(new RealLiteralExpression(x.ToString(), 1, 1));
+                        break;
+                    default:
+                        throw new Exception("Unexpected shit");
+                }
+                parent.Dispatch(funcParams[i], Arg.Any<List<object>>(), exTypes[i]).Returns(expected[i]);
+                typeNodes.Add(new TypeNode(exTypes[i], 1, 1));
+            }
+
+
+
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
+            funcCallExpr.GlobalReferences = new List<int> { 0 };
+            funcCallExpr.LocalReference = -1;
+            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
+            realHelper.SetASTRoot(ast);
+            List<object> res = new List<object>();
+            parent.FunctionReal(Arg.Any<FunctionNode>(), Arg.Do<List<object>>(x => res = x));
+
+            realHelper.FunctionCallReal(funcCallExpr, new List<Object>());
+
+            res.Should().BeEquivalentTo(expected);
         }
         #endregion
     }
