@@ -12,10 +12,13 @@ namespace ReferenceHandlerLib
     {
         public IReferenceHandler ReferenceHandler { get; set; }
         private Dictionary<string, List<int>> _functionTable;
+        private Dictionary<string, int> _functionIdentifierTable;
 
-        public void BuildTable(List<FunctionNode> functions)
+        public void BuildTables(List<FunctionNode> functions)
         {
             Dictionary<string, List<int>> table = new Dictionary<string, List<int>>();
+            Dictionary<string, int> functionIdentifierTable = new Dictionary<string, int>();
+
             for (int i = 0; i < functions.Count; i++)
             {
                 string name = functions[i].ParameterIdentifiers.Count + functions[i].Identifier;
@@ -29,6 +32,17 @@ namespace ReferenceHandlerLib
                 }
             }
             _functionTable = table;
+
+            for (int i = 0; i < functions.Count; i++)
+            {
+                string identifier = functions[i].Identifier;
+                if (!functionIdentifierTable.ContainsKey(identifier))
+                {
+                    functionIdentifierTable.Add(identifier, i);
+                }
+                else functionIdentifierTable[identifier] = -1;
+            }
+            _functionIdentifierTable = functionIdentifierTable;
         }
 
         public void VisitExport(ExportNode node)
