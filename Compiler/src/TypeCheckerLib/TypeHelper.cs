@@ -25,21 +25,55 @@ namespace TypeCheckerLib
         {
             // Call dispatch and check that return type is double
             // If integer insert CastNode 
+            var type = TypeChecker.Dispatch(exportNode.ExportValue).Type;
+            if (type == TypeEnum.Real)
+                return;
+            else if (type == TypeEnum.Integer)
+                InsertCastNode(exportNode);
+            else
+                throw new Exception("Export recived " + type.ToString() + " instead of Integer or Double");
+        }
+
+        private void InsertCastNode(ExportNode node)
+        {
+            CastFromIntegerExpression cast = new CastFromIntegerExpression(node.ExportValue, 0, 0);
+            node.ExportValue = cast;
         }
 
         public void VisitFunction(FunctionNode functionNode)
         {
             // Set current type nodes.
             // For each condition:
-                // If ReturnExpression of Condition do not match the declared return type of the function: Try Insert CastNode.
-                    // Check that LHS is type bool.
-                    // Check that RHS is type correct - this may be casted.
-                    
+            //  If ReturnExpression of Condition do not match the declared return type of the function: Try Insert CastNode.
+            //      Check that LHS is type bool.
+            //      Check that RHS is type correct - this may be casted.
             _typeNodes = functionNode.FunctionType.ParameterTypes;
-            TypeNode expressionTypeNode = TypeChecker.Dispatch(functionNode.Conditions[0].ReturnExpression);
-            if (!TypesAreEqual(expressionTypeNode, functionNode.FunctionType.ReturnType))
-                throw new Exception();
+
+            foreach (var condition in functionNode.Conditions)
+            {
+                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition);
+            }
         }
+
+        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition)
+        {
+            var type = TypeChecker.Dispatch(condition.ReturnExpression).Type;
+            if (type != rhsType)
+            {
+                if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
+                    InsertCastNode(condition);
+                else
+                    throw new Exception("Function body returns " + type.ToString()
+                        + ", expected " + rhsType.ToString());
+            }
+        }
+
+        private void InsertCastNode(ConditionNode conditionNode)
+        {
+            CastFromIntegerExpression cast = new CastFromIntegerExpression(conditionNode.ReturnExpression, 0, 0);
+            conditionNode.ReturnExpression = cast;
+        }
+
 
         public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
         {
@@ -152,10 +186,10 @@ namespace TypeCheckerLib
         private void CastToReal(IBinaryNumberOperator binaryNode, TypeNode nodeType, int child)
         {
             if (nodeType.Type != TypeEnum.Real)
-                InsertCastNode(binaryNode, child, TypeEnum.Real);
+                InsertCastNode(binaryNode, child);
         }
 
-        private void InsertCastNode(IBinaryNumberOperator binaryNode, int child, TypeEnum type)
+        private void InsertCastNode(IBinaryNumberOperator binaryNode, int child)
         {
             CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
             binaryNode.Children[child] = cast;
