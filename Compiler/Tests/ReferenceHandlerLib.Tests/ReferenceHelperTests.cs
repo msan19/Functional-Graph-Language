@@ -94,7 +94,7 @@ namespace ReferenceHandlerLib.Tests
 
         #region BuildTable
         [TestMethod]
-        public void BuildTable_1FunctionNode_Correct()
+        public void VisitFunctionCall_1FunctionNode_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -116,7 +116,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
@@ -124,7 +124,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesSameFunctionNamesAndSameParameterCount_Correct()
+        public void VisitFunctionCall_2FunctionNodesSameFunctionNamesAndSameParameterCount_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -147,7 +147,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
@@ -155,7 +155,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc1_Correct()
+        public void VisitFunctionCall_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc1_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -178,7 +178,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
@@ -186,7 +186,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc2_Correct()
+        public void VisitFunctionCall_2FunctionNodesDifferentFunctionNamesAndSameParameterCountCheckFunc2_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -209,7 +209,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 1 };
@@ -217,7 +217,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithTwoParams_Correct()
+        public void VisitFunctionCall_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithTwoParams_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -243,7 +243,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
@@ -251,7 +251,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithThreeParams_Correct()
+        public void VisitFunctionCall_2FunctionNodesSameFunctionNamesAndDifferentParameterCountCheckFuncWithThreeParams_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -278,7 +278,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 1 };
@@ -286,7 +286,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        public void BuildTable_2FunctionNodesDifferentFunctionNamesAndDifferentParameterCount_Correct()
+        public void VisitFunctionCall_2FunctionNodesDifferentFunctionNamesAndDifferentParameterCount_Correct()
         {
             // Setup for BuildTable
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
@@ -312,7 +312,7 @@ namespace ReferenceHandlerLib.Tests
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
-            referenceHelper.BuildTable(functions);
+            referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
             List<int> expected = new List<int>() { 0 };
