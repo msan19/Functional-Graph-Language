@@ -59,7 +59,7 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1,1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3,3);
-            FunctionNode input = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 4,4);
+            FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4,4);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
@@ -80,7 +80,7 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Real, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
-            FunctionNode input = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 4, 4);
+            FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4, 4);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
 
@@ -103,7 +103,7 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers, functionType, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1 };
 
             // Setup for VisitFunctionCall
@@ -133,8 +133,8 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", conditionNode, parameterIdentifiers, functionType, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall
@@ -164,8 +164,8 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", conditionNode, parameterIdentifiers, functionType, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall
@@ -195,8 +195,8 @@ namespace ReferenceHandlerLib.Tests
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", conditionNode, parameterIdentifiers, functionType, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall
@@ -229,8 +229,8 @@ namespace ReferenceHandlerLib.Tests
             List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", conditionNode, parameterIdentifiers2, functionType2, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall
@@ -263,8 +263,8 @@ namespace ReferenceHandlerLib.Tests
             List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", conditionNode, parameterIdentifiers2, functionType2, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall
@@ -298,8 +298,8 @@ namespace ReferenceHandlerLib.Tests
             List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func1", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func2", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func1", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func2", conditionNode, parameterIdentifiers2, functionType2, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitFunctionCall

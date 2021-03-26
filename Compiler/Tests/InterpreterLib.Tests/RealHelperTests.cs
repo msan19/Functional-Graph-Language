@@ -345,7 +345,7 @@ namespace InterpreterLib.Tests
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             FunctionNode res = null;
@@ -369,7 +369,7 @@ namespace InterpreterLib.Tests
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             FunctionNode res = null;
@@ -381,15 +381,17 @@ namespace InterpreterLib.Tests
         }
 
         [DataRow(new Object[] { 1.0, 1 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Integer })]
+        [DataRow(new Object[] { 1.0, 2.0, 3.0 }, new TypeEnum[] { TypeEnum.Real, TypeEnum.Real, TypeEnum.Real })]
+        [DataRow(new Object[] { 1, 2, 3 }, new TypeEnum[] { TypeEnum.Integer, TypeEnum.Integer, TypeEnum.Integer })]
+        [DataRow(new Object[] { }, new TypeEnum[] { })]
         [TestMethod]
-        public void FunctionCallReal_f_f(Object[] numbers, TypeEnum[] types)
+        public void FunctionCallReal_DifferentParameters_PassesCorrectParameterValuesToFunctionReal(Object[] numbers, TypeEnum[] types)
         {
             List<Object> expected = numbers.ToList();
             List<TypeEnum> exTypes = types.ToList();
             List<ExpressionNode> funcParams = new List<ExpressionNode>();
             IInterpreter parent = Substitute.For<IInterpreter>();
             List<TypeNode> typeNodes = new List<TypeNode>();
-
             for (int i = 0; i < expected.Count; i++)
             {
                 switch (expected[i])
@@ -406,15 +408,12 @@ namespace InterpreterLib.Tests
                 parent.Dispatch(funcParams[i], Arg.Any<List<object>>(), exTypes[i]).Returns(expected[i]);
                 typeNodes.Add(new TypeNode(exTypes[i], 1, 1));
             }
-
-
-
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
             RealHelper realHelper = new RealHelper() { Interpreter = parent };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
-            FunctionNode funcNode = new FunctionNode("", 1, null, null, funcTypeNode, 1, 1);
+            FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             realHelper.SetASTRoot(ast);
             List<object> res = new List<object>();

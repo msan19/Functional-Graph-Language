@@ -62,7 +62,7 @@ namespace TypeCheckerLib.Tests
         {
             List<FunctionNode> functionNodes = new List<FunctionNode>();
             for (int i = 0; i < numberOfNodes; i++)
-                functionNodes.Add(new FunctionNode("f", 0, null, null, null, 0, 0));
+                functionNodes.Add(new FunctionNode("f", null, null, null, 0, 0));
             return functionNodes;
         }
         

@@ -13,10 +13,10 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            Run(args);
+            new Program(args);
         }
 
-        public static void Run(string[] args)
+        public Program(string[] args)
         {
             LexParser lexParse = new LexParser(new ASTBuilder());
             ReferenceHandler referenceHandler = new ReferenceHandler(new ReferenceHelper());
@@ -24,15 +24,29 @@ namespace Main
             Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
-            string input = "export 5.5 + 33.3 export 5.5 + 33.3 " +
+            string input = "export 5.5 + 33.3 export 5.5 * func(33) " +
                                    "func: (integer) -> integer " +
-                                   "func(p) = |z| * y + x / i ^ (17 - 0.1 mod 2)";
+                                   "func(p) = |p| * 17 + p / 2 ^ (17 - 0.1 mod 2)";
+            string file = "";
+            //input = ReadFile(file);
 
             AST ast = lexParse.Run(input);
             referenceHandler.InsertReferences(ast);
             typeChecker.CheckTypes(ast);
             var output = interpreter.Interpret(ast);
-            fileGenerator.Export(output);
+            fileGenerator.Export(output, file);
         }
+
+        private string ReadFile(string file)
+        {
+            try
+            {
+                return System.IO.File.ReadAllText(file);
+            } catch
+            {
+                throw;
+            }
+        }
+
     }
 }

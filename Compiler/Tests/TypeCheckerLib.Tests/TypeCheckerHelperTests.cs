@@ -98,7 +98,7 @@ namespace TypeCheckerLib.Tests
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
             var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
-            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(dispatcherReturnType, 1, 1));
@@ -120,7 +120,7 @@ namespace TypeCheckerLib.Tests
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
             var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
-            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(dispatcherReturnType, 1, 1));
@@ -139,7 +139,7 @@ namespace TypeCheckerLib.Tests
             var expected = typeof(CastFromIntegerExpression);
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
             var funcType = GetFunctionType(TypeEnum.Real, new List<TypeEnum>());
-            FunctionNode input1 = new FunctionNode("", 0, condition, null, funcType, 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
@@ -514,7 +514,7 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
             var ast = GetAst();
-            ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real })), 0, 0));
+            ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real })), 0, 0));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
             TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
@@ -536,8 +536,8 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
             var ast = GetAst();
-            ast.Functions.Add(new FunctionNode("id", 0, null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
-            ast.Functions.Add(new FunctionNode("id", 1, null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer })), 0, 0));
+            ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
+            ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer })), 0, 0));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
             TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
@@ -608,7 +608,7 @@ namespace TypeCheckerLib.Tests
                 funcInputs.Add(new TypeNode(input, 0, 0));
             var functionOutput = new FunctionTypeNode(functOutput, funcInputs, 0, 0);
 
-            return new FunctionNode("id", 0, null, null,
+            return new FunctionNode("id", null, null,
                 new FunctionTypeNode(functionOutput,
                 inputs, 0, 0), 0, 0);
         }
@@ -619,7 +619,7 @@ namespace TypeCheckerLib.Tests
             foreach (var input in inputTypes)
                 inputs.Add(new TypeNode(input, 0, 0));
 
-            return new FunctionNode("id", 0, null, null,
+            return new FunctionNode("id", null, null,
                 new FunctionTypeNode(new TypeNode(output, 0, 0),
                 inputs, 0, 0), 0, 0);
         }
@@ -654,7 +654,7 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
 
             var ast = GetAst();
-            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }, new List<string>(){ "x" }));
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }, new List<string>(){ "x" }));
 
             TypeHelper typeHelper = new TypeHelper();
             typeHelper.SetAstRoot(ast);
@@ -673,7 +673,7 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
 
             var ast = GetAst();
-            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
 
             TypeHelper typeHelper = new TypeHelper();
             typeHelper.SetAstRoot(ast);
@@ -697,7 +697,7 @@ namespace TypeCheckerLib.Tests
             var ast = GetAst();
             var funcTypeDecl = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer});
 
-            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", 0, TypeEnum.Integer, new List<TypeNode>() { funcTypeDecl }, new List<string>(){ "G" }));
+            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", TypeEnum.Integer, new List<TypeNode>() { funcTypeDecl }, new List<string>(){ "G" }));
 
             TypeHelper typeHelper = new TypeHelper();
             typeHelper.SetAstRoot(ast);
@@ -715,7 +715,7 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("x", 0, 0);
 
             var ast = GetAst();
-            ast.Functions.Add(GetFunctionNodeWithParameters("F", 0, TypeEnum.Integer, new List<TypeEnum>(), new List<string>()));
+            ast.Functions.Add(GetFunctionNodeWithParameters("F", TypeEnum.Integer, new List<TypeEnum>(), new List<string>()));
 
             TypeHelper typeHelper = new TypeHelper();
             typeHelper.SetAstRoot(ast);
@@ -733,9 +733,9 @@ namespace TypeCheckerLib.Tests
             var ast = GetAst();
             var funcTypeDecl = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer});
             
-            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", 0, TypeEnum.Integer, new List<TypeNode>() {funcTypeDecl},
+            ast.Functions.Add(GetFunctionNodeWithFunctionInput("F", TypeEnum.Integer, new List<TypeNode>() {funcTypeDecl},
                 new List<string>() {"a"}));
-            ast.Functions.Add(GetFunctionNodeWithParameters("a", 1, TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
+            ast.Functions.Add(GetFunctionNodeWithParameters("a", TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }, new List<string>(){ "x" }));
 
             TypeHelper typeHelper = new TypeHelper();
             typeHelper.SetAstRoot(ast);
@@ -744,17 +744,17 @@ namespace TypeCheckerLib.Tests
                 
         }
 
-        private FunctionNode GetFunctionNodeWithFunctionInput(string id, int index, TypeEnum returnType, List<TypeNode> inputTypes, List<string> parameterIds)
+        private FunctionNode GetFunctionNodeWithFunctionInput(string id, TypeEnum returnType, List<TypeNode> inputTypes, List<string> parameterIds)
         {
             var returnNode = new TypeNode(returnType, 0, 0);
             var inputTypeNode = new FunctionTypeNode(returnNode, inputTypes, 0, 0);
-            return new FunctionNode(id, index, null, parameterIds, inputTypeNode, 0, 0);
+            return new FunctionNode(id, null, parameterIds, inputTypeNode, 0, 0);
         }
 
-        private FunctionNode GetFunctionNodeWithParameters(string id, int index, TypeEnum returnType, List<TypeEnum> inputTypes, List<string> parameterIds)
+        private FunctionNode GetFunctionNodeWithParameters(string id, TypeEnum returnType, List<TypeEnum> inputTypes, List<string> parameterIds)
         {
             var functType = GetFunctionType(returnType, inputTypes);
-            return new FunctionNode(id, index, null, parameterIds, functType, 0, 0);
+            return new FunctionNode(id, null, parameterIds, functType, 0, 0);
         }
         
         
