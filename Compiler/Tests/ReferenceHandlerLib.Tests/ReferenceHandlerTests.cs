@@ -173,7 +173,7 @@ namespace ReferenceHandlerLib.Tests
 
             refHandler.InsertReferences(ast);
 
-            helper.Received(1).BuildTable(Arg.Any<List<FunctionNode>>());
+            helper.Received(1).BuildTables(Arg.Any<List<FunctionNode>>());
         }
         #endregion
 
