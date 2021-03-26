@@ -4,10 +4,12 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TypeCheckerLib.Tests
 {
@@ -15,6 +17,24 @@ namespace TypeCheckerLib.Tests
     public class TypeCheckerHelperTests
     {
         #region Export
+        [TestMethod]
+        public void Export__CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>();
+            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitExport(input1);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
         // Real     -> 
         // Integer  ->  
         // Integer  -> Insert Cast Node
@@ -78,6 +98,28 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Function
+        [TestMethod]
+        public void Function__CorrectParameterPassDown()
+        {
+            var funcType = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            var expected = funcType.ParameterTypes.ToList();
+
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitFunction(input1);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
         // Condition ReturnType RHS
         // IntegerInteger   -> Nothing
         // RealInteger      -> Insert Cast Node
@@ -155,6 +197,31 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Binary Num Operator
+        [TestMethod]
+        public void BinaryNumOp__CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
+            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
+            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper()
+            {
+                TypeChecker = parent
+            };
+
+            typeHelper.VisitBinaryNumOp(input1, expected.ToList());
+         
+            res.Should().BeEquivalentTo(expected);
+        }
+
         // Int Real -> Cast Node
         // Int Real -> Append Int to Cast Node
         // Int Int  -> Still ints as children
@@ -310,6 +377,65 @@ namespace TypeCheckerLib.Tests
 
         #region Function Call
 
+        // Check for correct Parameter Passdown
+        [TestMethod]
+        public void FunctionCall_Local_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.LocalReference = 0;
+            input1.GlobalReferences = new List<int>() { 0 };
+
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+
+            List<TypeNode> parameterTypes = expected;
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+
+            typeHelper.VisitFunctionCall(input1, parameterTypes.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void FunctionCall_Global_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.GlobalReferences = new List<int>() { 0 };
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+            typeHelper.VisitFunctionCall(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
         // Only global references
         // 1 glob ref, 1 match with no input            -> Return Int
         // 1 glob ref, 1 match with input               -> Return Real
@@ -321,10 +447,10 @@ namespace TypeCheckerLib.Tests
         // 1 global ref, 1 match                        -> Return Function
         // 1 global ref, 1 match with function input    -> Return Int
         // 2 global ref, 0 match with function as input -> Throw Error
-        
+
         // Only local references
         // 1 local, 0 match                             -> Throw Error
-        
+
         // Both global and local references
         // 1 glob, 1 local                              -> local match
         // 1 glob, 1 local with local match             -> glob ref removed
@@ -746,12 +872,9 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Identifier
-        // Global (Only functions) | Mathc / No Match
-        // G(F)
+        // Global
         // 1 glob, is match     -> int, real, function ... 
-
         // Local
-        // G(x, F) = x + F(2)
         // 1 local, is match    -> int, real, function
 
 
