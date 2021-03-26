@@ -4,6 +4,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
+using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -125,6 +126,8 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
+        #endregion
+
         #region Interpret
         [TestMethod]
         public void Interpret_AST_CorrectNumberOfCallsToExportReal()
@@ -164,7 +167,6 @@ namespace InterpreterLib.Tests
             res.Should().BeEquivalentTo(expected);
         }
 
-        #endregion
         #endregion
 
         #region DispatchInt
@@ -287,7 +289,7 @@ namespace InterpreterLib.Tests
             IRealHelper rhelper = Substitute.For<IRealHelper>();
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             List<Object> res = null;
-            ihelper.SubtractionInteger(Arg.Any <SubtractionExpression > (), Arg.Do<List<Object>>(x => res = x));
+            ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
             interpreter.DispatchInt(input1, expected);
 
@@ -297,15 +299,15 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void DispatchInteger_SubtractionAndObjectList_CorrectSubtractionExprPassed()
         {
-           SubtractionExpression expected = new SubtractionExpression(null, null, 0, 0);
-           SubtractionExpression input1 = expected;
+            SubtractionExpression expected = new SubtractionExpression(null, null, 0, 0);
+            SubtractionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
-           SubtractionExpression res = null;
-            ihelper.SubtractionInteger(Arg.Do <SubtractionExpression > (x => res = x), Arg.Any<List<Object>>());
+            SubtractionExpression res = null;
+            ihelper.SubtractionInteger(Arg.Do<SubtractionExpression>(x => res = x), Arg.Any<List<Object>>());
 
             interpreter.DispatchInt(input1, input2);
 
@@ -316,13 +318,13 @@ namespace InterpreterLib.Tests
         public void DispatchInteger_SubtractionAndObjectList_CorrectValueReturned()
         {
             int expected = 17;
-           SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
+            SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
-            ihelper.SubtractionInteger(Arg.Any <SubtractionExpression > (), Arg.Any<List<Object>>()).Returns(expected);
+            ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
 
@@ -1423,7 +1425,7 @@ namespace InterpreterLib.Tests
         public void FunctionFunction_FunctionNodeAndObjectList_CorrectListPassed()
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
@@ -1440,7 +1442,7 @@ namespace InterpreterLib.Tests
         public void FunctionFunction_FunctionNodeAndObjectList_CorrectIntegerLiteralExprPassed()
         {
             ConditionNode expected = new ConditionNode(null, 0, 0);
-            FunctionNode input1 = new FunctionNode("", 0, expected, null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1458,7 +1460,7 @@ namespace InterpreterLib.Tests
         public void FunctionFunction_FunctionNodeAndObjectList_CorrectValueReturned()
         {
             int expected = 17;
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1466,7 +1468,7 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             fhelper.ConditionFunction(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = (int) interpreter.FunctionFunction(input1, input2);
+            int res = (int)interpreter.FunctionFunction(input1, input2);
 
             Assert.AreEqual(expected, res);
         }
@@ -1478,7 +1480,7 @@ namespace InterpreterLib.Tests
         public void FunctionInteger_FunctionNodeAndObjectList_CorrectListPassed()
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
@@ -1495,7 +1497,7 @@ namespace InterpreterLib.Tests
         public void FunctionInteger_FunctionNodeAndObjectList_CorrectIntegerLiteralExprPassed()
         {
             ConditionNode expected = new ConditionNode(null, 0, 0);
-            FunctionNode input1 = new FunctionNode("", 0, expected, null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1513,7 +1515,7 @@ namespace InterpreterLib.Tests
         public void FunctionInteger_FunctionNodeAndObjectList_CorrectValueReturned()
         {
             int expected = 17;
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1521,7 +1523,7 @@ namespace InterpreterLib.Tests
             Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
             ihelper.ConditionInteger(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = (int) interpreter.FunctionInteger(input1, input2);
+            int res = (int)interpreter.FunctionInteger(input1, input2);
 
             Assert.AreEqual(expected, res);
         }
@@ -1533,7 +1535,7 @@ namespace InterpreterLib.Tests
         public void FunctionReal_FunctionNodeAndObjectList_CorrectListPassed()
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
@@ -1550,7 +1552,7 @@ namespace InterpreterLib.Tests
         public void FunctionReal_FunctionNodeAndObjectList_CorrectRealLiteralExprPassed()
         {
             ConditionNode expected = new ConditionNode(null, 0, 0);
-            FunctionNode input1 = new FunctionNode("", 0, expected, null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1568,7 +1570,7 @@ namespace InterpreterLib.Tests
         public void FunctionReal_FunctionNodeAndObjectList_CorrectValueReturned()
         {
             int expected = 17;
-            FunctionNode input1 = new FunctionNode("", 0, new ConditionNode(null, 0, 0), null, null, 0, 0);
+            FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
@@ -1583,5 +1585,47 @@ namespace InterpreterLib.Tests
 
         #endregion
 
+        #region CompleteComponent
+        [DataRow(1, 1.0)]
+        [DataRow(-10, 0.017)]
+        [DataRow(10, 0.5)]
+        [TestMethod]
+        public void Interpret_Unmocked_ASTWithXtoThePowerOfY_CorrectListReturned(int xValue, double yValue)
+        {
+            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
+            IdentifierExpression x = new IdentifierExpression("x", 0, 0)
+            {
+                IsLocal = true,
+                Reference = 0
+            };
+            IdentifierExpression y = new IdentifierExpression("y", 0, 0)
+            {
+                IsLocal = true,
+                Reference = 1
+            };
+            CastFromIntegerExpression cast = new CastFromIntegerExpression(x, 0, 0);
+            PowerExpression power = new PowerExpression(cast, y, 0, 0);
+            ConditionNode condition = new ConditionNode(power, 0, 0);
+            TypeNode integerType = new TypeNode(TypeEnum.Integer, 0, 0);
+            TypeNode realType = new TypeNode(TypeEnum.Real, 0, 0);
+            FunctionTypeNode functionType = new FunctionTypeNode(realType, new List<TypeNode> { integerType, realType }, 0, 0);
+            FunctionNode function = new FunctionNode("func", condition, new List<string> { "x", "y" }, functionType, 0, 0);
+            IntegerLiteralExpression integerLiteral = new IntegerLiteralExpression(xValue.ToString(), 0, 0);
+            RealLiteralExpression realLiteral = new RealLiteralExpression(yValue.ToString(), 0, 0);
+            FunctionCallExpression functionCall = new FunctionCallExpression("func",
+                                                                             new List<ExpressionNode> { integerLiteral, realLiteral },
+                                                                             0, 0)
+            {
+                GlobalReferences = new List<int> { 0 },
+                LocalReference = -1
+            };
+            ExportNode export = new ExportNode(functionCall, 0, 0);
+            AST ast = new AST(new List<FunctionNode> { function }, new List<ExportNode> { export }, 0, 0);
+
+            List<double> res = interpreter.Interpret(ast);
+
+            Assert.AreEqual(res[0], Math.Pow(xValue, yValue));
+        }
+        #endregion
     }
 }

@@ -79,15 +79,17 @@ namespace TypeCheckerLib
         {
             TypeNode left = GetType(binaryNode.Children[0]);
             TypeNode right = GetType(binaryNode.Children[1]);
+            
+            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
+                throw new Exception("One of the arguments is of type Function.");
 
-            if (left.Type == right.Type)
-                return new TypeNode(left.Type, 0, 0);
-            else
+            if (left.Type != right.Type)
             {
                 CastToReal(binaryNode, left, 0);
                 CastToReal(binaryNode, right, 1);
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
+            return new TypeNode(left.Type, 0, 0);
         }
 
         // TODO: Match Local Call reference 
