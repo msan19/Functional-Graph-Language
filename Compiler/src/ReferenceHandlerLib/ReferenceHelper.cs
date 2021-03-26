@@ -40,7 +40,10 @@ namespace ReferenceHandlerLib
                 {
                     functionIdentifierTable.Add(identifier, i);
                 }
-                else functionIdentifierTable[identifier] = -1;
+                else
+                {
+                    functionIdentifierTable[identifier] = -1;
+                } 
             }
             _functionIdentifierTable = functionIdentifierTable;
         }
@@ -86,15 +89,28 @@ namespace ReferenceHandlerLib
                     node.Reference = i;
                 }
             }
-            if (node.Reference == -1)
+            if (node.Reference == -1) { throw new Exception($"{node.Id} is not a valid parameter identifier"); }
+            node.IsLocal = (node.Reference != -1);
+            if (!node.IsLocal)
             {
-                throw new Exception($"{node.Id} is not a valid parameter identifier");
+                if (_functionIdentifierTable.ContainsKey(node.Id))
+                {
+                    node.Reference = _functionIdentifierTable[node.Id];
+                }
+                else throw new Exception($"{node.Id} is not a valid identifier");
+
+                if (node.Reference == -1)
+                {
+                    throw new Exception($"points to an overloaded function");
+                }
             }
         }
 
         public void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers)
         {
-            node.GlobalReferences = _functionTable[node.Children.Count + node.Identifier];
+            List<int> list = new List<int>();
+            list = _functionTable[node.Children.Count + node.Identifier];
+            node.GlobalReferences = list.ToList();
         }
 
 
