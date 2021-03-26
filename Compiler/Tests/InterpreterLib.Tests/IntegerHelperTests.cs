@@ -323,7 +323,6 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(expectedList);
         }
-
         #endregion
     }
 }
