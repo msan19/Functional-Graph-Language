@@ -1,4 +1,4 @@
-﻿using ASTLib;
+using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -310,26 +310,28 @@ namespace TypeCheckerLib.Tests
         #endregion
 
         #region Function Call
-        // Todo: Remove irrelevant references 
 
         // Only global references
         // 1 glob ref, 1 match with no input            -> Return Int
         // 1 glob ref, 1 match with input               -> Return Real
         // 2 glob ref, 1 match                          -> Return Real
-        
         // 2 glob ref, 1 match with multiple input      -> Return Real
         // 2 glob ref, 2 matches                        -> Throw Error
         // 1 glob ref, 0 match                          -> Throw Error
         // 0 matches                                    -> Throw Error
+        // 1 global ref, 1 match                        -> Return Function
+        // 1 global ref, 1 match with function input    -> Return Int
+        // 2 global ref, 0 match with function as input -> Throw Error
         
+        // Only local references
+        // 1 local, 0 match                             -> Throw Error
         
-        // One perfect match                        -> Return Function
-        // One perfect match with function as input -> Return Int
-        // One match with function as input         -> Throw Error
+        // Both global and local references
+        // 1 glob, 1 local                              -> local match
+        // 1 glob, 1 local with local match             -> glob ref removed
+        // 1 glob, 1 local                              -> glob match
+        // 1 glob, 1 local with glob match              -> local ref removed
         
-        // Existence of both local and global reference: Check removal of global refs (multiple)
-        // Existence of both local and global reference: Check removal of local refs
-
         [TestMethod]
         public void FunctionCall_OneGlobalRefAndOneMatchWithNoInput_IntegerType()
         {
