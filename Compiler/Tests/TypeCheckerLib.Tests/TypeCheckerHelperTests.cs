@@ -133,7 +133,6 @@ namespace TypeCheckerLib.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
         public void Function_ReturnRealGetInteger_InsertCastNode()
         {
             var expected = typeof(CastFromIntegerExpression);
@@ -552,7 +551,6 @@ namespace TypeCheckerLib.Tests
         [ExpectedException(typeof(Exception))]
         public void FunctionCall_OneLocalRefAndZeroMatch_ThrowException()
         {
-            TypeEnum expected = TypeEnum.Real;
             var children = new List<ExpressionNode>
             {
                 new IntegerLiteralExpression("0", 0, 0)
@@ -560,24 +558,146 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.LocalReference = 0;
             
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
-           
+            List<TypeNode> parameterTypes = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Real})
+            };
+            
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            //parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
-
-            Assert.AreEqual(expected, res);
+            
+            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
         }
         
         // Both global and local references
         // 1 glob, 1 local                              -> local match
-        // 1 glob, 1 local with local match             -> glob ref removed
-        // 1 glob, 1 local                              -> glob match
-        // 1 glob, 1 local with glob match              -> local ref removed
+        [TestMethod]
+        public void FunctionCall_OneGlobAndOneLocal_LocalMatch()
+        {
+            TypeEnum expected = TypeEnum.Integer;
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.LocalReference = 0;
+            input1.GlobalReferences = new List<int>(){0};
+            
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
+            List<TypeNode> parameterTypes = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+            
+            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        // 1 glob, 1 local with local match             -> glob ref removed
+        [TestMethod]
+        public void FunctionCall_OneGlobAndOneLocal_GlobRefRemoved()
+        {
+            int expected = 0;
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.LocalReference = 0;
+            input1.GlobalReferences = new List<int>(){0};
+
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+
+            List<TypeNode> parameterTypes = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+            
+            typeHelper.VisitFunctionCall(input1, parameterTypes);
+            var res = input1.GlobalReferences.Count;
+            
+            Assert.AreEqual(expected, res);
+        }
+        
+        // 1 glob, 1 local                              -> glob match
+        [TestMethod]
+        public void FunctionCall_OneGlobAndOneLocal_GlobMatch()
+        {
+            TypeEnum expected = TypeEnum.Real;
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.LocalReference = 0;
+            input1.GlobalReferences = new List<int>(){0};
+            
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+
+            List<TypeNode> parameterTypes = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Real})
+            };
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+            
+            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        // 1 glob, 1 local with glob match              -> local ref removed
+        [TestMethod]
+        public void FunctionCall_OneGlobAndOneLocal_LocalRefRemoved()
+        {
+            int expected = FunctionCallExpression.NO_LOCAL_REF;
+            var children = new List<ExpressionNode>
+            {
+                new IntegerLiteralExpression("0", 0, 0)
+            };
+            FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
+            input1.LocalReference = 0;
+            input1.GlobalReferences = new List<int>(){0};
+            
+            var ast = GetAst();
+            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+
+            List<TypeNode> parameterTypes = new List<TypeNode>()
+            {
+                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Real})
+            };
+            
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            typeHelper.SetAstRoot(ast);
+            
+            typeHelper.VisitFunctionCall(input1, parameterTypes);
+            var res = input1.LocalReference;
+            
+            Assert.AreEqual(expected, res);
+        }
+        
         private FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
         {
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);

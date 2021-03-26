@@ -6,6 +6,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TypeCheckerLib
 {
@@ -91,16 +92,71 @@ namespace TypeCheckerLib
             return new TypeNode(left.Type, 0, 0);
         }
 
-        // TODO: Match Local Call reference 
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
-            // TODO: Check local scope
-            //       If local reference is found, empty funcCallExpNode.GlobalReferences
-            // Insert an error check here.
+            TypeNode res = null;
+            if (IsLocalReferenceAMatch(funcCallExpNode, parameterTypes))
+            {
+                funcCallExpNode.GlobalReferences = new List<int>();
+                FunctionTypeNode funcDeclType = (FunctionTypeNode)parameterTypes[funcCallExpNode.LocalReference];
+                res = funcDeclType.ReturnType;
+            }
+            else
+            {
+                List<int> matchingRefs = GetMatches(funcCallExpNode.Children, funcCallExpNode.GlobalReferences, parameterTypes);
+                if (matchingRefs.Count != 1)
+                    throw new Exception("Found no or more than one match");
+
+                funcCallExpNode.LocalReference = FunctionCallExpression.NO_LOCAL_REF;
+                funcCallExpNode.GlobalReferences = matchingRefs;
+                res = _functions[matchingRefs.First()].FunctionType.ReturnType;
+            }
             
-            return null;
+            return res;
         }
-        
+
+        private List<int> GetMatches(List<ExpressionNode> children, List<int> globalReferences,
+            List<TypeNode> parameterTypes)
+        {
+            List<int> res = new List<int>();
+            foreach (var globRef in globalReferences)
+            {
+                var func = _functions[globRef];
+                if (ChildrenMatchesFunctionInputParams(children, func.FunctionType.ParameterTypes, parameterTypes))
+                    res.Add(globRef);
+            }
+            return res;
+        }
+
+        private bool ChildrenMatchesFunctionInputParams(List<ExpressionNode> children,
+            List<TypeNode> functionTypeParameterTypes, List<TypeNode> parameterTypes)
+        {
+            for (var i = 0; i < children.Count; i++)
+            {
+                var child = TypeChecker.Dispatch(children[i], parameterTypes);
+                var expected = functionTypeParameterTypes[i];
+                if (!TypesAreEqual(child, expected))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool IsLocalReferenceAMatch(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
+        {
+            if (funcCallExpNode.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
+                return false;
+            
+            FunctionTypeNode funcDeclType = (FunctionTypeNode)parameterTypes[funcCallExpNode.LocalReference];
+            for (var i = 0; i < funcCallExpNode.Children.Count; i++)
+            {
+                var child = TypeChecker.Dispatch(funcCallExpNode.Children[i], parameterTypes);
+                var expected = funcDeclType.ParameterTypes[i];
+                if (!TypesAreEqual(child, expected))
+                    return false;
+            }
+            return true;
+        }
+
         private bool TypesAreEqual(TypeNode a, TypeNode b)
         {
             if (a.GetType() == typeof(FunctionTypeNode))
