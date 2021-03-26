@@ -406,8 +406,8 @@ namespace ReferenceHandlerLib.Tests
             List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", conditionNode, parameterIdentifiers2, functionType2, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitIdentifier
@@ -434,8 +434,8 @@ namespace ReferenceHandlerLib.Tests
             List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
-            FunctionNode functionNode1 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers1, functionType1, 17, 17);
-            FunctionNode functionNode2 = new FunctionNode("func", 1, conditionNode, parameterIdentifiers2, functionType2, 17, 17);
+            FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
+            FunctionNode functionNode2 = new FunctionNode("func", conditionNode, parameterIdentifiers2, functionType2, 17, 17);
             List<FunctionNode> functions = new List<FunctionNode>() { functionNode1, functionNode2 };
 
             // Setup for VisitIdentifier
