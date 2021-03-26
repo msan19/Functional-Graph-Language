@@ -55,6 +55,8 @@ namespace InterpreterLib.Helpers
             int leftOperand = Interpreter.DispatchInt(node.Children[0], parameters);
             int rightOperand = Interpreter.DispatchInt(node.Children[1], parameters);
 
+            if (rightOperand == 0) { throw new DivideByZeroException(); }
+
             return leftOperand / rightOperand;
         }
 
@@ -68,7 +70,8 @@ namespace InterpreterLib.Helpers
 
         private int ModuloCalculation(int leftOperand, int rightOperand)
         {
-            return leftOperand - rightOperand * leftOperand / rightOperand;
+            if(rightOperand == 0) { throw new DivideByZeroException(); }
+            return (int)(leftOperand - rightOperand * Math.Floor((double)(leftOperand / rightOperand)));
         }
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
@@ -99,8 +102,8 @@ namespace InterpreterLib.Helpers
         {
             FunctionNode funcNode;
 
-            _ = node.LocalReference > 0 ? funcNode = _root.Functions[(int)parameters[node.LocalReference]]
-                                        : funcNode = _root.Functions[node.GlobalReferences[0]];
+            _ = node.GlobalReferences.Count >= 1 ? funcNode = _root.Functions[node.GlobalReferences[0]]
+                                             : funcNode = _root.Functions[(int)parameters[node.LocalReference]];
 
             return FunctionCallIntegerIterator(node, funcNode, parameters);
         }
