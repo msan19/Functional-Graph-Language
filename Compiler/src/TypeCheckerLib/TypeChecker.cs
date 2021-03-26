@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib
@@ -44,6 +45,10 @@ namespace TypeCheckerLib
                     return _helper.VisitIntegerLiteral(n, parameterTypes);
                 case RealLiteralExpression n:
                     return _helper.VisitRealLiteral(n, parameterTypes);
+                case AdditionExpression n:
+                    return _helper.VisitAddition(n, parameterTypes);
+                case SubtractionExpression n:
+                    return _helper.VisitSubtraction(n, parameterTypes);
                 default:
                     throw new ArgumentException("The argument was not a recognized ExpressionNode");
                     
