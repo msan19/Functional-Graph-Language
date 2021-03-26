@@ -88,10 +88,10 @@ namespace TypeCheckerLib.Tests
             MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
             bool visitBinaryNumOpWasCalled = false;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(exp => visitBinaryNumOpWasCalled = true));
+            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(exp => visitBinaryNumOpWasCalled = true), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(multExpNode); 
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
             Assert.IsTrue(visitBinaryNumOpWasCalled);
         }
@@ -104,10 +104,10 @@ namespace TypeCheckerLib.Tests
             MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             IBinaryNumberOperator actualNode = null;
-            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(expNode => actualNode = expNode));
+            typeHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(multExpNode); 
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
             Assert.AreEqual(multExpNode, actualNode);
         }
@@ -120,10 +120,10 @@ namespace TypeCheckerLib.Tests
             MultiplicationExpression multExpNode = new MultiplicationExpression(n1, n2, 1, 3);
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitBinaryNumOp(Arg.Any<IBinaryNumberOperator>()).Returns(expectedTypeNode);
+            typeHelper.VisitBinaryNumOp(Arg.Any<IBinaryNumberOperator>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode); 
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
@@ -137,10 +137,10 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
             bool visitFunctionCallWasCalled = false;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(exp => visitFunctionCallWasCalled = true));
+            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(exp => visitFunctionCallWasCalled = true), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(funcCallExpr); 
+            typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
             Assert.IsTrue(visitFunctionCallWasCalled);
         }
@@ -151,10 +151,10 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             FunctionCallExpression actualNode = null;
-            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(expNode => actualNode = expNode));
+            typeHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(funcCallExpr); 
+            typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
             funcCallExpr.Should().BeEquivalentTo(actualNode);
         }
@@ -165,10 +165,10 @@ namespace TypeCheckerLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("f", new List<ExpressionNode>(), 1, 1);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Function, 1, 1);
-            typeHelper.VisitFunctionCall(Arg.Any<FunctionCallExpression>()).Returns(expectedTypeNode);
+            typeHelper.VisitFunctionCall(Arg.Any<FunctionCallExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            TypeNode actualTypeNode = typeChecker.Dispatch(funcCallExpr); 
+            TypeNode actualTypeNode = typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);        
         }
@@ -182,10 +182,10 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression idExpressionNode = new IdentifierExpression("i", 1, 1);
             bool visitIdentifierWasCalled = false;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(exp => visitIdentifierWasCalled = true));
+            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(exp => visitIdentifierWasCalled = true), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(idExpressionNode); 
+            typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
             Assert.IsTrue(visitIdentifierWasCalled);
         }
@@ -196,10 +196,10 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression idExpressionNode = new IdentifierExpression("i", 1, 1);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             IdentifierExpression actualNode = null;
-            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(expNode => actualNode = expNode));
+            typeHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(idExpressionNode); 
+            typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
             Assert.AreEqual(idExpressionNode, actualNode);
         }
@@ -211,10 +211,10 @@ namespace TypeCheckerLib.Tests
 
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitIdentifier(Arg.Any<IdentifierExpression>()).Returns(expectedTypeNode);
+            typeHelper.VisitIdentifier(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            TypeNode actualTypeNode = typeChecker.Dispatch(idExpressionNode); 
+            TypeNode actualTypeNode = typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);        
         }
@@ -228,10 +228,10 @@ namespace TypeCheckerLib.Tests
             IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
             bool visitIntegerLiteralWasCalled = false;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(exp => visitIntegerLiteralWasCalled = true));
+            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(exp => visitIntegerLiteralWasCalled = true), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(intLiteralExpression); 
+            typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
             Assert.IsTrue(visitIntegerLiteralWasCalled);
         }
@@ -242,10 +242,10 @@ namespace TypeCheckerLib.Tests
             IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             IntegerLiteralExpression actualNode = null;
-            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(intLitNode => actualNode = intLitNode));
+            typeHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(intLitNode => actualNode = intLitNode), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(intLiteralExpression); 
+            typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
             Assert.AreEqual(intLiteralExpression, actualNode);
         }
@@ -256,10 +256,10 @@ namespace TypeCheckerLib.Tests
             IntegerLiteralExpression intLiteralExpression = new IntegerLiteralExpression("1", 1, 1);
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitIntegerLiteral(Arg.Any<IntegerLiteralExpression>()).Returns(expectedTypeNode);
+            typeHelper.VisitIntegerLiteral(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            TypeNode actualTypeNode = typeChecker.Dispatch(intLiteralExpression); 
+            TypeNode actualTypeNode = typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
@@ -273,10 +273,10 @@ namespace TypeCheckerLib.Tests
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("1.0", 1, 1);
             bool visitRealLiteralWasCalled = false;
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(exp => visitRealLiteralWasCalled = true));
+            typeHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(exp => visitRealLiteralWasCalled = true), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(realLiteralExpression); 
+            typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
             Assert.IsTrue(visitRealLiteralWasCalled);
         }
@@ -287,10 +287,10 @@ namespace TypeCheckerLib.Tests
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("1.0", 1, 1);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
             RealLiteralExpression actualNode = null;
-            typeHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(intLitNode => actualNode = intLitNode));
+            typeHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(intLitNode => actualNode = intLitNode), Arg.Any<List<TypeNode>>());
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            typeChecker.Dispatch(realLiteralExpression); 
+            typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
             Assert.AreEqual(realLiteralExpression, actualNode);
         }
@@ -301,10 +301,10 @@ namespace TypeCheckerLib.Tests
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("1.0", 1, 1);
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             ITypeHelper typeHelper = Substitute.For<ITypeHelper>();
-            typeHelper.VisitRealLiteral(Arg.Any<RealLiteralExpression>()).Returns(expectedTypeNode);
+            typeHelper.VisitRealLiteral(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
             ITypeChecker typeChecker = new TypeChecker(typeHelper);
             
-            TypeNode actualTypeNode = typeChecker.Dispatch(realLiteralExpression); 
+            TypeNode actualTypeNode = typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }

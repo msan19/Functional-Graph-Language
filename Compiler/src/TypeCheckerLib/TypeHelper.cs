@@ -13,7 +13,6 @@ namespace TypeCheckerLib
     {
         public ITypeChecker TypeChecker { get; set; }
         private List<FunctionNode> _functions;
-        private List<TypeNode> _typeNodes;
 
         public void SetAstRoot(AST root)
         {
@@ -25,7 +24,7 @@ namespace TypeCheckerLib
         {
             // Call dispatch and check that return type is double
             // If integer insert CastNode 
-            var type = TypeChecker.Dispatch(exportNode.ExportValue).Type;
+            var type = TypeChecker.Dispatch(exportNode.ExportValue, new List<TypeNode>()).Type;
             if (type == TypeEnum.Real)
                 return;
             else if (type == TypeEnum.Integer)
@@ -47,17 +46,17 @@ namespace TypeCheckerLib
             //  If ReturnExpression of Condition do not match the declared return type of the function: Try Insert CastNode.
             //      Check that LHS is type bool.
             //      Check that RHS is type correct - this may be casted.
-            _typeNodes = functionNode.FunctionType.ParameterTypes;
+            List<TypeNode> parameterTypes = functionNode.FunctionType.ParameterTypes;
 
             foreach (var condition in functionNode.Conditions)
             {
-                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition);
+                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition, parameterTypes);
             }
         }
 
-        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition)
+        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
-            var type = TypeChecker.Dispatch(condition.ReturnExpression).Type;
+            var type = TypeChecker.Dispatch(condition.ReturnExpression, parameterTypes).Type;
             if (type != rhsType)
             {
                 if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
@@ -75,10 +74,10 @@ namespace TypeCheckerLib
         }
 
 
-        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
+        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode, List<TypeNode> parameterTypes)
         {
-            TypeNode left = GetType(binaryNode.Children[0]);
-            TypeNode right = GetType(binaryNode.Children[1]);
+            TypeNode left = GetType(binaryNode.Children[0], parameterTypes);
+            TypeNode right = GetType(binaryNode.Children[1], parameterTypes);
             
             if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
                 throw new Exception("One of the arguments is of type Function.");
@@ -93,41 +92,15 @@ namespace TypeCheckerLib
         }
 
         // TODO: Match Local Call reference 
-        public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
+        public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
             // TODO: Check local scope
             //       If local reference is found, empty funcCallExpNode.GlobalReferences
-            GetMatchingFunctions(funcCallExpNode);
-
             // Insert an error check here.
             
             return null;
         }
-
-        private void GetMatchingFunctions(FunctionCallExpression funcCallExpNode)
-        {
-            // TODO: Remove irrelevant references in funcCallExpNode.GlobalReferences
-            
-            List<FunctionNode> matches = new List<FunctionNode>();
-            foreach (int i in funcCallExpNode.GlobalReferences)
-            {
-                var func = _functions[i];
-                if (FunctionIsMatch(func.FunctionType.ParameterTypes, funcCallExpNode))
-                    matches.Add(func);
-            }
-        }
-
-        private bool FunctionIsMatch(List<TypeNode> parameterTypes, FunctionCallExpression funcCallExpNode)
-        {
-            for (int i = 0; i < parameterTypes.Count; i++)
-            {
-                var typeNode = TypeChecker.Dispatch(funcCallExpNode.Children[i]);
-                if(!TypesAreEqual(typeNode, parameterTypes[i]))
-                    return false;
-            }
-            return true;
-        }
-
+        
         private bool TypesAreEqual(TypeNode a, TypeNode b)
         {
             if (a.GetType() == typeof(FunctionTypeNode))
@@ -156,7 +129,7 @@ namespace TypeCheckerLib
             return true;
         }
 
-        public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)
+        public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes)
         {
             // If isLocal
                 // Lookup locally and return
@@ -166,12 +139,13 @@ namespace TypeCheckerLib
             return null;
         }
 
-        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode)
+        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode,
+            List<TypeNode> parameterTypes)
         {
             return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
-        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode)
+        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes)
         {
             return new TypeNode(TypeEnum.Real, 0, 0);
         }
@@ -180,9 +154,9 @@ namespace TypeCheckerLib
         /// Private Helpers
         /// 
 
-        private TypeNode GetType(ExpressionNode node)
+        private TypeNode GetType(ExpressionNode node, List<TypeNode> parameterTypes)
         {
-            return TypeChecker.Dispatch(node);
+            return TypeChecker.Dispatch(node, parameterTypes);
         }
 
         private void CastToReal(IBinaryNumberOperator binaryNode, TypeNode nodeType, int child)
