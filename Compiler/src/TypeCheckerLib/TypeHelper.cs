@@ -23,8 +23,6 @@ namespace TypeCheckerLib
         
         public void VisitExport(ExportNode exportNode)
         {
-            // Call dispatch and check that return type is double
-            // If integer insert CastNode 
             var type = TypeChecker.Dispatch(exportNode.ExportValue, new List<TypeNode>()).Type;
             if (type == TypeEnum.Real)
                 return;
@@ -42,11 +40,6 @@ namespace TypeCheckerLib
 
         public void VisitFunction(FunctionNode functionNode)
         {
-            // Set current type nodes.
-            // For each condition:
-            //  If ReturnExpression of Condition do not match the declared return type of the function: Try Insert CastNode.
-            //      Check that LHS is type bool.
-            //      Check that RHS is type correct - this may be casted.
             List<TypeNode> parameterTypes = functionNode.FunctionType.ParameterTypes;
 
             foreach (var condition in functionNode.Conditions)
@@ -187,12 +180,10 @@ namespace TypeCheckerLib
 
         public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes)
         {
-            // If isLocal
-                // Lookup locally and return
-            // Else
-                // Lookup globally and return
-            
-            return null;
+            if (idExpressionNode.IsLocal)
+                return parameterTypes[idExpressionNode.Reference];
+            else
+                return _functions[idExpressionNode.Reference].FunctionType.ReturnType;
         }
 
         public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode,
