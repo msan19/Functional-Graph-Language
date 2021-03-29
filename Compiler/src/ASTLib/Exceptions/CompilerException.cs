@@ -1,9 +1,7 @@
-﻿using ASTLib.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using ASTLib.Nodes;
 
-namespace Main.Exceptions
+namespace ASTLib.Exceptions
 {
     public abstract class CompilerException: Exception
     {

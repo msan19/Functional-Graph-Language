@@ -5,66 +5,74 @@ grammar Grammar
         Axiom = "Prog";
         Separator = "SEPARATOR";
     }
-
     terminals
     {
         id            -> [a-zA-Z] [a-zA-Z0-9]* ;
         realNumber    -> [0-9]+ '.' [0-9]+ ;
         integerNumber -> [0-9]+ ;
 
-        WHITE_SPACE -> U+0020 | U+0009 | U+000B | U+000C ;
-        SEPARATOR -> WHITE_SPACE+ ;
+        WHITE_SPACE   -> U+0020 | U+0009 | U+000B | U+000C ;
+        SEPARATOR     -> WHITE_SPACE+ ;
     }
-
     rules
     {
         Prog          -> Declarations ;
-
         Declarations  -> Declarations Declaration
                       |  Declaration ;
-
         Declaration   -> 'export' Expression
-                      |  Func '=' Expression ;
-
+                      |  Func '=' Expression
+                      |  Func '=' Conditions ;
+        Conditions    -> Conditions Condition
+                      |  Condition ;
+        Condition     -> '|' Expression '=' Expression
+                      |  '|' '_' '=' Expression ;
         Func          -> id ':' FuncTypeDecl id '(' ')'
                       |  id ':' FuncTypeDecl id '(' Ids ')' ;
-
         FuncTypeDecl  -> '(' Types ')' '->' Type
                       |  '(' ')' '->' Type ;
-
-        Types  	      -> Types ',' Type
+        Types         -> Types ',' Type
                       |  Type ;
-
         Type          -> 'integer'
                       |  'real'
+                      |  'boolean'
                       |  FuncTypeDecl ;
-
-        Ids 	      -> Ids ',' id
+        Ids           -> Ids ',' id
                       |  id ;
-
-        Expression    -> Expression '+' Term
-                      |  Expression '-' Term
+        Expression    -> Expression '!=' NumExpression
+                      |  Expression '==' NumExpression
+                      |  MaxTerm ;
+        MaxTerm	      -> MaxTerm 'or' MinTerm
+                      |  MinTerm ;
+        MinTerm	      -> MinTerm 'and' LogicTerm
+                      |  LogicTerm ;
+        LogicTerm     -> 'not' LogicTerm
+                      |  NumExpression Compare NumExpression
+                      |  NumExpression ;
+        Compare	      -> '>='
+                      |  '>'
+                      |  BoundComp ;
+        BoundComp     -> '<'
+                      |  '<=' ;
+        NumExpression -> NumExpression '+' Term
+                      |  NumExpression '-' Term
                       |  Term ;
-
         Term          -> Term '*' Factor
                       |  Term '/' Factor
                       |  Term 'mod' Factor
                       |  Factor ;
-
         Factor        -> Factor '^' Exponent
                       |  Exponent ;
-
         Exponent      -> id
                       |  '|' Expression '|'
                       |  '(' Expression ')'
                       |  Literal
                       |  id '(' Expressions ')'
                       |  id '(' ')' ;
-
         Expressions   -> Expression ',' Expressions
                       |  Expression ;
-
         Literal	      -> realNumber
-                      |  integerNumber ;
+                      |  integerNumber
+                      |  'true'
+                      |  'false' ;
     }
 }

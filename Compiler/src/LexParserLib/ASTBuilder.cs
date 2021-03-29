@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
@@ -78,7 +79,7 @@ namespace LexParserLib
             string functionID = GetFunctionID(himeFuncNode);
 
             if (typeID != functionID)
-                throw new Exception($"{typeID} and {functionID} should be equivalent");
+                throw new FunctionIdentifierMatchException(functionID, typeID, null);
 
             if (IsConditional(himeDeclNode))
             {
