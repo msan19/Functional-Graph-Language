@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Main.Exceptions
 {
-    public class CompilerException: Exception
+    public abstract class CompilerException: Exception
     {
         public Node _node { get; }
 
-        public CompilerException(Node node)
+        public CompilerException(Node node, string message) : base(message)
         {
             _node = node;
         }
