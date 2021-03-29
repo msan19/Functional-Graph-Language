@@ -14,6 +14,7 @@ namespace ASTLib.Nodes.ExpressionNodes
         public IntegerLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
         {
             Value = ConvertToInt(token);
+            Children = new List<ExpressionNode>();
         }
         private int ConvertToInt(string str)
         {

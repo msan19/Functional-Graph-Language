@@ -13,7 +13,7 @@ namespace LexParserLib
     {
         private const int PARAMETER_IDs_POS = 5, FUNCTIONTYPE_POS = 2, 
                           RETURNTYPE_POS = 4, CONSTANT_FUNCTION_CALL = 3,
-                          EXPRESSIONS_POS = 4, CONSTANT_FUNCTION_DECLARATION = 6;
+                          EXPRESSIONS_POS = 2, CONSTANT_FUNCTION_DECLARATION = 6;
         
         public AST GetAST(ASTNode root)
         {

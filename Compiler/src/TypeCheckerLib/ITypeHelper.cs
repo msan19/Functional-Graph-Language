@@ -3,6 +3,7 @@ using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib
@@ -19,5 +20,7 @@ namespace TypeCheckerLib
         TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes);
         TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode, List<TypeNode> parameterTypes);
         TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes);
+        TypeNode VisitAddition(AdditionExpression n, List<TypeNode> parameterTypes);
+        TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
     }
 }
