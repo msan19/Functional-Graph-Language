@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
@@ -9,7 +10,6 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Hime.Redist;
-using Main.Exceptions;
 
 namespace LexParserLib
 {
