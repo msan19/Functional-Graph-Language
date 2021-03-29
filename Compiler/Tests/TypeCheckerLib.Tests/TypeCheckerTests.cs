@@ -24,7 +24,7 @@ namespace TypeCheckerLib.Tests
             int expectedNumberOfCallsToVisitExport = 2;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitExport(Arg.Do<ExportNode>(exp => actualNumberOfCallToVisitExport++));
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             AST ast = CreateAst(0, 2);
 
             typeChecker.CheckTypes(ast);
@@ -39,7 +39,7 @@ namespace TypeCheckerLib.Tests
             int expectedNumberOfCallsToVisitFunction = 3;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitFunction(Arg.Do<FunctionNode>(exp => actualNumberOfCallsToVisitFunction++));
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             AST ast = CreateAst(3, 0);
 
             typeChecker.CheckTypes(ast);
@@ -90,7 +90,7 @@ namespace TypeCheckerLib.Tests
             bool visitBinaryNumOpWasCalled = false;
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             numberHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(exp => visitBinaryNumOpWasCalled = true), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(numberHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
             
             typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
@@ -106,7 +106,7 @@ namespace TypeCheckerLib.Tests
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             IBinaryNumberOperator actualNode = null;
             numberHelper.VisitBinaryNumOp(Arg.Do<IBinaryNumberOperator>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(numberHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
             
             typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
@@ -122,7 +122,7 @@ namespace TypeCheckerLib.Tests
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             numberHelper.VisitBinaryNumOp(Arg.Any<IBinaryNumberOperator>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(numberHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
             
             TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>()); 
             
@@ -139,7 +139,7 @@ namespace TypeCheckerLib.Tests
             bool visitFunctionCallWasCalled = false;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(exp => visitFunctionCallWasCalled = true), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
@@ -153,7 +153,7 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             FunctionCallExpression actualNode = null;
             declarationHelper.VisitFunctionCall(Arg.Do<FunctionCallExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
@@ -167,7 +167,7 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Function, 1, 1);
             declarationHelper.VisitFunctionCall(Arg.Any<FunctionCallExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             TypeNode actualTypeNode = typeChecker.Dispatch(funcCallExpr, new List<TypeNode>()); 
             
@@ -184,7 +184,7 @@ namespace TypeCheckerLib.Tests
             bool visitIdentifierWasCalled = false;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(exp => visitIdentifierWasCalled = true), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
@@ -198,7 +198,7 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             IdentifierExpression actualNode = null;
             declarationHelper.VisitIdentifier(Arg.Do<IdentifierExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
 
             typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
@@ -213,7 +213,7 @@ namespace TypeCheckerLib.Tests
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitIdentifier(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             TypeNode actualTypeNode = typeChecker.Dispatch(idExpressionNode, new List<TypeNode>()); 
             
@@ -230,7 +230,7 @@ namespace TypeCheckerLib.Tests
             bool visitIntegerLiteralWasCalled = false;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(exp => visitIntegerLiteralWasCalled = true), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
@@ -244,7 +244,7 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             IntegerLiteralExpression actualNode = null;
             declarationHelper.VisitIntegerLiteral(Arg.Do<IntegerLiteralExpression>(intLitNode => actualNode = intLitNode), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
@@ -258,7 +258,7 @@ namespace TypeCheckerLib.Tests
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitIntegerLiteral(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             TypeNode actualTypeNode = typeChecker.Dispatch(intLiteralExpression, new List<TypeNode>()); 
             
@@ -275,7 +275,7 @@ namespace TypeCheckerLib.Tests
             bool visitRealLiteralWasCalled = false;
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(exp => visitRealLiteralWasCalled = true), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
@@ -289,7 +289,7 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             RealLiteralExpression actualNode = null;
             declarationHelper.VisitRealLiteral(Arg.Do<RealLiteralExpression>(intLitNode => actualNode = intLitNode), Arg.Any<List<TypeNode>>());
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
@@ -303,7 +303,7 @@ namespace TypeCheckerLib.Tests
             TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             declarationHelper.VisitRealLiteral(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
-            ITypeChecker typeChecker = GetTypeCheckerOnlyWith(declarationHelper);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(declarationHelper);
             
             TypeNode actualTypeNode = typeChecker.Dispatch(realLiteralExpression, new List<TypeNode>()); 
             
@@ -311,38 +311,6 @@ namespace TypeCheckerLib.Tests
         }
             # endregion
 
-        private ITypeChecker GetTypeCheckerOnlyWith(IDeclarationHelper declarationHelper)
-        {
-            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
-            INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
-        }
-        
-        private ITypeChecker GetTypeCheckerOnlyWith(ICommonOperatorHelper commonOperatorHelper)
-        {
-            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
-            INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
-        }
-        
-        private ITypeChecker GetTypeCheckerOnlyWith(INumberHelper numberHelper)
-        {
-            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
-            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
-            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
-        }
-        
-        private ITypeChecker GetTypeCheckerOnlyWith(IBooleanHelper booleanHelper)
-        {
-            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
-            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
-            INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
-        }
-        
         # endregion
     }
 }
