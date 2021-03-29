@@ -14,7 +14,7 @@ namespace ReferenceHandlerLib
         public ReferenceHandler(IReferenceHelper helper)
         {
             _helper = helper;
-            _helper.ReferenceHandler = this;
+            _helper.SetDispatch(Dispatch);
         }
 
         public void InsertReferences(AST root)
