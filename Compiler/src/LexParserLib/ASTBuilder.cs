@@ -123,11 +123,20 @@ namespace LexParserLib
 
         private ConditionNode CreateConditionNode(ASTNode himeNode)
         {
-            ASTNode conditionExpr = himeNode.Children[1];
+            
             ASTNode expr = himeNode.Children[3];
-            return new ConditionNode(DispatchExpression(conditionExpr), DispatchExpression(expr),
-                                                        himeNode.Position.Line,
-                                                        himeNode.Position.Column);
+            ExpressionNode returnExpression = DispatchExpression(expr);
+
+            if(himeNode.Children[1].Value == "_")
+            {
+                return new ConditionNode(returnExpression,
+                                         himeNode.Position.Line, himeNode.Position.Column);
+            } else
+            {
+                ExpressionNode conditionExpr = DispatchExpression(himeNode.Children[1]);
+                return new ConditionNode(conditionExpr, returnExpression,
+                                         himeNode.Position.Line, himeNode.Position.Column);
+            }            
         }
 
         private ASTNode GetFunctionContent(ASTNode himeDeclerationNode)
