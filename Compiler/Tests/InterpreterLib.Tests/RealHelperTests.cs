@@ -17,6 +17,13 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class RealHelperTests
     {
+        private RealHelper SetUpHelper(IInterpreter parent)
+        {
+            RealHelper realHelper = new RealHelper();
+            realHelper.SetUpFuncs(parent.DispatchReal, parent.DispatchInt, parent.Dispatch, parent.FunctionReal);
+            return realHelper;
+        }
+
         #region ExportReal
         [DataRow(1.0, 1.0)]
         [DataRow(-1.0, -1.0)]
@@ -28,10 +35,7 @@ namespace InterpreterLib.Tests
             ExportNode exportNode = new ExportNode(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.ExportReal(exportNode, new List<object>());
 
@@ -50,10 +54,7 @@ namespace InterpreterLib.Tests
             ConditionNode conditionNode = new ConditionNode(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.ConditionReal(conditionNode, new List<object>());
 
@@ -76,10 +77,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.AdditionReal(additionExpr, new List<object>());
 
@@ -102,10 +100,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.SubtractionReal(subtractionExpr, new List<object>());
 
@@ -128,10 +123,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.MultiplicationReal(multiplicationExpr, new List<object>());
 
@@ -154,10 +146,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.DivisionReal(divisionExpr, new List<object>());
 
@@ -174,10 +163,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             Assert.ThrowsException<Exception>(() => realHelper.DivisionReal(divisionExpr, new List<object>()));
         }
@@ -198,10 +184,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.ModuloReal(moduloExpr, new List<object>());
 
@@ -218,10 +201,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             Assert.ThrowsException<Exception>(() => realHelper.ModuloReal(moduloExpr, new List<object>()));
         }
@@ -239,10 +219,7 @@ namespace InterpreterLib.Tests
             AbsoluteValueExpression absoluteExpr = new AbsoluteValueExpression(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.AbsoluteReal(absoluteExpr, new List<object>());
 
@@ -265,10 +242,7 @@ namespace InterpreterLib.Tests
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.PowerReal(powExpr, new List<object>());
 
@@ -320,10 +294,7 @@ namespace InterpreterLib.Tests
             CastFromIntegerExpression castExpr = new CastFromIntegerExpression(realLit, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchInt(realLit, Arg.Any<List<object>>()).Returns(input);
-            RealHelper realHelper = new RealHelper()
-            {
-                Interpreter = parent
-            };
+            RealHelper realHelper = SetUpHelper(parent);
 
             double res = realHelper.CastIntegerToReal(castExpr, new List<object>());
 
@@ -342,7 +313,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.LocalReference = -1;
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
-            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            RealHelper realHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
@@ -366,7 +337,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.GlobalReferences = new List<int>();
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
-            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            RealHelper realHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
@@ -411,7 +382,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
-            RealHelper realHelper = new RealHelper() { Interpreter = parent };
+            RealHelper realHelper = SetUpHelper(parent);
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);

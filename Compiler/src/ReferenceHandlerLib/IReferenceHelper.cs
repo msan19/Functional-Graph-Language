@@ -1,13 +1,14 @@
 ﻿using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using System;
 using System.Collections.Generic;
 
 namespace ReferenceHandlerLib
 {
     public interface IReferenceHelper
     {
-        IReferenceHandler ReferenceHandler { get; set; }
+        void SetDispatch(Action<ExpressionNode, List<string>> dispatch);
 
         void BuildTables(List<FunctionNode> functions);
         void VisitExport(ExportNode node);

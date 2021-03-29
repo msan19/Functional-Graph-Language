@@ -6,6 +6,7 @@ using InterpreterLib.Helpers;
 using LexParserLib;
 using ReferenceHandlerLib;
 using TypeCheckerLib;
+using TypeCheckerLib.Helpers;
 
 namespace Main
 {
@@ -20,7 +21,7 @@ namespace Main
         {
             LexParser lexParse = new LexParser(new ASTBuilder());
             ReferenceHandler referenceHandler = new ReferenceHandler(new ReferenceHelper());
-            TypeChecker typeChecker = new TypeChecker(new TypeHelper());
+            TypeChecker typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new BooleanHelper());
             Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
