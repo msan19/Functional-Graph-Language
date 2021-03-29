@@ -13,7 +13,10 @@ namespace InterpreterLib.Helpers
     public class RealHelper : IRealHelper
     {
 
-        public IInterpreter Interpreter { get; set; }
+        private Func<ExpressionNode, List<object>, double> _dispatchReal;
+        private Func<ExpressionNode, List<object>, int> _dispatchInt;
+        private Func<ExpressionNode, List<object>, TypeEnum, Object> _dispatch;
+        private Func<FunctionNode, List<object>, double> _functionReal;
 
         private AST _root;
 
@@ -22,44 +25,55 @@ namespace InterpreterLib.Helpers
             _root = root;
         }
 
+        public void SetUpFuncs(Func<ExpressionNode, List<object>, double> dispatchReal,
+                               Func<ExpressionNode, List<object>, int> dispatchInt,
+                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
+                               Func<FunctionNode, List<object>, double> functionReal)
+        {
+            _dispatchReal = dispatchReal;
+            _dispatchInt = dispatchInt;
+            _dispatch = dispatch;
+            _functionReal = functionReal;
+        }
+
         public double ExportReal(ExportNode node, List<object> parameters)
         {
-            return Interpreter.DispatchReal(node.ExportValue, parameters);
+            return _dispatchReal(node.ExportValue, parameters);
         }
 
         public double ConditionReal(ConditionNode node, List<object> parameters)
         {
-            return Interpreter.DispatchReal(node.ReturnExpression, parameters);
+            return _dispatchReal(node.ReturnExpression, parameters);
         }
 
         public double AdditionReal(AdditionExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             return leftOperand + rightOperand;
         }
 
         public double SubtractionReal(SubtractionExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             return leftOperand - rightOperand;
         }
 
         public double MultiplicationReal(MultiplicationExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             return leftOperand * rightOperand;
         }
 
         public double DivisionReal(DivisionExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             if (rightOperand == 0.0) throw new Exception("Divisor cannot be zero");
 
@@ -68,8 +82,8 @@ namespace InterpreterLib.Helpers
 
         public double ModuloReal(ModuloExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             if (rightOperand == 0.0) throw new Exception("Divisor cannot be zero");
 
@@ -78,14 +92,14 @@ namespace InterpreterLib.Helpers
 
         public double AbsoluteReal(AbsoluteValueExpression node, List<object> parameters)
         {
-            double operand = Interpreter.DispatchReal(node.Children[0], parameters);
+            double operand = _dispatchReal(node.Children[0], parameters);
 
             return Math.Abs(operand);
         }
         public double PowerReal(PowerExpression node, List<object> parameters)
         {
-            double leftOperand = Interpreter.DispatchReal(node.Children[0], parameters);
-            double rightOperand = Interpreter.DispatchReal(node.Children[1], parameters);
+            double leftOperand = _dispatchReal(node.Children[0], parameters);
+            double rightOperand = _dispatchReal(node.Children[1], parameters);
 
             return Math.Pow(leftOperand, rightOperand);
         }
@@ -102,7 +116,7 @@ namespace InterpreterLib.Helpers
 
         public double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters)
         {
-            return Convert.ToDouble(Interpreter.DispatchInt(node.Children[0], parameters));
+            return Convert.ToDouble(_dispatchInt(node.Children[0], parameters));
         }
 
         public double FunctionCallReal(FunctionCallExpression node, List<object> parameters)
@@ -118,10 +132,10 @@ namespace InterpreterLib.Helpers
             for (int i = 0; i < node.Children.Count; i++)
             {
                 TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
-                funcParameterValues.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+                funcParameterValues.Add(_dispatch(node.Children[i], parameters, parameterType));
             }
 
-            return Interpreter.FunctionReal(funcNode, funcParameterValues);
+            return _functionReal(funcNode, funcParameterValues);
         }
 
     }
