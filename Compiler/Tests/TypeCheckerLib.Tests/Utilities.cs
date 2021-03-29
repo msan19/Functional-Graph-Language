@@ -93,6 +93,34 @@ namespace TypeCheckerLib.Tests
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
         }
         
+        public static FunctionNode GetFunctionNodeWithFunctionOutput(TypeEnum funcOutput, List<TypeEnum> funcInputTypes, List<TypeEnum> inputToNewFunc)
+        {
+            var inputs = new List<TypeNode>();
+            foreach (var input in inputToNewFunc)
+                inputs.Add(new TypeNode(input, 0, 0));
+
+            var functOutput = new TypeNode(funcOutput, 0, 0);
+            var funcInputs = new List<TypeNode>();
+            foreach (var input in funcInputTypes)
+                funcInputs.Add(new TypeNode(input, 0, 0));
+            var functionOutput = new FunctionTypeNode(functOutput, funcInputs, 0, 0);
+
+            return new FunctionNode("id", null, null,
+                new FunctionTypeNode(functionOutput,
+                    inputs, 0, 0), 0, 0);
+        }
+
+        public static FunctionNode GetFunctionNode(TypeEnum output, List<TypeEnum> inputTypes)
+        {
+            var inputs = new List<TypeNode>();
+            foreach (var input in inputTypes)
+                inputs.Add(new TypeNode(input, 0, 0));
+
+            return new FunctionNode("id", null, null,
+                new FunctionTypeNode(new TypeNode(output, 0, 0),
+                    inputs, 0, 0), 0, 0);
+        }
+        
         public static AST GetAst()
         {
             return new AST(new List<FunctionNode>(), new List<ExportNode>(), 0, 0);
