@@ -21,7 +21,7 @@ namespace Main
         {
             LexParser lexParse = new LexParser(new ASTBuilder());
             ReferenceHandler referenceHandler = new ReferenceHandler(new ReferenceHelper());
-            TypeChecker typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new BooleanHelper());
+            TypeChecker typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeCheckerLib.Helpers.BooleanHelper());
             Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
