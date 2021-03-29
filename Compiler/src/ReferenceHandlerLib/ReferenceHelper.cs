@@ -10,9 +10,15 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        public IReferenceHandler ReferenceHandler { get; set; }
         private Dictionary<string, List<int>> _functionTable;
         private Dictionary<string, int> _functionIdentifierTable;
+
+        private Action<ExpressionNode, List<string>> _dispatch;
+
+        public void SetDispatch(Action<ExpressionNode, List<string>> dispatch)
+        {
+            _dispatch = dispatch;
+        }
 
         public void BuildTables(List<FunctionNode> functions)
         {
@@ -50,7 +56,7 @@ namespace ReferenceHandlerLib
 
         public void VisitExport(ExportNode node)
         {
-            ReferenceHandler.Dispatch(node.ExportValue, new List<string>() { });
+            _dispatch(node.ExportValue, new List<string>() { });
         }
 
         public void VisitFunction(FunctionNode node)
@@ -69,14 +75,17 @@ namespace ReferenceHandlerLib
 
         private void VisitCondition(ConditionNode node, List<string> identifiers)
         {
-            ReferenceHandler.Dispatch(node.ReturnExpression, identifiers);
+            _dispatch(node.ReturnExpression, identifiers);
         }
 
         public void VisitNonIdentifier(INonIdentifierExpression node, List<string> identifiers)
         {
-            foreach (ExpressionNode child in node.Children)
+            if (node.Children != null)
             {
-                ReferenceHandler.Dispatch(child, identifiers);
+                foreach (ExpressionNode child in node.Children)
+                {
+                    _dispatch(child, identifiers);
+                }
             }
         }
 
@@ -89,7 +98,6 @@ namespace ReferenceHandlerLib
                     node.Reference = i;
                 }
             }
-            if (node.Reference == -1) { throw new Exception($"{node.Id} is not a valid parameter identifier"); }
             node.IsLocal = (node.Reference != -1);
             if (!node.IsLocal)
             {

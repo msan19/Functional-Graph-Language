@@ -1,16 +1,21 @@
+using System;
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
     public interface IRealHelper
     {
-        IInterpreter Interpreter { get; set; }
-
         public void SetASTRoot(AST root);
+
+        public void SetUpFuncs(Func<ExpressionNode, List<object>, double> dispatchReal,
+                               Func<ExpressionNode, List<object>, int> dispatchInt,
+                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
+                               Func<FunctionNode, List<object>, double> functionReal);
 
         double ExportReal(ExportNode node, List<object> parameters);
 
