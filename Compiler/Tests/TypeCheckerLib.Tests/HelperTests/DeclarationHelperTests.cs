@@ -187,18 +187,17 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.LocalReference = 0;
             input1.GlobalReferences = new List<int>() { 0 };
 
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
             List<TypeNode> parameterTypes = expected;
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             List<TypeNode> res = null;
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast, parent);
 
-            typeHelper.VisitFunctionCall(input1, parameterTypes.ToList());
+            declarationHelper.VisitFunctionCall(input1, parameterTypes.ToList());
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -217,15 +216,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             List<TypeNode> res = null;
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
-            typeHelper.VisitFunctionCall(input1, expected.ToList());
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast, parent);
+            declarationHelper.VisitFunctionCall(input1, expected.ToList());
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -257,12 +255,11 @@ namespace TypeCheckerLib.Tests.HelperTests
             TypeEnum expected = TypeEnum.Integer;
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()));
-            TypeHelper typeHelper = new TypeHelper();
-            typeHelper.SetAstRoot(ast);
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -277,13 +274,12 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -299,17 +295,16 @@ namespace TypeCheckerLib.Tests.HelperTests
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
             
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -327,22 +322,21 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>()
             {
                 TypeEnum.Real, TypeEnum.Integer, TypeEnum.Integer, TypeEnum.Real
             }));
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() 
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() 
             { 
                 TypeEnum.Integer, TypeEnum.Real, TypeEnum.Integer, TypeEnum.Real
             }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -357,16 +351,15 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }));
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Integer }));
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
         }
 
         [TestMethod]
@@ -379,15 +372,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
         }
 
         [TestMethod]
@@ -396,11 +388,10 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
             input1.GlobalReferences = new List<int>() { };
-            var ast = GetAst();
-            TypeHelper typeHelper = new TypeHelper();
-            typeHelper.SetAstRoot(ast);
+            var ast = Utilities.GetAst();
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
         }
 
         [TestMethod]
@@ -410,12 +401,11 @@ namespace TypeCheckerLib.Tests.HelperTests
             TypeEnum expectedFuncInput = TypeEnum.Real;
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
+            var ast = Utilities.GetAst();
             ast.Functions.Add(GetFunctionNodeWithFunctionOutput(TypeEnum.Integer, new List<TypeEnum>() { TypeEnum.Real }, new List<TypeEnum>()));
-            TypeHelper typeHelper = new TypeHelper();
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = (FunctionTypeNode) typeHelper.VisitFunctionCall(input1, null);
+            var res = (FunctionTypeNode) declarationHelper.VisitFunctionCall(input1, null);
 
             Assert.AreEqual(expectedFuncOutput, res.ReturnType.Type);
             Assert.AreEqual(expectedFuncInput, res.ParameterTypes[0].Type);
@@ -432,14 +422,13 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0 };
-            var ast = GetAst();
+            var ast = Utilities.GetAst();
             ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real })), 0, 0));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast, parent);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -454,15 +443,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
             FunctionCallExpression input1 = new FunctionCallExpression("", children, 1, 1);
             input1.GlobalReferences = new List<int>() { 0, 1 };
-            var ast = GetAst();
+            var ast = Utilities.GetAst();
             ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }), 0, 0));
             ast.Functions.Add(new FunctionNode("id", null, null, GetFunctionType(TypeEnum.Integer, GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer })), 0, 0));
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetFunctionType(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Real }));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast, parent);
 
-            var res = typeHelper.VisitFunctionCall(input1, null).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, null).Type;
         }
 
         // Only local references
@@ -486,9 +474,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             //parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
             
-            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, parameterTypes).Type;
         }
         
         // Both global and local references
@@ -505,8 +493,8 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.LocalReference = 0;
             input1.GlobalReferences = new List<int>(){0};
             
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
             List<TypeNode> parameterTypes = new List<TypeNode>()
             {
@@ -515,10 +503,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
             
-            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, parameterTypes).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -536,8 +523,8 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.LocalReference = 0;
             input1.GlobalReferences = new List<int>(){0};
 
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
             List<TypeNode> parameterTypes = new List<TypeNode>()
             {
@@ -546,10 +533,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
             
-            typeHelper.VisitFunctionCall(input1, parameterTypes);
+            declarationHelper.VisitFunctionCall(input1, parameterTypes);
             var res = input1.GlobalReferences.Count;
             
             Assert.AreEqual(expected, res);
@@ -568,8 +554,8 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.LocalReference = 0;
             input1.GlobalReferences = new List<int>(){0};
             
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
             List<TypeNode> parameterTypes = new List<TypeNode>()
             {
@@ -578,10 +564,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
             
-            var res = typeHelper.VisitFunctionCall(input1, parameterTypes).Type;
+            var res = declarationHelper.VisitFunctionCall(input1, parameterTypes).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -599,8 +584,8 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.LocalReference = 0;
             input1.GlobalReferences = new List<int>(){0};
             
-            var ast = GetAst();
-            ast.Functions.Add(GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
+            var ast = Utilities.GetAst();
+            ast.Functions.Add(Utilities.GetFunctionNode(TypeEnum.Real, new List<TypeEnum>() { TypeEnum.Integer }));
 
             List<TypeNode> parameterTypes = new List<TypeNode>()
             {
@@ -609,10 +594,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper { TypeChecker = parent };
-            typeHelper.SetAstRoot(ast);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
             
-            typeHelper.VisitFunctionCall(input1, parameterTypes);
+            declarationHelper.VisitFunctionCall(input1, parameterTypes);
             var res = input1.LocalReference;
             
             Assert.AreEqual(expected, res);
@@ -630,12 +614,7 @@ namespace TypeCheckerLib.Tests.HelperTests
                 inputs.Add(new TypeNode(input, 0, 0));
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), inputs, 0, 0);
         }
-
-        private AST GetAst()
-        {
-            return new AST(new List<FunctionNode>(), new List<ExportNode>(), 0, 0);
-        }
-
+        
         private FunctionNode GetFunctionNodeWithFunctionOutput(TypeEnum funcOutput, List<TypeEnum> funcInputTypes, List<TypeEnum> inputToNewFunc)
         {
             var inputs = new List<TypeNode>();
@@ -652,19 +631,9 @@ namespace TypeCheckerLib.Tests.HelperTests
                 new FunctionTypeNode(functionOutput,
                 inputs, 0, 0), 0, 0);
         }
-
-        private FunctionNode GetFunctionNode(TypeEnum output, List<TypeEnum> inputTypes)
-        {
-            var inputs = new List<TypeNode>();
-            foreach (var input in inputTypes)
-                inputs.Add(new TypeNode(input, 0, 0));
-
-            return new FunctionNode("id", null, null,
-                new FunctionTypeNode(new TypeNode(output, 0, 0),
-                inputs, 0, 0), 0, 0);
-        }
+        
         #endregion
-
+        
         #region Identifier
         // Global
         // 1 glob, is match     -> int, real, function ... 
