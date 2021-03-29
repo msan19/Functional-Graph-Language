@@ -15,5 +15,11 @@ namespace ASTLib.Nodes
         {
             ReturnExpression = returnExpression;
         }
+
+        public ConditionNode(ExpressionNode conditionExpression, ExpressionNode returnExpression, int line, int letter) : base(line, letter)
+        {
+            ReturnExpression = returnExpression;
+            Condition = conditionExpression;
+        }
     }
 }

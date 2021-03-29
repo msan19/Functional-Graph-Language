@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes
+namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes
 {
     public class EqualExpression : ExpressionNode, INonIdentifierExpression, IEquivalenceOperator
     {

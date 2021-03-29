@@ -8,6 +8,7 @@ namespace ASTLib.Nodes.TypeNodes
     {
         Real,
         Integer,
+        Boolean,
         Function
     }
     

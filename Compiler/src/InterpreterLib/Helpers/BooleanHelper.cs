@@ -15,8 +15,10 @@ namespace InterpreterLib.Helpers
     {
         public IInterpreter Interpreter { get; set; }
         private Func<ExpressionNode, List<object>, bool> _dispatchBoolean;
+        private Func<ExpressionNode, List<object>, int> _dispatchInteger;
+        private Func<ExpressionNode, List<object>, double> _dispatchReal;
         private Func<ExpressionNode, List<object>, TypeEnum, object> _dispatch;
-        private Func<FunctionNode, List<object>, bool> _functionBoolean;
+        private Func<FunctionNode,   List<object>, bool> _functionBoolean;
         private AST _root;
 
         public bool AndBoolean(AndExpression node, List<object> parameters)
@@ -85,10 +87,14 @@ namespace InterpreterLib.Helpers
         }
 
         public void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
+                               Func<ExpressionNode, List<object>, int> dispatchInteger,
+                               Func<ExpressionNode, List<object>, double> dispatchReal,
                                Func<ExpressionNode, List<object>, TypeEnum, object> dispatch,
-                               Func<FunctionNode, List<object>, bool> functionBoolean)
+                               Func<FunctionNode,   List<object>, bool> functionBoolean)
         {
             _dispatchBoolean = dispatchBoolean;
+            _dispatchInteger = dispatchInteger;
+            _dispatchReal = dispatchReal;
             _dispatch = dispatch;
             _functionBoolean = functionBoolean;
         }
