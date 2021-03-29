@@ -1586,11 +1586,11 @@ namespace InterpreterLib.Tests
         #endregion
 
         #region CompleteComponent
-        [DataRow(1, 1.0)]
-        [DataRow(-10, 0.017)]
-        [DataRow(10, 0.5)]
+        [DataRow(1, 1.0, 1.0)]
+        [DataRow(10, 0.017, 1.0399201658290593)]
+        [DataRow(10, 0.5, 3.1622776601683795)]
         [TestMethod]
-        public void Interpret_Unmocked_ASTWithXtoThePowerOfY_CorrectListReturned(int xValue, double yValue)
+        public void Interpret_Unmocked_ASTWithXtoThePowerOfY_CorrectListReturned(int xValue, double yValue, double expected)
         {
             Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
             IdentifierExpression x = new IdentifierExpression("x", 0, 0)
@@ -1624,7 +1624,7 @@ namespace InterpreterLib.Tests
 
             List<double> res = interpreter.Interpret(ast);
 
-            Assert.AreEqual(res[0], Math.Pow(xValue, yValue));
+            Assert.AreEqual(expected, res[0]);
         }
         #endregion
     }
