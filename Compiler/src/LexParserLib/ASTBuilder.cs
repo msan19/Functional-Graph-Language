@@ -229,7 +229,7 @@ namespace LexParserLib
                 "MaxTerm"           => VisitExpression(himeNode),
                 "MinTerm"           => VisitExpression(himeNode),
                 "LogicTerm"         => VisitLogicTerm(himeNode),
-                "NumberExpression"  => VisitExpression(himeNode),
+                "NumExpression"  => VisitExpression(himeNode),
                 "Term"              => VisitExpression(himeNode),
                 "Factor"            => VisitExpression(himeNode),
                 "Exponent"          => VisitExponent(himeNode),
