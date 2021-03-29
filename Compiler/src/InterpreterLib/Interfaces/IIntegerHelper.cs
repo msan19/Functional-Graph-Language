@@ -4,6 +4,7 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
@@ -13,6 +14,10 @@ namespace InterpreterLib.Interfaces
         IInterpreter Interpreter { get; set; }
 
         void SetASTRoot(AST root);
+
+        void SetUpInts(Func<ExpressionNode, List<Object>, int> dispatchInt,
+               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
+               Func<FunctionNode, List<Object>, int> functionInteger);
 
         int ConditionInteger(ConditionNode node, List<Object> parameters);
 

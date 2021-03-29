@@ -13,6 +13,7 @@ namespace ASTLib.Nodes.ExpressionNodes
         public RealLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
         {
             Value = ConvertToDouble(token);
+            Children = new List<ExpressionNode>();
         }
         private double ConvertToDouble(string str)
         {

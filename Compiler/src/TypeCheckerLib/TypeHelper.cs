@@ -6,6 +6,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TypeCheckerLib
 {
@@ -13,7 +14,6 @@ namespace TypeCheckerLib
     {
         public ITypeChecker TypeChecker { get; set; }
         private List<FunctionNode> _functions;
-        private List<TypeNode> _typeNodes;
 
         public void SetAstRoot(AST root)
         {
@@ -23,9 +23,7 @@ namespace TypeCheckerLib
         
         public void VisitExport(ExportNode exportNode)
         {
-            // Call dispatch and check that return type is double
-            // If integer insert CastNode 
-            var type = TypeChecker.Dispatch(exportNode.ExportValue).Type;
+            var type = TypeChecker.Dispatch(exportNode.ExportValue, new List<TypeNode>()).Type;
             if (type == TypeEnum.Real)
                 return;
             else if (type == TypeEnum.Integer)
@@ -42,22 +40,17 @@ namespace TypeCheckerLib
 
         public void VisitFunction(FunctionNode functionNode)
         {
-            // Set current type nodes.
-            // For each condition:
-            //  If ReturnExpression of Condition do not match the declared return type of the function: Try Insert CastNode.
-            //      Check that LHS is type bool.
-            //      Check that RHS is type correct - this may be casted.
-            _typeNodes = functionNode.FunctionType.ParameterTypes;
+            List<TypeNode> parameterTypes = functionNode.FunctionType.ParameterTypes;
 
             foreach (var condition in functionNode.Conditions)
             {
-                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition);
+                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition, parameterTypes);
             }
         }
 
-        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition)
+        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
-            var type = TypeChecker.Dispatch(condition.ReturnExpression).Type;
+            var type = TypeChecker.Dispatch(condition.ReturnExpression, parameterTypes).Type;
             if (type != rhsType)
             {
                 if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
@@ -75,10 +68,10 @@ namespace TypeCheckerLib
         }
 
 
-        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode)
+        public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode, List<TypeNode> parameterTypes)
         {
-            TypeNode left = GetType(binaryNode.Children[0]);
-            TypeNode right = GetType(binaryNode.Children[1]);
+            TypeNode left = GetType(binaryNode.Children[0], parameterTypes);
+            TypeNode right = GetType(binaryNode.Children[1], parameterTypes);
             
             if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
                 throw new Exception("One of the arguments is of type Function.");
@@ -92,37 +85,66 @@ namespace TypeCheckerLib
             return new TypeNode(left.Type, 0, 0);
         }
 
-        // TODO: Match Local Call reference 
-        public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode)
+        public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
-            // TODO: Check local scope
-            //       If local reference is found, empty funcCallExpNode.GlobalReferences
-            GetMatchingFunctions(funcCallExpNode);
-
-            // Insert an error check here.
-            
-            return null;
-        }
-
-        private void GetMatchingFunctions(FunctionCallExpression funcCallExpNode)
-        {
-            // TODO: Remove irrelevant references in funcCallExpNode.GlobalReferences
-            
-            List<FunctionNode> matches = new List<FunctionNode>();
-            foreach (int i in funcCallExpNode.GlobalReferences)
+            TypeNode res = null;
+            if (IsLocalReferenceAMatch(funcCallExpNode, parameterTypes))
             {
-                var func = _functions[i];
-                if (FunctionIsMatch(func.FunctionType.ParameterTypes, funcCallExpNode))
-                    matches.Add(func);
+                funcCallExpNode.GlobalReferences = new List<int>();
+                FunctionTypeNode funcDeclType = (FunctionTypeNode)parameterTypes[funcCallExpNode.LocalReference];
+                res = funcDeclType.ReturnType;
             }
+            else
+            {
+                List<int> matchingRefs = GetMatches(funcCallExpNode.Children, funcCallExpNode.GlobalReferences, parameterTypes);
+                if (matchingRefs.Count != 1)
+                    throw new Exception("Found no or more than one match");
+
+                funcCallExpNode.LocalReference = FunctionCallExpression.NO_LOCAL_REF;
+                funcCallExpNode.GlobalReferences = matchingRefs;
+                res = _functions[matchingRefs.First()].FunctionType.ReturnType;
+            }
+            
+            return res;
         }
 
-        private bool FunctionIsMatch(List<TypeNode> parameterTypes, FunctionCallExpression funcCallExpNode)
+        private List<int> GetMatches(List<ExpressionNode> children, List<int> globalReferences,
+            List<TypeNode> parameterTypes)
         {
-            for (int i = 0; i < parameterTypes.Count; i++)
+            List<int> res = new List<int>();
+            foreach (var globRef in globalReferences)
             {
-                var typeNode = TypeChecker.Dispatch(funcCallExpNode.Children[i]);
-                if(!TypesAreEqual(typeNode, parameterTypes[i]))
+                var func = _functions[globRef];
+                if (ChildrenMatchesFunctionInputParams(children, func.FunctionType.ParameterTypes, parameterTypes))
+                    res.Add(globRef);
+            }
+            return res;
+        }
+
+        private bool ChildrenMatchesFunctionInputParams(List<ExpressionNode> children,
+            List<TypeNode> functionTypeParameterTypes, List<TypeNode> parameterTypes)
+        {
+            for (var i = 0; i < children.Count; i++)
+            {
+                var child = TypeChecker.Dispatch(children[i], parameterTypes);
+                var expected = functionTypeParameterTypes[i];
+                if (!TypesAreEqual(child, expected))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool IsLocalReferenceAMatch(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
+        {
+            if (funcCallExpNode.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
+                return false;
+            
+            FunctionTypeNode funcDeclType = (FunctionTypeNode)parameterTypes[funcCallExpNode.LocalReference];
+            for (var i = 0; i < funcCallExpNode.Children.Count; i++)
+            {
+                var child = TypeChecker.Dispatch(funcCallExpNode.Children[i], parameterTypes);
+                var expected = funcDeclType.ParameterTypes[i];
+                if (!TypesAreEqual(child, expected))
                     return false;
             }
             return true;
@@ -156,22 +178,21 @@ namespace TypeCheckerLib
             return true;
         }
 
-        public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode)
+        public TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes)
         {
-            // If isLocal
-                // Lookup locally and return
-            // Else
-                // Lookup globally and return
-            
-            return null;
+            if (idExpressionNode.IsLocal)
+                return parameterTypes[idExpressionNode.Reference];
+            else
+                return _functions[idExpressionNode.Reference].FunctionType.ReturnType;
         }
 
-        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode)
+        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode,
+            List<TypeNode> parameterTypes)
         {
             return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
-        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode)
+        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes)
         {
             return new TypeNode(TypeEnum.Real, 0, 0);
         }
@@ -180,21 +201,55 @@ namespace TypeCheckerLib
         /// Private Helpers
         /// 
 
-        private TypeNode GetType(ExpressionNode node)
+        private TypeNode GetType(ExpressionNode node, List<TypeNode> parameterTypes)
         {
-            return TypeChecker.Dispatch(node);
+            return TypeChecker.Dispatch(node, parameterTypes);
         }
 
-        private void CastToReal(IBinaryNumberOperator binaryNode, TypeNode nodeType, int child)
+        private void CastToReal(IExpressionNode binaryNode, TypeNode nodeType, int child)
         {
             if (nodeType.Type != TypeEnum.Real)
                 InsertCastNode(binaryNode, child);
         }
 
-        private void InsertCastNode(IBinaryNumberOperator binaryNode, int child)
+        private void InsertCastNode(IExpressionNode binaryNode, int child)
         {
             CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
             binaryNode.Children[child] = cast;
+        }
+
+        public TypeNode VisitAddition(AdditionExpression n, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = GetType(n.Children[0], parameterTypes);
+            TypeNode right = GetType(n.Children[1], parameterTypes);
+
+            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
+                throw new Exception("One of the arguments is of type Function.");
+
+            if (left.Type != right.Type)
+            {
+                CastToReal(n, left, 0);
+                CastToReal(n, right, 1);
+                return new TypeNode(TypeEnum.Real, 0, 0);
+            }
+            return new TypeNode(left.Type, 0, 0);
+        }
+
+        public TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = GetType(n.Children[0], parameterTypes);
+            TypeNode right = GetType(n.Children[1], parameterTypes);
+
+            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
+                throw new Exception("One of the arguments is of type Function.");
+
+            if (left.Type != right.Type)
+            {
+                CastToReal(n, left, 0);
+                CastToReal(n, right, 1);
+                return new TypeNode(TypeEnum.Real, 0, 0);
+            }
+            return new TypeNode(left.Type, 0, 0);
         }
     }
 }

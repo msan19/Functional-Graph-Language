@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
@@ -30,20 +31,24 @@ namespace TypeCheckerLib
             }
         }
 
-        public TypeNode Dispatch(ExpressionNode node)
+        public TypeNode Dispatch(ExpressionNode node, List<TypeNode> parameterTypes)
         {
             switch (node)
             {
                 case IBinaryNumberOperator n:
-                    return _helper.VisitBinaryNumOp(n);
+                    return _helper.VisitBinaryNumOp(n, parameterTypes);
                 case FunctionCallExpression n:
-                    return _helper.VisitFunctionCall(n);
+                    return _helper.VisitFunctionCall(n, parameterTypes);
                 case IdentifierExpression n:
-                    return _helper.VisitIdentifier(n);
+                    return _helper.VisitIdentifier(n, parameterTypes);
                 case IntegerLiteralExpression n:
-                    return _helper.VisitIntegerLiteral(n);
+                    return _helper.VisitIntegerLiteral(n, parameterTypes);
                 case RealLiteralExpression n:
-                    return _helper.VisitRealLiteral(n);
+                    return _helper.VisitRealLiteral(n, parameterTypes);
+                case AdditionExpression n:
+                    return _helper.VisitAddition(n, parameterTypes);
+                case SubtractionExpression n:
+                    return _helper.VisitSubtraction(n, parameterTypes);
                 default:
                     throw new ArgumentException("The argument was not a recognized ExpressionNode");
                     

@@ -6,9 +6,11 @@ namespace ASTLib.Nodes.ExpressionNodes
 {
     public class FunctionCallExpression : ExpressionNode
     {
-        public List<int> GlobalReferences { get; set; }
+        public const int NO_LOCAL_REF = -1; 
+        
+        public List<int> GlobalReferences { get; set; } = new List<int>();
 
-        public int LocalReference { get; set; }
+        public int LocalReference { get; set; } = NO_LOCAL_REF;
 
         public string Identifier { get; }
 

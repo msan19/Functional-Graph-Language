@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
     public interface IFunctionHelper
     {
-        IInterpreter Interpreter { get; set; }
-
         void SetAST(AST root);
+
+        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchFunction,
+                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
+                               Func<FunctionNode, List<Object>, int> functionFunction);
 
         int ConditionFunction(ConditionNode node, List<Object> parameters);
 

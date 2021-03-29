@@ -10,7 +10,9 @@ namespace InterpreterLib.Helpers
 {
     public class FunctionHelper : IFunctionHelper
     {
-        public IInterpreter Interpreter { get; set; }
+        private Func<ExpressionNode, List<Object>, int> _dispatchFunction;
+        private Func<ExpressionNode, List<object>, TypeEnum, Object> _dispatch;
+        private Func<FunctionNode, List<Object>, int> _functionFunction;
         private List<FunctionNode> _functions;
 
         public void SetAST(AST root)
@@ -18,9 +20,18 @@ namespace InterpreterLib.Helpers
             _functions = root.Functions;
         }
 
+        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchFunction,
+                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
+                               Func<FunctionNode, List<Object>, int> functionFunction)
+        {
+            _dispatchFunction = dispatchFunction;
+            _dispatch = dispatch;
+            _functionFunction = functionFunction;
+        }
+
         public int ConditionFunction(ConditionNode node, List<Object> parameters)
         {
-            return Interpreter.DispatchFunction(node.ReturnExpression, parameters);         
+            return _dispatchFunction(node.ReturnExpression, parameters);         
         }
 
         public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
@@ -41,10 +52,10 @@ namespace InterpreterLib.Helpers
             for (int i = 0; i < node.Children.Count; i++)
             {
                 TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
-                funcParameterValues.Add(Interpreter.Dispatch(node.Children[i], parameters, parameterType));
+                funcParameterValues.Add(_dispatch(node.Children[i], parameters, parameterType));
             }
 
-            return Interpreter.FunctionFunction(funcNode, funcParameterValues);
+            return _functionFunction(funcNode, funcParameterValues);
         }
 
     }
