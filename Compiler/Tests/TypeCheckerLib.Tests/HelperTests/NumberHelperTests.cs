@@ -43,9 +43,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             {
                 Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
             };
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Real);
             
             List<TypeNode> res = null;
             ITypeChecker parent = Substitute.For<ITypeChecker>();
@@ -69,11 +67,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_InsertedIntToRealCastNode()
         {
             var expected = typeof(CastFromIntegerExpression);
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
-
-            //IBinaryNumberOperator input2 = GetBinaryOperator(TypeEnum.Integer, TypeEnum.Real, )
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Real);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             helper.VisitBinaryNumOp(input1, null);
@@ -86,9 +80,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_AppendedIntNodeToTypeCast()
         {
             var expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Real);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             helper.VisitBinaryNumOp(input1, null);
@@ -101,9 +93,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithTwoInt_LeftNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Integer);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             helper.VisitBinaryNumOp(input1, null);
@@ -116,9 +106,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithTwoInt_RightNodeIsReal()
         {
             var expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Integer);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             helper.VisitBinaryNumOp(input1, null);
@@ -131,9 +119,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithIntAndReal_ReturnsRealTypeNode()
         {
             var expected = TypeEnum.Real;
-            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
-            RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit, realLit, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Real);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             var res = helper.VisitBinaryNumOp(input1, null).Type;
@@ -145,9 +131,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void BinaryNumOp_MultiplicationExpressionWithTwoInt_ReturnsIntTypeNode()
         {
             var expected = TypeEnum.Integer;
-            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
-            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression("2", 2, 2);
-            IBinaryNumberOperator input1 = new MultiplicationExpression(intLit1, intLit2, 1, 1);
+            IBinaryNumberOperator input1 = GetMultiplicationExpression(TypeEnum.Integer, TypeEnum.Integer);
 
             NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             var res = helper.VisitBinaryNumOp(input1, null).Type;
