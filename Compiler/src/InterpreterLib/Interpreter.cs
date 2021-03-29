@@ -19,7 +19,7 @@ namespace InterpreterLib
         public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper)
         {
             _functionHelper = functionHelper;
-            _functionHelper.Interpreter = this;
+            _functionHelper.SetUpFuncs(this.DispatchFunction, this.Dispatch, this.FunctionFunction);
 
             _integerHelper = integerHelper;
             _integerHelper.Interpreter = this;

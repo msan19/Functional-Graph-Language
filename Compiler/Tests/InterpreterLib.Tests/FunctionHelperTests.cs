@@ -16,6 +16,13 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class FunctionHelperTests
     {
+        private FunctionHelper SetUpHelper(IInterpreter parent)
+        {
+            FunctionHelper functionHelper = new FunctionHelper();
+            functionHelper.SetUpFuncs(parent.DispatchFunction, parent.Dispatch, parent.FunctionFunction);
+            return functionHelper;
+        }
+
         #region ConditionFunction
         [DataRow(1, 1)]
         [DataRow(3, 3)]
@@ -27,10 +34,7 @@ namespace InterpreterLib.Tests
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.DispatchFunction(id, Arg.Any<List<Object>>()).Returns(input);
-            FunctionHelper functionHelper = new FunctionHelper()
-            {
-                Interpreter = parent
-            };
+            FunctionHelper functionHelper = SetUpHelper(parent);
 
             int res = functionHelper.ConditionFunction(conditionNode, new List<Object>());
 
@@ -46,10 +50,7 @@ namespace InterpreterLib.Tests
             List<Object> res = null;
             parent.DispatchFunction(id, Arg.Do<List<Object>>(x => res = x));
             List<Object> expected = new List<Object> { 1, 1.3, "" };
-            FunctionHelper functionHelper = new FunctionHelper()
-            {
-                Interpreter = parent
-            };
+            FunctionHelper functionHelper = SetUpHelper(parent);
 
             functionHelper.ConditionFunction(conditionNode, expected);
 
@@ -66,10 +67,7 @@ namespace InterpreterLib.Tests
             ExpressionNode res = null;
             parent.DispatchFunction(Arg.Do<ExpressionNode>(x => res = x), Arg.Any<List<Object>>());
             List<Object> input2 = new List<Object> { 1, 1.3, "" };
-            FunctionHelper functionHelper = new FunctionHelper()
-            {
-                Interpreter = parent
-            };
+            FunctionHelper functionHelper = SetUpHelper(parent);
 
             functionHelper.ConditionFunction(conditionNode, input2);
 
@@ -110,7 +108,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.LocalReference = -1;
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
-            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            FunctionHelper functionHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
@@ -134,7 +132,7 @@ namespace InterpreterLib.Tests
             funcCallExpr.GlobalReferences = new List<int>();
             IInterpreter parent = Substitute.For<IInterpreter>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
-            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            FunctionHelper functionHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
@@ -183,7 +181,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
-            FunctionHelper functionHelper = new FunctionHelper() { Interpreter = parent };
+            FunctionHelper functionHelper = SetUpHelper(parent);
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
