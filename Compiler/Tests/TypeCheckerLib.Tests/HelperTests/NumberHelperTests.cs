@@ -8,12 +8,15 @@ using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TypeCheckerLib.Helpers;
+using TypeCheckerLib.Interfaces;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {
     [TestClass]
     public class NumberHelperTests
     {
+
         #region Binary Num Operator
         [TestMethod]
         public void BinaryNumOp__CorrectParameterPassDown()
@@ -30,12 +33,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             List<TypeNode> res = null;
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            typeHelper.VisitBinaryNumOp(input1, expected.ToList());
+            helper.VisitBinaryNumOp(input1, expected.ToList());
          
             res.Should().BeEquivalentTo(expected);
         }

@@ -6,8 +6,7 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib.Interfaces
 {
-    public interface IBooleanHelper
+    public interface IBooleanHelper : ITypeHelper
     {
-        void Initialize(AST root, Func<ExpressionNode, List<TypeNode>, TypeNode> dispatcher);
     }
 }

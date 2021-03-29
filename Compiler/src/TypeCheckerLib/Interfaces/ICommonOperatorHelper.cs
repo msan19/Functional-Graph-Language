@@ -7,9 +7,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib.Interfaces
 {
-    public interface ICommonOperatorHelper
+    public interface ICommonOperatorHelper : ITypeHelper
     {
-        void Initialize(AST root, Func<ExpressionNode, List<TypeNode>, TypeNode> dispatcher);
         TypeNode VisitAddition(AdditionExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
     }

@@ -7,9 +7,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib.Interfaces
 {
-    public interface IDeclarationHelper
+    public interface IDeclarationHelper : ITypeHelper
     {
-        void Initialize(AST root, Func<ExpressionNode, List<TypeNode>, TypeNode> dispatcher);
         void VisitExport(ExportNode exportNode);
         void VisitFunction(FunctionNode functionNode);
         TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes);

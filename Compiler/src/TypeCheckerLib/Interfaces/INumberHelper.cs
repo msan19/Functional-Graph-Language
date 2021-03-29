@@ -8,9 +8,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace TypeCheckerLib.Interfaces
 {
-    public interface INumberHelper
+    public interface INumberHelper : ITypeHelper
     {
-        void Initialize(AST root, Func<ExpressionNode, List<TypeNode>, TypeNode> dispatcher);
         TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode, List<TypeNode> parameterTypes);
     }
 }

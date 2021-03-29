@@ -9,6 +9,28 @@ namespace TypeCheckerLib.Tests
 {
     public static class Utilities
     {
+
+        public static T GetHelper<T>(ITypeChecker parent) where T : ITypeHelper, new()
+        {
+            var helper = new T();
+            helper.Initialize(GetAst(), parent.Dispatch);
+            return helper;
+        }
+        public static T GetHelper<T>(AST root) where T : ITypeHelper, new()
+        {
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var helper = new T();
+            helper.Initialize(root, parent.Dispatch);
+            return helper;
+        }
+
+        public static T GetHelper<T>(AST root, ITypeChecker parent) where T : ITypeHelper, new()
+        {
+            var helper = new T();
+            helper.Initialize(root, parent.Dispatch);
+            return helper;
+        }
+
         public static ITypeChecker GetTypeCheckerOnlyWith(IDeclarationHelper declarationHelper)
         {
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
