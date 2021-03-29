@@ -7,15 +7,10 @@ namespace Main.Exceptions
 {
     public class FunctionIdentifierMatchException : CompilerException
     {
-   
-        public string FuncID { get; }
-
-        public string TypeID { get; }
-
-        public FunctionIdentifierMatchException(string funcID, string typeID, Node node) : base(node)
+ 
+        public FunctionIdentifierMatchException(string funcID, string typeID, Node node) : 
+            base(node, $"{typeID} and {funcID} should be equivalent")
         {
-            FuncID = funcID;
-            TypeID = typeID;
         }
 
     }

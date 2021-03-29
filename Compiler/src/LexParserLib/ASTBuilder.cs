@@ -9,6 +9,7 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Hime.Redist;
+using Main.Exceptions;
 
 namespace LexParserLib
 {
@@ -78,7 +79,7 @@ namespace LexParserLib
             string functionID = GetFunctionID(himeFuncNode);
 
             if (typeID != functionID)
-                throw new Exception($"{typeID} and {functionID} should be equivalent");
+                throw new FunctionIdentifierMatchException(functionID, typeID, null);
 
             if (IsConditional(himeDeclNode))
             {
