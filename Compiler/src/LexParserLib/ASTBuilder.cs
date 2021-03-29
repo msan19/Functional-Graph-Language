@@ -24,7 +24,7 @@ namespace LexParserLib
             return VisitDeclarations(root.Children[0]);
         }
 
-        public AST VisitDeclarations(ASTNode himeNode)
+        private AST VisitDeclarations(ASTNode himeNode)
         {
             AST ast;
             int declarationIndex;
