@@ -23,8 +23,8 @@ namespace TypeCheckerLib.Helpers
 
         public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode, List<TypeNode> parameterTypes)
         {
-            TypeNode left = GetType(binaryNode.Children[0], parameterTypes);
-            TypeNode right = GetType(binaryNode.Children[1], parameterTypes);
+            TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
+            TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
             
             if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
                 throw new Exception("One of the arguments is of type Function.");
@@ -48,11 +48,6 @@ namespace TypeCheckerLib.Helpers
         {
             CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
             binaryNode.Children[child] = cast;
-        }
-        
-        private TypeNode GetType(ExpressionNode node, List<TypeNode> parameterTypes)
-        {
-            return _getType(node, parameterTypes);
         }
     }
 }
