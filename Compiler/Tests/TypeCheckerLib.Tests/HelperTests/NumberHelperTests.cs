@@ -57,12 +57,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            typeHelper.VisitBinaryNumOp(input1, null);
+            helper.VisitBinaryNumOp(input1, null);
             var res = input1.Children[0].GetType();
 
             Assert.AreEqual(expected, res);
@@ -78,12 +75,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            typeHelper.VisitBinaryNumOp(input1, null);
+            helper.VisitBinaryNumOp(input1, null);
             var res = input1.Children[0].Children[0].GetType();
 
             Assert.AreEqual(expected, res);
@@ -99,12 +93,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            typeHelper.VisitBinaryNumOp(input1, null);
+            helper.VisitBinaryNumOp(input1, null);
             var res = input1.Children[0].GetType();
 
             Assert.AreEqual(expected, res);
@@ -120,12 +111,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            typeHelper.VisitBinaryNumOp(input1, null);
+            helper.VisitBinaryNumOp(input1, null);
             var res = input1.Children[1].GetType();
 
             Assert.AreEqual(expected, res);
@@ -141,12 +129,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            var res = typeHelper.VisitBinaryNumOp(input1, null).Type;
+            var res = helper.VisitBinaryNumOp(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -161,12 +146,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            var res = typeHelper.VisitBinaryNumOp(input1, null).Type;
+            var res = helper.VisitBinaryNumOp(input1, null).Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -183,16 +165,11 @@ namespace TypeCheckerLib.Tests.HelperTests
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
-            TypeHelper typeHelper = new TypeHelper()
-            {
-                TypeChecker = parent
-            };
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
-            var res = typeHelper.VisitBinaryNumOp(input1, null).Type;
+            var res = helper.VisitBinaryNumOp(input1, null).Type;
         }
         
         #endregion
-
-        
     }
 }
