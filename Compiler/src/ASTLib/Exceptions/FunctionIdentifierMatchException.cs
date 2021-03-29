@@ -1,9 +1,6 @@
 ﻿using ASTLib.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Main.Exceptions
+namespace ASTLib.Exceptions
 {
     public class FunctionIdentifierMatchException : CompilerException
     {
