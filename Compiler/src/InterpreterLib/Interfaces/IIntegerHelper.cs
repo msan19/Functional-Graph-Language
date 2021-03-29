@@ -15,7 +15,7 @@ namespace InterpreterLib.Interfaces
 
         void SetASTRoot(AST root);
 
-        void SetUpInts(Func<ExpressionNode, List<Object>, int> dispatchInt,
+        void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInt,
                Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
                Func<FunctionNode, List<Object>, int> functionInteger);
 

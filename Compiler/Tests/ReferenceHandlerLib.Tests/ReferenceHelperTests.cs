@@ -15,6 +15,13 @@ namespace ReferenceHandlerLib.Tests
     [TestClass]
     public class ReferenceHelperTests
     {
+        private ReferenceHelper BuildHelper(IReferenceHandler referenceHandler)
+        {
+            ReferenceHelper referenceHelper = new ReferenceHelper();
+            referenceHelper.SetDispatch(referenceHandler.Dispatch);
+            return referenceHelper;
+        }
+
         #region VisitExport
         [TestMethod]
         public void VisitExport_IntegerLiteralExpression_Correct()
@@ -23,7 +30,7 @@ namespace ReferenceHandlerLib.Tests
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2",1,1);
             ExportNode input = new ExportNode(integerLiteralExpression,3,3);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             System.Type result = null;
             parent.Dispatch(Arg.Do<IntegerLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
@@ -38,7 +45,7 @@ namespace ReferenceHandlerLib.Tests
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("2", 1, 1);
             ExportNode input = new ExportNode(realLiteralExpression, 3, 3);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             System.Type result = null;
             parent.Dispatch(Arg.Do<RealLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
@@ -61,7 +68,7 @@ namespace ReferenceHandlerLib.Tests
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3,3);
             FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4,4);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             System.Type result = null;
             parent.Dispatch(Arg.Do<IntegerLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
@@ -82,7 +89,7 @@ namespace ReferenceHandlerLib.Tests
             FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
             FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4, 4);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             System.Type result = null;
             parent.Dispatch(Arg.Do<RealLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
@@ -113,8 +120,9 @@ namespace ReferenceHandlerLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("func", children, 1, 1);
             List<string> input2 = new List<string>() { "a", "b" };
 
+
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -145,12 +153,12 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
 
-            List<int> expected = new List<int>() { 0 };
+            List<int> expected = new List<int>() { 0, 1 };
             expected.Should().BeEquivalentTo(input1.GlobalReferences);
         }
 
@@ -176,7 +184,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -207,7 +215,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -241,7 +249,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -276,7 +284,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b", "c" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -310,7 +318,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input2 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -350,7 +358,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> input4 = new List<string>() { "a", "b" };
 
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitFunctionCall(input1, input2);
@@ -372,7 +380,7 @@ namespace ReferenceHandlerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("b", 1, 1);
             List<string> input2 = new List<string>() { "a", "b", "c" };
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.VisitIdentifier(input1, input2);
 
@@ -388,7 +396,7 @@ namespace ReferenceHandlerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("d", 1, 1);
             List<string> input2 = new List<string>() { "a", "b", "c" };
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.VisitIdentifier(input1, input2);
         }
@@ -414,7 +422,7 @@ namespace ReferenceHandlerLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("func", 1, 1);
             List<string> input2 = new List<string>() { "a", "b", "c", "func" };
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitIdentifier(input1, input2);
@@ -431,7 +439,7 @@ namespace ReferenceHandlerLib.Tests
             List<string> parameterIdentifiers2 = new List<string> { "a", "b" };
             TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes1 = new List<TypeNode>() { typeNode, typeNode };
-            List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode, typeNode };
+            List<TypeNode> parameterTypes2 = new List<TypeNode>() { typeNode, typeNode };
             FunctionTypeNode functionType1 = new FunctionTypeNode(typeNode, parameterTypes1, 3, 3);
             FunctionTypeNode functionType2 = new FunctionTypeNode(typeNode, parameterTypes2, 3, 3);
             FunctionNode functionNode1 = new FunctionNode("func", conditionNode, parameterIdentifiers1, functionType1, 17, 17);
@@ -440,9 +448,9 @@ namespace ReferenceHandlerLib.Tests
 
             // Setup for VisitIdentifier
             IdentifierExpression input1 = new IdentifierExpression("func", 1, 1);
-            List<string> input2 = new List<string>() { "a", "b", "c", "func", "func" };
+            List<string> input2 = new List<string>() { "a", "b", "c", "func1", "func1" };
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = new ReferenceHelper() { ReferenceHandler = parent };
+            ReferenceHelper referenceHelper = BuildHelper(parent);
 
             referenceHelper.BuildTables(functions);
             referenceHelper.VisitIdentifier(input1, input2);

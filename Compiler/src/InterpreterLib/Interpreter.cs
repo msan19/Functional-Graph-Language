@@ -22,10 +22,10 @@ namespace InterpreterLib
             _functionHelper.SetUpFuncs(this.DispatchFunction, this.Dispatch, this.FunctionFunction);
 
             _integerHelper = integerHelper;
-            _integerHelper.Interpreter = this;
+            _integerHelper.SetUpFuncs(this.DispatchInt, this.Dispatch, this.FunctionInteger);
 
             _realHelper = realHelper;
-            _realHelper.Interpreter = this;
+            _realHelper.SetUpFuncs(this.DispatchReal, this.DispatchInt, this.Dispatch, this.FunctionReal);
         }
 
         public List<double> Interpret(AST node)

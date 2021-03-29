@@ -20,7 +20,7 @@ namespace InterpreterLib.Tests
         private IntegerHelper SetUpHelper(IInterpreter parent)
         {
             IntegerHelper integerHelper = new IntegerHelper();
-            integerHelper.SetUpInts(parent.DispatchInt, parent.Dispatch, parent.FunctionInteger);
+            integerHelper.SetUpFuncs(parent.DispatchInt, parent.Dispatch, parent.FunctionInteger);
             return integerHelper;
         }
 
@@ -119,21 +119,6 @@ namespace InterpreterLib.Tests
             int res = integerHelper.DivisionInteger(divExpr, new List<object>());
 
             Assert.AreEqual(expected, res);
-        }
-
-        [DataRow(3, 0)]
-        [TestMethod]
-        public void DivisionInt_DivisorIsZero_ThrowsException(int input1, int input2)
-        {
-            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
-            IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
-            DivisionExpression divisionExpr = new DivisionExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
-            parent.DispatchReal(intLit1, Arg.Any<List<object>>()).Returns(input1);
-            parent.DispatchReal(intLit2, Arg.Any<List<object>>()).Returns(input2);
-            IntegerHelper integerHelper = SetUpHelper(parent);
-
-            Assert.ThrowsException<Exception>(() => integerHelper.DivisionInteger(divisionExpr, new List<object>()));
         }
         #endregion
 
