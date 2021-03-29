@@ -79,7 +79,7 @@ namespace LexParserLib
             string functionID = GetFunctionID(himeFuncNode);
 
             if (typeID != functionID)
-                throw new FunctionIdentifierMatchException(functionID, typeID, null);
+                throw new FunctionIdentifierMatchException(functionID, typeID);
 
             if (IsConditional(himeDeclNode))
             {
@@ -181,7 +181,7 @@ namespace LexParserLib
                 "boolean" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Boolean,
                                           himeNode.Position.Line, himeNode.Position.Column),
                 "FuncTypeDecl" => CreateFunctionTypeNode(himeNode.Children[0]),
-                _ => throw new Exception($"'{himeNode.Children[0].Symbol.Name}' is not an accepted type"),
+                _ => throw new UnimplementedTypeException(himeNode.Children[0].Symbol.Name),
             };
         }
 
