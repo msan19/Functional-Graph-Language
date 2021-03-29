@@ -20,5 +20,14 @@ namespace ASTLib.Nodes
             FunctionType = functionType;
             Identifier = identifier;
         }
+
+        public FunctionNode(List<ConditionNode> conditions, string identifier, List<string> parameterIdentifiers,
+            FunctionTypeNode functionType, int line, int letter) : base(line, letter)
+        {
+            Conditions = conditions;
+            ParameterIdentifiers = parameterIdentifiers;
+            FunctionType = functionType;
+            Identifier = identifier;
+        }
     }
 }
