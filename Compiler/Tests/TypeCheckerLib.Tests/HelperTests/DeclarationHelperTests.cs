@@ -19,7 +19,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             var expected = new List<TypeNode>();
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Utilities.GetFullyMockedTypeChecker();
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
             List<TypeNode> res = null;
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             TypeHelper typeHelper = new TypeHelper()
@@ -98,7 +98,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [TestMethod]
         public void Function__CorrectParameterPassDown()
         {
-            var funcType = GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
             var expected = funcType.ParameterTypes.ToList();
 
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -136,7 +136,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void Function_Type_CorrectType(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
+            var funcType = Utilities.GetFunctionType(functionReturnType, new List<TypeEnum>());
             FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
@@ -158,7 +158,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void Function_Type_WrongTypeAndThrowException(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var funcType = GetFunctionType(functionReturnType, new List<TypeEnum>());
+            var funcType = Utilities.GetFunctionType(functionReturnType, new List<TypeEnum>());
             FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
@@ -176,7 +176,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             var expected = typeof(CastFromIntegerExpression);
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var funcType = GetFunctionType(TypeEnum.Real, new List<TypeEnum>());
+            var funcType = Utilities.GetFunctionType(TypeEnum.Real, new List<TypeEnum>());
             FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();

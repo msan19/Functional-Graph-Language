@@ -7,15 +7,6 @@ namespace TypeCheckerLib.Tests
 {
     public static class Utilities
     {
-        public static ITypeChecker GetFullyMockedTypeChecker()
-        {
-            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
-            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
-            INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
-        }
-        
         public static ITypeChecker GetTypeCheckerOnlyWith(IDeclarationHelper declarationHelper)
         {
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
@@ -48,11 +39,6 @@ namespace TypeCheckerLib.Tests
             return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
         }
         
-        
-        public static FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
-        {
-            return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
-        }
 
         public static FunctionTypeNode GetFunctionType(TypeEnum returnType, List<TypeEnum> inputTypes)
         {
@@ -60,6 +46,11 @@ namespace TypeCheckerLib.Tests
             foreach (var input in inputTypes)
                 inputs.Add(new TypeNode(input, 0, 0));
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), inputs, 0, 0);
+        }
+        
+        public static FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
+        {
+            return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
         }
     }
 }
