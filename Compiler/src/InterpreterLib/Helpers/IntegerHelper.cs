@@ -13,7 +13,7 @@ namespace InterpreterLib.Helpers
     {
 
         public IInterpreter Interpreter { get; set; }
-        private Func<ExpressionNode, List<object>, int> _dispatchInt;
+        private Func<ExpressionNode, List<object>, int> _dispatchInterger;
         private Func<ExpressionNode, List<object>, TypeEnum, object> _dispatch;
         private Func<FunctionNode, List<object>, int> _functionInteger;
         private AST _root;
@@ -23,48 +23,48 @@ namespace InterpreterLib.Helpers
             _root = root;
         }
 
-        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInt,
+        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInterger,
                        Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
                        Func<FunctionNode, List<Object>, int> functionInteger)
         {
-            _dispatchInt = dispatchInt;
+            _dispatchInterger = dispatchInterger;
             _dispatch = dispatch;
             _functionInteger = functionInteger;
         }
 
         public int ConditionInteger(ConditionNode node, List<Object> parameters)
         {
-            return _dispatchInt(node.ReturnExpression, parameters);
+            return _dispatchInterger(node.ReturnExpression, parameters);
         }
 
         public int AdditionInteger(AdditionExpression node, List<Object> parameters)
         {
-            int leftOperand =  _dispatchInt(node.Children[0], parameters);
-            int rightOperand = _dispatchInt(node.Children[1], parameters);
+            int leftOperand =  _dispatchInterger(node.Children[0], parameters);
+            int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
             return leftOperand + rightOperand;
         }
 
         public int SubtractionInteger(SubtractionExpression node, List<Object> parameters)
         {
-            int leftOperand =  _dispatchInt(node.Children[0], parameters);
-            int rightOperand = _dispatchInt(node.Children[1], parameters);
+            int leftOperand =  _dispatchInterger(node.Children[0], parameters);
+            int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
             return leftOperand - rightOperand;
         }
 
         public int MultiplicationInteger(MultiplicationExpression node, List<Object> parameters)
         {
-            int leftOperand =  _dispatchInt(node.Children[0], parameters);
-            int rightOperand = _dispatchInt(node.Children[1], parameters);
+            int leftOperand =  _dispatchInterger(node.Children[0], parameters);
+            int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
             return leftOperand * rightOperand;
         }
 
         public int DivisionInteger(DivisionExpression node, List<Object> parameters)
         {
-            int leftOperand =  _dispatchInt(node.Children[0], parameters);
-            int rightOperand = _dispatchInt(node.Children[1], parameters);
+            int leftOperand =  _dispatchInterger(node.Children[0], parameters);
+            int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
             if (rightOperand == 0) { throw new DivideByZeroException(); }
 
@@ -73,8 +73,8 @@ namespace InterpreterLib.Helpers
 
         public int ModuloInteger(ModuloExpression node, List<Object> parameters)
         {
-            int leftOperand =  _dispatchInt(node.Children[0], parameters);
-            int rightOperand = _dispatchInt(node.Children[1], parameters);
+            int leftOperand =  _dispatchInterger(node.Children[0], parameters);
+            int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
             return ModuloCalculation(leftOperand, rightOperand);
         }
@@ -87,7 +87,7 @@ namespace InterpreterLib.Helpers
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
         {
-            int operand = _dispatchInt(node.Children[0], parameters);
+            int operand = _dispatchInterger(node.Children[0], parameters);
 
             if (node.Type == TypeEnum.Integer)
             {
