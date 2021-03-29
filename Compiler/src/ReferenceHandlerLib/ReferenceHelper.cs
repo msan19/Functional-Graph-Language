@@ -91,6 +91,7 @@ namespace ReferenceHandlerLib
 
         public void VisitIdentifier(IdentifierExpression node, List<string> identifiers)
         {
+            if (!identifiers.Contains(node.Id)) { throw new Exception($"{node.Id} is not present in list of identifiers"); }
             for (int i = 0; i < identifiers.Count; i++)
             {
                 if (identifiers[i] == node.Id)
