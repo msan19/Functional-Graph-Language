@@ -20,7 +20,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             var expected = new List<TypeNode>()
             {
-                GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
             };
             IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
             RealLiteralExpression realLit = new RealLiteralExpression("2.2", 2, 2);
@@ -194,17 +194,5 @@ namespace TypeCheckerLib.Tests.HelperTests
         #endregion
 
         
-        private FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
-        {
-            return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
-        }
-
-        private FunctionTypeNode GetFunctionType(TypeEnum returnType, List<TypeEnum> inputTypes)
-        {
-            var inputs = new List<TypeNode>();
-            foreach (var input in inputTypes)
-                inputs.Add(new TypeNode(input, 0, 0));
-            return new FunctionTypeNode(new TypeNode(returnType, 0, 0), inputs, 0, 0);
-        }
     }
 }
