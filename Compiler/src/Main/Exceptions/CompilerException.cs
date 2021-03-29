@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Main
+namespace Main.Exceptions
 {
     public class CompilerException: Exception
     {
-        private Node _node;
+        public Node _node { get; }
 
         public CompilerException(Node node)
         {
