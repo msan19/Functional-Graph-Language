@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using ASTLib;
+using ASTLib.Nodes;
 using ASTLib.Nodes.TypeNodes;
 using NSubstitute;
 using TypeCheckerLib.Interfaces;
@@ -51,6 +53,11 @@ namespace TypeCheckerLib.Tests
         public static FunctionTypeNode GetFunctionType(TypeEnum returnType, FunctionTypeNode inputType)
         {
             return new FunctionTypeNode(new TypeNode(returnType, 0, 0), new List<TypeNode>() { inputType }, 0, 0);
+        }
+        
+        public static AST GetAst()
+        {
+            return new AST(new List<FunctionNode>(), new List<ExportNode>(), 0, 0);
         }
     }
 }

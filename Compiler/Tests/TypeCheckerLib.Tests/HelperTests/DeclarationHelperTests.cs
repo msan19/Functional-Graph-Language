@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -7,6 +8,8 @@ using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TypeCheckerLib.Helpers;
+using TypeCheckerLib.Interfaces;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {
@@ -27,6 +30,8 @@ namespace TypeCheckerLib.Tests.HelperTests
                 TypeChecker = parent
             };
 
+            IDeclarationHelper declarationHelper = new DeclarationHelper();
+            
             typeHelper.VisitExport(input1);
 
             res.Should().BeEquivalentTo(expected);
@@ -215,7 +220,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             {
             };
 
-            var ast = GetAst();
+            var ast = Utilities.GetAst();
             ast.Functions.Add(GetFunctionNode(expectedType, new List<TypeEnum>()));
             
             TypeHelper typeHelper = new TypeHelper();
@@ -253,6 +258,18 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             return new TypeNode(type, 0, 0);
         }
+        
+        private FunctionNode GetFunctionNode(TypeEnum output, List<TypeEnum> inputTypes)
+        {
+            var inputs = new List<TypeNode>();
+            foreach (var input in inputTypes)
+                inputs.Add(new TypeNode(input, 0, 0));
+
+            return new FunctionNode("id", null, null,
+                new FunctionTypeNode(new TypeNode(output, 0, 0),
+                    inputs, 0, 0), 0, 0);
+        }
+        
         #endregion
 
         #region Integer 
