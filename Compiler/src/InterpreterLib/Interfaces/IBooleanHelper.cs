@@ -16,13 +16,15 @@ namespace InterpreterLib.Interfaces
 
         void SetASTRoot(AST root);
 
-        void SetUpFuncs(Func<ExpressionNode, List<Object>, bool> dispatchBoolean,
-               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
-               Func<FunctionNode, List<object>, bool> functionBoolean);
+        void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
+                        Func<ExpressionNode, List<object>, int> dispatchInteger,
+                        Func<ExpressionNode, List<object>, double> dispatchReal,
+                        Func<ExpressionNode, List<object>, TypeEnum, object> dispatch,
+                        Func<FunctionNode,   List<object>, bool> functionBoolean);
 
-        bool ConditionBoolean(ConditionNode node, List<Object> parameters);
+        bool ConditionBoolean(ConditionNode node, List<object> parameters);
 
-        bool IdentifierBoolean(IdentifierExpression node, List<Object> parameters);
+        bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
 
         bool NotBoolean(NotExpression node, List<object> parameters);
 
