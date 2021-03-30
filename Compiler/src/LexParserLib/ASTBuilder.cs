@@ -190,7 +190,7 @@ namespace LexParserLib
                 "boolean" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Boolean,
                                           himeNode.Position.Line, himeNode.Position.Column),
                 "FuncTypeDecl" => CreateFunctionTypeNode(himeNode.Children[0]),
-                _ => throw new UnimplementedTypeException(himeNode.Children[0].Symbol.Name),
+                _ => throw new UnimplementedASTException(himeNode.Children[0].Symbol.Name, "type"),
             };
         }
 
@@ -242,7 +242,7 @@ namespace LexParserLib
                 "Term"              => VisitExpression(himeNode),
                 "Factor"            => VisitExpression(himeNode),
                 "Exponent"          => VisitExponent(himeNode),
-                _ => throw new Exception($"{ himeNode.Symbol.Name } is not yet implemented"),
+                _ => throw new UnimplementedASTException(himeNode.Symbol.Name, "symbol"),
             };
         }
 
@@ -283,7 +283,7 @@ namespace LexParserLib
                 "^" => new PowerExpression(leftOperant, rightOperant,
                                            himeNode.Position.Line, 
                                            himeNode.Position.Column),
-                _ => throw new Exception($"{himeNode.Children[1].Value} has not been implemented as an operator")
+                _ => throw new UnimplementedASTException(himeNode.Children[1].Value, "operator")
             };
         }
 
@@ -316,7 +316,7 @@ namespace LexParserLib
                     "leq" => new LessEqualExpression(leftOperant, rightOperant,
                                             himeNode.Position.Line,
                                             himeNode.Position.Column),
-                    _ => throw new Exception($"{op.Value} is not a valid relational operator")
+                    _ => throw new UnimplementedASTException(op.Value, "operator")
                 };
             }
                 
@@ -367,7 +367,7 @@ namespace LexParserLib
                 "false" => new BooleanLiteralExpression(false,
                                                                 himeNode.Position.Line,
                                                                 himeNode.Position.Column),
-                _ => throw new Exception($"{himeNode.Symbol.Name} has not been implemented as a literal"),
+                _ => throw new UnimplementedASTException(himeNode.Symbol.Name, "literal"),
             };
         }
 
