@@ -155,24 +155,126 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-        #region And
+        #region Pass Node Down
         [TestMethod]
-        public void DispatchBool_And_CorrectVisitMethodCalled()
+        public void DispatchBool_Greater_PassNodeDown()
         {
             var parameters = GetParameterList();
-            var node = GetAndExp();
+            var node = GetGreaterExp();
+            var expected = node;
 
             var boolHelper = GetBooleanHelper();
-            bool res = false;
-            boolHelper.AndBoolean(Arg.Any<AndExpression>(), Arg.Do<List<object>>(x => res = true))
+            Node res = null;
+            boolHelper.GreaterBoolean(Arg.Do<GreaterExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
             var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
-            Assert.AreEqual(true, res);
+            Assert.AreEqual(expected, res);
         }
+        [TestMethod]
+        public void DispatchBool_Less_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetLessExp();
+            var expected = node;
 
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.LessBoolean(Arg.Do<LessExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [TestMethod]
+        public void DispatchBool_GreaterEqual_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetGreaterEqualExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.GreaterEqualBoolean(Arg.Do<GreaterEqualExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [TestMethod]
+        public void DispatchBool_LessEqual_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetLessEqualExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.LessEqualBoolean(Arg.Do<LessEqualExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [TestMethod]
+        public void DispatchBool_Equal_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetEqualExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.EqualBoolean(Arg.Do<EqualExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [TestMethod]
+        public void DispatchBool_NotEqual_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetNotEqualExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.NotEqualBoolean(Arg.Do<NotEqualExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [TestMethod]
+        public void DispatchBool_Not_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetNotExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.NotBoolean(Arg.Do<NotExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
         [TestMethod]
         public void DispatchBool_And_PassNodeDown()
         {
@@ -190,6 +292,24 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        [TestMethod]
+        public void DispatchBool_Or_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetOrExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.OrBoolean(Arg.Do<OrExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -208,7 +328,6 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
-        #endregion
         #endregion
     }
 }
