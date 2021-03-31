@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -51,7 +52,7 @@ namespace InterpreterLib
                 ModuloExpression e          => _integerHelper.ModuloInteger(e, parameters),
                 AbsoluteValueExpression e   => _integerHelper.AbsoluteInteger(e, parameters),
                 FunctionCallExpression e    => _integerHelper.FunctionCallInteger(e, parameters),
-                _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
+                _ => throw new UnimplementedInterpreterException(node, "DispatchInt")
             };
         }
 
@@ -70,7 +71,7 @@ namespace InterpreterLib
                 ModuloExpression e          => _realHelper.ModuloReal(e, parameters),
                 AbsoluteValueExpression e   => _realHelper.AbsoluteReal(e, parameters),
                 FunctionCallExpression e    => _realHelper.FunctionCallReal(e, parameters),
-                _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
+                _ => throw new UnimplementedInterpreterException(node, "DispatchReal")
             };
         }
 
@@ -80,7 +81,7 @@ namespace InterpreterLib
             {
                 IdentifierExpression e => _functionHelper.IdentifierFunction(e, parameters),
                 FunctionCallExpression e => _functionHelper.FunctionCallFunction(e, parameters),
-                _ => throw new Exception($"{node.GetType()} has not been implemented in DispatchFunction")
+                _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
 
@@ -91,7 +92,7 @@ namespace InterpreterLib
                 TypeEnum.Integer    => (object) DispatchInt(node, parameters),
                 TypeEnum.Real       => (object) DispatchReal(node, parameters),
                 TypeEnum.Function   => (object) DispatchFunction(node, parameters),
-                _ => throw new Exception("no type")
+                _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }
 
