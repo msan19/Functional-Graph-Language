@@ -81,7 +81,8 @@ namespace ReferenceHandlerLib
         private void VisitCondition(ConditionNode node, List<string> identifiers)
         {
             if (!(node.Condition == null))
-                _dispatch(node.ReturnExpression, identifiers);
+                _dispatch(node.Condition, identifiers);
+            _dispatch(node.ReturnExpression, identifiers);
         }
 
         public void VisitNonIdentifier(INonIdentifierExpression node, List<string> identifiers)

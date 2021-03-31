@@ -166,7 +166,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitBinaryNumOp(input1, null);
         }
 
-<<<<<<< HEAD
+
         [TestMethod]
         public void BinaryNumOp_MultiplicationExpressionWithBooleanAndReal_ThrowsException()
         {
@@ -179,13 +179,12 @@ namespace TypeCheckerLib.Tests.HelperTests
             NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
 
             Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitBinaryNumOp(input, null));
-=======
+        }
         #endregion
-
 
         #region VisitPower
         [TestMethod]
-        public void VisitPower__CorrectParameterPassDown()
+        public void VisitPower_CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>()
             {
@@ -303,7 +302,6 @@ namespace TypeCheckerLib.Tests.HelperTests
 
 
             helper.VisitPower(input1, null);
->>>>>>> f97beb2bccd281367c5ebaeacce3fb20c4be7639
         }
 
         #endregion

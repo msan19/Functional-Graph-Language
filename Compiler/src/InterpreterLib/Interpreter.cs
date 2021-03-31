@@ -87,8 +87,8 @@ namespace InterpreterLib
         {
             return node switch
             {
-                IdentifierExpression e => _functionHelper.IdentifierFunction(e, parameters),
-                FunctionCallExpression e => _functionHelper.FunctionCallFunction(e, parameters),
+                IdentifierExpression e      => _functionHelper.IdentifierFunction(e, parameters),
+                FunctionCallExpression e    => _functionHelper.FunctionCallFunction(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
@@ -97,15 +97,16 @@ namespace InterpreterLib
         {
             return node switch
             {
-                GreaterExpression e => _booleanHelper.GreaterBoolean(e, parameters),
-                LessExpression e => _booleanHelper.LessBoolean(e, parameters),
-                GreaterEqualExpression e => _booleanHelper.GreaterEqualBoolean(e, parameters),
-                LessEqualExpression e => _booleanHelper.LessEqualBoolean(e, parameters),
-                EqualExpression e => _booleanHelper.EqualBoolean(e, parameters),
-                NotEqualExpression e => _booleanHelper.NotEqualBoolean(e, parameters),
-                NotExpression e => _booleanHelper.NotBoolean(e, parameters),
-                AndExpression e => _booleanHelper.AndBoolean(e, parameters),
-                OrExpression e => _booleanHelper.OrBoolean(e, parameters),
+                GreaterExpression e         => _booleanHelper.GreaterBoolean(e, parameters),
+                LessExpression e            => _booleanHelper.LessBoolean(e, parameters),
+                GreaterEqualExpression e    => _booleanHelper.GreaterEqualBoolean(e, parameters),
+                LessEqualExpression e       => _booleanHelper.LessEqualBoolean(e, parameters),
+                EqualExpression e           => _booleanHelper.EqualBoolean(e, parameters),
+                NotEqualExpression e        => _booleanHelper.NotEqualBoolean(e, parameters),
+                NotExpression e             => _booleanHelper.NotBoolean(e, parameters),
+                AndExpression e             => _booleanHelper.AndBoolean(e, parameters),
+                OrExpression e              => _booleanHelper.OrBoolean(e, parameters),
+                _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }
         

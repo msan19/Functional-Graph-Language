@@ -9,8 +9,6 @@ namespace InterpreterLib.Interfaces
 {
     public interface IFunctionHelper : IInterpretorHelper
     {
-        void SetAST(AST root);
-
         void SetInterpreter(IInterpreterFunction interpreter);
 
         int? ConditionFunction(ConditionNode node, List<Object> parameters);

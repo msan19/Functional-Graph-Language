@@ -10,9 +10,6 @@ namespace InterpreterLib.Interfaces
 {
     public interface IIntegerHelper : IInterpretorHelper
     {
-
-        void SetASTRoot(AST root);
-
         void SetInterpreter(IInterpreterInteger interpreter);
 
         int ConditionInteger(ConditionNode node, List<Object> parameters);

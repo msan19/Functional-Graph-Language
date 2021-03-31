@@ -10,8 +10,6 @@ namespace InterpreterLib.Interfaces
 {
     public interface IRealHelper : IInterpretorHelper
     {
-        void SetASTRoot(AST root);
-
         void SetInterpreter(IInterpreterReal interpreter);
 
         double ExportReal(ExportNode node, List<object> parameters);
