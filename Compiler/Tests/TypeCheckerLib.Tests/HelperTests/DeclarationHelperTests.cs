@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -10,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
+using InvalidCastException = ASTLib.Exceptions.InvalidCastException;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {
@@ -70,7 +72,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             Assert.AreEqual(typeof(CastFromIntegerExpression), res);
         }
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidCastException))]
         public void Export_Func_ThrowException()
         {
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -136,7 +138,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(TypeEnum.Function, TypeEnum.Integer)]
         [DataRow(TypeEnum.Function, TypeEnum.Real)]
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidCastException))]
         public void Function_Type_WrongTypeAndThrowException(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -342,7 +344,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(OverloadException))]
         public void FunctionCall_TwoGlobalReferencesAndTwoMatches_ThrowError()
         {
             var children = new List<ExpressionNode>
@@ -363,7 +365,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(NoMatchingFunctionFoundException))]
         public void FunctionCall_OneGlobalAndZeroMatch_ThrowError()
         {
             var children = new List<ExpressionNode>
@@ -383,7 +385,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(NoMatchingFunctionFoundException))]
         public void FunctionCall_ZeroGlobalRefAndZeroMatch_ThrowError()
         {
             FunctionCallExpression input1 = new FunctionCallExpression("", new List<ExpressionNode>(), 1, 1);
@@ -434,7 +436,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(NoMatchingFunctionFoundException))]
         public void FunctionCall_TwoGlobalAndZeroMatch_ThrowException()
         {
             var children = new List<ExpressionNode>
@@ -456,7 +458,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         // Only local references
         // 1 local, 0 match                             -> Throw Error
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(NoMatchingFunctionFoundException))]
         public void FunctionCall_OneLocalRefAndZeroMatch_ThrowException()
         {
             var children = new List<ExpressionNode>
