@@ -25,13 +25,12 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+
             List<Object> res = null;
             fhelper.FunctionCallFunction(Arg.Any<FunctionCallExpression>(), Arg.Do<List<Object>>(x => res = x));
 
-            refHandler.DispatchFunction(input1, expected);
+            interpreter.DispatchFunction(input1, expected);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -43,13 +42,12 @@ namespace InterpreterLib.Tests
             FunctionCallExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            
             FunctionCallExpression res = null;
             fhelper.FunctionCallFunction(Arg.Do<FunctionCallExpression>(x => res = x), Arg.Any<List<Object>>());
 
-            refHandler.DispatchFunction(input1, input2);
+            interpreter.DispatchFunction(input1, input2);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -61,12 +59,10 @@ namespace InterpreterLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             fhelper.FunctionCallFunction(Arg.Any<FunctionCallExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = refHandler.DispatchFunction(input1, input2);
+            int res = interpreter.DispatchFunction(input1, input2);
 
             Assert.AreEqual(expected, res);
         }
@@ -79,13 +75,11 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             List<Object> res = null;
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
-            refHandler.DispatchFunction(input1, expected);
+            interpreter.DispatchFunction(input1, expected);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -97,13 +91,11 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             IdentifierExpression res = null;
             fhelper.IdentifierFunction(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
-            refHandler.DispatchFunction(input1, input2);
+            interpreter.DispatchFunction(input1, input2);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -115,12 +107,10 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter refHandler = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
-            int res = refHandler.DispatchFunction(input1, input2);
+            int res = interpreter.DispatchFunction(input1, input2);
 
             Assert.AreEqual(expected, res);
         }
@@ -136,11 +126,9 @@ namespace InterpreterLib.Tests
                                                               new ExportNode(null,0,0),
                                                               new ExportNode(null,0,0)};
             AST input1 = new AST(null, exports, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
-
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            
             interpreter.Interpret(input1);
 
             rhelper.Received(3).ExportReal(Arg.Any<ExportNode>(), Arg.Any<List<Object>>());
@@ -154,10 +142,8 @@ namespace InterpreterLib.Tests
                                                               new ExportNode(null,0,0),
                                                               new ExportNode(null,0,0)};
             AST input1 = new AST(null, exports, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.ExportReal(exports[0], Arg.Any<List<Object>>()).Returns(0.1);
             rhelper.ExportReal(exports[1], Arg.Any<List<Object>>()).Returns(3.3);
             rhelper.ExportReal(exports[2], Arg.Any<List<Object>>()).Returns(7.0);
@@ -176,10 +162,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.FunctionCallInteger(Arg.Any<FunctionCallExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -194,10 +178,8 @@ namespace InterpreterLib.Tests
             FunctionCallExpression expected = new FunctionCallExpression("", null, 0, 0);
             FunctionCallExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             FunctionCallExpression res = null;
             ihelper.FunctionCallInteger(Arg.Do<FunctionCallExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -212,10 +194,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.FunctionCallInteger(Arg.Any<FunctionCallExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -230,10 +210,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.AdditionInteger(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -248,10 +226,8 @@ namespace InterpreterLib.Tests
             AdditionExpression expected = new AdditionExpression(null, null, 0, 0);
             AdditionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             AdditionExpression res = null;
             ihelper.AdditionInteger(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -266,10 +242,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.AdditionInteger(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -284,10 +258,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -302,10 +274,8 @@ namespace InterpreterLib.Tests
             SubtractionExpression expected = new SubtractionExpression(null, null, 0, 0);
             SubtractionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             SubtractionExpression res = null;
             ihelper.SubtractionInteger(Arg.Do<SubtractionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -320,10 +290,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -338,10 +306,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.MultiplicationInteger(Arg.Any<MultiplicationExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -356,10 +322,8 @@ namespace InterpreterLib.Tests
             MultiplicationExpression expected = new MultiplicationExpression(null, null, 0, 0);
             MultiplicationExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             MultiplicationExpression res = null;
             ihelper.MultiplicationInteger(Arg.Do<MultiplicationExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -374,10 +338,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.MultiplicationInteger(Arg.Any<MultiplicationExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -392,10 +354,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.DivisionInteger(Arg.Any<DivisionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -410,10 +370,8 @@ namespace InterpreterLib.Tests
             DivisionExpression expected = new DivisionExpression(null, null, 0, 0);
             DivisionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             DivisionExpression res = null;
             ihelper.DivisionInteger(Arg.Do<DivisionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -428,10 +386,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.DivisionInteger(Arg.Any<DivisionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -446,10 +402,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.ModuloInteger(Arg.Any<ModuloExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -464,10 +418,8 @@ namespace InterpreterLib.Tests
             ModuloExpression expected = new ModuloExpression(null, null, 0, 0);
             ModuloExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ModuloExpression res = null;
             ihelper.ModuloInteger(Arg.Do<ModuloExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -482,10 +434,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.ModuloInteger(Arg.Any<ModuloExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -500,10 +450,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.AbsoluteInteger(Arg.Any<AbsoluteValueExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -518,10 +466,8 @@ namespace InterpreterLib.Tests
             AbsoluteValueExpression expected = new AbsoluteValueExpression(null, 0, 0);
             AbsoluteValueExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             AbsoluteValueExpression res = null;
             ihelper.AbsoluteInteger(Arg.Do<AbsoluteValueExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -536,10 +482,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.AbsoluteInteger(Arg.Any<AbsoluteValueExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -554,10 +498,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.IdentifierInteger(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -572,10 +514,8 @@ namespace InterpreterLib.Tests
             IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             IdentifierExpression res = null;
             ihelper.IdentifierInteger(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -590,10 +530,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.IdentifierInteger(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -608,10 +546,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -626,10 +562,8 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression expected = new IntegerLiteralExpression("", 0, 0);
             IntegerLiteralExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             IntegerLiteralExpression res = null;
             ihelper.LiteralInteger(Arg.Do<IntegerLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -644,10 +578,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -665,10 +597,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.FunctionCallReal(Arg.Any<FunctionCallExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -683,10 +613,8 @@ namespace InterpreterLib.Tests
             FunctionCallExpression expected = new FunctionCallExpression("", null, 0, 0);
             FunctionCallExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             FunctionCallExpression res = null;
             rhelper.FunctionCallReal(Arg.Do<FunctionCallExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -701,10 +629,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.FunctionCallReal(Arg.Any<FunctionCallExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -719,10 +645,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -737,10 +661,8 @@ namespace InterpreterLib.Tests
             AdditionExpression expected = new AdditionExpression(null, null, 0, 0);
             AdditionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             AdditionExpression res = null;
             rhelper.AdditionReal(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -755,10 +677,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -773,10 +693,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.SubtractionReal(Arg.Any<SubtractionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -791,10 +709,8 @@ namespace InterpreterLib.Tests
             SubtractionExpression expected = new SubtractionExpression(null, null, 0, 0);
             SubtractionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             SubtractionExpression res = null;
             rhelper.SubtractionReal(Arg.Do<SubtractionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -809,10 +725,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.SubtractionReal(Arg.Any<SubtractionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -827,10 +741,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.MultiplicationReal(Arg.Any<MultiplicationExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -845,10 +757,8 @@ namespace InterpreterLib.Tests
             MultiplicationExpression expected = new MultiplicationExpression(null, null, 0, 0);
             MultiplicationExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             MultiplicationExpression res = null;
             rhelper.MultiplicationReal(Arg.Do<MultiplicationExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -863,10 +773,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.MultiplicationReal(Arg.Any<MultiplicationExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -881,10 +789,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             PowerExpression input1 = new PowerExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.PowerReal(Arg.Any<PowerExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -899,10 +805,8 @@ namespace InterpreterLib.Tests
             PowerExpression expected = new PowerExpression(null, null, 0, 0);
             PowerExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             PowerExpression res = null;
             rhelper.PowerReal(Arg.Do<PowerExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -917,10 +821,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             PowerExpression input1 = new PowerExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.PowerReal(Arg.Any<PowerExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -935,10 +837,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.DivisionReal(Arg.Any<DivisionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -953,10 +853,8 @@ namespace InterpreterLib.Tests
             DivisionExpression expected = new DivisionExpression(null, null, 0, 0);
             DivisionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             DivisionExpression res = null;
             rhelper.DivisionReal(Arg.Do<DivisionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -971,10 +869,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.DivisionReal(Arg.Any<DivisionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -989,10 +885,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.ModuloReal(Arg.Any<ModuloExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1007,10 +901,8 @@ namespace InterpreterLib.Tests
             ModuloExpression expected = new ModuloExpression(null, null, 0, 0);
             ModuloExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             ModuloExpression res = null;
             rhelper.ModuloReal(Arg.Do<ModuloExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1025,10 +917,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.ModuloReal(Arg.Any<ModuloExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -1043,10 +933,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.AbsoluteReal(Arg.Any<AbsoluteValueExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1061,10 +949,8 @@ namespace InterpreterLib.Tests
             AbsoluteValueExpression expected = new AbsoluteValueExpression(null, 0, 0);
             AbsoluteValueExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             AbsoluteValueExpression res = null;
             rhelper.AbsoluteReal(Arg.Do<AbsoluteValueExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1079,10 +965,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.AbsoluteReal(Arg.Any<AbsoluteValueExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -1097,10 +981,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             CastFromIntegerExpression input1 = new CastFromIntegerExpression(null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.CastIntegerToReal(Arg.Any<CastFromIntegerExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1115,10 +997,8 @@ namespace InterpreterLib.Tests
             CastFromIntegerExpression expected = new CastFromIntegerExpression(null, 0, 0);
             CastFromIntegerExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             CastFromIntegerExpression res = null;
             rhelper.CastIntegerToReal(Arg.Do<CastFromIntegerExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1133,10 +1013,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             CastFromIntegerExpression input1 = new CastFromIntegerExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.CastIntegerToReal(Arg.Any<CastFromIntegerExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -1151,10 +1029,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.IdentifierReal(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1169,10 +1045,8 @@ namespace InterpreterLib.Tests
             IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             IdentifierExpression res = null;
             rhelper.IdentifierReal(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1187,10 +1061,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.IdentifierReal(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -1205,10 +1077,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             RealLiteralExpression input1 = new RealLiteralExpression("", 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.LiteralReal(Arg.Any<RealLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1223,10 +1093,8 @@ namespace InterpreterLib.Tests
             RealLiteralExpression expected = new RealLiteralExpression("", 0, 0);
             RealLiteralExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             RealLiteralExpression res = null;
             rhelper.LiteralReal(Arg.Do<RealLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1241,10 +1109,8 @@ namespace InterpreterLib.Tests
             double expected = 17;
             RealLiteralExpression input1 = new RealLiteralExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.LiteralReal(Arg.Any<RealLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = interpreter.DispatchReal(input1, input2);
@@ -1262,10 +1128,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1280,10 +1144,8 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression expected = new IntegerLiteralExpression("", 0, 0);
             IntegerLiteralExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             IntegerLiteralExpression res = null;
             ihelper.LiteralInteger(Arg.Do<IntegerLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1298,10 +1160,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Integer);
@@ -1316,10 +1176,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1334,10 +1192,8 @@ namespace InterpreterLib.Tests
             AdditionExpression expected = new AdditionExpression(null, null, 0, 0);
             AdditionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             AdditionExpression res = null;
             rhelper.AdditionReal(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1352,10 +1208,8 @@ namespace InterpreterLib.Tests
             double expected = 17.2;
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = (double)interpreter.Dispatch(input1, input2, TypeEnum.Real);
@@ -1371,9 +1225,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             List<Object> res = null;
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1389,9 +1241,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             IdentifierExpression res = null;
             fhelper.IdentifierFunction(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1407,9 +1257,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Function);
@@ -1427,9 +1275,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             List<Object> res = null;
             fhelper.ConditionFunction(Arg.Any<ConditionNode>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1445,9 +1291,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             ConditionNode res = null;
             fhelper.ConditionFunction(Arg.Do<ConditionNode>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1463,9 +1307,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             fhelper.ConditionFunction(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.FunctionFunction(input1, input2);
@@ -1481,10 +1323,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.ConditionInteger(Arg.Any<ConditionNode>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1499,10 +1339,8 @@ namespace InterpreterLib.Tests
             ConditionNode expected = new ConditionNode(null, 0, 0);
             FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ConditionNode res = null;
             ihelper.ConditionInteger(Arg.Do<ConditionNode>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1517,10 +1355,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+                        IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
             ihelper.ConditionInteger(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.FunctionInteger(input1, input2);
@@ -1536,10 +1372,8 @@ namespace InterpreterLib.Tests
         {
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.ConditionReal(Arg.Any<ConditionNode>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -1554,10 +1388,8 @@ namespace InterpreterLib.Tests
             ConditionNode expected = new ConditionNode(null, 0, 0);
             FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             ConditionNode res = null;
             rhelper.ConditionReal(Arg.Do<ConditionNode>(x => res = x), Arg.Any<List<Object>>());
 
@@ -1572,10 +1404,8 @@ namespace InterpreterLib.Tests
             int expected = 17;
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = new Interpreter(fhelper, ihelper, rhelper);
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
             rhelper.ConditionReal(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.FunctionReal(input1, input2);
@@ -1592,7 +1422,7 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void Interpret_Unmocked_ASTWithXtoThePowerOfY_CorrectListReturned(int xValue, double yValue, double expected)
         {
-            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
+            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new BooleanHelper());
             IdentifierExpression x = new IdentifierExpression("x", 0, 0)
             {
                 IsLocal = true,

@@ -11,6 +11,7 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
+        const int NO_LOCAL_REF = -1;
         private Dictionary<string, List<int>> _functionTable;
         private Dictionary<string, int> _functionIdentifierTable;
 
@@ -49,7 +50,7 @@ namespace ReferenceHandlerLib
                 }
                 else
                 {
-                    functionIdentifierTable[identifier] = -1;
+                    functionIdentifierTable[identifier] = NO_LOCAL_REF;
                 } 
             }
             _functionIdentifierTable = functionIdentifierTable;
@@ -66,7 +67,10 @@ namespace ReferenceHandlerLib
             {
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
             }
-            VisitCondition(node.Conditions[0], node.ParameterIdentifiers);
+            foreach (ConditionNode conditionNode in node.Conditions)
+            {
+                VisitCondition(conditionNode, node.ParameterIdentifiers);
+            }
         }
 
         private bool HasUniqueParameters(List<string> parameters)
@@ -99,7 +103,7 @@ namespace ReferenceHandlerLib
                     node.Reference = i;
                 }
             }
-            node.IsLocal = (node.Reference != -1);
+            node.IsLocal = (node.Reference != NO_LOCAL_REF);
             if (!node.IsLocal)
             {
                 if (_functionIdentifierTable.ContainsKey(node.Id))
@@ -108,7 +112,7 @@ namespace ReferenceHandlerLib
                 }
                 else throw new InvalidIdentifierException(node.Id);
 
-                if (node.Reference == -1)
+                if (node.Reference == NO_LOCAL_REF)
                 {
                     throw new OverloadedFunctionIdentifierException(node.Id);
                 }
