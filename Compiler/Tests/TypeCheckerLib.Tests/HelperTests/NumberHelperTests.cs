@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -165,6 +166,20 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitBinaryNumOp(input1, null);
         }
 
+<<<<<<< HEAD
+        [TestMethod]
+        public void BinaryNumOp_MultiplicationExpressionWithBooleanAndReal_ThrowsException()
+        {
+            BooleanLiteralExpression boolLit = new BooleanLiteralExpression(true, 0, 0);
+            RealLiteralExpression realLit = new RealLiteralExpression("1.1", 0, 0);
+            IBinaryNumberOperator input = new MultiplicationExpression(boolLit, realLit, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
+
+            Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitBinaryNumOp(input, null));
+=======
         #endregion
 
 
@@ -288,6 +303,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
 
             helper.VisitPower(input1, null);
+>>>>>>> f97beb2bccd281367c5ebaeacce3fb20c4be7639
         }
 
         #endregion
