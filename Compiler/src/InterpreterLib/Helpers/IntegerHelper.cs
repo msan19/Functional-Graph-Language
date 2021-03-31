@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using InterpreterLib.Interfaces;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Exceptions;
 
 namespace InterpreterLib.Helpers
 {
@@ -66,7 +67,7 @@ namespace InterpreterLib.Helpers
             int leftOperand =  _dispatchInterger(node.Children[0], parameters);
             int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
-            if (rightOperand == 0) { throw new DivideByZeroException(); }
+            if (rightOperand == 0) { throw new DivisionByZeroException(node); }
 
             return leftOperand / rightOperand;
         }
@@ -89,14 +90,9 @@ namespace InterpreterLib.Helpers
         {
             int operand = _dispatchInterger(node.Children[0], parameters);
 
-            if (node.Type == TypeEnum.Integer)
-            {
-                return Math.Abs(operand);
-            }
-            else
-            {
-                throw new Exception("Operand is not of type: Integer");
-            }
+            if (node.Type != TypeEnum.Integer) { throw new InvalidAbsoluteIntegerException(node); }
+
+            return Math.Abs(operand);
         }
         
         public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)
