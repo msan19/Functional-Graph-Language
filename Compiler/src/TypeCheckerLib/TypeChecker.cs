@@ -32,11 +32,8 @@ namespace TypeCheckerLib
             foreach (var exportNode in root.Exports)
                 _declarationHelper.VisitExport(exportNode);
 
-            for (var index = 0; index < root.Functions.Count; index++)
-            {
-                var functionNode = root.Functions[index];
+            foreach (var functionNode in root.Functions)
                 _declarationHelper.VisitFunction(functionNode);
-            }
         }
 
         public TypeNode Dispatch(ExpressionNode node, List<TypeNode> parameterTypes)
