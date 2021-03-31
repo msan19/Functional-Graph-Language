@@ -51,6 +51,27 @@ namespace InterpreterLib.Tests
         #endregion
         
         #region OrBoolean
+        [DataRow(true, true, true)]
+        [DataRow(true, false, true)]
+        [DataRow(false, true, true)]
+        [DataRow(false, false, false)]
+        [TestMethod]
+        public void OrBoolean__CorrectValuesReturned(bool lhsValue, bool rhsValue, bool expected)
+        {
+            BooleanLiteralExpression lhs = new BooleanLiteralExpression(lhsValue, 0, 0);
+            BooleanLiteralExpression rhs = new BooleanLiteralExpression(rhsValue, 0, 0);
+
+            OrExpression orExpr = new OrExpression(lhs, rhs, 0, 0);
+            IInterpreter parent = Substitute.For<IInterpreter>();
+            parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchBoolean(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.OrBoolean(orExpr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
         
         #region EqualBoolean
