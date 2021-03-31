@@ -77,12 +77,13 @@ namespace InterpreterLib.Helpers
             int leftOperand =  _dispatchInterger(node.Children[0], parameters);
             int rightOperand = _dispatchInterger(node.Children[1], parameters);
 
+            if (rightOperand == 0) { throw new DivisionByZeroException(node); }
+
             return ModuloCalculation(leftOperand, rightOperand);
         }
 
         private int ModuloCalculation(int leftOperand, int rightOperand)
         {
-            if(rightOperand == 0) { throw new DivideByZeroException(); }
             return (int)(leftOperand - rightOperand * Math.Floor((double)(leftOperand / rightOperand)));
         }
 
