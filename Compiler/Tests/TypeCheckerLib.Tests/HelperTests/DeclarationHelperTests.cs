@@ -82,6 +82,18 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             declarationHelper.VisitExport(input1);
         }
+
+        [TestMethod]
+        public void Export_Boolean_ThrowsException()
+        {
+            ExportNode input = new ExportNode(new BooleanLiteralExpression(true, 0, 0), 0, 0);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            Assert.ThrowsException<InvalidCastException>(() => declarationHelper.VisitExport(input));
+        }
+
         #endregion
 
         #region Function
@@ -119,6 +131,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(TypeEnum.Integer, TypeEnum.Integer)]
         [DataRow(TypeEnum.Real, TypeEnum.Real)]
         [DataRow(TypeEnum.Function, TypeEnum.Function)]
+        [DataRow(TypeEnum.Boolean, TypeEnum.Boolean)]
         [TestMethod]
         public void Function_Type_CorrectType(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
         {
@@ -137,6 +150,9 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(TypeEnum.Real, TypeEnum.Function)]
         [DataRow(TypeEnum.Function, TypeEnum.Integer)]
         [DataRow(TypeEnum.Function, TypeEnum.Real)]
+        [DataRow(TypeEnum.Boolean, TypeEnum.Integer)]
+        [DataRow(TypeEnum.Boolean, TypeEnum.Real)]
+        [DataRow(TypeEnum.Boolean, TypeEnum.Function)]
         [TestMethod]
         [ExpectedException(typeof(InvalidCastException))]
         public void Function_Type_WrongTypeAndThrowException(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
@@ -169,6 +185,28 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             Assert.AreEqual(expected, res);
         }
+
+        /*[TestMethod]
+        public void Function_ReturnsRealGetsBoolean_ThrowsException()
+        {
+            FunctionTypeNode funcType = Utilities.GetFunctionType(TypeEnum.Real, )
+
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            var expected = funcType.ParameterTypes.ToList();
+
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            List<TypeNode> res = null;
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+
+            res.Should().BeEquivalentTo(expected);
+        }*/
+
         #endregion
 
         #region Function Call

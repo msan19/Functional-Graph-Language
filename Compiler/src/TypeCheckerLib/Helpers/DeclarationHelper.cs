@@ -25,7 +25,7 @@ namespace TypeCheckerLib.Helpers
 
         public void VisitExport(ExportNode exportNode)
         {
-            var type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;
+            TypeEnum type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;
             if (type == TypeEnum.Real)
                 return;
             else if (type == TypeEnum.Integer)
@@ -44,7 +44,7 @@ namespace TypeCheckerLib.Helpers
         {
             List<TypeNode> parameterTypes = functionNode.FunctionType.ParameterTypes;
 
-            foreach (var condition in functionNode.Conditions)
+            foreach (ConditionNode condition in functionNode.Conditions)
             {
                 CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition, parameterTypes);
             }
@@ -52,7 +52,7 @@ namespace TypeCheckerLib.Helpers
 
         private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
-            var type = _getType(condition.ReturnExpression, parameterTypes).Type;
+            TypeEnum type = _getType(condition.ReturnExpression, parameterTypes).Type;
             if (type != rhsType)
             {
                 if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
@@ -70,7 +70,7 @@ namespace TypeCheckerLib.Helpers
         
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
-            TypeNode res = null;
+            TypeNode res;
             if (IsLocalReferenceAMatch(funcCallExpNode, parameterTypes))
             {
                 funcCallExpNode.GlobalReferences = new List<int>();
