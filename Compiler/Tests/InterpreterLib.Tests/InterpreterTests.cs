@@ -1,6 +1,7 @@
 ﻿using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -10,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InterpreterLib.Tests
@@ -589,7 +591,6 @@ namespace InterpreterLib.Tests
         #endregion
 
         #endregion
-
         #region DispatchReal
         #region DispatchReal_functionCallExpr
         [TestMethod]
@@ -1120,7 +1121,80 @@ namespace InterpreterLib.Tests
         #endregion
 
         #endregion
+        #region DispatchBoolean
+        private Interpreter GetDispatchBool_And()
+        {
+            return null;
+        }
+        [TestMethod]
+        public void DispatchBool_And_CorrectVisitMethodCalled()
+        {
+            List<object> parameters = new List<object>();
+            AndExpression node = new AndExpression(null, null, 0, 0);
 
+            IBooleanHelper boolHelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            bool res = false;
+            boolHelper.AndBoolean(Arg.Any<AndExpression>(), Arg.Do<List<object>>(x => res = true))
+                .Returns(true);
+
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(true, res);
+        }
+        [TestMethod]
+        public void DispatchBool_And_PassNodeDown()
+        {
+            List<object> parameters = new List<object>();
+            AndExpression node = new AndExpression(null, null, 0, 0);
+            Node expected = node;
+
+            IBooleanHelper boolHelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            Node res = null;
+            boolHelper.AndBoolean(Arg.Do<AndExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_And_PassParametersDown(object o)
+        {
+            List<object> parameters = new List<object>() { o };
+            AndExpression node = new AndExpression(null, null, 0, 0);
+
+            IBooleanHelper boolHelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            List<object> res = null;
+            boolHelper.AndBoolean(Arg.Any<AndExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(true)]
+        [DataRow(false)]
+        [TestMethod]
+        public void DispatchBool_And_ReturnsCorrect(bool expected)
+        {
+            List<object> parameters = new List<object>();
+            AndExpression node = new AndExpression(null, null, 0, 0);
+
+            IBooleanHelper boolHelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            boolHelper.AndBoolean(Arg.Any<AndExpression>(), Arg.Any<List<object>>())
+                .Returns(expected);
+
+            var res = interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
         #region Dispatch
         #region Dispatch_IntegerLiteralExpr
         [TestMethod]
@@ -1316,7 +1390,6 @@ namespace InterpreterLib.Tests
         }
 
         #endregion
-
         #region FunctionInteger
         [TestMethod]
         public void FunctionInteger_FunctionNodeAndObjectList_CorrectListPassed()
@@ -1365,7 +1438,6 @@ namespace InterpreterLib.Tests
         }
 
         #endregion
-
         #region FunctionReal
         [TestMethod]
         public void FunctionReal_FunctionNodeAndObjectList_CorrectListPassed()
@@ -1413,6 +1485,8 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
 
+        #endregion
+        #region FunctionBoolean
         #endregion
 
         #region CompleteComponent
