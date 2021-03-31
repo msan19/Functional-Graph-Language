@@ -7,6 +7,8 @@ using LexParserLib;
 using ReferenceHandlerLib;
 using TypeCheckerLib;
 using TypeCheckerLib.Helpers;
+using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
+using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 
 namespace Main
 {
@@ -21,8 +23,8 @@ namespace Main
         {
             LexParser lexParse = new LexParser(new ASTBuilder());
             ReferenceHandler referenceHandler = new ReferenceHandler(new ReferenceHelper());
-            TypeChecker typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeCheckerLib.Helpers.BooleanHelper());
-            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper());
+            TypeChecker typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeBooleanHelper());
+            Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
             string input = "export 5.5 + 33.3 export 5.5 * func(33) " +
