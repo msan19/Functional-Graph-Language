@@ -27,13 +27,12 @@ namespace InterpreterLib.Tests
         #endregion
         
         #region AndBoolean
-
         [DataRow(true, true, true)]
         [DataRow(true, false, false)]
         [DataRow(false, true, false)]
         [DataRow(false, false, false)]
         [TestMethod]
-        public void AndBoolean_inp_exp(bool lhsValue, bool rhsValue, bool expected)
+        public void AndBoolean__CorrectValuesReturned(bool lhsValue, bool rhsValue, bool expected)
         {
             BooleanLiteralExpression lhs = new BooleanLiteralExpression(lhsValue, 0, 0);
             BooleanLiteralExpression rhs = new BooleanLiteralExpression(rhsValue, 0, 0);
@@ -49,8 +48,6 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
-        
-        
         #endregion
         
         #region OrBoolean
