@@ -154,7 +154,6 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
-
         #region Pass Node Down
         [TestMethod]
         public void DispatchBool_Greater_PassNodeDown()
@@ -310,6 +309,133 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
+        #region Pass Parameters Down
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Greater_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetGreaterExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.GreaterBoolean(Arg.Any<GreaterExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Less_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetLessExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.LessBoolean(Arg.Any<LessExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_GreaterEqual_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetGreaterEqualExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.GreaterEqualBoolean(Arg.Any<GreaterEqualExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_LessEqual_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetLessEqualExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.LessEqualBoolean(Arg.Any<LessEqualExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Equal_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetEqualExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.EqualBoolean(Arg.Any<EqualExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_NotEqual_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetNotEqualExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.NotEqualBoolean(Arg.Any<NotEqualExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Not_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetNotExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.NotBoolean(Arg.Any<NotExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -328,6 +454,25 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Or_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetOrExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.OrBoolean(Arg.Any<OrExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        #endregion
         #endregion
     }
 }
