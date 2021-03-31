@@ -24,6 +24,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             return node;
         }
 
+        private PowerExpression GetPowerExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new PowerExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
         private ExpressionNode GetLiteral(TypeEnum type)
         {
             return type switch
@@ -156,7 +164,134 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             helper.VisitBinaryNumOp(input1, null);
         }
-        
+
         #endregion
+
+
+        #region VisitPower
+        [TestMethod]
+        public void VisitPower__CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
+
+            helper.VisitPower(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        // Int Real -> Cast Node
+        // Int Real -> Append Int to Cast Node
+        // Int Int  -> Still ints as children
+        // Int Real -> Return Real
+        // Int Int  -> Return Int
+        // Int Func -> Throw Error 
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            helper.VisitPower(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithIntAndReal_AppendedIntNodeToTypeCast()
+        {
+            var expected = typeof(IntegerLiteralExpression);
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            helper.VisitPower(input1, null);
+            var res = input1.Children[0].Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithTwoInt_LeftInsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Integer);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            helper.VisitPower(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithTwoInt_RightInsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Integer);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            helper.VisitPower(input1, null);
+            var res = input1.Children[1].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithIntAndReal_ReturnsRealTypeNode()
+        {
+            var expected = TypeEnum.Real;
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            var res = helper.VisitPower(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithTwoInt_ReturnsRealTypeNode()
+        {
+            var expected = TypeEnum.Real;
+            PowerExpression input1 = GetPowerExpression(TypeEnum.Integer, TypeEnum.Integer);
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            var res = helper.VisitPower(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        // Int Func -> Throw Error 
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitPower_PowerExpressionWithIntAndFunc_ThrowsException()
+        {
+
+            IntegerLiteralExpression intLit1 = new IntegerLiteralExpression("1", 1, 1);
+            IdentifierExpression func = new IdentifierExpression("f", 0, 0);
+            PowerExpression input1 = new PowerExpression(intLit1, func, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
+
+
+            helper.VisitPower(input1, null);
+        }
+
+        #endregion
+
+
     }
 }

@@ -71,9 +71,15 @@ namespace TypeCheckerLib.Helpers
             TypeNode childType = GetType(n.Children[0], parameterTypes);
 
             if (childType.Type == TypeEnum.Real)
+            {
+                n.Type = TypeEnum.Real;
                 return childType;
-            else if (childType.Type == TypeEnum.Integer) //More types are added later, they all return integer
+            }
+            else if (childType.Type == TypeEnum.Integer) //More types are added later, they all return integer 
+            {
+                n.Type = TypeEnum.Integer;
                 return new TypeNode(TypeEnum.Integer, 0, 0);
+            }
             else
                 throw new AbsoluteValueTypeException(n, childType.Type);
         }
