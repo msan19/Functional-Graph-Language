@@ -9,6 +9,7 @@ using ASTLib.Nodes.TypeNodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using FluentAssertions;
+using ASTLib.Exceptions;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -389,19 +390,6 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception), "Not a valid parameter identifier.")]
-        public void VisitIdentifier_IdentifierNotPresentInList_ThrowsException()
-        {
-            // Setup for VisitIdentifier
-            IdentifierExpression input1 = new IdentifierExpression("d", 1, 1);
-            List<string> input2 = new List<string>() { "a", "b", "c" };
-            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
-            ReferenceHelper referenceHelper = BuildHelper(parent);
-
-            referenceHelper.VisitIdentifier(input1, input2);
-        }
-
-        [TestMethod]
         public void VisitIdentifier_TwoOfSameIdentifier_Correct()
         {
             // Setup for BuildTables
@@ -429,7 +417,7 @@ namespace ReferenceHandlerLib.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception), "Not a valid identifier.")]
+        [ExpectedException(typeof(OverloadedFunctionIdentifierException), "Not a valid identifier.")]
         public void VisitIdentifier_OverloadedFunctionIdentifier_Correct()
         {
             // Setup for BuildTables
