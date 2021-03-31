@@ -17,10 +17,10 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class IntegerlHelperTests
     {
-        private IntegerHelper SetUpHelper(IInterpreter parent)
+        private IntegerHelper SetUpHelper(IInterpreterInteger parent)
         {
             IntegerHelper integerHelper = new IntegerHelper();
-            integerHelper.SetUpFuncs(parent.DispatchInt, parent.Dispatch, parent.FunctionInteger);
+            integerHelper.SetInterpreter(parent);
             return integerHelper;
         }
 
@@ -31,7 +31,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ConditionNode conditionNode = new ConditionNode(intLit, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = SetUpHelper(parent);
 
@@ -49,7 +49,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             AdditionExpression addExpr = new AdditionExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
             IntegerHelper integerHelper = SetUpHelper(parent);
@@ -70,7 +70,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             SubtractionExpression subExpr = new SubtractionExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
             IntegerHelper integerHelper = SetUpHelper(parent);
@@ -91,7 +91,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             MultiplicationExpression multExpr = new MultiplicationExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
             IntegerHelper integerHelper = SetUpHelper(parent);
@@ -111,7 +111,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             DivisionExpression divExpr = new DivisionExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
             IntegerHelper integerHelper = SetUpHelper(parent);
@@ -131,7 +131,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression intLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             ModuloExpression modExpr = new ModuloExpression(intLit1, intLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchInt(intLit2, Arg.Any<List<object>>()).Returns(input2);
             IntegerHelper integerHelper = SetUpHelper(parent);
@@ -150,7 +150,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             AbsoluteValueExpression absExpr = new AbsoluteValueExpression(intLit, 1, 1);
             absExpr.Type = TypeEnum.Integer;
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = SetUpHelper(parent);
 
@@ -166,7 +166,7 @@ namespace InterpreterLib.Tests
         public void LiteralInteger_GivenInteger_ReturnsIntegerLiteral(int input, int expected)
         {
             IntegerLiteralExpression intLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = SetUpHelper(parent);
 
@@ -200,7 +200,7 @@ namespace InterpreterLib.Tests
             List<ExpressionNode> funcParams = new List<ExpressionNode> { intLit };
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
             IntegerHelper integerHelper = SetUpHelper(parent);
             FunctionNode functionNode = new FunctionNode("", null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
@@ -224,7 +224,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("1", funcParams, 1, 1);
             funcCallExpr.LocalReference = 0;
             funcCallExpr.GlobalReferences = new List<int>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             IntegerHelper integerHelper = SetUpHelper(parent);
             parent.Dispatch(funcParams[0], Arg.Any<List<Object>>(), TypeEnum.Integer).Returns(1);
             FunctionNode functionNode = new FunctionNode("", null, null, new FunctionTypeNode(null, new List<TypeNode> { new TypeNode(TypeEnum.Integer, 1, 1) }, 1, 1), 1, 1);
@@ -246,7 +246,7 @@ namespace InterpreterLib.Tests
             List<Object> expectedList = numbers.ToList();
             List<TypeEnum> expectedTypes = types.ToList();
             List<ExpressionNode> funcParams = new List<ExpressionNode>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
             List<TypeNode> typeNodes = new List<TypeNode>();
 
             for (int i = 0; i < expectedList.Count; i++)

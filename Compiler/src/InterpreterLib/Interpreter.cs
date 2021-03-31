@@ -11,7 +11,7 @@ using InterpreterLib.Interfaces;
 
 namespace InterpreterLib
 {
-    public class Interpreter : IInterpreter
+    public class Interpreter : IInterpreter, IInterpreterInteger, IInterpreterFunction, IInterpreterReal
     {
         private readonly IFunctionHelper _functionHelper;
         private readonly IIntegerHelper _integerHelper;
@@ -21,14 +21,14 @@ namespace InterpreterLib
         public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
         {
             _functionHelper = functionHelper;
-            _functionHelper.SetUpFuncs(DispatchFunction, Dispatch, FunctionFunction);
+            _functionHelper.SetInterpreter(this);
 
             _integerHelper = integerHelper;
-            _integerHelper.SetUpFuncs(DispatchInt, Dispatch, FunctionInteger);
+            _integerHelper.SetInterpreter(this);
 
             _realHelper = realHelper;
-            _realHelper.SetUpFuncs(DispatchReal, DispatchInt, Dispatch, FunctionReal);
-            
+            _realHelper.SetInterpreter(this);
+
             _booleanHelper = booleanHelper;
             _booleanHelper.SetUpFuncs(DispatchBoolean,  DispatchInt, DispatchReal, Dispatch, FunctionBoolean);
         }
@@ -123,7 +123,19 @@ namespace InterpreterLib
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)
         {
-            return _functionHelper.ConditionFunction(node.Conditions[0], parameters);
+            int result = 0;
+            int returnedValues = 0;
+            foreach(ConditionNode child in node.Conditions)
+            {
+                int? value = _functionHelper.ConditionFunction(node.Conditions[0], parameters);
+                if (value != null)
+                {
+                    result = (int) value;
+                    returnedValues++;
+                }
+            }
+            if (returnedValues != 1) throw new Exception(returnedValues + "conditions where true");
+            return result;
         }
     }
 }

@@ -11,11 +11,9 @@ namespace InterpreterLib.Interfaces
     {
         void SetAST(AST root);
 
-        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchFunction,
-                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
-                               Func<FunctionNode, List<Object>, int> functionFunction);
+        void SetInterpreter(IInterpreterFunction interpreter);
 
-        int ConditionFunction(ConditionNode node, List<Object> parameters);
+        int? ConditionFunction(ConditionNode node, List<Object> parameters);
 
         int IdentifierFunction(IdentifierExpression node, List<Object> parameters);
 

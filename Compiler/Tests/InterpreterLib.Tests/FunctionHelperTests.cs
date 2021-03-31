@@ -16,10 +16,10 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class FunctionHelperTests
     {
-        private FunctionHelper SetUpHelper(IInterpreter parent)
+        private FunctionHelper SetUpHelper(IInterpreterFunction parent)
         {
             FunctionHelper functionHelper = new FunctionHelper();
-            functionHelper.SetUpFuncs(parent.DispatchFunction, parent.Dispatch, parent.FunctionFunction);
+            functionHelper.SetInterpreter(parent);
             return functionHelper;
         }
 
@@ -32,11 +32,11 @@ namespace InterpreterLib.Tests
         {
             IdentifierExpression id = new IdentifierExpression("", 1, 1);
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             parent.DispatchFunction(id, Arg.Any<List<Object>>()).Returns(input);
             FunctionHelper functionHelper = SetUpHelper(parent);
 
-            int res = functionHelper.ConditionFunction(conditionNode, new List<Object>());
+            int res = (int) functionHelper.ConditionFunction(conditionNode, new List<Object>());
 
             Assert.AreEqual(expected, res);
         }
@@ -46,7 +46,7 @@ namespace InterpreterLib.Tests
         {
             IdentifierExpression id = new IdentifierExpression("", 1, 1);
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             List<Object> res = null;
             parent.DispatchFunction(id, Arg.Do<List<Object>>(x => res = x));
             List<Object> expected = new List<Object> { 1, 1.3, "" };
@@ -63,7 +63,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression id = new IdentifierExpression("", 1, 1);
             ExpressionNode expected = id;
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             ExpressionNode res = null;
             parent.DispatchFunction(Arg.Do<ExpressionNode>(x => res = x), Arg.Any<List<Object>>());
             List<Object> input2 = new List<Object> { 1, 1.3, "" };
@@ -106,7 +106,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
             FunctionHelper functionHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
@@ -130,7 +130,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.LocalReference = 0;
             funcCallExpr.GlobalReferences = new List<int>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Function).Returns((Object)1);
             FunctionHelper functionHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Function, 1, 1) };
@@ -156,7 +156,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = numbers.ToList();
             List<TypeEnum> exTypes = types.ToList();
             List<ExpressionNode> funcParams = new List<ExpressionNode>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterFunction parent = Substitute.For<IInterpreterFunction>();
             List<TypeNode> typeNodes = new List<TypeNode>();
 
             for (int i = 0; i < expected.Count; i++)

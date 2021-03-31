@@ -17,10 +17,10 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class RealHelperTests
     {
-        private RealHelper SetUpHelper(IInterpreter parent)
+        private RealHelper SetUpHelper(IInterpreterReal parent)
         {
             RealHelper realHelper = new RealHelper();
-            realHelper.SetUpFuncs(parent.DispatchReal, parent.DispatchInt, parent.Dispatch, parent.FunctionReal);
+            realHelper.SetInterpreter(parent);
             return realHelper;
         }
 
@@ -33,7 +33,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ExportNode exportNode = new ExportNode(realLit, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
@@ -52,7 +52,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             ConditionNode conditionNode = new ConditionNode(realLit, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
@@ -74,7 +74,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             AdditionExpression additionExpr = new AdditionExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -97,7 +97,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             SubtractionExpression subtractionExpr = new SubtractionExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -120,7 +120,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             MultiplicationExpression multiplicationExpr = new MultiplicationExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -143,7 +143,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             DivisionExpression divisionExpr = new DivisionExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -160,7 +160,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             DivisionExpression divisionExpr = new DivisionExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -181,7 +181,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             ModuloExpression moduloExpr = new ModuloExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -198,7 +198,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             ModuloExpression moduloExpr = new ModuloExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -217,7 +217,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             AbsoluteValueExpression absoluteExpr = new AbsoluteValueExpression(realLit, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
@@ -239,7 +239,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1.ToString(), 1, 1);
             IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2.ToString(), 2, 2);
             PowerExpression powExpr = new PowerExpression(realLit1, realLit2, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchReal(realLit1, Arg.Any<List<object>>()).Returns(input1);
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
@@ -292,7 +292,7 @@ namespace InterpreterLib.Tests
         {
             IntegerLiteralExpression realLit = new IntegerLiteralExpression(input.ToString(), 1, 1);
             CastFromIntegerExpression castExpr = new CastFromIntegerExpression(realLit, 1, 1);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.DispatchInt(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
@@ -311,7 +311,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.GlobalReferences = new List<int> { 0 };
             funcCallExpr.LocalReference = -1;
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
             RealHelper realHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
@@ -335,7 +335,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression funcCallExpr = new FunctionCallExpression("test", funcParams, 1, 1);
             funcCallExpr.LocalReference = 0;
             funcCallExpr.GlobalReferences = new List<int>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             parent.Dispatch(funcParams[0], Arg.Any<List<object>>(), TypeEnum.Real).Returns((Object)1.0);
             RealHelper realHelper = SetUpHelper(parent);
             List<TypeNode> typeNodes = new List<TypeNode> { new TypeNode(TypeEnum.Real, 1, 1) };
@@ -361,7 +361,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = numbers.ToList();
             List<TypeEnum> exTypes = types.ToList();
             List<ExpressionNode> funcParams = new List<ExpressionNode>();
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
             List<TypeNode> typeNodes = new List<TypeNode>();
             for (int i = 0; i < expected.Count; i++)
             {

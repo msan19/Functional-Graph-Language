@@ -10,12 +10,9 @@ namespace InterpreterLib.Interfaces
 {
     public interface IRealHelper
     {
-        public void SetASTRoot(AST root);
+        void SetASTRoot(AST root);
 
-        public void SetUpFuncs(Func<ExpressionNode, List<object>, double> dispatchReal,
-                               Func<ExpressionNode, List<object>, int> dispatchInt,
-                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
-                               Func<FunctionNode, List<object>, double> functionReal);
+        void SetInterpreter(IInterpreterReal interpreter);
 
         double ExportReal(ExportNode node, List<object> parameters);
 

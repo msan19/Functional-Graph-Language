@@ -10,9 +10,7 @@ namespace InterpreterLib.Helpers
 {
     public class FunctionHelper : IFunctionHelper
     {
-        private Func<ExpressionNode, List<Object>, int> _dispatchFunction;
-        private Func<ExpressionNode, List<object>, TypeEnum, Object> _dispatch;
-        private Func<FunctionNode, List<Object>, int> _functionFunction;
+        IInterpreterFunction _interpreter;
         private List<FunctionNode> _functions;
 
         public void SetAST(AST root)
@@ -20,18 +18,16 @@ namespace InterpreterLib.Helpers
             _functions = root.Functions;
         }
 
-        public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchFunction,
-                               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
-                               Func<FunctionNode, List<Object>, int> functionFunction)
+        public void SetInterpreter(IInterpreterFunction interpreter)
         {
-            _dispatchFunction = dispatchFunction;
-            _dispatch = dispatch;
-            _functionFunction = functionFunction;
+            _interpreter = interpreter;
         }
 
-        public int ConditionFunction(ConditionNode node, List<Object> parameters)
+        public int? ConditionFunction(ConditionNode node, List<Object> parameters)
         {
-            return _dispatchFunction(node.ReturnExpression, parameters);         
+            if(node.Condition == null || _interpreter.DispatchBoolean(node.Condition, parameters)) 
+                return _interpreter.DispatchFunction(node.ReturnExpression, parameters);
+            return null;
         }
 
         public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
@@ -52,10 +48,10 @@ namespace InterpreterLib.Helpers
             for (int i = 0; i < node.Children.Count; i++)
             {
                 TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
-                funcParameterValues.Add(_dispatch(node.Children[i], parameters, parameterType));
+                funcParameterValues.Add(_interpreter.Dispatch(node.Children[i], parameters, parameterType));
             }
 
-            return _functionFunction(funcNode, funcParameterValues);
+            return _interpreter.FunctionFunction(funcNode, funcParameterValues);
         }
 
     }

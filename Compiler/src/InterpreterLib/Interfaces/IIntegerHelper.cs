@@ -11,13 +11,9 @@ namespace InterpreterLib.Interfaces
     public interface IIntegerHelper
     {
 
-        IInterpreter Interpreter { get; set; }
-
         void SetASTRoot(AST root);
 
-        void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInt,
-               Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
-               Func<FunctionNode, List<Object>, int> functionInteger);
+        void SetInterpreter(IInterpreterInteger interpreter);
 
         int ConditionInteger(ConditionNode node, List<Object> parameters);
 
