@@ -39,25 +39,19 @@ namespace TypeCheckerLib
 
         public TypeNode Dispatch(ExpressionNode node, List<TypeNode> parameterTypes)
         {
-            switch (node)
+            return node switch
             {
-                case IBinaryNumberOperator n:
-                    return _numberHelper.VisitBinaryNumOp(n, parameterTypes);
-                case FunctionCallExpression n:
-                    return _declarationHelper.VisitFunctionCall(n, parameterTypes);
-                case IdentifierExpression n:
-                    return _declarationHelper.VisitIdentifier(n, parameterTypes);
-                case IntegerLiteralExpression n:
-                    return _declarationHelper.VisitIntegerLiteral(n, parameterTypes);
-                case RealLiteralExpression n:
-                    return _declarationHelper.VisitRealLiteral(n, parameterTypes);
-                case AdditionExpression n:
-                    return _commonOperatorHelper.VisitAddition(n, parameterTypes);
-                case SubtractionExpression n:
-                    return _commonOperatorHelper.VisitSubtraction(n, parameterTypes);
-                default:
-                    throw new UnimplementedTypeCheckerException(node, "Dispatch");
-            }
+                IBinaryNumberOperator n     => _numberHelper.VisitBinaryNumOp(n, parameterTypes),
+                PowerExpression n           => _numberHelper.VisitPower(n, parameterTypes),
+                FunctionCallExpression n    => _declarationHelper.VisitFunctionCall(n, parameterTypes),
+                IdentifierExpression n      => _declarationHelper.VisitIdentifier(n, parameterTypes),
+                IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(n, parameterTypes),
+                RealLiteralExpression n     => _declarationHelper.VisitRealLiteral(n, parameterTypes),
+                AdditionExpression n        => _commonOperatorHelper.VisitAddition(n, parameterTypes),
+                SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
+                AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
+                _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
+            };
         }
 
         private void InitializeHelpers(AST root)

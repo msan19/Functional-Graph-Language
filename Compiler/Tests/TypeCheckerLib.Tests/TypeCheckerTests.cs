@@ -128,10 +128,206 @@ namespace TypeCheckerLib.Tests
             
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
-            # endregion
- 
-            
-            # region FunctionCallExpression
+        #endregion
+
+            #region PowerExpression
+        [TestMethod]
+        public void Dispatch_PowerExpression_CorrectVisitMethodCalled()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            PowerExpression multExpNode = new PowerExpression(n1, n2, 1, 3);
+            bool visitBinaryNumOpWasCalled = false;
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            numberHelper.VisitPower(Arg.Do<PowerExpression>(exp => visitBinaryNumOpWasCalled = true), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.IsTrue(visitBinaryNumOpWasCalled);
+        }
+
+        [TestMethod]
+        public void Dispatch_PowerExpression_CorrectNodePassedToVisit()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            PowerExpression multExpNode = new PowerExpression(n1, n2, 1, 3);
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            PowerExpression actualNode = null;
+            numberHelper.VisitPower(Arg.Do<PowerExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(multExpNode, actualNode);
+        }
+
+        [TestMethod]
+        public void Dispatch_PowerExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            PowerExpression multExpNode = new PowerExpression(n1, n2, 1, 3);
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            numberHelper.VisitPower(Arg.Any<PowerExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(numberHelper);
+
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
+        }
+        #endregion
+
+            #region AdditionExpression
+        [TestMethod]
+        public void Dispatch_AdditionExpression_CorrectVisitMethodCalled()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            AdditionExpression multExpNode = new AdditionExpression(n1, n2, 1, 3);
+            bool visitWasCalled = false;
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitAddition(Arg.Do<AdditionExpression>(exp => visitWasCalled = true), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.IsTrue(visitWasCalled);
+        }
+
+        [TestMethod]
+        public void Dispatch_AdditionExpression_CorrectNodePassedToVisit()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            AdditionExpression multExpNode = new AdditionExpression(n1, n2, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            AdditionExpression actualNode = null;
+            helper.VisitAddition(Arg.Do<AdditionExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(multExpNode, actualNode);
+        }
+
+        [TestMethod]
+        public void Dispatch_AdditionExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            AdditionExpression multExpNode = new AdditionExpression(n1, n2, 1, 3);
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitAddition(Arg.Any<AdditionExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
+        }
+        #endregion
+
+            #region SubtractionExpression
+        [TestMethod]
+        public void Dispatch_SubtractionExpression_CorrectVisitMethodCalled()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            SubtractionExpression multExpNode = new SubtractionExpression(n1, n2, 1, 3);
+            bool visitWasCalled = false;
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitSubtraction(Arg.Do<SubtractionExpression>(exp => visitWasCalled = true), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.IsTrue(visitWasCalled);
+        }
+
+        [TestMethod]
+        public void Dispatch_SubtractionExpression_CorrectNodePassedToVisit()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            SubtractionExpression multExpNode = new SubtractionExpression(n1, n2, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            SubtractionExpression actualNode = null;
+            helper.VisitSubtraction(Arg.Do<SubtractionExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(multExpNode, actualNode);
+        }
+
+        [TestMethod]
+        public void Dispatch_SubtractionExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression n2 = new IntegerLiteralExpression("2", 1, 5);
+            SubtractionExpression multExpNode = new SubtractionExpression(n1, n2, 1, 3);
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitSubtraction(Arg.Any<SubtractionExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
+        }
+        #endregion
+
+            #region AbsoluteValueExpression
+        [TestMethod]
+        public void Dispatch_AbsoluteValueExpression_CorrectVisitMethodCalled()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            AbsoluteValueExpression multExpNode = new AbsoluteValueExpression(n1, 1, 3);
+            bool visitWasCalled = false;
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitAbsoluteValue(Arg.Do<AbsoluteValueExpression>(exp => visitWasCalled = true), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.IsTrue(visitWasCalled);
+        }
+
+        [TestMethod]
+        public void Dispatch_AbsoluteValueExpression_CorrectNodePassedToVisit()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            AbsoluteValueExpression multExpNode = new AbsoluteValueExpression(n1, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            AbsoluteValueExpression actualNode = null;
+            helper.VisitAbsoluteValue(Arg.Do<AbsoluteValueExpression>(expNode => actualNode = expNode), Arg.Any<List<TypeNode>>());
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(multExpNode, actualNode);
+        }
+
+        [TestMethod]
+        public void Dispatch_AbsoluteValueExpression_ExpectToReturnSameTypeAsHelperMethod()
+        {
+            IntegerLiteralExpression n1 = new IntegerLiteralExpression("1", 1, 1);
+            AbsoluteValueExpression multExpNode = new AbsoluteValueExpression(n1, 1, 3);
+            TypeNode expectedTypeNode = new TypeNode(TypeEnum.Real, 1, 3);
+            ICommonOperatorHelper helper = Substitute.For<ICommonOperatorHelper>();
+            helper.VisitAbsoluteValue(Arg.Any<AbsoluteValueExpression>(), Arg.Any<List<TypeNode>>()).Returns(expectedTypeNode);
+            ITypeChecker typeChecker = Utilities.GetTypeCheckerOnlyWith(helper);
+
+            TypeNode actualTypeNode = typeChecker.Dispatch(multExpNode, new List<TypeNode>());
+
+            Assert.AreEqual(expectedTypeNode, actualTypeNode);
+        }
+            #endregion
+
+            #region FunctionCallExpression
         [TestMethod]
         public void Dispatch_ExpressionNodeIsFunctionCallExpression_CorrectVisitMethodCalled()
         {
@@ -174,7 +370,6 @@ namespace TypeCheckerLib.Tests
             Assert.AreEqual(expectedTypeNode, actualTypeNode);        
         }
             # endregion
-            
             
             # region IdentifierExpression
         [TestMethod]
@@ -221,7 +416,6 @@ namespace TypeCheckerLib.Tests
         }
             # endregion
 
-            
             # region IntegerLiteralExpression
         [TestMethod]
         public void Dispatch_ExpressionNodeIsIntegerLiteralExpression_CorrectVisitMethodCalled()
@@ -265,7 +459,6 @@ namespace TypeCheckerLib.Tests
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
             # endregion
-            
             
             # region RealLiteralExpression
         [TestMethod]

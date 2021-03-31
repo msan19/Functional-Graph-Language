@@ -11,7 +11,7 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        const int NO_LOCAL_REF = -1;
+        private const int NO_LOCAL_REF = -1;
         private Dictionary<string, List<int>> _functionTable;
         private Dictionary<string, int> _functionIdentifierTable;
 

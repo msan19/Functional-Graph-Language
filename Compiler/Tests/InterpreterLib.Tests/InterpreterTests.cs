@@ -1,6 +1,7 @@
 ﻿using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -10,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InterpreterLib.Tests
@@ -589,7 +591,6 @@ namespace InterpreterLib.Tests
         #endregion
 
         #endregion
-
         #region DispatchReal
         #region DispatchReal_functionCallExpr
         [TestMethod]
@@ -1120,7 +1121,7 @@ namespace InterpreterLib.Tests
         #endregion
 
         #endregion
-
+        
         #region Dispatch
         #region Dispatch_IntegerLiteralExpr
         [TestMethod]
@@ -1316,7 +1317,6 @@ namespace InterpreterLib.Tests
         }
 
         #endregion
-
         #region FunctionInteger
         [TestMethod]
         public void FunctionInteger_FunctionNodeAndObjectList_CorrectListPassed()
@@ -1365,7 +1365,6 @@ namespace InterpreterLib.Tests
         }
 
         #endregion
-
         #region FunctionReal
         [TestMethod]
         public void FunctionReal_FunctionNodeAndObjectList_CorrectListPassed()
@@ -1413,6 +1412,8 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
 
+        #endregion
+        #region FunctionBoolean
         #endregion
 
         #region CompleteComponent

@@ -29,7 +29,7 @@ namespace Main
 
             string input = "export 5.5 + 33.3 export 5.5 * func(33) " +
                                    "func: (integer) -> real " +
-                                   "func(p) = p * 17 + p / 2 ^ (17 - 0.1 mod 2)";
+                                   "func(p) = |p| * 17 + p / 2 ^ (17 - 0.1 mod 2)";
             string file = "";
             //input = ReadFile(file);
 
