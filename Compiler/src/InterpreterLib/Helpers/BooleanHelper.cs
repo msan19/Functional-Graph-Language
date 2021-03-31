@@ -39,22 +39,36 @@ namespace InterpreterLib.Helpers
             _functionBoolean = functionBoolean;
         }
         
-        public bool AndBoolean(AndExpression node, List<object> parameters)
+        public bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
+            
+            
+            // return _functionBoolean
+        }
+        
+        public bool AndBoolean(AndExpression node, List<object> parameters)
+        {
+            bool leftOperand =  _dispatchBoolean(node.Children[0], parameters);
+            bool rightOperand = _dispatchBoolean(node.Children[1], parameters);
+
+            return leftOperand && rightOperand;
         }
 
+        public bool OrBoolean(OrExpression node, List<object> parameters)
+        {
+            bool leftOperand =  _dispatchBoolean(node.Children[0], parameters);
+            bool rightOperand = _dispatchBoolean(node.Children[1], parameters);
+
+            return leftOperand || rightOperand;
+        }
+        
         public bool ConditionBoolean(ConditionNode node, List<object> parameters)
         {
             throw new NotImplementedException();
         }
 
         public bool EqualBoolean(EqualExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
         }
@@ -90,11 +104,6 @@ namespace InterpreterLib.Helpers
         }
 
         public bool NotEqualBoolean(NotEqualExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool OrBoolean(OrExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
         }

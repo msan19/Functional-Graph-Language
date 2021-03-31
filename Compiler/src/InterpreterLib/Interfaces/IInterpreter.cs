@@ -15,6 +15,8 @@ namespace InterpreterLib.Interfaces
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
 
+        bool DispatchBoolean(ExpressionNode node, List<object> parameters);
+
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 
         List<double> Interpret(AST node);
@@ -23,6 +25,8 @@ namespace InterpreterLib.Interfaces
 
         double FunctionReal(FunctionNode node, List<Object> parameters);
 
+        public bool FunctionBoolean(FunctionNode node, List<object> parameters);
+        
         int FunctionFunction(FunctionNode node, List<Object> parameters);
     }
 }

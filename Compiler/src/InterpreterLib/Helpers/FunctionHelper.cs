@@ -13,7 +13,7 @@ namespace InterpreterLib.Helpers
         IInterpreterFunction _interpreter;
         private List<FunctionNode> _functions;
 
-        public void SetAST(AST root)
+        public void SetASTRoot(AST root)
         {
             _functions = root.Functions;
         }

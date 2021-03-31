@@ -7,7 +7,7 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IFunctionHelper
+    public interface IFunctionHelper : IInterpretorHelper
     {
         void SetAST(AST root);
 

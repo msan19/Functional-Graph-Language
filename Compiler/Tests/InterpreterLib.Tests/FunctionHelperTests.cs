@@ -113,7 +113,7 @@ namespace InterpreterLib.Tests
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
-            functionHelper.SetAST(ast);
+            functionHelper.SetASTRoot(ast);
             FunctionNode res = null;
             parent.FunctionFunction(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
@@ -137,7 +137,7 @@ namespace InterpreterLib.Tests
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
-            functionHelper.SetAST(ast);
+            functionHelper.SetASTRoot(ast);
             FunctionNode res = null;
             parent.FunctionFunction(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
@@ -185,7 +185,7 @@ namespace InterpreterLib.Tests
             FunctionTypeNode funcTypeNode = new FunctionTypeNode(null, typeNodes, 1, 1);
             FunctionNode funcNode = new FunctionNode("", null, null, funcTypeNode, 1, 1);
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
-            functionHelper.SetAST(ast);
+            functionHelper.SetASTRoot(ast);
             List<object> res = new List<object>();
             parent.FunctionFunction(Arg.Any<FunctionNode>(), Arg.Do<List<object>>(x => res = x));
 

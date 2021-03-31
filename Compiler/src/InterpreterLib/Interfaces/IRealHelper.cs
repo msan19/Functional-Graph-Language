@@ -8,7 +8,7 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IRealHelper
+    public interface IRealHelper : IInterpretorHelper
     {
         void SetASTRoot(AST root);
 
