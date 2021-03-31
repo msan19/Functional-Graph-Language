@@ -10,12 +10,10 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IBooleanHelper
+    public interface IBooleanHelper : IInterpretorHelper
     {
         IInterpreter Interpreter { get; set; }
-
-        void SetASTRoot(AST root);
-
+        
         void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
                         Func<ExpressionNode, List<object>, int> dispatchInteger,
                         Func<ExpressionNode, List<object>, double> dispatchReal,
