@@ -2,6 +2,7 @@ using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace ReferenceHandlerLib
         {
             if (HasUniqueParameters(node.ParameterIdentifiers))
             {
-                throw new Exception($"Two or more of same parameter identifiers");
+                throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
             }
             VisitCondition(node.Conditions[0], node.ParameterIdentifiers);
         }
@@ -91,7 +92,7 @@ namespace ReferenceHandlerLib
 
         public void VisitIdentifier(IdentifierExpression node, List<string> identifiers)
         {
-            if (!identifiers.Contains(node.Id)) { throw new Exception($"{node.Id} is not present in list of identifiers"); }
+            if (!identifiers.Contains(node.Id)) { throw new ValueNotFoundInListException(node.Id, identifiers); }
             for (int i = 0; i < identifiers.Count; i++)
             {
                 if (identifiers[i] == node.Id)
@@ -106,11 +107,11 @@ namespace ReferenceHandlerLib
                 {
                     node.Reference = _functionIdentifierTable[node.Id];
                 }
-                else throw new Exception($"{node.Id} is not a valid identifier");
+                else throw new InvalidIdentifierException(node.Id);
 
                 if (node.Reference == -1)
                 {
-                    throw new Exception($"points to an overloaded function");
+                    throw new OverloadedFunctionIdentifierException(node.Id);
                 }
             }
         }
