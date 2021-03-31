@@ -1,16 +1,15 @@
-﻿using ASTLib.Exceptions;
-using ASTLib.Nodes;
+﻿using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TypeCheckerLib.Tests.HelperTests
+namespace ASTLib.Exceptions
 {
     public class NoMatchingFunctionFoundException : CompilerException
     {
-        public NoMatchingFunctionFoundException(FunctionCallExpression node) : 
+        public NoMatchingFunctionFoundException(FunctionCallExpression node) :
             base(node, GetMessage(node))
         {
         }

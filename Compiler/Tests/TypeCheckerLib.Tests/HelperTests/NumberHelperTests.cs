@@ -141,7 +141,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         
         // Int Func -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(ASTLib.Exceptions.InvalidCastException))]
         public void BinaryNumOp_MultiplicationExpressionWithIntAndFunc_ThrowsException()
         {
             

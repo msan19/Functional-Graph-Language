@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
+using ASTLib.Exceptions;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -27,7 +28,7 @@ namespace TypeCheckerLib.Helpers
             TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
             
             if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
-                throw new Exception("One of the arguments is of type Function.");
+                throw new ASTLib.Exceptions.InvalidCastException((Node) binaryNode, TypeEnum.Function, TypeEnum.Real);
 
             if (left.Type != right.Type)
             {

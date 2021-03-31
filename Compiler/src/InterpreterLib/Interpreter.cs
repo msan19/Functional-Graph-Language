@@ -16,17 +16,21 @@ namespace InterpreterLib
         private readonly IFunctionHelper _functionHelper;
         private readonly IIntegerHelper _integerHelper;
         private readonly IRealHelper _realHelper;
+        private readonly IBooleanHelper _booleanHelper;
 
-        public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper)
+        public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
         {
             _functionHelper = functionHelper;
-            _functionHelper.SetUpFuncs(this.DispatchFunction, this.Dispatch, this.FunctionFunction);
+            _functionHelper.SetUpFuncs(DispatchFunction, Dispatch, FunctionFunction);
 
             _integerHelper = integerHelper;
-            _integerHelper.SetUpFuncs(this.DispatchInt, this.Dispatch, this.FunctionInteger);
+            _integerHelper.SetUpFuncs(DispatchInt, Dispatch, FunctionInteger);
 
             _realHelper = realHelper;
-            _realHelper.SetUpFuncs(this.DispatchReal, this.DispatchInt, this.Dispatch, this.FunctionReal);
+            _realHelper.SetUpFuncs(DispatchReal, DispatchInt, Dispatch, FunctionReal);
+            
+            _booleanHelper = booleanHelper;
+            _booleanHelper.SetUpFuncs(DispatchBoolean,  DispatchInt, DispatchReal, Dispatch, FunctionBoolean);
         }
 
         public List<double> Interpret(AST node)
@@ -34,6 +38,7 @@ namespace InterpreterLib
             _functionHelper.SetAST(node);
             _integerHelper.SetASTRoot(node);
             _realHelper.SetASTRoot(node);
+            _booleanHelper.SetASTRoot(node);
             List<double> results = new List<double>();
             foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<object>()));
             return results;
@@ -85,6 +90,11 @@ namespace InterpreterLib
             };
         }
 
+        public bool DispatchBoolean(ExpressionNode node, List<object> parameters)
+        {
+            throw new NotImplementedException();
+        }
+        
         public object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type)
         {
             return type switch
@@ -104,6 +114,11 @@ namespace InterpreterLib
         public double FunctionReal(FunctionNode node, List<object> parameters)
         {
             return _realHelper.ConditionReal(node.Conditions[0], parameters);
+        }
+
+        public bool FunctionBoolean(FunctionNode node, List<object> parameters)
+        {
+            throw new NotImplementedException();
         }
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)

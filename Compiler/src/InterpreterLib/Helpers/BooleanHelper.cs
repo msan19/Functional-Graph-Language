@@ -21,6 +21,24 @@ namespace InterpreterLib.Helpers
         private Func<FunctionNode,   List<object>, bool> _functionBoolean;
         private AST _root;
 
+        public void SetASTRoot(AST root)
+        {
+            _root = root;
+        }
+
+        public void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
+            Func<ExpressionNode, List<object>, int> dispatchInteger,
+            Func<ExpressionNode, List<object>, double> dispatchReal,
+            Func<ExpressionNode, List<object>, TypeEnum, object> dispatch,
+            Func<FunctionNode,   List<object>, bool> functionBoolean)
+        {
+            _dispatchBoolean = dispatchBoolean;
+            _dispatchInteger = dispatchInteger;
+            _dispatchReal = dispatchReal;
+            _dispatch = dispatch;
+            _functionBoolean = functionBoolean;
+        }
+        
         public bool AndBoolean(AndExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
@@ -79,24 +97,6 @@ namespace InterpreterLib.Helpers
         public bool OrBoolean(OrExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
-        }
-
-        public void SetASTRoot(AST root)
-        {
-            _root = root;
-        }
-
-        public void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
-                               Func<ExpressionNode, List<object>, int> dispatchInteger,
-                               Func<ExpressionNode, List<object>, double> dispatchReal,
-                               Func<ExpressionNode, List<object>, TypeEnum, object> dispatch,
-                               Func<FunctionNode,   List<object>, bool> functionBoolean)
-        {
-            _dispatchBoolean = dispatchBoolean;
-            _dispatchInteger = dispatchInteger;
-            _dispatchReal = dispatchReal;
-            _dispatch = dispatch;
-            _functionBoolean = functionBoolean;
         }
     }
 }
