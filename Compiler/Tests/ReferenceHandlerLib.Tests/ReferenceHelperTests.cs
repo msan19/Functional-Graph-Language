@@ -98,6 +98,7 @@ namespace ReferenceHandlerLib.Tests
 
             Assert.AreEqual(expected, result);
         }
+
         #endregion
 
         #region VisitFunctionCall

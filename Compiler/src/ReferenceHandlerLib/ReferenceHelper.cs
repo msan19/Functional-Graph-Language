@@ -66,7 +66,10 @@ namespace ReferenceHandlerLib
             {
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
             }
-            VisitCondition(node.Conditions[0], node.ParameterIdentifiers);
+            foreach (ConditionNode conditionNode in node.Conditions)
+            {
+                VisitCondition(conditionNode, node.ParameterIdentifiers);
+            }
         }
 
         private bool HasUniqueParameters(List<string> parameters)
