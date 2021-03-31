@@ -14,7 +14,7 @@ using InterpreterLib.Interfaces;
 
 namespace InterpreterLib
 {
-    public class Interpreter : IInterpreter, IInterpreterInteger, IInterpreterFunction, IInterpreterReal
+    public class Interpreter : IInterpreter
     {
         private readonly IFunctionHelper _functionHelper;
         private readonly IIntegerHelper _integerHelper;
@@ -33,7 +33,7 @@ namespace InterpreterLib
             _realHelper.SetInterpreter(this);
 
             _booleanHelper = booleanHelper;
-            _booleanHelper.SetUpFuncs(DispatchBoolean,  DispatchInt, DispatchReal, Dispatch, FunctionBoolean);
+            _booleanHelper.SetInterpreter(this);
         }
 
         public List<double> Interpret(AST node)

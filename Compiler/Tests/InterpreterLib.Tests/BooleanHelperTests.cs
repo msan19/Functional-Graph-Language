@@ -38,7 +38,7 @@ namespace InterpreterLib.Tests
             BooleanLiteralExpression rhs = new BooleanLiteralExpression(rhsValue, 0, 0);
 
             AndExpression andExpr = new AndExpression(lhs, rhs, 0, 0);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
             parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
             parent.DispatchBoolean(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
 
@@ -62,7 +62,7 @@ namespace InterpreterLib.Tests
             BooleanLiteralExpression rhs = new BooleanLiteralExpression(rhsValue, 0, 0);
 
             OrExpression orExpr = new OrExpression(lhs, rhs, 0, 0);
-            IInterpreter parent = Substitute.For<IInterpreter>();
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
             parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
             parent.DispatchBoolean(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
 

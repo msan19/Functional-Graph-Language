@@ -12,13 +12,7 @@ namespace InterpreterLib.Interfaces
 {
     public interface IBooleanHelper : IInterpretorHelper
     {
-        IInterpreter Interpreter { get; set; }
-        
-        void SetUpFuncs(Func<ExpressionNode, List<object>, bool> dispatchBoolean,
-                        Func<ExpressionNode, List<object>, int> dispatchInteger,
-                        Func<ExpressionNode, List<object>, double> dispatchReal,
-                        Func<ExpressionNode, List<object>, TypeEnum, object> dispatch,
-                        Func<FunctionNode,   List<object>, bool> functionBoolean);
+        void SetInterpreter(IInterpreterBoolean interpreter);
 
         bool ConditionBoolean(ConditionNode node, List<object> parameters);
 

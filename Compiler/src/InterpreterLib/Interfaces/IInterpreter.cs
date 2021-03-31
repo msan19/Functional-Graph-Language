@@ -7,26 +7,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IInterpreter
+    public interface IInterpreter: IInterpreterInteger, IInterpreterFunction, IInterpreterReal, IInterpreterBoolean
     {
-        int DispatchFunction(ExpressionNode node, List<object> parameters);
-
-        int DispatchInt(ExpressionNode node, List<object> parameters);
-
-        double DispatchReal(ExpressionNode node, List<object> parameters);
-
-        bool DispatchBoolean(ExpressionNode node, List<object> parameters);
-
-        object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
-
         List<double> Interpret(AST node);
-
-        int FunctionInteger(FunctionNode node, List<Object> parameters);
-
-        double FunctionReal(FunctionNode node, List<Object> parameters);
-
-        public bool FunctionBoolean(FunctionNode node, List<object> parameters);
-        
-        int FunctionFunction(FunctionNode node, List<Object> parameters);
     }
 }

@@ -7,11 +7,10 @@ namespace InterpreterLib.Tests
 {
     public static class Utilities
     {
-        public static BooleanHelper GetBooleanHelper(IInterpreter interpreter)
+        public static BooleanHelper GetBooleanHelper(IInterpreterBoolean interpreter)
         {
             BooleanHelper booleanHelper = new BooleanHelper();
-            booleanHelper.SetUpFuncs(interpreter.DispatchBoolean, interpreter.DispatchInt, 
-                interpreter.DispatchReal, interpreter.Dispatch, interpreter.FunctionBoolean);
+            booleanHelper.SetInterpreter(interpreter);
             return booleanHelper;
         }
         
