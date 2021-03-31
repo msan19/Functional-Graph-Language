@@ -3,7 +3,7 @@ using ASTLib;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
 
-namespace TypeCheckerLib
+namespace TypeCheckerLib.Interfaces
 {
     public interface ITypeChecker
     {
