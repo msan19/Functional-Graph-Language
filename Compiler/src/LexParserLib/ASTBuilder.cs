@@ -83,7 +83,10 @@ namespace LexParserLib
 
             if (IsConditional(himeDeclNode))
             {
-                List<ConditionNode> conditions = VisitConditions(GetFunctionContent(himeDeclNode));
+                List<ConditionNode> conditions = new List<ConditionNode>();
+                VisitConditions(GetFunctionContent(himeDeclNode), 
+                                                   conditions, 
+                                                   false);
                 return new FunctionNode(conditions, typeID, parameterIdentifiers, type,
                                         himeDeclNode.Position.Line, himeDeclNode.Position.Column);
             } else
@@ -102,17 +105,20 @@ namespace LexParserLib
                                                         himeDeclerationNode.Position.Column);
         }
 
-        private List<ConditionNode> VisitConditions(ASTNode himeNode)
+        private void VisitConditions(ASTNode himeNode, List<ConditionNode> conditions, 
+                                     bool hasFoundDefault)
         {
             if (himeNode.Children.Count == 1)
             {
-                return new List<ConditionNode> { CreateConditionNode(himeNode.Children[0]) };
+                conditions.Add(CreateConditionNode(himeNode.Children[0]));
             }
             else
             {
-                List<ConditionNode> conditions = VisitConditions(himeNode.Children[0]);
-                conditions.Add(CreateConditionNode(himeNode.Children[2]));
-                return conditions;
+                ConditionNode node = CreateConditionNode(himeNode.Children[2]);
+                conditions.Add(node);
+                if (hasFoundDefault && node.IsDefaultCase())
+                    throw new Exception("More than one default case");
+                VisitConditions(himeNode.Children[0], conditions, hasFoundDefault || node.IsDefaultCase());
             }
         }
 

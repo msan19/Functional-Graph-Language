@@ -1278,7 +1278,7 @@ namespace InterpreterLib.Tests
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             List<Object> res = null;
-            fhelper.ConditionFunction(Arg.Any<ConditionNode>(), Arg.Do<List<Object>>(x => res = x));
+            fhelper.ConditionFunction(Arg.Any<ConditionNode>(), Arg.Do<List<Object>>(x => res = x)).Returns(0);
 
             interpreter.FunctionFunction(input1, expected);
 
@@ -1294,7 +1294,7 @@ namespace InterpreterLib.Tests
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
             ConditionNode res = null;
-            fhelper.ConditionFunction(Arg.Do<ConditionNode>(x => res = x), Arg.Any<List<Object>>());
+            fhelper.ConditionFunction(Arg.Do<ConditionNode>(x => res = x), Arg.Any<List<Object>>()).Returns(0);
 
             interpreter.FunctionFunction(input1, input2);
 

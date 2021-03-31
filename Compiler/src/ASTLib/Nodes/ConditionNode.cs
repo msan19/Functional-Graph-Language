@@ -21,5 +21,10 @@ namespace ASTLib.Nodes
             ReturnExpression = returnExpression;
             Condition = conditionExpression;
         }
+
+        public bool IsDefaultCase()
+        {
+            return Elements == null && Condition == null;
+        }
     }
 }

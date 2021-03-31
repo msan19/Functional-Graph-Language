@@ -138,18 +138,36 @@ namespace InterpreterLib
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)
         {
-            int result = 0;
+            return (int) HandleConditions(_functionHelper.ConditionFunction, node, parameters);
+        }
+
+        private T HandleConditions<T>(Func<ConditionNode, List<Object>, T> func, 
+                                      FunctionNode node, List<Object> parameters)
+        {
+            T result = default;
             int returnedValues = 0;
-            foreach(ConditionNode child in node.Conditions)
+            ConditionNode defaultCase = null;
+            foreach (ConditionNode child in node.Conditions)
             {
-                int? value = _functionHelper.ConditionFunction(node.Conditions[0], parameters);
-                if (value != null)
+                if (child.IsDefaultCase())
+                    defaultCase = child;
+                else
                 {
-                    result = (int) value;
-                    returnedValues++;
+                    T value = func(child, parameters);
+                    if (value != null)
+                    {
+                        result = value;
+                        returnedValues++;
+                    }
                 }
             }
-            if (returnedValues != 1) throw new Exception(returnedValues + "conditions where true");
+            if (returnedValues == 0 && defaultCase != null)
+            {
+                var a = func(defaultCase, parameters);
+                return a;
+            }
+            else if (returnedValues != 1)
+                throw new Exception(returnedValues + "conditions where true");
             return result;
         }
     }
