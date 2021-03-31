@@ -27,8 +27,8 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
             TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
             
-            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
-                throw new ASTLib.Exceptions.InvalidCastException((Node) binaryNode, TypeEnum.Function, TypeEnum.Real);
+            if (!IsNumberType(left.Type) || !IsNumberType(right.Type))
+                throw new UnmatchableTypesException((Node) binaryNode, left.Type, right.Type, "number");
 
             if (left.Type != right.Type)
             {
@@ -38,7 +38,12 @@ namespace TypeCheckerLib.Helpers
             }
             return new TypeNode(left.Type, 0, 0);
         }
-        
+
+        private bool IsNumberType(TypeEnum t)
+        {
+            return t == TypeEnum.Integer || t == TypeEnum.Real;
+        }
+
         private void CastToReal(IExpressionNode binaryNode, TypeNode nodeType, int child)
         {
             if (nodeType.Type != TypeEnum.Real)

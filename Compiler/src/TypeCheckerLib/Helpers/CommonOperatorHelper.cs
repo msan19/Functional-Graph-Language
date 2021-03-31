@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -26,8 +27,8 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(n.Children[0], parameterTypes);
             TypeNode right = GetType(n.Children[1], parameterTypes);
 
-            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
-                throw new Exception("One of the arguments is of type Function.");
+            if (!IsAddableType(left.Type) || !IsAddableType(right.Type))
+                throw new UnmatchableTypesException(n, left.Type, right.Type, "number");
 
             if (left.Type != right.Type)
             {
@@ -36,6 +37,11 @@ namespace TypeCheckerLib.Helpers
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
             return new TypeNode(left.Type, 0, 0);
+        }
+
+        private bool IsAddableType(TypeEnum t)
+        {
+            return t == TypeEnum.Integer || t == TypeEnum.Real;
         }
 
         public TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes)
@@ -43,8 +49,8 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(n.Children[0], parameterTypes);
             TypeNode right = GetType(n.Children[1], parameterTypes);
 
-            if (left.Type == TypeEnum.Function || right.Type == TypeEnum.Function)
-                throw new Exception("One of the arguments is of type Function.");
+            if (!IsSubtractableType(left.Type) || !IsSubtractableType(right.Type))
+                throw new UnmatchableTypesException(n, left.Type, right.Type, "number");
 
             if (left.Type != right.Type)
             {
@@ -54,7 +60,24 @@ namespace TypeCheckerLib.Helpers
             }
             return new TypeNode(left.Type, 0, 0);
         }
-        
+
+        private bool IsSubtractableType(TypeEnum t)
+        {
+            return t == TypeEnum.Integer || t == TypeEnum.Real;
+        }
+
+        public TypeNode VisitAbsoluteValue(AbsoluteValueExpression n, List<TypeNode> parameterTypes)
+        {
+            TypeNode childType = GetType(n.Children[0], parameterTypes);
+
+            if (childType.Type == TypeEnum.Real)
+                return childType;
+            else if (childType.Type == TypeEnum.Integer) //More types are added later, they all return integer
+                return new TypeNode(TypeEnum.Integer, 0, 0);
+            else
+                throw new AbsoluteValueTypeException(n, childType.Type);
+        }
+
         private TypeNode GetType(ExpressionNode node, List<TypeNode> parameterTypes)
         {
             return _getType(node, parameterTypes);
