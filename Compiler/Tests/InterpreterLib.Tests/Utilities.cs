@@ -1,3 +1,5 @@
+using ASTLib;
+using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using NSubstitute;
 
@@ -5,6 +7,14 @@ namespace InterpreterLib.Tests
 {
     public static class Utilities
     {
+        public static BooleanHelper GetBooleanHelper(IInterpreter interpreter)
+        {
+            BooleanHelper booleanHelper = new BooleanHelper();
+            booleanHelper.SetUpFuncs(interpreter.DispatchBoolean, interpreter.DispatchInt, 
+                interpreter.DispatchReal, interpreter.Dispatch, interpreter.FunctionBoolean);
+            return booleanHelper;
+        }
+        
         public static Interpreter GetFullyMockedIntepretor()
         {
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();

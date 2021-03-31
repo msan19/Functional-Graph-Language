@@ -8,14 +8,12 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IIntegerHelper
+    public interface IIntegerHelper : IInterpretorHelper
     {
 
         IInterpreter Interpreter { get; set; }
 
-        void SetASTRoot(AST root);
-
-        void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInt,
+        void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchInteger,
                Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
                Func<FunctionNode, List<Object>, int> functionInteger);
 

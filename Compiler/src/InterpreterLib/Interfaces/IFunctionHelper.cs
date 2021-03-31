@@ -7,10 +7,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IFunctionHelper
+    public interface IFunctionHelper : IInterpretorHelper
     {
-        void SetAST(AST root);
-
         public void SetUpFuncs(Func<ExpressionNode, List<Object>, int> dispatchFunction,
                                Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,
                                Func<FunctionNode, List<Object>, int> functionFunction);

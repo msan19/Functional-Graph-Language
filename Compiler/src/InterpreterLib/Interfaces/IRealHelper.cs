@@ -8,10 +8,8 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IRealHelper
+    public interface IRealHelper : IInterpretorHelper
     {
-        public void SetASTRoot(AST root);
-
         public void SetUpFuncs(Func<ExpressionNode, List<object>, double> dispatchReal,
                                Func<ExpressionNode, List<object>, int> dispatchInt,
                                Func<ExpressionNode, List<object>, TypeEnum, Object> dispatch,

@@ -38,7 +38,7 @@ namespace InterpreterLib
 
         public List<double> Interpret(AST node)
         {
-            _functionHelper.SetAST(node);
+            _functionHelper.SetASTRoot(node);
             _integerHelper.SetASTRoot(node);
             _realHelper.SetASTRoot(node);
             _booleanHelper.SetASTRoot(node);
