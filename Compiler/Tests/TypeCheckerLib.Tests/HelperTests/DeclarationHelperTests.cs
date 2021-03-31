@@ -186,27 +186,6 @@ namespace TypeCheckerLib.Tests.HelperTests
             Assert.AreEqual(expected, res);
         }
 
-        /*[TestMethod]
-        public void Function_ReturnsRealGetsBoolean_ThrowsException()
-        {
-            FunctionTypeNode funcType = Utilities.GetFunctionType(TypeEnum.Real, )
-
-            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
-            var expected = funcType.ParameterTypes.ToList();
-
-            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
-
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
-            List<TypeNode> res = null;
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            declarationHelper.VisitFunction(input1);
-
-            res.Should().BeEquivalentTo(expected);
-        }*/
-
         #endregion
 
         #region Function Call
