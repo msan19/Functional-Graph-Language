@@ -58,8 +58,7 @@ namespace TypeCheckerLib.Helpers
                 if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
                     InsertCastNode(condition);
                 else
-                    throw new InvalidCastException("Function body returns " + type.ToString()
-                                                                 + ", expected " + rhsType.ToString());
+                    throw new InvalidCastException(condition, type, rhsType);
             }
         }
 
@@ -81,8 +80,10 @@ namespace TypeCheckerLib.Helpers
             else
             {
                 List<int> matchingRefs = GetMatches(funcCallExpNode.Children, funcCallExpNode.GlobalReferences, parameterTypes);
-                if (matchingRefs.Count != 1)
-                    throw new OverloadException(GetFunctions(matchingRefs));
+                if (matchingRefs.Count > 1)
+                    throw new OverloadException(funcCallExpNode, GetFunctions(matchingRefs));
+                else if (matchingRefs.Count == 0)
+                    throw new NoMatchingFunctionFoundException(funcCallExpNode);
 
                 funcCallExpNode.LocalReference = FunctionCallExpression.NO_LOCAL_REF;
                 funcCallExpNode.GlobalReferences = matchingRefs;

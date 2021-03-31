@@ -1,4 +1,5 @@
 ﻿using ASTLib.Nodes;
+using ASTLib.Nodes.ExpressionNodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace ASTLib.Exceptions
     {
         public List<FunctionNode> Nodes { get; private set; }
 
-        public OverloadException(List<FunctionNode> nodes) : 
-            base(nodes.FirstOrDefault(), GetMessage(nodes))
+        public OverloadException(FunctionCallExpression node, List<FunctionNode> nodes) : 
+            base(node, GetMessage(nodes))
         {
 
         }
