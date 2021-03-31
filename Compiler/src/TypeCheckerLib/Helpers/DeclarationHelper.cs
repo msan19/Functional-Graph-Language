@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
+using InvalidCastException = ASTLib.Exceptions.InvalidCastException;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -29,7 +31,7 @@ namespace TypeCheckerLib.Helpers
             else if (type == TypeEnum.Integer)
                 InsertCastNode(exportNode);
             else
-                throw new Exception("Export recived " + type.ToString() + " instead of Integer or Double");
+                throw new InvalidCastException(exportNode, type, TypeEnum.Real);
         }
 
         private void InsertCastNode(ExportNode node)
@@ -56,7 +58,7 @@ namespace TypeCheckerLib.Helpers
                 if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
                     InsertCastNode(condition);
                 else
-                    throw new Exception("Function body returns " + type.ToString()
+                    throw new InvalidCastException("Function body returns " + type.ToString()
                                                                  + ", expected " + rhsType.ToString());
             }
         }
@@ -80,13 +82,21 @@ namespace TypeCheckerLib.Helpers
             {
                 List<int> matchingRefs = GetMatches(funcCallExpNode.Children, funcCallExpNode.GlobalReferences, parameterTypes);
                 if (matchingRefs.Count != 1)
-                    throw new Exception("Found no or more than one match");
+                    throw new OverloadException(GetFunctions(matchingRefs));
 
                 funcCallExpNode.LocalReference = FunctionCallExpression.NO_LOCAL_REF;
                 funcCallExpNode.GlobalReferences = matchingRefs;
                 res = _functions[matchingRefs.First()].FunctionType.ReturnType;
             }
             
+            return res;
+        }
+
+        private List<FunctionNode> GetFunctions(List<int> matchingRefs)
+        {
+            var res = new List<FunctionNode>();
+            foreach (var i in matchingRefs)
+                res.Add(_functions[i]);
             return res;
         }
 
