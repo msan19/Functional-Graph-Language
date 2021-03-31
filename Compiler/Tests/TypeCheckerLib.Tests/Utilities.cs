@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
@@ -31,6 +32,12 @@ namespace TypeCheckerLib.Tests
             helper.Initialize(GetAst(), parent.Dispatch);
             return helper;
         }
+
+        internal static object GetIntepretorOnlyWith(IBooleanHelper boolHelper)
+        {
+            throw new NotImplementedException();
+        }
+
         public static T GetHelper<T>(AST root) where T : ITypeHelper, new()
         {
             ITypeChecker parent = Substitute.For<ITypeChecker>();

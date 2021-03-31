@@ -4,6 +4,9 @@ using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Helpers;
@@ -92,7 +95,18 @@ namespace InterpreterLib
 
         public bool DispatchBoolean(ExpressionNode node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return node switch
+            {
+                //GreaterExpression e => _booleanHelper.GreaterBoolean(e, parameters),
+                //LessExpression e => _booleanHelper.LessBoolean(e, parameters),
+                //GreaterEqualExpression e => _booleanHelper.GreaterEqualBoolean(e, parameters),
+                //LessEqualExpression e => _booleanHelper.LessEqualBoolean(e, parameters),
+                //EqualExpression e => _booleanHelper.EqualBoolean(e, parameters),
+                //NotEqualExpression e => _booleanHelper.NotEqualBoolean(e, parameters),
+                //NotExpression e => _booleanHelper.NotBoolean(e, parameters),
+                //AndExpression e => _booleanHelper.AndBoolean(e, parameters),
+                //OrExpression e => _booleanHelper.OrBoolean(e, parameters),
+            };
         }
         
         public object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type)
