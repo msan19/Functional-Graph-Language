@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -35,7 +36,7 @@ namespace ReferenceHandlerLib
                 case INonIdentifierExpression   e: _helper.VisitNonIdentifier(e, parameters);   break;
                 case FunctionCallExpression     e: _helper.VisitFunctionCall(e, parameters);    break;
 
-                default: throw new Exception($"{node.GetType()} is not implmented yet in reference handler");
+                default: throw new UnimplementedReferenceHandlerException(node);
             }
         }
 
