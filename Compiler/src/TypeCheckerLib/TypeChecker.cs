@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -55,8 +56,7 @@ namespace TypeCheckerLib
                 case SubtractionExpression n:
                     return _commonOperatorHelper.VisitSubtraction(n, parameterTypes);
                 default:
-                    throw new ArgumentException("The argument was not a recognized ExpressionNode");
-                    
+                    throw new UnimplementedTypeCheckerException(node, "Dispatch");
             }
         }
 
