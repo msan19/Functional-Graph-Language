@@ -5,6 +5,7 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -99,6 +100,43 @@ namespace TypeCheckerLib.Helpers
         {
             CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
             binaryNode.Children[child] = cast;
+        }
+
+        public TypeNode VisitGreaterEqual(GreaterEqualExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = GetType(node.Children[0], parameterTypes);
+            TypeNode right = GetType(node.Children[1], parameterTypes);
+
+            if (!IsComparableType(left.Type) || !IsComparableType(right.Type))
+                throw new UnmatchableTypesException(node, left.Type, right.Type, "number");
+
+            if (left.Type != right.Type)
+            {
+                CastToReal(node, left, 0);
+                CastToReal(node, right, 1);
+                return new TypeNode(TypeEnum.Real, 0, 0);
+            }
+            return new TypeNode(left.Type, 0, 0);
+        }
+
+        private bool IsComparableType(TypeEnum t)
+        {
+            return t == TypeEnum.Integer || t == TypeEnum.Real;
+        }
+
+        public TypeNode VisitGreater(GreaterExpression node, List<TypeNode> parameterTypes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TypeNode VisitLessEqual(LessEqualExpression node, List<TypeNode> parameterTypes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TypeNode VisitLess(LessExpression node, List<TypeNode> parameterTypes)
+        {
+            throw new NotImplementedException();
         }
     }
 }

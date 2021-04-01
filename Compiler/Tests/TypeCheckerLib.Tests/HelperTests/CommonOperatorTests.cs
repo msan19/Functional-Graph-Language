@@ -1,5 +1,6 @@
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -36,6 +37,14 @@ namespace TypeCheckerLib.Tests.HelperTests
         {
             ExpressionNode literal = GetLiteral(type);
             var node = new AbsoluteValueExpression(literal, 0, 0);
+            return node;
+        }
+
+        private GreaterEqualExpression GetGreaterEqualExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new GreaterEqualExpression(leftNode, rightNode, 0, 0);
             return node;
         }
 
@@ -338,6 +347,26 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitAbsoluteValue(input1, null);
         }
 
+        #region VisitGreaterEqual
+        [TestMethod]
+        public void VisitGreaterEqual__CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            GreaterEqualExpression input1 = GetGreaterEqualExpression(TypeEnum.Integer, TypeEnum.Real);
 
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitGreaterEqual(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+        #endregion
     }
 }
