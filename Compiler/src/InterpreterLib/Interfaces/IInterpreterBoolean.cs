@@ -11,6 +11,8 @@ namespace InterpreterLib.Interfaces
     {
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
+        
+        int DispatchInt(ExpressionNode node, List<object> parameters);
 
         bool DispatchBoolean(ExpressionNode node, List<object> parameters);
 

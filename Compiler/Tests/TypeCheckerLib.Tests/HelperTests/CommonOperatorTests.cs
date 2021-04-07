@@ -48,6 +48,30 @@ namespace TypeCheckerLib.Tests.HelperTests
             return node;
         }
 
+        private GreaterExpression GetGreaterExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new GreaterExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
+        private LessEqualExpression GetLessEqualExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new LessEqualExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
+        private LessExpression GetLessExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new LessExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
         private ExpressionNode GetLiteral(TypeEnum type)
         {
             return type switch
@@ -347,9 +371,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitAbsoluteValue(input1, null);
         }
 
-        #region VisitGreaterEqual
+        #region VisitRelationalOperators
         [TestMethod]
-        public void VisitGreaterEqual__CorrectParameterPassDown()
+        public void VisitRelationalOperators_ForGreaterEqualExpression_CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>()
             {
@@ -363,7 +387,67 @@ namespace TypeCheckerLib.Tests.HelperTests
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
 
-            helper.VisitGreaterEqual(input1, expected.ToList());
+            helper.VisitRelationalOperator(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_ForGreaterExpression_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            GreaterExpression input1 = GetGreaterExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitRelationalOperator(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_ForLessEqualExpression_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            LessEqualExpression input1 = GetLessEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitRelationalOperator(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_ForLessExpression_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+            LessExpression input1 = GetLessExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitRelationalOperator(input1, expected.ToList());
 
             res.Should().BeEquivalentTo(expected);
         }
