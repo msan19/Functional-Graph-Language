@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
+using ASTLib.Interfaces;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -21,31 +22,25 @@ namespace TypeCheckerLib.Helpers
             _getType = dispatcher;
         }
 
-        public TypeNode VisitAnd(AndExpression node, List<TypeNode> parameterTypes)
+        public TypeNode VisitNot(NotExpression node, List<TypeNode> parameterTypes)
         {
-            TypeNode left = _getType(node.Children[0], parameterTypes);
-            TypeNode right = _getType(node.Children[1], parameterTypes);
+            TypeNode notNode = _getType(node.Children[0], parameterTypes);
 
-            if ( !IsBool(left.Type) && !IsBool(right.Type))
+            if (!IsBool(notNode.Type))
             {
-                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "bool");
+                throw new Exception();
             }
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
-        public TypeNode VisitNot(NotExpression node, List<TypeNode> parameterTypes)
+        public TypeNode VisitBinaryBoolOp(IBinaryBooleanOperator binaryNode, List<TypeNode> parameterTypes)
         {
-            throw new NotImplementedException();
-        }
-
-        public TypeNode VisitOr(OrExpression node, List<TypeNode> parameterTypes)
-        {
-            TypeNode left = _getType(node.Children[0], parameterTypes);
-            TypeNode right = _getType(node.Children[1], parameterTypes);
+            TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
+            TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
 
             if (!IsBool(left.Type) && !IsBool(right.Type))
             {
-                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "bool");
+                throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "bool");
             }
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
@@ -54,6 +49,7 @@ namespace TypeCheckerLib.Helpers
         {
             return t == TypeEnum.Boolean;
         }
+
 
     }
 }
