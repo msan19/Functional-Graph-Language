@@ -123,17 +123,17 @@ namespace InterpreterLib
 
         public int FunctionInteger(FunctionNode node, List<Object> parameters)
         {
-            return _integerHelper.ConditionInteger(node.Conditions[0], parameters);
+            return (int) HandleConditions(_integerHelper.ConditionInteger, node, parameters);
         }
 
         public double FunctionReal(FunctionNode node, List<object> parameters)
         {
-            return _realHelper.ConditionReal(node.Conditions[0], parameters);
+            return (double) HandleConditions(_realHelper.ConditionReal, node, parameters);
         }
 
         public bool FunctionBoolean(FunctionNode node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return (bool) HandleConditions(_booleanHelper.ConditionBoolean, node, parameters);
         }
 
         public int FunctionFunction(FunctionNode node, List<Object> parameters)
@@ -163,11 +163,13 @@ namespace InterpreterLib
             }
             if (returnedValues == 0 && defaultCase != null)
             {
-                var a = func(defaultCase, parameters);
+                T a = func(defaultCase, parameters);
+                if (a == null)
+                    throw new Exception("Default case returned null");
                 return a;
             }
             else if (returnedValues != 1)
-                throw new Exception(returnedValues + "conditions where true");
+                throw new Exception(returnedValues + " conditions where true");
             return result;
         }
     }

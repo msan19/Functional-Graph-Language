@@ -35,7 +35,7 @@ namespace InterpreterLib.Tests
             parent.DispatchInt(intLit, Arg.Any<List<object>>()).Returns(input);
             IntegerHelper integerHelper = SetUpHelper(parent);
 
-            int res = integerHelper.ConditionInteger(conditionNode, new List<object>());
+            int res = (int) integerHelper.ConditionInteger(conditionNode, new List<object>());
 
             Assert.AreEqual(expected, res);
         }

@@ -32,6 +32,57 @@ namespace InterpreterLib.Tests
         private List<object> GetParameterList() => new List<object>();
         private IBooleanHelper GetBooleanHelper() => Substitute.For<IBooleanHelper>();
 
+        #region FunctionBoolean
+        [DataRow(true, false, true)]
+        [DataRow(null, false, false)]
+        [DataRow(true, null, true)]
+        [TestMethod]
+        public void FunctionBoolean_FunctionNodeAndTwoConditionsOneDefaultCaseAndObjectList_CorrectValueReturned(bool? a, bool? b, bool? expected)
+        {
+            ConditionNode cn1 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
+            ConditionNode cn2 = new ConditionNode(null, 0, 0);
+            FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IBooleanHelper fhelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            fhelper.ConditionBoolean(cn1, Arg.Any<List<Object>>()).Returns(a);
+            fhelper.ConditionBoolean(cn2, Arg.Any<List<Object>>()).Returns(b);
+
+            bool res = (bool)interpreter.FunctionBoolean(input1, input2);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void FunctionBoolean_FunctionNodeAndTwoConditionAndObjectList_CorrectExceptionThrown()
+        {
+            ConditionNode cn1 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
+            ConditionNode cn2 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
+            FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IBooleanHelper fhelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            fhelper.ConditionBoolean(cn1, Arg.Any<List<Object>>()).Returns(true);
+            fhelper.ConditionBoolean(cn2, Arg.Any<List<Object>>()).Returns(true);
+
+            Assert.ThrowsException<Exception>(() => interpreter.FunctionBoolean(input1, input2));
+        }
+
+        [TestMethod]
+        public void FunctionBoolean_FunctionNodeAndTwoConditionsOneDefaultCaseAndObjectList_CorrectExceptionThrown()
+        {
+            ConditionNode cn1 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
+            ConditionNode cn2 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), 0, 0);
+            FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IBooleanHelper fhelper = Substitute.For<IBooleanHelper>();
+            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            fhelper.ConditionBoolean(cn1, Arg.Any<List<Object>>());
+            fhelper.ConditionBoolean(cn2, Arg.Any<List<Object>>());
+
+            Assert.ThrowsException<Exception>(() => interpreter.FunctionBoolean(input1, input2));
+        }
+        #endregion
 
         #region DispatchBoolean
         #region Returns Correct

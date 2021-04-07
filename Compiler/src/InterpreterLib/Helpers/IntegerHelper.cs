@@ -26,7 +26,7 @@ namespace InterpreterLib.Helpers
             _interpreter = interpreter;
         }
 
-        public int ConditionInteger(ConditionNode node, List<Object> parameters)
+        public int? ConditionInteger(ConditionNode node, List<Object> parameters)
         {
             return _interpreter.DispatchInt(node.ReturnExpression, parameters);
         }
