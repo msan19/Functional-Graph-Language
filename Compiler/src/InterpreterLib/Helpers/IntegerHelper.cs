@@ -28,7 +28,9 @@ namespace InterpreterLib.Helpers
 
         public int? ConditionInteger(ConditionNode node, List<Object> parameters)
         {
-            return _interpreter.DispatchInt(node.ReturnExpression, parameters);
+            if (node.Condition == null || _interpreter.DispatchBoolean(node.Condition, parameters))
+                return _interpreter.DispatchInt(node.ReturnExpression, parameters);
+            return null;
         }
 
         public int AdditionInteger(AdditionExpression node, List<Object> parameters)

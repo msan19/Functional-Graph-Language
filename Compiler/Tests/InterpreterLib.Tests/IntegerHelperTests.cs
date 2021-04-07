@@ -25,6 +25,21 @@ namespace InterpreterLib.Tests
         }
 
         #region FunctionInteger
+        [TestMethod]
+        public void ConditionInteger_ConditionNodeAndObjectList_ReturnsNull()
+        {
+            IdentifierExpression id = new IdentifierExpression("", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(id, id, 1, 1);
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchBoolean(id, Arg.Any<List<Object>>()).Returns(false);
+            IntegerHelper integerHelper = SetUpHelper(parent);
+            int? expected = null;
+
+            int? res = integerHelper.ConditionInteger(conditionNode, new List<Object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
         [DataRow(2, 2)]
         [TestMethod]
         public void ConditionInteger_Integer_ReturnsCorrectResult(int input, int expected)
