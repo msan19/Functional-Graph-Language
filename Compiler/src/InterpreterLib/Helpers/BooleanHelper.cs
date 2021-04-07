@@ -13,7 +13,6 @@ namespace InterpreterLib.Helpers
 {
     public class BooleanHelper : IBooleanHelper
     {
-        public IInterpreter Interpreter { get; set; }
         private IInterpreterBoolean _interpreter;
         private AST _root;
 
@@ -55,12 +54,37 @@ namespace InterpreterLib.Helpers
         {
             throw new NotImplementedException();
         }
-
+        
         public bool EqualBoolean(EqualExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            bool res = default;
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+
+            if (node.Type == TypeEnum.Boolean)
+            {
+                bool lhsValue = _interpreter.DispatchBoolean(lhs, parameters);
+                bool rhsValue = _interpreter.DispatchBoolean(rhs, parameters);
+                res = lhsValue == rhsValue;
+            } 
+            else if (node.Type == TypeEnum.Real)
+            {
+                double lhsValue = _interpreter.DispatchReal(lhs, parameters);
+                double rhsValue = _interpreter.DispatchReal(rhs, parameters);
+                res = lhsValue == rhsValue;
+            } 
+            else if (node.Type == TypeEnum.Integer)
+            {
+                int lhsValue = _interpreter.DispatchInt(lhs, parameters);
+                int rhsValue = _interpreter.DispatchInt(rhs, parameters);
+                res = lhsValue == rhsValue;
+            }
+
+            return res;
         }
 
+        
+        // Relational operators only works for real
         public bool GreaterBoolean(GreaterExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
