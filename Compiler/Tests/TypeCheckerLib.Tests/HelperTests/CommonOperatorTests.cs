@@ -347,9 +347,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitAbsoluteValue(input1, null);
         }
 
-        #region VisitGreaterEqual
+        #region VisitRelationalOperators
         [TestMethod]
-        public void VisitGreaterEqual__CorrectParameterPassDown()
+        public void VisitRelationalOperators_ForGreaterEqualExpression_CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>()
             {
@@ -363,7 +363,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
 
-            helper.VisitGreaterEqual(input1, expected.ToList());
+            helper.VisitRelationalOperators(input1, expected.ToList());
 
             res.Should().BeEquivalentTo(expected);
         }
