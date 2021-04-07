@@ -82,17 +82,23 @@ namespace InterpreterLib.Helpers
 
             return res;
         }
-
         
-        // Relational operators only works for real
         public bool GreaterBoolean(GreaterExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+            double lhsValue = _interpreter.DispatchReal(lhs, new List<object>());
+            double rhsValue = _interpreter.DispatchReal(rhs, new List<object>());
+            return lhsValue > rhsValue;
         }
 
         public bool GreaterEqualBoolean(GreaterEqualExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+            double lhsValue = _interpreter.DispatchReal(lhs, new List<object>());
+            double rhsValue = _interpreter.DispatchReal(rhs, new List<object>());
+            return lhsValue >= rhsValue;
         }
 
         public bool IdentifierBoolean(IdentifierExpression node, List<object> parameters)
@@ -102,12 +108,20 @@ namespace InterpreterLib.Helpers
 
         public bool LessBoolean(LessExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+            double lhsValue = _interpreter.DispatchReal(lhs, new List<object>());
+            double rhsValue = _interpreter.DispatchReal(rhs, new List<object>());
+            return lhsValue < rhsValue;
         }
 
         public bool LessEqualBoolean(LessEqualExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+            double lhsValue = _interpreter.DispatchReal(lhs, new List<object>());
+            double rhsValue = _interpreter.DispatchReal(rhs, new List<object>());
+            return lhsValue <= rhsValue;
         }
 
         public bool NotBoolean(NotExpression node, List<object> parameters)

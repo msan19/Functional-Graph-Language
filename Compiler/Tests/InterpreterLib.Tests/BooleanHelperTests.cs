@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
@@ -145,22 +146,113 @@ namespace InterpreterLib.Tests
             
             Assert.AreEqual(expected, res);
         }
-        
         #endregion
         
         #region NotEqualBoolean
+        
         #endregion
         
+        // Assumption: Relational operators only works for real
+        //             - TyperChecker have casted children from type Integer to type Real
+
         #region GreaterEqualBoolean
+        // a >= b
+        
+        [DataRow(0.0, 1.0, false)]
+        [DataRow(1.0, 0.0, true)]
+        [DataRow(0.0, 0.0, true)]
+        [TestMethod]
+        public void GreaterEqualBoolean_Real_CorrectValuesReturned(double lhsValue, double rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new GreaterEqualExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchReal(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchReal(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.GreaterEqualBoolean(expression, new List<object>());
+            
+            Assert.AreEqual(expected, res);
+        }
         #endregion
         
         #region GreaterBoolean
+        // a > b
+        
+        [DataRow(0.0, 1.0, false)]
+        [DataRow(1.0, 0.0, true)]
+        [DataRow(0.0, 0.0, false)]
+        [TestMethod]
+        public void GreaterBoolean_Real_CorrectValuesReturned(double lhsValue, double rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new GreaterExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchReal(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchReal(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.GreaterBoolean(expression, new List<object>());
+            
+            Assert.AreEqual(expected, res);
+        }
         #endregion
         
         #region LessEqualBoolean
+        // a <= b
+        
+        [DataRow(0.0, 1.0, true)]
+        [DataRow(1.0, 0.0, false)]
+        [DataRow(0.0, 0.0, true)]
+        [TestMethod]
+        public void LessEqualBoolean_Real_CorrectValuesReturned(double lhsValue, double rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new LessEqualExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchReal(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchReal(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.LessEqualBoolean(expression, new List<object>());
+            
+            Assert.AreEqual(expected, res);
+        }
         #endregion
         
         #region LessBoolean
+        // a < b
+        
+        [DataRow(0.0, 1.0, true)]
+        [DataRow(1.0, 0.0, false)]
+        [DataRow(0.0, 0.0, false)]
+        [TestMethod]
+        public void LessBoolean_Real_CorrectValuesReturned(double lhsValue, double rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new LessExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchReal(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchReal(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.LessBoolean(expression, new List<object>());
+            
+            Assert.AreEqual(expected, res);
+        }
         #endregion
         
         #region FunctionCallBoolean
