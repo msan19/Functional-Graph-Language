@@ -80,7 +80,7 @@ namespace ReferenceHandlerLib
 
         private void VisitCondition(ConditionNode node, List<string> identifiers)
         {
-            if (!(node.Condition == null))
+            if (node.Condition != null)
                 _dispatch(node.Condition, identifiers);
             _dispatch(node.ReturnExpression, identifiers);
         }
