@@ -30,9 +30,11 @@ namespace InterpreterLib.Helpers
             return _interpreter.DispatchReal(node.ExportValue, parameters);
         }
 
-        public double ConditionReal(ConditionNode node, List<object> parameters)
+        public double? ConditionReal(ConditionNode node, List<object> parameters)
         {
-            return _interpreter.DispatchReal(node.ReturnExpression, parameters);
+            if (node.Condition == null || _interpreter.DispatchBoolean(node.Condition, parameters))
+                return _interpreter.DispatchReal(node.ReturnExpression, parameters);
+            return null;
         }
 
         public double AdditionReal(AdditionExpression node, List<object> parameters)

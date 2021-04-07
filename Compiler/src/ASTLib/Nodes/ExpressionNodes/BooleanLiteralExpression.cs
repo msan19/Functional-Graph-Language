@@ -9,12 +9,10 @@ namespace ASTLib.Nodes.ExpressionNodes
     public class BooleanLiteralExpression : ExpressionNode, INonIdentifierExpression
     {
         public bool Value { get; }
-        public FunctionTypeNode Type { get; set; }
 
-        public BooleanLiteralExpression(bool value, int line, int letter) : base(null, line, letter) 
+        public BooleanLiteralExpression(bool value, int line, int letter) : base(new List<ExpressionNode>(), line, letter) 
         {
             Value = value;
-            Children = new List<ExpressionNode>();
         }
     }
 }

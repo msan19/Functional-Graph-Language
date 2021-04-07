@@ -44,6 +44,21 @@ namespace InterpreterLib.Tests
         #endregion
 
         #region ConditionReal
+        [TestMethod]
+        public void ConditionReal_ConditionNodeAndObjectList_ReturnsNull()
+        {
+            IdentifierExpression id = new IdentifierExpression("", 1, 1);
+            ConditionNode conditionNode = new ConditionNode(id, id, 1, 1);
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
+            parent.DispatchBoolean(id, Arg.Any<List<Object>>()).Returns(false);
+            RealHelper realHelper = SetUpHelper(parent);
+            double? expected = null;
+
+            double? res = realHelper.ConditionReal(conditionNode, new List<Object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
         [DataRow(1.0, 1.0)]
         [DataRow(-1.0, -1.0)]
         [DataRow(0.0, 0.0)]
@@ -56,7 +71,7 @@ namespace InterpreterLib.Tests
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
-            double res = realHelper.ConditionReal(conditionNode, new List<object>());
+            double res = (double) realHelper.ConditionReal(conditionNode, new List<object>());
 
             Assert.AreEqual(expected, res);
         }

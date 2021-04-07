@@ -1,4 +1,5 @@
 using ASTLib;
+using ASTLib.Nodes.ExpressionNodes;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using NSubstitute;
@@ -53,6 +54,21 @@ namespace InterpreterLib.Tests
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
             IRealHelper realHelper = Substitute.For<IRealHelper>();
             return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+        }
+
+        public static IntegerLiteralExpression GetIntLitExpression()
+        {
+            return new IntegerLiteralExpression("", 0, 0);
+        }
+        
+        public static RealLiteralExpression GetRealLitExpression()
+        {
+            return new RealLiteralExpression("", 0, 0);
+        }
+        
+        public static BooleanLiteralExpression GetBoolLitExpression(bool val)
+        {
+            return new BooleanLiteralExpression(val, 0, 0);
         }
     }
 }

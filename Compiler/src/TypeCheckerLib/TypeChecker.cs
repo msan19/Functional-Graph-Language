@@ -50,6 +50,7 @@ namespace TypeCheckerLib
                 AdditionExpression n        => _commonOperatorHelper.VisitAddition(n, parameterTypes),
                 SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
+                IRelationOperator n         => _commonOperatorHelper.VisitRelationalOperator(n, parameterTypes),
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }
