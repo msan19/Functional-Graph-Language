@@ -12,7 +12,7 @@ namespace InterpreterLib.Interfaces
     {
         void SetInterpreter(IInterpreterInteger interpreter);
 
-        int ConditionInteger(ConditionNode node, List<Object> parameters);
+        int? ConditionInteger(ConditionNode node, List<Object> parameters);
 
         int AdditionInteger(AdditionExpression node, List<Object> parameters);
 

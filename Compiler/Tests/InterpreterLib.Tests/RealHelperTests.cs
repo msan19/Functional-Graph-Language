@@ -56,7 +56,7 @@ namespace InterpreterLib.Tests
             parent.DispatchReal(realLit, Arg.Any<List<object>>()).Returns(input);
             RealHelper realHelper = SetUpHelper(parent);
 
-            double res = realHelper.ConditionReal(conditionNode, new List<object>());
+            double res = (double) realHelper.ConditionReal(conditionNode, new List<object>());
 
             Assert.AreEqual(expected, res);
         }

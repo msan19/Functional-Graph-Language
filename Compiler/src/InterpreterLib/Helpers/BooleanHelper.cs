@@ -50,7 +50,7 @@ namespace InterpreterLib.Helpers
             return leftOperand || rightOperand;
         }
         
-        public bool ConditionBoolean(ConditionNode node, List<object> parameters)
+        public bool? ConditionBoolean(ConditionNode node, List<object> parameters)
         {
             throw new NotImplementedException();
         }

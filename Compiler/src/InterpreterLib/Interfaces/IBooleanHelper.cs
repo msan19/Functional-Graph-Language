@@ -14,7 +14,7 @@ namespace InterpreterLib.Interfaces
     {
         void SetInterpreter(IInterpreterBoolean interpreter);
 
-        bool ConditionBoolean(ConditionNode node, List<object> parameters);
+        bool? ConditionBoolean(ConditionNode node, List<object> parameters);
 
         bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
 
