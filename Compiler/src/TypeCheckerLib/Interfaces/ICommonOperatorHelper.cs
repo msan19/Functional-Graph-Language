@@ -14,6 +14,6 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitAbsoluteValue(AbsoluteValueExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitAddition(AdditionExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
-        TypeNode VisitRelationalOperators(IRelationOperator node, List<TypeNode> parameterTypes);
+        TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes);
     }
 }

@@ -5,7 +5,6 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -102,7 +101,7 @@ namespace TypeCheckerLib.Helpers
             binaryNode.Children[child] = cast;
         }
 
-        public TypeNode VisitRelationalOperators(IRelationOperator node, List<TypeNode> parameterTypes)
+        public TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes)
         {
             TypeNode left = GetType(node.Children[0], parameterTypes);
             TypeNode right = GetType(node.Children[1], parameterTypes);
