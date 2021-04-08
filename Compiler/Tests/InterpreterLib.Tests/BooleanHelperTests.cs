@@ -28,8 +28,25 @@ namespace InterpreterLib.Tests
         #endregion
 
         #region NotBoolean
+        [DataRow(false, true)]
+        [DataRow(true, false)]
+        [TestMethod]
+        public void NotBoolean_CorrectValuesReturned(bool input, bool expected)
+        {
+            BooleanLiteralExpression lhs = new BooleanLiteralExpression(input, 0, 0);
+            
+            var expr = new NotExpression(lhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(input);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.NotBoolean(expr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
-        
+
         #region AndBoolean
         [DataRow(true, true, true)]
         [DataRow(true, false, false)]
