@@ -4,6 +4,7 @@ using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -42,11 +43,14 @@ namespace TypeCheckerLib
             return node switch
             {
                 IBinaryNumberOperator n     => _numberHelper.VisitBinaryNumOp(n, parameterTypes),
+                IBinaryBooleanOperator n    => _booleanHelper.VisitBinaryBoolOp(n, parameterTypes),
+                NotExpression n             => _booleanHelper.VisitNot(n, parameterTypes),
                 PowerExpression n           => _numberHelper.VisitPower(n, parameterTypes),
                 FunctionCallExpression n    => _declarationHelper.VisitFunctionCall(n, parameterTypes),
                 IdentifierExpression n      => _declarationHelper.VisitIdentifier(n, parameterTypes),
                 IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(n, parameterTypes),
                 RealLiteralExpression n     => _declarationHelper.VisitRealLiteral(n, parameterTypes),
+                BooleanLiteralExpression n  => _declarationHelper.VisitBooleanLiteral(n, parameterTypes),
                 AdditionExpression n        => _commonOperatorHelper.VisitAddition(n, parameterTypes),
                 SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),

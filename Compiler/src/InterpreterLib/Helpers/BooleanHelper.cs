@@ -54,35 +54,7 @@ namespace InterpreterLib.Helpers
         {
             throw new NotImplementedException();
         }
-        
-        public bool EqualBoolean(EqualExpression node, List<object> parameters)
-        {
-            bool res = default;
-            ExpressionNode lhs = node.Children[0];
-            ExpressionNode rhs = node.Children[1];
 
-            if (node.Type == TypeEnum.Boolean)
-            {
-                bool lhsValue = _interpreter.DispatchBoolean(lhs, parameters);
-                bool rhsValue = _interpreter.DispatchBoolean(rhs, parameters);
-                res = lhsValue == rhsValue;
-            } 
-            else if (node.Type == TypeEnum.Real)
-            {
-                double lhsValue = _interpreter.DispatchReal(lhs, parameters);
-                double rhsValue = _interpreter.DispatchReal(rhs, parameters);
-                res = lhsValue == rhsValue;
-            } 
-            else if (node.Type == TypeEnum.Integer)
-            {
-                int lhsValue = _interpreter.DispatchInt(lhs, parameters);
-                int rhsValue = _interpreter.DispatchInt(rhs, parameters);
-                res = lhsValue == rhsValue;
-            }
-
-            return res;
-        }
-        
         public bool GreaterBoolean(GreaterExpression node, List<object> parameters)
         {
             ExpressionNode lhs = node.Children[0];
@@ -103,7 +75,7 @@ namespace InterpreterLib.Helpers
 
         public bool IdentifierBoolean(IdentifierExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return parameters[node.Reference].Equals("true");
         }
 
         public bool LessBoolean(LessExpression node, List<object> parameters)
@@ -126,12 +98,47 @@ namespace InterpreterLib.Helpers
 
         public bool NotBoolean(NotExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return !_interpreter.DispatchBoolean(node.Children[0], parameters);
+        }
+
+        public bool EqualBoolean(EqualExpression node, List<object> parameters)
+        {
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+
+            return IsEqual(lhs, rhs, node.Type, parameters);
         }
 
         public bool NotEqualBoolean(NotEqualExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+
+            return !IsEqual(lhs, rhs, node.Type, parameters);
+        }
+
+        private bool IsEqual(ExpressionNode lhs, ExpressionNode rhs, TypeEnum type, List<object> parameters)
+        {
+            bool res = false;
+            if (type == TypeEnum.Boolean)
+            {
+                bool lhsValue = _interpreter.DispatchBoolean(lhs, parameters);
+                bool rhsValue = _interpreter.DispatchBoolean(rhs, parameters);
+                res = lhsValue == rhsValue;
+            }
+            else if (type == TypeEnum.Real)
+            {
+                double lhsValue = _interpreter.DispatchReal(lhs, parameters);
+                double rhsValue = _interpreter.DispatchReal(rhs, parameters);
+                res = lhsValue == rhsValue;
+            }
+            else if (type == TypeEnum.Integer)
+            {
+                int lhsValue = _interpreter.DispatchInt(lhs, parameters);
+                int rhsValue = _interpreter.DispatchInt(rhs, parameters);
+                res = lhsValue == rhsValue;
+            }
+            return res;
         }
     }
 }

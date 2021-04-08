@@ -304,6 +304,19 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitPower(input1, null);
         }
 
+        [TestMethod]
+        public void VisitPower_PowerExpressionWithBooleans_ThrowsException()
+        {
+            BooleanLiteralExpression boolExpr =  new BooleanLiteralExpression(true, 1, 1);
+            PowerExpression input = new PowerExpression(boolExpr, boolExpr, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>(parent);
+
+            Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitPower(input, null));
+        }
+
         #endregion
 
 

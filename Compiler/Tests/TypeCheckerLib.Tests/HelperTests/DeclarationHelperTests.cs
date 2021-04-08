@@ -130,10 +130,9 @@ namespace TypeCheckerLib.Tests.HelperTests
         */
         [DataRow(TypeEnum.Integer, TypeEnum.Integer)]
         [DataRow(TypeEnum.Real, TypeEnum.Real)]
-        [DataRow(TypeEnum.Function, TypeEnum.Function)]
         [DataRow(TypeEnum.Boolean, TypeEnum.Boolean)]
         [TestMethod]
-        public void Function_Type_CorrectType(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
+        public void Function_Type_CorrectPrimitiveType(TypeEnum functionReturnType, TypeEnum dispatcherReturnType)
         {
             var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
             var funcType = Utilities.GetFunctionType(functionReturnType, new List<TypeEnum>());
@@ -141,6 +140,75 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(dispatcherReturnType, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        public void Function_Type_CorrectFunctionType()
+        {
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var returnType = new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), new List<TypeNode>(), 0, 0);
+            var funcType = new FunctionTypeNode(returnType, new List<TypeNode>(), 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(returnType);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void Function_Type_InvalidCastOnFunctionType()
+        {
+            var condition = new ConditionNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var returnType = new FunctionTypeNode(new TypeNode(TypeEnum.Integer, 1, 1), new List<TypeNode>(), 0, 0);
+            var funcType = new FunctionTypeNode(returnType, new List<TypeNode>(), 0, 0);
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+            var actualReturnType = new FunctionTypeNode(new TypeNode(TypeEnum.Real, 1, 1), new List<TypeNode>(), 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(actualReturnType);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        public void Function_Type_CorrectConditionType()
+        {
+            var condition = new ConditionNode(new BooleanLiteralExpression(true, 0,0), 
+                                              new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<AdditionExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Boolean, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void Function_Type_IncorrectConditionType()
+        {
+            var condition = new ConditionNode(new BooleanLiteralExpression(true, 0, 0),
+                                              new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<AdditionExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Real, 1, 1));
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitFunction(input1);
