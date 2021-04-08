@@ -5,6 +5,7 @@ export b(2.0, 0.5)
 b: (real, real) -> real
 b(a, b) = 
 	| a > 0.0 = a ^ b
+	| b > 1 = 17
 	| _ = 0.0
 
 func: (integer) -> real

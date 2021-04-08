@@ -148,6 +148,7 @@ namespace InterpreterLib
             T result = default;
             int returnedValues = 0;
             ConditionNode defaultCase = null;
+            ConditionNode exceptionNode = null;
             foreach (ConditionNode child in node.Conditions)
             {
                 if (child.IsDefaultCase())
@@ -159,6 +160,8 @@ namespace InterpreterLib
                     {
                         result = value;
                         returnedValues++;
+                        if (returnedValues > 0)
+                            exceptionNode = child;
                     }
                 }
             }
@@ -170,7 +173,7 @@ namespace InterpreterLib
                 return a;
             }
             else if (returnedValues != 1)
-                throw new UnacceptedConditionsException(node, returnedValues);
+                throw new UnacceptedConditionsException(exceptionNode, returnedValues);
             return result;
         }
     }

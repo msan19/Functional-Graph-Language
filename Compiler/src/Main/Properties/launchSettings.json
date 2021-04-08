@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Main": {
+      "commandName": "Project",
+      "commandLineArgs": "throw"
+    },
+    "Exception Catched": {
+      "commandName": "Project"
+    }
+  }
+}

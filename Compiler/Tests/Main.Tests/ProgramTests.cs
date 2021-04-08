@@ -15,7 +15,7 @@ namespace Main.Tests
 
             try
             {
-                new Program(args);
+                new Program(args).Run();
             }
             catch (NotImplementedException)
             {

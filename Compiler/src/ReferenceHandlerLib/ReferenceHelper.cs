@@ -100,7 +100,7 @@ namespace ReferenceHandlerLib
         {
             for (int i = 0; i < identifiers.Count; i++)
             {
-                if (identifiers[i] == node.Id)
+                if (identifiers[i] == node.ID)
                 {
                     node.Reference = i;
                 }
@@ -108,15 +108,15 @@ namespace ReferenceHandlerLib
             node.IsLocal = (node.Reference != NO_LOCAL_REF);
             if (!node.IsLocal)
             {
-                if (_functionIdentifierTable.ContainsKey(node.Id))
+                if (_functionIdentifierTable.ContainsKey(node.ID))
                 {
-                    node.Reference = _functionIdentifierTable[node.Id];
+                    node.Reference = _functionIdentifierTable[node.ID];
                 }
-                else throw new InvalidIdentifierException(node.Id);
+                else throw new InvalidIdentifierException(node);
 
                 if (node.Reference == NO_LOCAL_REF)
                 {
-                    throw new OverloadedFunctionIdentifierException(node.Id);
+                    throw new OverloadedFunctionIdentifierException(node);
                 }
             }
         }

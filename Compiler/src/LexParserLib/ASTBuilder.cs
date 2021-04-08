@@ -21,7 +21,8 @@ namespace LexParserLib
         
         public AST GetAST(ASTNode root)
         {
-            return VisitDeclarations(root.Children[0]);
+            AST ast = VisitDeclarations(root.Children[0]);
+            return ast;
         }
 
         private AST VisitDeclarations(ASTNode himeNode)
@@ -46,7 +47,7 @@ namespace LexParserLib
         {
             List<FunctionNode> functionNodes = new List<FunctionNode>();
             List<ExportNode> exportNodes = new List<ExportNode>();
-            return new AST(functionNodes, exportNodes, himeNode.Position.Line, himeNode.Position.Column);
+            return new AST(functionNodes, exportNodes, 0, 0);
         }
 
         private void InsertDeclaration(AST ast, ASTNode himeNode)
@@ -66,21 +67,23 @@ namespace LexParserLib
         private ExportNode CreateExportNode(ASTNode himeNode)
         {
             ExpressionNode expressionNode = DispatchExpression(himeNode.Children[1]);
-            return new ExportNode(expressionNode, himeNode.Position.Line, himeNode.Position.Column);
+            TextPosition position = himeNode.Children[0].Position;
+            return new ExportNode(expressionNode, position.Line, position.Column);
         }
         
         private FunctionNode CreateFunctionNode(ASTNode himeDeclNode)
         {
-            var himeFuncNode = GetHimeFuncNode(himeDeclNode);
-            var type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
+            ASTNode himeFuncNode = GetHimeFuncNode(himeDeclNode);
+            FunctionTypeNode type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
 
-            var parameterIdentifiers = GetParameterIdentifiers(himeFuncNode);
+            List<string> parameterIdentifiers = GetParameterIdentifiers(himeFuncNode);
             string typeID = GetTypeID(himeFuncNode);
             string functionID = GetFunctionID(himeFuncNode);
 
             if (typeID != functionID)
                 throw new FunctionIdentifierMatchException(functionID, typeID);
 
+            TextPosition position = himeFuncNode.Children[0].Position;
             if (IsConditional(himeDeclNode))
             {
                 List<ConditionNode> conditions = new List<ConditionNode>();
@@ -88,21 +91,22 @@ namespace LexParserLib
                                                    conditions, 
                                                    false);
                 return new FunctionNode(conditions, typeID, parameterIdentifiers, type,
-                                        himeDeclNode.Position.Line, himeDeclNode.Position.Column);
+                                        position.Line, position.Column);
             } else
             {
-                var condition = GetInsertedConditionNode(himeDeclNode);
+                ConditionNode condition = GetInsertedConditionNode(himeDeclNode);
                 return new FunctionNode(typeID, condition, parameterIdentifiers, type,
-                                        himeDeclNode.Position.Line, himeDeclNode.Position.Column);
+                                        position.Line, position.Column);
             }
         }
 
         private ConditionNode GetInsertedConditionNode(ASTNode himeDeclerationNode)
         {
             ASTNode expr = GetFunctionContent(himeDeclerationNode);
+            TextPosition position = himeDeclerationNode.Children[1].Position;
             return new ConditionNode(DispatchExpression(expr),
-                                                        himeDeclerationNode.Position.Line,
-                                                        himeDeclerationNode.Position.Column);
+                                                        position.Line,
+                                                        position.Column);
         }
 
         private void VisitConditions(ASTNode himeNode, List<ConditionNode> conditions, 
@@ -133,15 +137,16 @@ namespace LexParserLib
             ASTNode expr = himeNode.Children[3];
             ExpressionNode returnExpression = DispatchExpression(expr);
 
-            if(himeNode.Children[1].Value == "_")
+            TextPosition position = himeNode.Children[0].Position;
+            if (himeNode.Children[1].Value == "_")
             {
                 return new ConditionNode(returnExpression,
-                                         himeNode.Position.Line, himeNode.Position.Column);
+                                         position.Line, position.Column);
             } else
             {
                 ExpressionNode conditionExpr = DispatchExpression(himeNode.Children[1]);
                 return new ConditionNode(conditionExpr, returnExpression,
-                                         himeNode.Position.Line, himeNode.Position.Column);
+                                         position.Line, position.Column);
             }            
         }
 
@@ -182,19 +187,23 @@ namespace LexParserLib
         {
             TypeNode returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
             List<TypeNode> parameterTypes = VisitTypes(himeNode.Children[1]);
-            return new FunctionTypeNode(returnType, parameterTypes, himeNode.Position.Line, himeNode.Position.Column);
+
+            TextPosition position = himeNode.Children[0].Position;
+            return new FunctionTypeNode(returnType, parameterTypes, position.Line, position.Column);
         }
 
         public TypeNode CreateTypeNode(ASTNode himeNode)
         {
+
+            TextPosition position = himeNode.Children[0].Position;
             return himeNode.Children[0].Symbol.Name switch
             {
-                "integer" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Integer,
-                                          himeNode.Position.Line, himeNode.Position.Column),
-                "real" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Real,
-                                       himeNode.Position.Line, himeNode.Position.Column),
-                "boolean" => new TypeNode(ASTLib.Nodes.TypeNodes.TypeEnum.Boolean,
-                                          himeNode.Position.Line, himeNode.Position.Column),
+                "integer" => new TypeNode(TypeEnum.Integer,
+                                          position.Line, position.Column),
+                "real" => new TypeNode(TypeEnum.Real,
+                                       position.Line, position.Column),
+                "boolean" => new TypeNode(TypeEnum.Boolean,
+                                          position.Line, position.Column),
                 "FuncTypeDecl" => CreateFunctionTypeNode(himeNode.Children[0]),
                 _ => throw new UnimplementedASTException(himeNode.Children[0].Symbol.Name, "type"),
             };
@@ -257,38 +266,39 @@ namespace LexParserLib
             ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
             ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
 
+            TextPosition position = himeNode.Children[1].Position;
             return himeNode.Children[1].Value switch
             {
                 "eq" => new EqualExpression(leftOperant, rightOperant,
-                                            himeNode.Position.Line,
-                                            himeNode.Position.Column),
+                                            position.Line,
+                                            position.Column),
                 "neq" => new NotEqualExpression(leftOperant, rightOperant,
-                                                himeNode.Position.Line,
-                                                himeNode.Position.Column),
+                                                position.Line,
+                                                position.Column),
                 "or" => new OrExpression(leftOperant, rightOperant,
-                                         himeNode.Position.Line,
-                                         himeNode.Position.Column),
+                                         position.Line,
+                                         position.Column),
                 "and" => new AndExpression(leftOperant, rightOperant,
-                                           himeNode.Position.Line,
-                                           himeNode.Position.Column),
+                                           position.Line,
+                                           position.Column),
                 "+" => new AdditionExpression(leftOperant, rightOperant,
-                                              himeNode.Position.Line, 
-                                              himeNode.Position.Column),
+                                              position.Line, 
+                                              position.Column),
                 "-" => new SubtractionExpression(leftOperant, rightOperant,
-                                                 himeNode.Position.Line, 
-                                                 himeNode.Position.Column),
+                                                 position.Line, 
+                                                 position.Column),
                 "*" => new MultiplicationExpression(leftOperant, rightOperant,
-                                                    himeNode.Position.Line,
-                                                    himeNode.Position.Column),
+                                                    position.Line,
+                                                    position.Column),
                 "/" => new DivisionExpression(leftOperant, rightOperant,
-                                              himeNode.Position.Line,
-                                              himeNode.Position.Column),
+                                              position.Line,
+                                              position.Column),
                 "mod" => new ModuloExpression(leftOperant, rightOperant,
-                                              himeNode.Position.Line,
-                                              himeNode.Position.Column),
+                                              position.Line,
+                                              position.Column),
                 "^" => new PowerExpression(leftOperant, rightOperant,
-                                           himeNode.Position.Line, 
-                                           himeNode.Position.Column),
+                                           position.Line, 
+                                           position.Column),
                 _ => throw new UnimplementedASTException(himeNode.Children[1].Value, "operator")
             };
         }
@@ -304,24 +314,25 @@ namespace LexParserLib
             {
                 ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
                 ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
-                ASTNode op = himeNode.Children[1];
+                ASTNode op = himeNode.Children[1].Children[0];
                 if (op.Children.Count != 0)
                     op = op.Children[0];
 
+                TextPosition position = op.Position;
                 return op.Value switch
                 {
                     ">=" => new GreaterEqualExpression(leftOperant, rightOperant,
-                                            himeNode.Position.Line,
-                                            himeNode.Position.Column),
+                                            position.Line,
+                                            position.Column),
                     ">" => new GreaterExpression(leftOperant, rightOperant,
-                                            himeNode.Position.Line,
-                                            himeNode.Position.Column),
+                                            position.Line,
+                                            position.Column),
                     "<" => new LessExpression(leftOperant, rightOperant,
-                                            himeNode.Position.Line,
-                                            himeNode.Position.Column),
+                                            position.Line,
+                                            position.Column),
                     "<=" => new LessEqualExpression(leftOperant, rightOperant,
-                                            himeNode.Position.Line,
-                                            himeNode.Position.Column),
+                                            position.Line,
+                                            position.Column),
                     _ => throw new UnimplementedASTException(op.Value, "operator")
                 };
             }
@@ -334,7 +345,8 @@ namespace LexParserLib
                 return DispatchExpression(himeNode.Children[1]);
             else if(himeNode.Children[0].Value == "|") 
                 return new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
-                                                  himeNode.Position.Line, himeNode.Position.Column);
+                                                  himeNode.Children[0].Position.Line, 
+                                                  himeNode.Children[0].Position.Column);
             else
             {
                 List<ExpressionNode> expressions = new List<ExpressionNode>();
@@ -342,7 +354,7 @@ namespace LexParserLib
                 if(himeNode.Children.Count != CONSTANT_FUNCTION_CALL)
                     VisitExpressions(himeNode.Children[EXPRESSIONS_POS], expressions);
                 return new FunctionCallExpression(himeNode.Children[0].Value, expressions, 
-                                                  himeNode.Position.Line, himeNode.Position.Column);
+                                                  himeNode.Children[0].Position.Line, himeNode.Children[0].Position.Column);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ASTLib.Nodes.ExpressionNodes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace ASTLib.Exceptions
 {
     public class OverloadedFunctionIdentifierException : CompilerException
     {
-        public OverloadedFunctionIdentifierException(string id) : base(null, $"Identifier with id {id} points to an overloaded function")
+        public OverloadedFunctionIdentifierException(IdentifierExpression node) : base(node, $"{node.ID} points to an overloaded function")
         {
 
         }

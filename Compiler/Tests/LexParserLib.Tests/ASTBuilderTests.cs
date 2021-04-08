@@ -17,7 +17,7 @@ namespace LexParserLib.Tests
         {
             string input = "export 5.5 + 33.3";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             RealLiteralExpression node = (RealLiteralExpression)ast.Exports[0].ExportValue.Children[1];
             Assert.AreEqual(14, node.LetterNumber);
@@ -27,7 +27,7 @@ namespace LexParserLib.Tests
         {
             string input = "export 5.5 + 33.3";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             RealLiteralExpression node = (RealLiteralExpression)ast.Exports[0].ExportValue.Children[1];
             Assert.AreEqual(33.3, node.Value);
@@ -40,7 +40,7 @@ namespace LexParserLib.Tests
         {
             string input = "export 5.5 + 33.3 + 2 + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             IntegerLiteralExpression node = (IntegerLiteralExpression)ast.Exports[0].ExportValue.Children[0].Children[1];
             Assert.AreEqual(21, node.LetterNumber);
@@ -50,7 +50,7 @@ namespace LexParserLib.Tests
         {
             string input = "export 5.5 + 33.3 + 2 + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             IntegerLiteralExpression node = (IntegerLiteralExpression)ast.Exports[0].ExportValue.Children[0].Children[1];
             Assert.AreEqual(2, node.Value);
@@ -64,7 +64,7 @@ namespace LexParserLib.Tests
             string input =      "func: (integer) -> integer " +
                                 "func(x) = x + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             var func = ast.Functions[0];
             Assert.AreEqual("x", func.ParameterIdentifiers[0]);
@@ -75,7 +75,7 @@ namespace LexParserLib.Tests
             string input = "func: (integer) -> integer " +
                                 "func(x) = x + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             var func = ast.Functions[0];
             Assert.AreEqual("func", func.Identifier);
@@ -86,7 +86,7 @@ namespace LexParserLib.Tests
             string input = "func: (integer) -> integer " +
                                 "func(x) = x + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             var func = ast.Functions[0];
             Assert.AreEqual(ASTLib.Nodes.TypeNodes.TypeEnum.Integer, func.FunctionType.ParameterTypes[0].Type);
@@ -97,7 +97,7 @@ namespace LexParserLib.Tests
             string input = "func: (integer) -> integer " +
                                 "func(x) = x + 1";
 
-            AST ast = new LexParser(new ASTBuilder()).Run(input);
+            AST ast = new LexParser(new ASTBuilder()).Run(input, false);
 
             var func = ast.Functions[0];
             Assert.AreEqual(ASTLib.Nodes.TypeNodes.TypeEnum.Integer, func.FunctionType.ReturnType.Type);

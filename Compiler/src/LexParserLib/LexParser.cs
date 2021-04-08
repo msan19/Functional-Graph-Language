@@ -16,7 +16,7 @@ namespace LexParserLib
             _astBuilder = astBuilder;
         }
 
-        public AST Run(string input)
+        public AST Run(string input, bool print)
         {
             GrammarLexer lexer = new GrammarLexer(input);
             GrammarParser parser = new GrammarParser(lexer);
@@ -24,7 +24,8 @@ namespace LexParserLib
             ParseResult result = parser.Parse();
             CheckErrors(result);
             // Prints the produced syntax tree
-            Print(result.Root, new bool[] { });
+            if(print) 
+                Print(result.Root, new bool[] { });
             return _astBuilder.GetAST(result.Root);
         }
 
