@@ -1,4 +1,5 @@
-﻿using ASTLib.Nodes;
+﻿using ASTLib.Exceptions;
+using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
@@ -65,7 +66,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionBoolean(cn1, Arg.Any<List<Object>>()).Returns(true);
             fhelper.ConditionBoolean(cn2, Arg.Any<List<Object>>()).Returns(true);
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionBoolean(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionBoolean(input1, input2));
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionBoolean(cn1, Arg.Any<List<Object>>());
             fhelper.ConditionBoolean(cn2, Arg.Any<List<Object>>());
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionBoolean(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionBoolean(input1, input2));
         }
         #endregion
 

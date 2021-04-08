@@ -38,7 +38,7 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
             TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
 
-            if (!IsBool(left.Type) && !IsBool(right.Type))
+            if (!IsBool(left.Type) || !IsBool(right.Type))
             {
                 throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "bool");
             }

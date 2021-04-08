@@ -1,4 +1,5 @@
-﻿using ASTLib.Nodes;
+﻿using ASTLib.Exceptions;
+using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using FluentAssertions;
@@ -94,7 +95,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionReal(cn1, Arg.Any<List<Object>>()).Returns(17.1);
             fhelper.ConditionReal(cn2, Arg.Any<List<Object>>()).Returns(18.3);
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionReal(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionReal(input1, input2));
         }
 
         [TestMethod]
@@ -109,7 +110,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionReal(cn1, Arg.Any<List<Object>>());
             fhelper.ConditionReal(cn2, Arg.Any<List<Object>>());
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionReal(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionReal(input1, input2));
         }
 
         #endregion

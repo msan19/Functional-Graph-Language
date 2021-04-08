@@ -1,4 +1,5 @@
-﻿using ASTLib.Nodes;
+﻿using ASTLib.Exceptions;
+using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using FluentAssertions;
 using InterpreterLib.Interfaces;
@@ -93,7 +94,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionFunction(cn1, Arg.Any<List<Object>>()).Returns(17);
             fhelper.ConditionFunction(cn2, Arg.Any<List<Object>>()).Returns(18);
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionFunction(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionFunction(input1, input2));
         }
 
         [TestMethod]
@@ -108,7 +109,7 @@ namespace InterpreterLib.Tests
             fhelper.ConditionFunction(cn1, Arg.Any<List<Object>>());
             fhelper.ConditionFunction(cn2, Arg.Any<List<Object>>());
 
-            Assert.ThrowsException<Exception>(() => interpreter.FunctionFunction(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.FunctionFunction(input1, input2));
         }
 
         #endregion

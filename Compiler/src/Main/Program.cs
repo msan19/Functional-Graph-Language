@@ -9,6 +9,7 @@ using TypeCheckerLib;
 using TypeCheckerLib.Helpers;
 using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
 using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
+using ASTLib.Exceptions;
 
 namespace Main
 {
@@ -16,7 +17,14 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            new Program(args);
+            try
+            {
+                new Program(args);
+            } catch (CompilerException e)
+            {
+                Console.WriteLine($"An error was detected on line {e.Node.LineNumber}:\n{e.Message}");
+                throw;
+            }
         }
 
         public Program(string[] args)
@@ -27,11 +35,12 @@ namespace Main
             Interpreter interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
-            string input = "export 5.5 + 33.3 export 5.5 * func(33) " +
-                                   "func: (integer) -> real " +
-                                   "func(p) = |p| * 17 + p / 2 ^ (17 - 0.1 mod 2)";
-            string file = "";
-            //input = ReadFile(file);
+            string file = @"..\..\..\..\..\Calculator.fgl";
+            //string input = ReadFile(file);
+            string input = "export 5.5 + 33.3 " +
+                           "export 5.5 * func(33) " +
+                           "func: (integer)->real " +
+                           "func(p) = | p | *17 + p / 2 ^ (17 - 0.1 mod 2)";
 
             AST ast = lexParse.Run(input);
             referenceHandler.InsertReferences(ast);
