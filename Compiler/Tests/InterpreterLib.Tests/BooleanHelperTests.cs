@@ -152,7 +152,29 @@ namespace InterpreterLib.Tests
             
             Assert.AreEqual(expected, res);
         }
-        
+
+        [DataRow(0, 1, false)]
+        [DataRow(1, 0, false)]
+        [DataRow(0, 0, true)]
+        [TestMethod]
+        public void EqualBoolean_Function_CorrectValuesReturned(int lhsValue, int rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetIntLitExpression();
+            var rhs = Utilities.GetIntLitExpression();
+
+            EqualExpression expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Function;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.EqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
         [DataRow(0.0, 1.0, false)]
         [DataRow(1.0, 0.0, false)]
         [DataRow(0.0, 0.0, true)]
@@ -221,6 +243,29 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+
+        [DataRow(0, 1, true)]
+        [DataRow(1, 0, true)]
+        [DataRow(0, 0, false)]
+        [TestMethod]
+        public void NotEqualBoolean_Function_CorrectValuesReturned(int lhsValue, int rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetIntLitExpression();
+            var rhs = Utilities.GetIntLitExpression();
+
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Function;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.NotEqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
         [DataRow(0.0, 1.0, true)]
         [DataRow(1.0, 0.0, true)]
         [DataRow(0.0, 0.0, false)]
