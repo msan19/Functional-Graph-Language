@@ -13,7 +13,8 @@ namespace TypeCheckerLib.Interfaces
         void VisitFunction(FunctionNode functionNode);
         TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes);
         TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes);
-        TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode, List<TypeNode> parameterTypes);
-        TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes);
+        TypeNode VisitIntegerLiteral();
+        TypeNode VisitRealLiteral();
+        TypeNode VisitBooleanLiteral();
     }
 }

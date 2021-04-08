@@ -392,6 +392,34 @@ namespace TypeCheckerLib.Tests.HelperTests
             res.Should().BeEquivalentTo(expected);
         }
 
+        // Int Real -> Cast Node
+        // Int Real -> Return Boolean
+
+        [TestMethod]
+        public void VisitRelationalOperators_GreaterEqualExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            GreaterEqualExpression input1 = GetGreaterEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            helper.VisitRelationalOperator(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_GreaterEqualExpressionWithIntAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            GreaterEqualExpression input1 = GetGreaterEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitRelationalOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
         [TestMethod]
         public void VisitRelationalOperators_ForGreaterExpression_CorrectParameterPassDown()
         {
@@ -410,6 +438,31 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitRelationalOperator(input1, expected.ToList());
 
             res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_GreaterExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            GreaterExpression input1 = GetGreaterExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            helper.VisitRelationalOperator(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_GreaterExpressionWithIntAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            GreaterExpression input1 = GetGreaterExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitRelationalOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
         }
 
         [TestMethod]
@@ -433,6 +486,31 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
+        public void VisitRelationalOperators_LessEqualExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            LessEqualExpression input1 = GetLessEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            helper.VisitRelationalOperator(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_LessEqualExpressionWithIntAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            LessEqualExpression input1 = GetLessEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitRelationalOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
         public void VisitRelationalOperators_ForLessExpression_CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>()
@@ -450,6 +528,31 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitRelationalOperator(input1, expected.ToList());
 
             res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_LessExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            LessExpression input1 = GetLessExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            helper.VisitRelationalOperator(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_LessExpressionWithIntAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            LessExpression input1 = GetLessExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitRelationalOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
         }
         #endregion
     }

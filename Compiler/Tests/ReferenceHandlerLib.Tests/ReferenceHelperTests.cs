@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using FluentAssertions;
 using ASTLib.Exceptions;
+using System.Linq.Expressions;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -94,6 +95,45 @@ namespace ReferenceHandlerLib.Tests
 
             System.Type result = null;
             parent.Dispatch(Arg.Do<RealLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
+            referenceHelper.VisitFunction(input);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void VisitFunction_MultipleConditions_DispatchesCorrectExpressions()
+        {
+            List<Type> expected = new List<Type> { typeof(IntegerLiteralExpression), typeof(IntegerLiteralExpression) };
+            ConditionNode firstCondition = new ConditionNode(new IntegerLiteralExpression("1", 1, 1), 1, 1);
+            ConditionNode secondCondition = new ConditionNode(new IntegerLiteralExpression("2", 1, 1), 1, 1);
+            List<ConditionNode> conditions = new List<ConditionNode> { firstCondition, secondCondition };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            FunctionNode input = new FunctionNode(conditions, "func1", parameterIdentifiers, new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1), 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            List<Type> result = new List<Type>();
+            parent.Dispatch(Arg.Do<IntegerLiteralExpression>(x => result.Add(x.GetType())), Arg.Any<List<string>>());
+            referenceHelper.VisitFunction(input);
+
+            CollectionAssert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void VisitFunction_FunctionWithConditionExpression_DispatchesConditionExpression()
+        {
+            Type expected = typeof(BooleanLiteralExpression);
+            BooleanLiteralExpression expressionNode = new BooleanLiteralExpression(true, 1, 1);
+            List<ConditionNode> conditions = new List<ConditionNode> { new ConditionNode(expressionNode, new IntegerLiteralExpression("1", 1, 1), 1, 1) };
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            FunctionNode input = new FunctionNode(conditions, "func1", parameterIdentifiers, new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1), 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            Type result = null;
+            parent.Dispatch(Arg.Do<BooleanLiteralExpression>(x => result = x.GetType()), Arg.Any<List<string>>());
             referenceHelper.VisitFunction(input);
 
             Assert.AreEqual(expected, result);

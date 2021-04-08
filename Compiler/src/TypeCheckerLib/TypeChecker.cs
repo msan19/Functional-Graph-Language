@@ -48,12 +48,15 @@ namespace TypeCheckerLib
                 PowerExpression n           => _numberHelper.VisitPower(n, parameterTypes),
                 FunctionCallExpression n    => _declarationHelper.VisitFunctionCall(n, parameterTypes),
                 IdentifierExpression n      => _declarationHelper.VisitIdentifier(n, parameterTypes),
-                IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(n, parameterTypes),
-                RealLiteralExpression n     => _declarationHelper.VisitRealLiteral(n, parameterTypes),
+                IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(),
+                RealLiteralExpression n     => _declarationHelper.VisitRealLiteral(),
+                BooleanLiteralExpression n  => _declarationHelper.VisitBooleanLiteral(),
                 AdditionExpression n        => _commonOperatorHelper.VisitAddition(n, parameterTypes),
                 SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
                 IRelationOperator n         => _commonOperatorHelper.VisitRelationalOperator(n, parameterTypes),
+                IEquivalenceOperator n      => _commonOperatorHelper.VisitEquivalenceOperator(n, parameterTypes),
+
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }

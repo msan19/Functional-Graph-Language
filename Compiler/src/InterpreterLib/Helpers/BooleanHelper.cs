@@ -138,6 +138,12 @@ namespace InterpreterLib.Helpers
                 int rhsValue = _interpreter.DispatchInt(rhs, parameters);
                 res = lhsValue == rhsValue;
             }
+            else if (type == TypeEnum.Function)
+            {
+                int lhsValue = _interpreter.DispatchFunction(lhs, parameters);
+                int rhsValue = _interpreter.DispatchFunction(rhs, parameters);
+                res = lhsValue == rhsValue;
+            }
             return res;
         }
     }

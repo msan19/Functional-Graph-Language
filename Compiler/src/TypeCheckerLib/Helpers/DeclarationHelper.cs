@@ -102,8 +102,8 @@ namespace TypeCheckerLib.Helpers
 
         private List<FunctionNode> GetFunctions(List<int> matchingRefs)
         {
-            var res = new List<FunctionNode>();
-            foreach (var i in matchingRefs)
+            List<FunctionNode> res = new List<FunctionNode>();
+            foreach (int i in matchingRefs)
                 res.Add(_functions[i]);
             return res;
         }
@@ -112,9 +112,9 @@ namespace TypeCheckerLib.Helpers
             List<TypeNode> parameterTypes)
         {
             List<int> res = new List<int>();
-            foreach (var globRef in globalReferences)
+            foreach (int globRef in globalReferences)
             {
-                var func = _functions[globRef];
+                FunctionNode func = _functions[globRef];
                 if (ChildrenMatchesFunctionInputParams(children, func.FunctionType.ParameterTypes, parameterTypes))
                     res.Add(globRef);
             }
@@ -124,10 +124,10 @@ namespace TypeCheckerLib.Helpers
         private bool ChildrenMatchesFunctionInputParams(List<ExpressionNode> children,
             List<TypeNode> functionTypeParameterTypes, List<TypeNode> parameterTypes)
         {
-            for (var i = 0; i < children.Count; i++)
+            for (int i = 0; i < children.Count; i++)
             {
-                var child = _getType(children[i], parameterTypes);
-                var expected = functionTypeParameterTypes[i];
+                TypeNode child = _getType(children[i], parameterTypes);
+                TypeNode expected = functionTypeParameterTypes[i];
                 if (!TypesAreEqual(child, expected))
                     return false;
             }
@@ -140,10 +140,10 @@ namespace TypeCheckerLib.Helpers
                 return false;
             
             FunctionTypeNode funcDeclType = (FunctionTypeNode)parameterTypes[funcCallExpNode.LocalReference];
-            for (var i = 0; i < funcCallExpNode.Children.Count; i++)
+            for (int i = 0; i < funcCallExpNode.Children.Count; i++)
             {
-                var child = _getType(funcCallExpNode.Children[i], parameterTypes);
-                var expected = funcDeclType.ParameterTypes[i];
+                TypeNode child = _getType(funcCallExpNode.Children[i], parameterTypes);
+                TypeNode expected = funcDeclType.ParameterTypes[i];
                 if (!TypesAreEqual(child, expected))
                     return false;
             }
@@ -186,15 +186,19 @@ namespace TypeCheckerLib.Helpers
                 return _functions[idExpressionNode.Reference].FunctionType.ReturnType;
         }
 
-        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode,
-            List<TypeNode> parameterTypes)
+        public TypeNode VisitIntegerLiteral()
         {
             return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
-        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes)
+        public TypeNode VisitRealLiteral()
         {
             return new TypeNode(TypeEnum.Real, 0, 0);
+        }
+
+        public TypeNode VisitBooleanLiteral()
+        {
+            return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
         
