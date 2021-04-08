@@ -55,6 +55,8 @@ namespace TypeCheckerLib
                 SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
                 IRelationOperator n         => _commonOperatorHelper.VisitRelationalOperator(n, parameterTypes),
+                IEquivalenceOperator n      => _commonOperatorHelper.VisitEquivalenceOperator(n, parameterTypes),
+
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }
