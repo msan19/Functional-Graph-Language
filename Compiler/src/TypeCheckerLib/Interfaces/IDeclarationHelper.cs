@@ -15,5 +15,6 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitIdentifier(IdentifierExpression idExpressionNode, List<TypeNode> parameterTypes);
         TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode, List<TypeNode> parameterTypes);
         TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes);
+        TypeNode VisitBooleanLiteral(BooleanLiteralExpression booleanLiteralExpression, List<TypeNode> parameterTypes);
     }
 }

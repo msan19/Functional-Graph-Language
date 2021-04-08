@@ -47,6 +47,7 @@ namespace TypeCheckerLib
                 IdentifierExpression n      => _declarationHelper.VisitIdentifier(n, parameterTypes),
                 IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(n, parameterTypes),
                 RealLiteralExpression n     => _declarationHelper.VisitRealLiteral(n, parameterTypes),
+                BooleanLiteralExpression n  => _declarationHelper.VisitBooleanLiteral(n, parameterTypes),
                 AdditionExpression n        => _commonOperatorHelper.VisitAddition(n, parameterTypes),
                 SubtractionExpression n     => _commonOperatorHelper.VisitSubtraction(n, parameterTypes),
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
