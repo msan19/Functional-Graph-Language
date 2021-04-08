@@ -113,9 +113,24 @@ namespace TypeCheckerLib.Helpers
             {
                 CastToReal(node, left, 0);
                 CastToReal(node, right, 1);
-                return new TypeNode(TypeEnum.Real, 0, 0);
+                return new TypeNode(TypeEnum.Boolean, 0, 0);
             }
-            return new TypeNode(left.Type, 0, 0);
+            return new TypeNode(TypeEnum.Boolean, 0, 0);
+        }
+
+        public TypeNode VisitEquivalenceOperator(IEquivalenceOperator node, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = GetType(node.Children[0], parameterTypes);
+            TypeNode right = GetType(node.Children[1], parameterTypes);
+
+            //TODO
+            //Fields af deres børns type skal vi sætte
+
+            if (left.Type != right.Type)
+            {
+                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "expected same type");
+            }
+            return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
         private bool IsComparableType(TypeEnum t)
