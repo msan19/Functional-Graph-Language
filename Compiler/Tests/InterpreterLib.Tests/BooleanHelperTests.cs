@@ -147,17 +147,81 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
-        
+
         #region NotEqualBoolean
-        
+        [DataRow(0, 1, true)]
+        [DataRow(1, 0, true)]
+        [DataRow(0, 0, false)]
+        [TestMethod]
+        public void NotEqualBoolean_Int_CorrectValuesReturned(int lhsValue, int rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetIntLitExpression();
+            var rhs = Utilities.GetIntLitExpression();
+
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Integer;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchInt(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchInt(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.NotEqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+        [DataRow(0.0, 1.0, true)]
+        [DataRow(1.0, 0.0, true)]
+        [DataRow(0.0, 0.0, false)]
+        [TestMethod]
+        public void NotEqualBoolean_Real_CorrectValuesReturned(double lhsValue, double rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Real;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchReal(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchReal(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.NotEqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow(true, true, false)]
+        [DataRow(true, false, true)]
+        [DataRow(false, true, true)]
+        [DataRow(false, false, false)]
+        [TestMethod]
+        public void NotEqualBoolean_Bool_CorrectValuesReturned(bool lhsValue, bool rhsValue, bool expected)
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Boolean;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchBoolean(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.NotEqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
-        
+
         // Assumption: Relational operators only works for real
         //             - TyperChecker have casted children from type Integer to type Real
 
         #region GreaterEqualBoolean
         // a >= b
-        
+
         [DataRow(0.0, 1.0, false)]
         [DataRow(1.0, 0.0, true)]
         [DataRow(0.0, 0.0, true)]
