@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using InterpreterLib.Interfaces;
 using System.Linq;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Exceptions;
 
 namespace InterpreterLib.Helpers
 {
@@ -66,7 +67,7 @@ namespace InterpreterLib.Helpers
             double leftOperand = _interpreter.DispatchReal(node.Children[0], parameters);
             double rightOperand = _interpreter.DispatchReal(node.Children[1], parameters);
 
-            if (rightOperand == 0.0) throw new Exception("Divisor cannot be zero");
+            if (rightOperand == 0.0) throw new DivisionByZeroException(node);
 
             return leftOperand / rightOperand;
         }
@@ -76,7 +77,7 @@ namespace InterpreterLib.Helpers
             double leftOperand = _interpreter.DispatchReal(node.Children[0], parameters);
             double rightOperand = _interpreter.DispatchReal(node.Children[1], parameters);
 
-            if (rightOperand == 0.0) throw new Exception("Divisor cannot be zero");
+            if (rightOperand == 0.0) throw new DivisionByZeroException(node);
 
             return leftOperand - rightOperand * Math.Floor(leftOperand / rightOperand);
         }

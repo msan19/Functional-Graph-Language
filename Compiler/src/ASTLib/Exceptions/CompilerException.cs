@@ -5,11 +5,11 @@ namespace ASTLib.Exceptions
 {
     public abstract class CompilerException: Exception
     {
-        public Node _node { get; }
+        public Node Node { get; }
 
         public CompilerException(Node node, string message) : base(message)
         {
-            _node = node;
+            Node = node;
         }
 
     }
