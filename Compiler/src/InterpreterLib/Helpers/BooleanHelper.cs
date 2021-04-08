@@ -75,7 +75,7 @@ namespace InterpreterLib.Helpers
 
         public bool IdentifierBoolean(IdentifierExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return parameters[node.Reference].Equals("true");
         }
 
         public bool LessBoolean(LessExpression node, List<object> parameters)

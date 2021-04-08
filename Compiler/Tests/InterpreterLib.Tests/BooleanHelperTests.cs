@@ -17,14 +17,50 @@ namespace InterpreterLib.Tests
     {
         #region SetASTRoot
         #endregion
-        
+
         #region SetUpFuncs
         #endregion
-        
+
         #region ConditionBoolean
         #endregion
-        
+
         #region IdentifierBoolean
+        [DataRow("true", true)]
+        [DataRow("false", false)]
+        [TestMethod]
+        public void Identifier_Index0_CorrectValuesReturned(string input, bool expected)
+        {
+            var expression = GetIdentifier(0);
+            var parameters = new List<object>() { input };
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.IdentifierBoolean(expression, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow("true", true)]
+        [DataRow("false", false)]
+        [TestMethod]
+        public void Identifier_Index1_CorrectValuesReturned(string input, bool expected)
+        {
+            var expression = GetIdentifier(1);
+            var parameters = new List<object>() { "testing", input };
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.IdentifierBoolean(expression, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private IdentifierExpression GetIdentifier(int reference)
+        {
+            return new IdentifierExpression("", 0, 0) { Reference = reference };
+        }
         #endregion
 
         #region NotBoolean
