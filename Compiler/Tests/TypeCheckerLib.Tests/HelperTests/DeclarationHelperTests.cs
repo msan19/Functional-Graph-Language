@@ -740,16 +740,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             input1.IsLocal = false;
             input1.Reference = 0;
 
-            var funcParams = new List<TypeNode>()
-            {
-            };
+            var funcParams = new List<TypeNode>();
 
             var ast = Utilities.GetAst();
             ast.Functions.Add(Utilities.GetFunctionNode(expectedType, new List<TypeEnum>()));
             
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(ast);
 
-            var res = declarationHelper.VisitIdentifier(input1, funcParams).Type;
+            var res = ((FunctionTypeNode) declarationHelper.VisitIdentifier(input1, funcParams)).ReturnType.Type;
 
             Assert.AreEqual(expectedType, res);
         }

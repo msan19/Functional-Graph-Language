@@ -1,6 +1,9 @@
 using System;
 using ASTLib;
 using Hime.Redist;
+using System.Linq;
+using System.Collections.Generic;
+using ASTLib.Exceptions;
 
 namespace LexParserLib
 {
@@ -19,12 +22,24 @@ namespace LexParserLib
             GrammarParser parser = new GrammarParser(lexer);
             // Executes the parsing
             ParseResult result = parser.Parse();
+            CheckErrors(result);
             // Prints the produced syntax tree
-            Print(result.Root, new bool[] { });
+            //Print(result.Root, new bool[] { });
             return _astBuilder.GetAST(result.Root);
         }
 
-        private static void Print(ASTNode node, bool[] crossings)
+        private void CheckErrors(ParseResult result)
+        {
+            if (result.Errors.Count > 0)
+            {
+                List<ParseError> list = result.Errors.ToList();
+                List<int> lines = list.ConvertAll(e => e.Position.Line);
+                List<string> messages = list.ConvertAll(e => e.Message);
+                throw new ParserException(messages, lines);
+            }
+        }
+
+        private void Print(ASTNode node, bool[] crossings)
         {
             ASTNode node1 = node;
             for (int i = 0; i < crossings.Length - 1; i++)

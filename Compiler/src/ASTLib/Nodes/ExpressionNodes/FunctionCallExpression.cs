@@ -8,7 +8,7 @@ namespace ASTLib.Nodes.ExpressionNodes
     {
         public const int NO_LOCAL_REF = -1; 
         
-        public List<int> GlobalReferences { get; set; } = new List<int>();
+        public List<int> GlobalReferences { get; set; }
 
         public int LocalReference { get; set; } = NO_LOCAL_REF;
 
@@ -17,6 +17,7 @@ namespace ASTLib.Nodes.ExpressionNodes
         public FunctionCallExpression(string identifier, List<ExpressionNode> children, int line, int letter) : base(children, line, letter) 
         {
             Identifier = identifier;
+            GlobalReferences = new List<int>();
         }
     }
 }

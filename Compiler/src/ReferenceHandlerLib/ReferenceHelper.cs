@@ -123,9 +123,13 @@ namespace ReferenceHandlerLib
 
         public void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers)
         {
-            List<int> list = new List<int>();
-            list = _functionTable[node.Children.Count + node.Identifier];
-            node.GlobalReferences = list.ToList();
+            string key = node.Children.Count + node.Identifier;
+            if (_functionTable.ContainsKey(key))
+                node.GlobalReferences = _functionTable[key].ToList();
+            node.LocalReference = identifiers.IndexOf(node.Identifier);
+
+            foreach (ExpressionNode n in node.Children)
+                _dispatch(n, identifiers);
         }
 
 

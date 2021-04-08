@@ -1,5 +1,12 @@
 export 5.5 + 33.3
 export 5.5 * func(33)
+export a(b)
+
+a: ((integer) -> integer) -> integer
+a(f) = f(13) + 4
+
+b: (integer) -> integer
+b(x) = 2 * x
 
 func: (integer) -> real
 func(p) = |p| * 17 + p / 2 ^ (17 - 0.1 mod 2)

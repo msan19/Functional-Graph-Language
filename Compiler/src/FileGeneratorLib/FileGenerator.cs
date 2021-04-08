@@ -15,9 +15,9 @@ namespace FileGeneratorLib
 
         public void Export(List<double> output, string file)
         {
-            string text = "";
-            foreach(double d in output)
-                text += d + "\n";
+            string text = "\nRESULTS:\n";
+            for(int i = 0; i < output.Count; i++)
+                text += $"\tOutput {i} = {output[i]} \n";
             try
             {
                 Console.WriteLine(text);

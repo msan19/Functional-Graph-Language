@@ -86,7 +86,8 @@ namespace TypeCheckerLib.Helpers
             }
             else
             {
-                List<int> matchingRefs = GetMatches(funcCallExpNode.Children, funcCallExpNode.GlobalReferences, parameterTypes);
+                List<int> matchingRefs = funcCallExpNode.GlobalReferences;
+                CheckMatches(funcCallExpNode.Children, matchingRefs, parameterTypes);
                 if (matchingRefs.Count > 1)
                     throw new OverloadException(funcCallExpNode, GetFunctions(matchingRefs));
                 else if (matchingRefs.Count == 0)
@@ -108,27 +109,25 @@ namespace TypeCheckerLib.Helpers
             return res;
         }
 
-        private List<int> GetMatches(List<ExpressionNode> children, List<int> globalReferences,
-            List<TypeNode> parameterTypes)
+        private void CheckMatches(List<ExpressionNode> children, List<int> references,
+                                     List<TypeNode> parameterTypes)
         {
-            List<int> res = new List<int>();
-            foreach (int globRef in globalReferences)
+            List<TypeNode> childrenTypes = children.ConvertAll(child => _getType(child, parameterTypes));
+
+            for (int i = references.Count - 1; i >= 0; i--)
             {
-                FunctionNode func = _functions[globRef];
-                if (ChildrenMatchesFunctionInputParams(children, func.FunctionType.ParameterTypes, parameterTypes))
-                    res.Add(globRef);
+                FunctionNode func = _functions[references[i]];
+                if (!ChildrenMatchesFunctionInputParams(childrenTypes, func.FunctionType.ParameterTypes))
+                    references.Remove(i);
             }
-            return res;
         }
 
-        private bool ChildrenMatchesFunctionInputParams(List<ExpressionNode> children,
-            List<TypeNode> functionTypeParameterTypes, List<TypeNode> parameterTypes)
+        private bool ChildrenMatchesFunctionInputParams(List<TypeNode> children,
+                                                        List<TypeNode> functionTypeParameterTypes)
         {
             for (int i = 0; i < children.Count; i++)
             {
-                TypeNode child = _getType(children[i], parameterTypes);
-                TypeNode expected = functionTypeParameterTypes[i];
-                if (!TypesAreEqual(child, expected))
+                if (!TypesAreEqual(children[i], functionTypeParameterTypes[i]))
                     return false;
             }
             return true;
@@ -183,7 +182,7 @@ namespace TypeCheckerLib.Helpers
             if (idExpressionNode.IsLocal)
                 return parameterTypes[idExpressionNode.Reference];
             else
-                return _functions[idExpressionNode.Reference].FunctionType.ReturnType;
+                return _functions[idExpressionNode.Reference].FunctionType;
         }
 
         public TypeNode VisitIntegerLiteral()

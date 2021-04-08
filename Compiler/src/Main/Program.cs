@@ -22,7 +22,8 @@ namespace Main
                 new Program(args);
             } catch (CompilerException e)
             {
-                Console.WriteLine($"An error was detected on line {e.Node.LineNumber}:\n{e.Message}");
+                string s = e.Node != null ? "on line " + e.Node.LineNumber : "";
+                Console.WriteLine($"An error was detected {s}:\n{e.Message}");
                 throw;
             }
         }
@@ -36,11 +37,7 @@ namespace Main
             FileGenerator fileGenerator = new FileGenerator(new FileHelper());
 
             string file = @"..\..\..\..\..\Calculator.fgl";
-            //string input = ReadFile(file);
-            string input = "export 5.5 + 33.3 " +
-                           "export 5.5 * func(33) " +
-                           "func: (integer)->real " +
-                           "func(p) = | p | *17 + p / 2 ^ (17 - 0.1 mod 2)";
+            string input = ReadFile(file);
 
             AST ast = lexParse.Run(input);
             referenceHandler.InsertReferences(ast);
@@ -53,7 +50,9 @@ namespace Main
         {
             try
             {
-                return System.IO.File.ReadAllText(file);
+                string s = System.IO.File.ReadAllText(file);
+                Console.WriteLine(s);
+                return s;
             } catch
             {
                 throw;
