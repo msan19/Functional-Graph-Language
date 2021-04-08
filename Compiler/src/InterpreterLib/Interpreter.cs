@@ -117,6 +117,7 @@ namespace InterpreterLib
                 TypeEnum.Integer    => (object) DispatchInt(node, parameters),
                 TypeEnum.Real       => (object) DispatchReal(node, parameters),
                 TypeEnum.Function   => (object) DispatchFunction(node, parameters),
+                TypeEnum.Boolean    => (object) DispatchBoolean(node, parameters),
                 _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }

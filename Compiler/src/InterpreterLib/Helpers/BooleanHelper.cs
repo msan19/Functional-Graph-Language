@@ -15,6 +15,7 @@ namespace InterpreterLib.Helpers
     {
         private IInterpreterBoolean _interpreter;
         private AST _root;
+        private List<FunctionNode> _functions => _root.Functions;
 
         public void SetASTRoot(AST root)
         {
@@ -28,12 +29,29 @@ namespace InterpreterLib.Helpers
         
         public bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
-            
-            
-            // return _functionBoolean
+            FunctionNode funcNode = GetFuncNode(node, parameters);
+            return GetResult(node, funcNode, parameters);
         }
-        
+
+        private bool GetResult(FunctionCallExpression node, FunctionNode funcNode, List<object> parameters)
+        {
+            List<object> funcParameters = new List<object>();
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                TypeEnum type = funcNode.FunctionType.ParameterTypes[i].Type;
+                funcParameters.Add(_interpreter.Dispatch(node, parameters, type));
+            }
+            return _interpreter.FunctionBoolean(funcNode, funcParameters);
+        }
+
+        private FunctionNode GetFuncNode(FunctionCallExpression node, List<object> parameters)
+        {
+            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
+                return _functions[node.GlobalReferences[0]];
+            else
+                return _functions[(int)parameters[node.LocalReference]];
+        }
+
         public bool AndBoolean(AndExpression node, List<object> parameters)
         {
             bool leftOperand =  _interpreter.DispatchBoolean(node.Children[0], parameters);
