@@ -104,9 +104,10 @@ namespace InterpreterLib.Helpers
         public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
         {
             FunctionNode funcNode;
-
-            _ = node.GlobalReferences.Count >= 1 ? funcNode = _root.Functions[node.GlobalReferences[0]]
-                                             : funcNode = _root.Functions[(int)parameters[node.LocalReference]];
+            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
+                funcNode = _root.Functions[node.GlobalReferences[0]];
+            else
+                funcNode = _root.Functions[(int)parameters[node.LocalReference]];
 
             return FunctionCallIntegerIterator(node, funcNode, parameters);
         }
