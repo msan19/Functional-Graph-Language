@@ -1,3 +1,4 @@
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
@@ -205,6 +206,21 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitAddition(input1, null);
         }
 
+        [TestMethod]
+        public void VisitAddition_AdditionExpressionWithIntAndBoolean_ThrowsException()
+        {
+
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
+            BooleanLiteralExpression booleanExpr = new BooleanLiteralExpression(true, 0, 0);
+            AdditionExpression input = new AdditionExpression(intLit, booleanExpr, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitAddition(input, null));
+        }
+
         #endregion
 
         #region VisitSubtraction
@@ -329,8 +345,24 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitSubtraction(input1, null);
         }
 
+        [TestMethod]
+        public void VisitSubtraction_SubtractionExpressionWithIntAndBoolean_ThrowsException()
+        {
+
+            IntegerLiteralExpression intLit = new IntegerLiteralExpression("1", 1, 1);
+            BooleanLiteralExpression booleanExpr = new BooleanLiteralExpression(true, 0, 0);
+            SubtractionExpression input = new SubtractionExpression(intLit, booleanExpr, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitSubtraction(input, null));
+        }
+
         #endregion
 
+        #region VisitAbsoluteValue
         [TestMethod]
         public void VisitAbsoluteValue_AbsoluteValueExpressionWithIntAndReal_ReturnsRealTypeNode()
         {
@@ -370,6 +402,20 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             helper.VisitAbsoluteValue(input1, null);
         }
+
+        [TestMethod]
+        public void VisitAbsoluteValue_AbsoluteValueExpressionWithBoolean_ThrowsException()
+        {
+            BooleanLiteralExpression booleanExpr = new BooleanLiteralExpression(false, 0, 0);
+            AbsoluteValueExpression input = new AbsoluteValueExpression(booleanExpr, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<AbsoluteValueTypeException>(() => helper.VisitAbsoluteValue(input, null));
+        }
+
+        #endregion
 
         #region VisitRelationalOperators
         [TestMethod]
