@@ -77,8 +77,8 @@ namespace InterpreterLib.Helpers
         {
             ExpressionNode lhs = node.Children[0];
             ExpressionNode rhs = node.Children[1];
-            double lhsValue = _interpreter.DispatchReal(lhs, new List<object>());
-            double rhsValue = _interpreter.DispatchReal(rhs, new List<object>());
+            double lhsValue = _interpreter.DispatchReal(lhs, parameters);
+            double rhsValue = _interpreter.DispatchReal(rhs, parameters);
             return lhsValue > rhsValue;
         }
 

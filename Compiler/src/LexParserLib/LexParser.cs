@@ -24,7 +24,7 @@ namespace LexParserLib
             ParseResult result = parser.Parse();
             CheckErrors(result);
             // Prints the produced syntax tree
-            //Print(result.Root, new bool[] { });
+            Print(result.Root, new bool[] { });
             return _astBuilder.GetAST(result.Root);
         }
 

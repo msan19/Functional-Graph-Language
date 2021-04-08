@@ -17,9 +17,10 @@ namespace Main
     {
         static void Main(string[] args)
         {
+            new Program(args);
             try
             {
-                new Program(args);
+                //new Program(args);
             } catch (CompilerException e)
             {
                 string s = e.Node != null ? "on line " + e.Node.LineNumber : "";

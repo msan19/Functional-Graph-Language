@@ -114,7 +114,7 @@ namespace LexParserLib
             }
             else
             {
-                ConditionNode node = CreateConditionNode(himeNode.Children[2]);
+                ConditionNode node = CreateConditionNode(himeNode.Children[1]);
                 conditions.Add(node);
                 if (hasFoundDefault && node.IsDefaultCase())
                     throw new Exception("More than one default case");
@@ -310,16 +310,16 @@ namespace LexParserLib
 
                 return op.Value switch
                 {
-                    "geq" => new GreaterEqualExpression(leftOperant, rightOperant,
+                    ">=" => new GreaterEqualExpression(leftOperant, rightOperant,
                                             himeNode.Position.Line,
                                             himeNode.Position.Column),
-                    "greater" => new GreaterExpression(leftOperant, rightOperant,
+                    ">" => new GreaterExpression(leftOperant, rightOperant,
                                             himeNode.Position.Line,
                                             himeNode.Position.Column),
-                    "less" => new LessExpression(leftOperant, rightOperant,
+                    "<" => new LessExpression(leftOperant, rightOperant,
                                             himeNode.Position.Line,
                                             himeNode.Position.Column),
-                    "leq" => new LessEqualExpression(leftOperant, rightOperant,
+                    "<=" => new LessEqualExpression(leftOperant, rightOperant,
                                             himeNode.Position.Line,
                                             himeNode.Position.Column),
                     _ => throw new UnimplementedASTException(op.Value, "operator")
@@ -337,23 +337,23 @@ namespace LexParserLib
                                                   himeNode.Position.Line, himeNode.Position.Column);
             else
             {
-                List<ExpressionNode> expressions = himeNode.Children.Count == CONSTANT_FUNCTION_CALL ?
-                                                   new List<ExpressionNode>() :
-                                                   VisitExpressions(himeNode.Children[EXPRESSIONS_POS]);
+                List<ExpressionNode> expressions = new List<ExpressionNode>();
+
+                if(himeNode.Children.Count != CONSTANT_FUNCTION_CALL)
+                    VisitExpressions(himeNode.Children[EXPRESSIONS_POS], expressions);
                 return new FunctionCallExpression(himeNode.Children[0].Value, expressions, 
                                                   himeNode.Position.Line, himeNode.Position.Column);
             }
         }
 
-        private List<ExpressionNode> VisitExpressions(ASTNode himeNode)
+        private void VisitExpressions(ASTNode himeNode, List<ExpressionNode> expressions )
         {
-            if (himeNode.Children.Count == 1) 
-                return new List<ExpressionNode> { DispatchExpression(himeNode.Children[0])};
+            if (himeNode.Children.Count == 1)
+                expressions.Add(DispatchExpression(himeNode.Children[0]));
             else
             {
-                List<ExpressionNode> expressions = VisitExpressions(himeNode.Children[2]);
                 expressions.Add(DispatchExpression(himeNode.Children[0]));
-                return expressions;
+                VisitExpressions(himeNode.Children[2], expressions);
             }
         }
 
