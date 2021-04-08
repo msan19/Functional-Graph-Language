@@ -166,11 +166,11 @@ namespace InterpreterLib
             {
                 T a = func(defaultCase, parameters);
                 if (a == null)
-                    throw new Exception("Default case returned null");
+                    throw new UnacceptedConditionsException(defaultCase);
                 return a;
             }
             else if (returnedValues != 1)
-                throw new Exception(returnedValues + " conditions where true");
+                throw new UnacceptedConditionsException(node, returnedValues);
             return result;
         }
     }

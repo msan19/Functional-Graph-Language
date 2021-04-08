@@ -9,6 +9,7 @@ namespace InterpreterLib.Interfaces
 {
     public interface IInterpreterBoolean
     {
+        int DispatchFunction(ExpressionNode node, List<object> parameters);
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
         

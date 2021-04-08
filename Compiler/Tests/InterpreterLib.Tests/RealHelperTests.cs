@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -180,7 +181,7 @@ namespace InterpreterLib.Tests
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
 
-            Assert.ThrowsException<Exception>(() => realHelper.DivisionReal(divisionExpr, new List<object>()));
+            Assert.ThrowsException<DivisionByZeroException>(() => realHelper.DivisionReal(divisionExpr, new List<object>()));
         }
         #endregion
 
@@ -218,7 +219,7 @@ namespace InterpreterLib.Tests
             parent.DispatchReal(realLit2, Arg.Any<List<object>>()).Returns(input2);
             RealHelper realHelper = SetUpHelper(parent);
 
-            Assert.ThrowsException<Exception>(() => realHelper.ModuloReal(moduloExpr, new List<object>()));
+            Assert.ThrowsException<DivisionByZeroException>(() => realHelper.ModuloReal(moduloExpr, new List<object>()));
         }
         #endregion
 
