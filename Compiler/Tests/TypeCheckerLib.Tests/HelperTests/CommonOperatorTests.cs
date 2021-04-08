@@ -393,6 +393,31 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
+        public void VisitRelationalOperators_GreaterEqualExpressionWithIntAndReal_InsertedIntToRealCastNode()
+        {
+            var expected = typeof(CastFromIntegerExpression);
+            GreaterEqualExpression input1 = GetGreaterEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            helper.VisitRelationalOperator(input1, null);
+            var res = input1.Children[0].GetType();
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitRelationalOperators_GreaterEqualExpressionWithIntAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            GreaterEqualExpression input1 = GetGreaterEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitRelationalOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
         public void VisitRelationalOperators_ForGreaterExpression_CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>()
