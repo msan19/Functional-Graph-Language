@@ -695,6 +695,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(TypeEnum.Integer)]
         [DataRow(TypeEnum.Real)]
         [DataRow(TypeEnum.Function)]
+        [DataRow(TypeEnum.Boolean)]
         [TestMethod]
         public void Identifier_OneGlobalIsMatch_CorrectType(TypeEnum expectedType)
         {
@@ -720,6 +721,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(TypeEnum.Integer)]
         [DataRow(TypeEnum.Real)]
         [DataRow(TypeEnum.Function)]
+        [DataRow(TypeEnum.Boolean)]
         [TestMethod]
         public void Identifier_OneLocalIsMatch_CorrectType(TypeEnum expectedType)
         {
@@ -755,7 +757,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("2", 2, 2);
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>();
 
-            var res = declarationHelper.VisitIntegerLiteral(input1, null).Type;
+            var res = declarationHelper.VisitIntegerLiteral().Type;
 
             Assert.AreEqual(expected, res);
         }
@@ -770,11 +772,25 @@ namespace TypeCheckerLib.Tests.HelperTests
             RealLiteralExpression input1 = new RealLiteralExpression("2.2", 2, 2);
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>();
 
-            var res = declarationHelper.VisitRealLiteral(input1, null).Type;
+            var res = declarationHelper.VisitRealLiteral().Type;
 
             Assert.AreEqual(expected, res);
         }
         #endregion
-        
+
+        #region Bool 
+        [TestMethod]
+        public void VisitBooleanLiteral_GivenBooleanLiteral_ReturnsBooleanTypeNode()
+        {
+            TypeEnum expected = TypeEnum.Boolean;
+            BooleanLiteralExpression input = new BooleanLiteralExpression(false, 2, 2);
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>();
+
+            TypeEnum res = declarationHelper.VisitBooleanLiteral().Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
     }
 }

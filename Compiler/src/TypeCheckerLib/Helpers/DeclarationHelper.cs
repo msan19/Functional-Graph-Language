@@ -186,18 +186,17 @@ namespace TypeCheckerLib.Helpers
                 return _functions[idExpressionNode.Reference].FunctionType.ReturnType;
         }
 
-        public TypeNode VisitIntegerLiteral(IntegerLiteralExpression intLiteralExpressionNode,
-            List<TypeNode> parameterTypes)
+        public TypeNode VisitIntegerLiteral()
         {
             return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
-        public TypeNode VisitRealLiteral(RealLiteralExpression realLiteralExpressionNode, List<TypeNode> parameterTypes)
+        public TypeNode VisitRealLiteral()
         {
             return new TypeNode(TypeEnum.Real, 0, 0);
         }
 
-        public TypeNode VisitBooleanLiteral(BooleanLiteralExpression booleanLiteralExpression, List<TypeNode> parameterTypes)
+        public TypeNode VisitBooleanLiteral()
         {
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
