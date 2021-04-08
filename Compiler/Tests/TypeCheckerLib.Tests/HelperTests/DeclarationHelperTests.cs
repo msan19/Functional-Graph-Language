@@ -177,6 +177,43 @@ namespace TypeCheckerLib.Tests.HelperTests
             declarationHelper.VisitFunction(input1);
         }
 
+        [TestMethod]
+        public void Function_Type_CorrectConditionType()
+        {
+            var condition = new ConditionNode(new BooleanLiteralExpression(true, 0,0), 
+                                              new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<AdditionExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Boolean, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void Function_Type_IncorrectConditionType()
+        {
+            var condition = new ConditionNode(new BooleanLiteralExpression(true, 0, 0),
+                                              new AdditionExpression(null, null, 0, 0), 0, 0);
+            var funcType = Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>());
+            FunctionNode input1 = new FunctionNode("", condition, null, funcType, 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<AdditionExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(
+                            new TypeNode(TypeEnum.Real, 1, 1));
+            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.VisitFunction(input1);
+        }
+
         [DataRow(TypeEnum.Integer, TypeEnum.Real)]
         [DataRow(TypeEnum.Real, TypeEnum.Function)]
         [DataRow(TypeEnum.Function, TypeEnum.Integer)]
