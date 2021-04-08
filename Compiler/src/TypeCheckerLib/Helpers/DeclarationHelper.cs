@@ -46,19 +46,26 @@ namespace TypeCheckerLib.Helpers
 
             foreach (ConditionNode condition in functionNode.Conditions)
             {
-                CheckConditionNode(functionNode.FunctionType.ReturnType.Type, condition, parameterTypes);
+                CheckConditionNode(functionNode.FunctionType.ReturnType, condition, parameterTypes);
             }
         }
 
-        private void CheckConditionNode(TypeEnum rhsType, ConditionNode condition, List<TypeNode> parameterTypes)
+        private void CheckConditionNode(TypeNode expectedType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
-            TypeEnum type = _getType(condition.ReturnExpression, parameterTypes).Type;
-            if (type != rhsType)
+            TypeNode returnType = _getType(condition.ReturnExpression, parameterTypes);
+            if(!condition.IsDefaultCase())
             {
-                if (type == TypeEnum.Integer && rhsType == TypeEnum.Real)
+                TypeEnum conditionType = _getType(condition.Condition, parameterTypes).Type;
+                if (conditionType != TypeEnum.Boolean)
+                    throw new InvalidCastException(condition, conditionType, TypeEnum.Boolean);
+            }
+                
+            if (!TypesAreEqual(returnType, expectedType))
+            {
+                if (returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real)
                     InsertCastNode(condition);
                 else
-                    throw new InvalidCastException(condition, type, rhsType);
+                    throw new InvalidCastException(condition, returnType.Type, expectedType.Type);
             }
         }
 
@@ -145,9 +152,9 @@ namespace TypeCheckerLib.Helpers
         
         private bool TypesAreEqual(TypeNode a, TypeNode b)
         {
-            if (a.GetType() == typeof(FunctionTypeNode))
+            if (a.Type == TypeEnum.Function)
             {
-                if (b.GetType() == typeof(FunctionTypeNode))
+                if (b.Type == TypeEnum.Function)
                     return IsFunctionTypesEqual((FunctionTypeNode)a, (FunctionTypeNode)b);
                 else
                     return false;

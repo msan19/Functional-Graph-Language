@@ -15,13 +15,11 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class BooleanHelperTests
     {
-        #region SetASTRoot
-        #endregion
-
-        #region SetUpFuncs
-        #endregion
-
         #region ConditionBoolean
+        #endregion
+
+        #region FunctionCallBoolean
+
         #endregion
 
         #region IdentifierBoolean
@@ -371,8 +369,6 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
-        
-        #region FunctionCallBoolean
-        #endregion
+
     }
 }
