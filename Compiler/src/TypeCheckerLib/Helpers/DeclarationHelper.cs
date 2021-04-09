@@ -53,7 +53,7 @@ namespace TypeCheckerLib.Helpers
         private void CheckConditionNode(TypeNode expectedType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
             TypeNode returnType = _getType(condition.ReturnExpression, parameterTypes);
-            if(!condition.IsDefaultCase())
+            if(!condition.IsDefaultCase)
             {
                 TypeEnum conditionType = _getType(condition.Condition, parameterTypes).Type;
                 if (conditionType != TypeEnum.Boolean)

@@ -151,7 +151,7 @@ namespace InterpreterLib
             ConditionNode exceptionNode = null;
             foreach (ConditionNode child in node.Conditions)
             {
-                if (child.IsDefaultCase())
+                if (child.IsDefaultCase)
                     defaultCase = child;
                 else
                 {

@@ -11,6 +11,7 @@ using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
 using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using ASTLib.Exceptions;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Main
@@ -84,8 +85,9 @@ namespace Main
             _interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
-            string file = @"..\..\..\..\..\Calculator.fgl";
-            _input = ReadFile(file);
+            // string file = @"..\..\..\..\..\Calculator.fgl";
+            string fileName = "test.fgl";
+            _input = FileReader.Read(fileName);
             _input = _input.Replace('\t', ' ');
             Lines = _input.Split("\n").ToList();
             Console.WriteLine(_input);
@@ -100,16 +102,7 @@ namespace Main
             _fileGenerator.Export(output, "");
         }
 
-        private string ReadFile(string file)
-        {
-            try
-            {
-                return System.IO.File.ReadAllText(file);
-            } catch
-            {
-                throw;
-            }
-        }
+        
 
     }
 }
