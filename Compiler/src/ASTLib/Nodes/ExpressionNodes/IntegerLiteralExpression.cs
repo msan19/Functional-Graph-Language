@@ -16,6 +16,13 @@ namespace ASTLib.Nodes.ExpressionNodes
             Value = ConvertToInt(token);
             Children = new List<ExpressionNode>();
         }
+
+        public IntegerLiteralExpression(int value, int line, int letter) : base(null, line, letter)
+        {
+            Value = value;
+            Children = new List<ExpressionNode>();
+        }
+
         private int ConvertToInt(string str)
         {
             int result = -1;
