@@ -27,7 +27,6 @@ namespace InterpreterLib.Tests
 
         // x input varaibles
 
-
         [DataRow(0, 1, true)]
         [DataRow(0, 1, false)]
         [DataRow(2, 4, false)]
@@ -51,6 +50,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [DataRow(0, 1, 0, 1, true)]
         [DataRow(0, 1, 0, 1, false)]
         [DataRow(2, 4, 3, 5, false)]
@@ -105,9 +105,10 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expectedElementCount, res.Count);
         }
-        //[DataRow(1, TypeEnum.Integer)]
-        //[DataRow(1, TypeEnum.Real)]
-        //[DataRow(10, TypeEnum.Integer)]
+        
+        [DataRow(1, TypeEnum.Integer)]
+        [DataRow(1, TypeEnum.Real)]
+        [DataRow(10, TypeEnum.Integer)]
         [DataRow(10, TypeEnum.Real)]
         [TestMethod]
         public void FunctionCallBoolean_GlobalRef_CorrectParameterTypes(int expectedElementCount, TypeEnum type)
@@ -182,17 +183,37 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void NotBoolean_CorrectValuesReturned(bool input, bool expected)
         {
-            BooleanLiteralExpression lhs = new BooleanLiteralExpression(input, 0, 0);
+            BooleanLiteralExpression child = Utilities.GetBoolLitExpression(input);
             
-            var expr = new NotExpression(lhs, 0, 0);
+            var expr = new NotExpression(child, 0, 0);
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-            parent.DispatchBoolean(lhs, Arg.Any<List<object>>()).Returns(input);
+            parent.DispatchBoolean(expr, Arg.Any<List<object>>()).Returns(input);
 
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             bool res = booleanHelper.NotBoolean(expr, new List<object>());
 
             Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void NotBoolean__CheckParametersPassedDown()
+        {
+            BooleanLiteralExpression child = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new NotExpression(child, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchBoolean(child, Arg.Do<List<object>>(x => lhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.NotBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
         }
         #endregion
 
@@ -218,6 +239,29 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
+        [TestMethod]
+        public void AndBoolean__CheckParametersPassedDown()
+        {
+            BooleanLiteralExpression lhs = Utilities.GetBoolLitExpression();
+            BooleanLiteralExpression rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new AndExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchBoolean(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchBoolean(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.AndBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
         #endregion
         
         #region OrBoolean
@@ -228,8 +272,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void OrBoolean__CorrectValuesReturned(bool lhsValue, bool rhsValue, bool expected)
         {
-            BooleanLiteralExpression lhs = new BooleanLiteralExpression(lhsValue, 0, 0);
-            BooleanLiteralExpression rhs = new BooleanLiteralExpression(rhsValue, 0, 0);
+            BooleanLiteralExpression lhs = Utilities.GetBoolLitExpression(lhsValue);
+            BooleanLiteralExpression rhs = Utilities.GetBoolLitExpression(rhsValue);
 
             OrExpression orExpr = new OrExpression(lhs, rhs, 0, 0);
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
@@ -241,6 +285,29 @@ namespace InterpreterLib.Tests
             bool res = booleanHelper.OrBoolean(orExpr, new List<object>());
 
             Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void OrBoolean__CheckParametersPassedDown()
+        {
+            BooleanLiteralExpression lhs = Utilities.GetBoolLitExpression();
+            BooleanLiteralExpression rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new OrExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchBoolean(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchBoolean(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.OrBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
         }
         #endregion
 
