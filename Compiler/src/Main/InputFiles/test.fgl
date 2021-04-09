@@ -1,8 +1,12 @@
-export func2()
+export 5.5 + 33.3
+export 5.5 * func(33)
+export b(2.0, 0.5)
 
-func: () -> boolean
-func() = true
+b: (real, real) -> real
+b(a, b) = 
+	| a > 0.0 = a ^ b
+	| b > 1 = 17
+	| _ = 0.0
 
-func2: () -> real
-func2() =
-	| func() == true = 6.1
+func: (integer) -> real
+func(p) = |p| * 17 + p / 2 ^ (17 - 0.1 mod 2)
