@@ -41,22 +41,39 @@ namespace Main
                 }
                 catch (CompilerException e)
                 {
-                    Console.WriteLine();
                     if (e.Node != null)
                     {
-                        string s = e.Node.LetterNumber <= 0 ? "" : new string(' ', e.Node.LetterNumber - 1) + "\u2191";
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"An error was detected on line {e.Node.LineNumber}:\n{e.Message}");
-                        Console.ResetColor();
-                        Console.WriteLine(program.Lines[e.Node.LineNumber - 1]);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(s);
-                        Console.ResetColor();
+                        program.PrintError(e.Node.LineNumber, 
+                                           e.Node.LetterNumber, 
+                                           e.Message, 
+                                           program.Lines[e.Node.LineNumber - 1]);
                     }
                     else
-                        Console.WriteLine($"An error was detected:\n{e.Message}");
+                        Console.WriteLine($"\nAn error was detected:\n{e.Message}");
+                } 
+                catch (ParserException e)
+                {
+                    for(int i = 0; i < e.Messages.Count; i++)
+                    {
+                        program.PrintError(e.Lines[i],
+                                           e.Letters[i],
+                                           e.Messages[i],
+                                           program.Lines[e.Lines[i] - 1]);
+                    }
                 }
             }
+        }
+
+        private void PrintError(int line, int letter, string message, string code)
+        {
+            string s = letter <= 0 ? "" : new string(' ', letter - 1) + "\u2191";
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\nAn error was detected on line {line}:\n{message}");
+            Console.ResetColor();
+            Console.WriteLine(code);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(s);
+            Console.ResetColor();
         }
 
         public Program(string[] args)

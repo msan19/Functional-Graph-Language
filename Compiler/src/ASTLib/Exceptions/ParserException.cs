@@ -5,22 +5,19 @@ using System.Text;
 
 namespace ASTLib.Exceptions
 {
-    public class ParserException : CompilerException
+    public class ParserException : Exception
     {
 
-        public ParserException(List<string> messages, List<int> lines) : base(null, GetMessage(messages, lines))
-        {
-        }
+        public List<string> Messages { get; }
+        public List<int> Lines { get; }
 
-        private static string GetMessage(List<string> messages, List<int> lines)
-        {
-            string message = "";
-            for(int i = 0; i < messages.Count; i++)
-            {
-                message += $"At line {lines[i]}: {message}\n";
-            }
+        public List<int> Letters { get; }
 
-            return message;
+        public ParserException(List<string> messages, List<int> lines, List<int> letters)
+        {
+            Messages = messages;
+            Lines = lines;
+            Letters = letters;
         }
 
     }
