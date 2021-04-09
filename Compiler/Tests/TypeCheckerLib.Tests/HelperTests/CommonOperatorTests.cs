@@ -600,6 +600,17 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             Assert.AreEqual(expected, res);
         }
+
+        [TestMethod]
+        public void VisitRelationalOperators_ExpressionWithABoolean_ThrowsError()
+        {
+            BooleanLiteralExpression booleanExpr = new BooleanLiteralExpression(true, 1, 1);
+            IntegerLiteralExpression rightNode = new IntegerLiteralExpression("1", 1, 1);
+            LessExpression input = new LessExpression(booleanExpr, rightNode, 0, 0);
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+
+            Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitRelationalOperator(input, null));
+        }
         #endregion
     }
 }
