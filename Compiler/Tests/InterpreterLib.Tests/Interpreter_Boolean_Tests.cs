@@ -100,6 +100,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -112,6 +113,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -124,6 +126,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -136,6 +139,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -148,6 +152,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -160,6 +165,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -172,6 +178,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -184,6 +191,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -196,6 +204,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -208,6 +217,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         private void DispatchBool_ReturnsCorrect(ExpressionNode node, IBooleanHelper boolHelper, bool expected)
         {
             var parameters = GetParameterList();
@@ -236,6 +246,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Less_PassNodeDown()
         {
@@ -253,6 +264,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_GreaterEqual_PassNodeDown()
         {
@@ -270,6 +282,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_LessEqual_PassNodeDown()
         {
@@ -287,6 +300,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Equal_PassNodeDown()
         {
@@ -304,6 +318,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_NotEqual_PassNodeDown()
         {
@@ -321,6 +336,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Not_PassNodeDown()
         {
@@ -338,6 +354,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_And_PassNodeDown()
         {
@@ -355,6 +372,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Or_PassNodeDown()
         {
@@ -372,6 +390,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Identifier_PassNodeDown()
         {
@@ -409,6 +428,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -427,6 +447,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -445,6 +466,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -463,6 +485,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -481,6 +504,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -499,6 +523,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -517,6 +542,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -535,6 +561,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -553,6 +580,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
