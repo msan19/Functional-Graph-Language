@@ -109,6 +109,7 @@ namespace InterpreterLib
                 NotExpression e             => _booleanHelper.NotBoolean(e, parameters),
                 AndExpression e             => _booleanHelper.AndBoolean(e, parameters),
                 OrExpression e              => _booleanHelper.OrBoolean(e, parameters),
+                IdentifierExpression e      => _booleanHelper.IdentifierBoolean(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
