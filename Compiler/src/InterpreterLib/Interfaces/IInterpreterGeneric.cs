@@ -7,13 +7,11 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IInterpreterInteger
+    public interface IInterpreterGeneric
     {
-        int DispatchInt(ExpressionNode node, List<object> parameters);
 
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 
-        bool DispatchBoolean(ExpressionNode node, List<object> parameters);
+        T Function<T>(FunctionNode node, List<Object> parameters);
     }
-
 }

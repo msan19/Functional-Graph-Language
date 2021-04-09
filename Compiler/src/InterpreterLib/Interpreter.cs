@@ -11,6 +11,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
+using InterpreterLib.MatchPair;
 
 namespace InterpreterLib
 {
@@ -20,8 +21,9 @@ namespace InterpreterLib
         private readonly IIntegerHelper _integerHelper;
         private readonly IRealHelper _realHelper;
         private readonly IBooleanHelper _booleanHelper;
+        private readonly IGenericHelper _genericHelper;
 
-        public Interpreter(IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
         {
             _functionHelper = functionHelper;
             _functionHelper.SetInterpreter(this);
@@ -34,14 +36,15 @@ namespace InterpreterLib
 
             _booleanHelper = booleanHelper;
             _booleanHelper.SetInterpreter(this);
+
+            _genericHelper = genericHelper;
+            _genericHelper.SetInterpreter(this);
         }
 
         public List<double> Interpret(AST node)
         {
-            _functionHelper.SetASTRoot(node);
-            _integerHelper.SetASTRoot(node);
-            _realHelper.SetASTRoot(node);
-            _booleanHelper.SetASTRoot(node);
+            
+            _genericHelper.SetASTRoot(node);
             List<double> results = new List<double>();
             foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<object>()));
             return results;
@@ -59,7 +62,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _integerHelper.DivisionInteger(e, parameters),
                 ModuloExpression e          => _integerHelper.ModuloInteger(e, parameters),
                 AbsoluteValueExpression e   => _integerHelper.AbsoluteInteger(e, parameters),
-                FunctionCallExpression e    => _integerHelper.FunctionCallInteger(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<int>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchInt")
             };
         }
@@ -78,7 +81,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _realHelper.DivisionReal(e, parameters),
                 ModuloExpression e          => _realHelper.ModuloReal(e, parameters),
                 AbsoluteValueExpression e   => _realHelper.AbsoluteReal(e, parameters),
-                FunctionCallExpression e    => _realHelper.FunctionCallReal(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<double>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchReal")
             };
         }
@@ -88,7 +91,7 @@ namespace InterpreterLib
             return node switch
             {
                 IdentifierExpression e      => _functionHelper.IdentifierFunction(e, parameters),
-                FunctionCallExpression e    => _functionHelper.FunctionCallFunction(e, parameters),
+                FunctionCallExpression e    => (int) _genericHelper.FunctionCall<long>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
@@ -106,6 +109,7 @@ namespace InterpreterLib
                 NotExpression e             => _booleanHelper.NotBoolean(e, parameters),
                 AndExpression e             => _booleanHelper.AndBoolean(e, parameters),
                 OrExpression e              => _booleanHelper.OrBoolean(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }
@@ -122,28 +126,7 @@ namespace InterpreterLib
             };
         }
 
-        public int FunctionInteger(FunctionNode node, List<Object> parameters)
-        {
-            return (int) HandleConditions(_integerHelper.ConditionInteger, node, parameters);
-        }
-
-        public double FunctionReal(FunctionNode node, List<object> parameters)
-        {
-            return (double) HandleConditions(_realHelper.ConditionReal, node, parameters);
-        }
-
-        public bool FunctionBoolean(FunctionNode node, List<object> parameters)
-        {
-            return (bool) HandleConditions(_booleanHelper.ConditionBoolean, node, parameters);
-        }
-
-        public int FunctionFunction(FunctionNode node, List<Object> parameters)
-        {
-            return (int) HandleConditions(_functionHelper.ConditionFunction, node, parameters);
-        }
-
-        private T HandleConditions<T>(Func<ConditionNode, List<Object>, T> func, 
-                                      FunctionNode node, List<Object> parameters)
+        public T Function<T>(FunctionNode node, List<Object> parameters)
         {
             T result = default;
             int returnedValues = 0;
@@ -155,10 +138,10 @@ namespace InterpreterLib
                     defaultCase = child;
                 else
                 {
-                    T value = func(child, parameters);
-                    if (value != null)
+                    MatchPair<T> value = _genericHelper.Condition<T>(child, parameters);
+                    if (value.IsCalculated)
                     {
-                        result = value;
+                        result = value.Element;
                         returnedValues++;
                         if (returnedValues > 0)
                             exceptionNode = child;
@@ -167,7 +150,7 @@ namespace InterpreterLib
             }
             if (returnedValues == 0 && defaultCase != null)
             {
-                T a = func(defaultCase, parameters);
+                T a = _genericHelper.Condition<T>(defaultCase, parameters).Element;
                 if (a == null)
                     throw new UnacceptedConditionsException(defaultCase);
                 return a;

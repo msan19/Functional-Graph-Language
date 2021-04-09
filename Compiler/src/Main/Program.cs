@@ -81,7 +81,7 @@ namespace Main
             _lexParse = new LexParser(new ASTBuilder());
             _referenceHandler = new ReferenceHandler(new ReferenceHelper());
             _typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeBooleanHelper());
-            _interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
+            _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             string file = @"..\..\..\..\..\Calculator.fgl";

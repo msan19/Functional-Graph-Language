@@ -7,15 +7,11 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IFunctionHelper : IInterpretorHelper
+    public interface IFunctionHelper : IInterpreterHelper
     {
         void SetInterpreter(IInterpreterFunction interpreter);
 
-        int? ConditionFunction(ConditionNode node, List<Object> parameters);
-
         int IdentifierFunction(IdentifierExpression node, List<Object> parameters);
-
-        int FunctionCallFunction(FunctionCallExpression node, List<Object> parameters);
 
     }
 }

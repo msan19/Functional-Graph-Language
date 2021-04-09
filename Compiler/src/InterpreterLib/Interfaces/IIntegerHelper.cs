@@ -8,11 +8,9 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IIntegerHelper : IInterpretorHelper
+    public interface IIntegerHelper : IInterpreterHelper
     {
         void SetInterpreter(IInterpreterInteger interpreter);
-
-        int? ConditionInteger(ConditionNode node, List<Object> parameters);
 
         int AdditionInteger(AdditionExpression node, List<Object> parameters);
 
@@ -29,7 +27,5 @@ namespace InterpreterLib.Interfaces
         int IdentifierInteger(IdentifierExpression node, List<Object> parameters);
 
         int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters);
-
-        int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters);
     }
 }
