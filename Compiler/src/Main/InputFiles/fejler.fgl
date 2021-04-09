@@ -1,0 +1,13 @@
+export func()
+export func1()
+export func2()
+
+
+func: () -> real
+func() = (|0 - 1| / (22 mod 222))
+
+func1: () -> real
+func1() = |0 - 1|
+
+func2: () -> real
+func2() = (22 mod 222)
