@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeCheckerLib.Tests", "Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestInputCode", "TestInputCode", "{321CC6BC-7B6C-4642-BB51-73BFFD78C245}"
 	ProjectSection(SolutionItems) = preProject
-		Calculator.fgl = Calculator.fgl
+		src\Main\bin\Debug\netcoreapp3.1\Calculator.fgl = src\Main\bin\Debug\netcoreapp3.1\Calculator.fgl
 	EndProjectSection
 EndProject
 Global
