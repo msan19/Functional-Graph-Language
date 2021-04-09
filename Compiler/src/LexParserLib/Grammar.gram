@@ -55,6 +55,7 @@ grammar Grammar
                       |  '<=' ;
         NumExpression -> NumExpression '+' Term
                       |  NumExpression '-' Term
+                      | '-' Term
                       |  Term ;
         Term          -> Term '*' Factor
                       |  Term '/' Factor
