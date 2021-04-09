@@ -5,6 +5,7 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -106,7 +107,7 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(node.Children[0], parameterTypes);
             TypeNode right = GetType(node.Children[1], parameterTypes);
 
-            if (!IsComparableType(left.Type) || !IsComparableType(right.Type))
+            if (!IsNumber(left.Type) || !IsNumber(right.Type))
                 throw new UnmatchableTypesException((Node) node, left.Type, right.Type, "number");
 
             if (left.Type != right.Type)
@@ -123,17 +124,18 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(node.Children[0], parameterTypes);
             TypeNode right = GetType(node.Children[1], parameterTypes);
 
-            //TODO
-            //Fields af deres børns type skal vi sætte
+            node.Type = (left.Type == TypeEnum.Integer) ? TypeEnum.Real : left.Type;
+
+            CastToReal(node, left, 0);
+            CastToReal(node, right, 1);
 
             if (left.Type != right.Type)
-            {
                 throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "expected same type");
-            }
-            return new TypeNode(TypeEnum.Boolean, 0, 0);
+            else
+                return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
-        private bool IsComparableType(TypeEnum t)
+        private bool IsNumber(TypeEnum t)
         {
             return t == TypeEnum.Integer || t == TypeEnum.Real;
         }
