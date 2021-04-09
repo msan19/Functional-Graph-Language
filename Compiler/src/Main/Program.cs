@@ -62,7 +62,7 @@ namespace Main
             _interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
-            string file = @"..\..\..\..\..\Calculator.fgl";
+            string file = @"Calculator.fgl";
             _input = ReadFile(file);
             _input = _input.Replace('\t', ' ');
             Lines = _input.Split("\n").ToList();
