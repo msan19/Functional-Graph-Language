@@ -150,12 +150,22 @@ namespace InterpreterLib.Tests
         
         public static RealLiteralExpression GetRealLitExpression()
         {
-            return new RealLiteralExpression("", 0, 0);
+            return new RealLiteralExpression("1.0", 0, 0);
+        }
+        
+        public static BooleanLiteralExpression GetBoolLitExpression()
+        {
+            return new BooleanLiteralExpression(default, 0, 0);
         }
         
         public static BooleanLiteralExpression GetBoolLitExpression(bool val)
         {
             return new BooleanLiteralExpression(val, 0, 0);
+        }
+
+        public static FunctionCallExpression GetFuncCallExpresssion()
+        {
+            return new FunctionCallExpression("", new List<ExpressionNode>(), 0, 0);
         }
     }
 }

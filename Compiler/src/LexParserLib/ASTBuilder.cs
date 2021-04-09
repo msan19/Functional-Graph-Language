@@ -120,9 +120,9 @@ namespace LexParserLib
             {
                 ConditionNode node = CreateConditionNode(himeNode.Children[1]);
                 conditions.Add(node);
-                if (hasFoundDefault && node.IsDefaultCase())
+                if (hasFoundDefault && node.IsDefaultCase)
                     throw new Exception("More than one default case");
-                VisitConditions(himeNode.Children[0], conditions, hasFoundDefault || node.IsDefaultCase());
+                VisitConditions(himeNode.Children[0], conditions, hasFoundDefault || node.IsDefaultCase);
             }
         }
 
@@ -185,8 +185,18 @@ namespace LexParserLib
 
         public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
         {
-            TypeNode returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
-            List<TypeNode> parameterTypes = VisitTypes(himeNode.Children[1]);
+            TypeNode returnType;
+            List<TypeNode> parameterTypes;
+            if (himeNode.Children.Count == 5)
+            {
+                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
+                parameterTypes = VisitTypes(himeNode.Children[1]);
+            }
+            else
+            {
+                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS - 1]);
+                parameterTypes = new List<TypeNode>();
+            }
 
             TextPosition position = himeNode.Children[0].Position;
             return new FunctionTypeNode(returnType, parameterTypes, position.Line, position.Column);
@@ -269,10 +279,10 @@ namespace LexParserLib
             TextPosition position = himeNode.Children[1].Position;
             return himeNode.Children[1].Value switch
             {
-                "eq" => new EqualExpression(leftOperant, rightOperant,
+                "==" => new EqualExpression(leftOperant, rightOperant,
                                             position.Line,
                                             position.Column),
-                "neq" => new NotEqualExpression(leftOperant, rightOperant,
+                "!=" => new NotEqualExpression(leftOperant, rightOperant,
                                                 position.Line,
                                                 position.Column),
                 "or" => new OrExpression(leftOperant, rightOperant,

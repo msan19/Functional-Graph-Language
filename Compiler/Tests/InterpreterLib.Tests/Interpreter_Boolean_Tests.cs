@@ -29,6 +29,7 @@ namespace InterpreterLib.Tests
         private NotExpression GetNotExp() => new NotExpression(null, 0, 0);
         private AndExpression GetAndExp() => new AndExpression(null, null, 0, 0);
         private OrExpression GetOrExp() => new OrExpression(null, null, 0, 0);
+        private IdentifierExpression GetIdentifierExp() => new IdentifierExpression("", 0, 0);
         #endregion
         private List<object> GetParameterList() => new List<object>();
         private IBooleanHelper GetBooleanHelper() => Substitute.For<IBooleanHelper>();
@@ -47,6 +48,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -59,6 +61,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -71,6 +74,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -83,6 +87,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -95,6 +100,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -107,6 +113,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -119,6 +126,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -131,6 +139,7 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
         [DataRow(true)]
         [DataRow(false)]
         [TestMethod]
@@ -143,8 +152,21 @@ namespace InterpreterLib.Tests
 
             DispatchBool_ReturnsCorrect(node, boolHelper, expected);
         }
+        
+        [DataRow(true)]
+        [DataRow(false)]
+        [TestMethod]
+        public void DispatchBool_ReturnsCorrect_Indentifier(bool expected)
+        {
+            var node = GetIdentifierExp();
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            boolHelper.IdentifierBoolean(Arg.Any<IdentifierExpression>(), Arg.Any<List<object>>())
+                .Returns(expected);
 
-        public void DispatchBool_ReturnsCorrect(ExpressionNode node, IBooleanHelper boolHelper, bool expected)
+            DispatchBool_ReturnsCorrect(node, boolHelper, expected);
+        }
+        
+        private void DispatchBool_ReturnsCorrect(ExpressionNode node, IBooleanHelper boolHelper, bool expected)
         {
             var parameters = GetParameterList();
             var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
@@ -172,6 +194,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Less_PassNodeDown()
         {
@@ -189,6 +212,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_GreaterEqual_PassNodeDown()
         {
@@ -206,6 +230,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_LessEqual_PassNodeDown()
         {
@@ -223,6 +248,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Equal_PassNodeDown()
         {
@@ -240,6 +266,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_NotEqual_PassNodeDown()
         {
@@ -257,6 +284,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Not_PassNodeDown()
         {
@@ -274,6 +302,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_And_PassNodeDown()
         {
@@ -291,6 +320,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
         [TestMethod]
         public void DispatchBool_Or_PassNodeDown()
         {
@@ -301,6 +331,24 @@ namespace InterpreterLib.Tests
             var boolHelper = GetBooleanHelper();
             Node res = null;
             boolHelper.OrBoolean(Arg.Do<OrExpression>(x => res = x), Arg.Any<List<object>>())
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void DispatchBool_Identifier_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = GetIdentifierExp();
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.IdentifierBoolean(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
             var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
@@ -328,6 +376,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -346,6 +395,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -364,6 +414,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -382,6 +433,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -400,6 +452,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -418,6 +471,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -436,6 +490,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -454,6 +509,7 @@ namespace InterpreterLib.Tests
 
             res.Should().BeEquivalentTo(parameters);
         }
+        
         [DataRow(TypeEnum.Boolean)]
         [DataRow(1)]
         [TestMethod]
@@ -465,6 +521,25 @@ namespace InterpreterLib.Tests
             IBooleanHelper boolHelper = GetBooleanHelper();
             List<object> res = null;
             boolHelper.OrBoolean(Arg.Any<OrExpression>(), Arg.Do<List<object>>(x => res = x))
+                .Returns(true);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters.ToList());
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+        
+        [DataRow(TypeEnum.Boolean)]
+        [DataRow(1)]
+        [TestMethod]
+        public void DispatchBool_Identifier_PassParametersDown(object o)
+        {
+            var parameters = GetParameterList();
+            var node = GetIdentifierExp();
+
+            IBooleanHelper boolHelper = GetBooleanHelper();
+            List<object> res = null;
+            boolHelper.IdentifierBoolean(Arg.Any<IdentifierExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
             var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);

@@ -29,51 +29,40 @@ namespace Main
 
         static void Main(string[] args)
         {
-            Program program = new Program(args);
-
-            if (args.Length >= 1 && args[0] == "throw")
-                program.Run();
+            if (ShouldPrintExceoptions(args))
+                RunWithoutExecptionPrinting(args);
             else
+                RunWithExecptionPrinting(args);
+        }
+
+        private static bool ShouldPrintExceoptions(string[] args)
+        {
+            return args.Length >= 1 && args[0] == "throw";
+        }
+
+        private static void RunWithExecptionPrinting(string[] args)
+        {
+            Program program = new Program(args);
+            IExceptionPrinter exceptionPrinter = new ExceptionPrinter(program.Lines);
+
+            try
             {
-                try
-                {
-                    program.Run();
-                }
-                catch (CompilerException e)
-                {
-                    if (e.Node != null)
-                    {
-                        program.PrintError(e.Node.LineNumber, 
-                                           e.Node.LetterNumber, 
-                                           e.Message, 
-                                           program.Lines[e.Node.LineNumber - 1]);
-                    }
-                    else
-                        Console.WriteLine($"\nAn error was detected:\n{e.Message}");
-                } 
-                catch (ParserException e)
-                {
-                    for(int i = 0; i < e.Messages.Count; i++)
-                    {
-                        program.PrintError(e.Lines[i],
-                                           e.Letters[i],
-                                           e.Messages[i],
-                                           program.Lines[e.Lines[i] - 1]);
-                    }
-                }
+                program.Run();
+            }
+            catch (CompilerException e)
+            {
+                exceptionPrinter.Print(e);
+            }
+            catch (ParserException e)
+            {
+                exceptionPrinter.Print(e);
             }
         }
 
-        private void PrintError(int line, int letter, string message, string code)
+        private static void RunWithoutExecptionPrinting(string[] args)
         {
-            string s = letter <= 0 ? "" : new string(' ', letter - 1) + "\u2191";
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\nAn error was detected on line {line}:\n{message}");
-            Console.ResetColor();
-            Console.WriteLine(code);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(s);
-            Console.ResetColor();
+            Program program = new Program(args);
+            program.Run();
         }
 
         public Program(string[] args)
@@ -84,8 +73,8 @@ namespace Main
             _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
-            string file = @"..\..\..\..\..\Calculator.fgl";
-            _input = ReadFile(file);
+            string fileName = "test.fgl";
+            _input = FileReader.Read(fileName);
             _input = _input.Replace('\t', ' ');
             Lines = _input.Split("\n").ToList();
             Console.WriteLine(_input);
@@ -99,17 +88,5 @@ namespace Main
             var output = _interpreter.Interpret(ast);
             _fileGenerator.Export(output, "");
         }
-
-        private string ReadFile(string file)
-        {
-            try
-            {
-                return System.IO.File.ReadAllText(file);
-            } catch
-            {
-                throw;
-            }
-        }
-
     }
 }

@@ -93,7 +93,9 @@ namespace TypeCheckerLib.Helpers
         private void CastToReal(IExpressionNode binaryNode, TypeNode nodeType, int child)
         {
             if (nodeType.Type != TypeEnum.Real)
+            {
                 InsertCastNode(binaryNode, child);
+            }
         }
         
         private void InsertCastNode(IExpressionNode binaryNode, int child)
@@ -124,15 +126,28 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(node.Children[0], parameterTypes);
             TypeNode right = GetType(node.Children[1], parameterTypes);
 
-            node.Type = (left.Type == TypeEnum.Integer) ? TypeEnum.Real : left.Type;
-
-            CastToReal(node, left, 0);
-            CastToReal(node, right, 1);
-
-            if (left.Type != right.Type)
-                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "expected same type");
-            else
+            if (left.Type == right.Type)
+            {
+                node.Type = left.Type;
                 return new TypeNode(TypeEnum.Boolean, 0, 0);
+            }
+            else if (left.Type == TypeEnum.Real && right.Type == TypeEnum.Integer)
+            {
+                node.Type = TypeEnum.Real;
+                CastToReal(node, right, 1);
+                return new TypeNode(TypeEnum.Boolean, 0, 0);
+            }
+            else if (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Real)
+            {
+                node.Type = TypeEnum.Real;
+                CastToReal(node, left, 0);
+                return new TypeNode(TypeEnum.Boolean, 0, 0);
+            }
+            else
+            {
+                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "expected same type");
+            }
+                
         }
 
         private bool IsNumber(TypeEnum t)
