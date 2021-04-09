@@ -269,10 +269,10 @@ namespace LexParserLib
             TextPosition position = himeNode.Children[1].Position;
             return himeNode.Children[1].Value switch
             {
-                "eq" => new EqualExpression(leftOperant, rightOperant,
+                "==" => new EqualExpression(leftOperant, rightOperant,
                                             position.Line,
                                             position.Column),
-                "neq" => new NotEqualExpression(leftOperant, rightOperant,
+                "!=" => new NotEqualExpression(leftOperant, rightOperant,
                                                 position.Line,
                                                 position.Column),
                 "or" => new OrExpression(leftOperant, rightOperant,
