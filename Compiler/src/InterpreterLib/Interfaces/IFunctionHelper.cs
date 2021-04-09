@@ -9,7 +9,6 @@ namespace InterpreterLib.Interfaces
 {
     public interface IFunctionHelper : IInterpreterHelper
     {
-        void SetInterpreter(IInterpreterFunction interpreter);
 
         int IdentifierFunction(IdentifierExpression node, List<Object> parameters);
 

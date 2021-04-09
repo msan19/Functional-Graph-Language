@@ -26,7 +26,6 @@ namespace InterpreterLib
         public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
         {
             _functionHelper = functionHelper;
-            _functionHelper.SetInterpreter(this);
 
             _integerHelper = integerHelper;
             _integerHelper.SetInterpreter(this);

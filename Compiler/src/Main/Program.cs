@@ -29,18 +29,18 @@ namespace Main
 
         static void Main(string[] args)
         {
-            if (ShouldPrintExceoptions(args))
+            if (ShouldThrowExceptions(args))
                 RunWithoutExecptionPrinting(args);
             else
-                RunWithExecptionPrinting(args);
+                RunWithExceptionPrinting(args);
         }
 
-        private static bool ShouldPrintExceoptions(string[] args)
+        private static bool ShouldThrowExceptions(string[] args)
         {
             return args.Length >= 1 && args[0] == "throw";
         }
 
-        private static void RunWithExecptionPrinting(string[] args)
+        private static void RunWithExceptionPrinting(string[] args)
         {
             Program program = new Program(args);
             IExceptionPrinter exceptionPrinter = new ExceptionPrinter(program.Lines);

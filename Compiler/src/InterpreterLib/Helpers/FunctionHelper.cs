@@ -10,19 +10,6 @@ namespace InterpreterLib.Helpers
 {
     public class FunctionHelper : IFunctionHelper
     {
-        IInterpreterFunction _interpreter;
-        private List<FunctionNode> _functions;
-
-        public void SetASTRoot(AST root)
-        {
-            _functions = root.Functions;
-        }
-
-        public void SetInterpreter(IInterpreterFunction interpreter)
-        {
-            _interpreter = interpreter;
-        }
-
         public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
         {
             return node.IsLocal ? (int) parameters[node.Reference] : node.Reference;

@@ -1,11 +1,17 @@
-export 5.5 + 33.3
-export 5.5 * func(33)
+export c(a)
+export a()
 export b(2.0, 0.5)
+
+a:() -> integer
+a() = 17
+
+c:(() -> integer) -> real
+c(f) = f() ^ f()
 
 b: (real, real) -> real
 b(a, b) = 
 	| a > 0.0 = a ^ b
-	| b > 1 = 17
+	| b <= 1 = 17
 	| _ = 0.0
 
 func: (integer) -> real
