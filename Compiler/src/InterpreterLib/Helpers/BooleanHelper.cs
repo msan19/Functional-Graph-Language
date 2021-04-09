@@ -116,7 +116,7 @@ namespace InterpreterLib.Helpers
 
         public bool NotBoolean(NotExpression node, List<object> parameters)
         {
-            return !_interpreter.DispatchBoolean(node.Children[0], parameters);
+            return !_interpreter.DispatchBoolean(node.Children[0], null);
         }
 
         public bool EqualBoolean(EqualExpression node, List<object> parameters)

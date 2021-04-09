@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -242,8 +243,7 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
-        
-        
+
         #region EqualBoolean
         [DataRow(0, 1, false)]
         [DataRow(1, 0, false)]
@@ -273,8 +273,8 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void EqualBoolean_Function_CorrectValuesReturned(int lhsValue, int rhsValue, bool expected)
         {
-            var lhs = Utilities.GetIntLitExpression();
-            var rhs = Utilities.GetIntLitExpression();
+            var lhs = Utilities.GetFuncCallExpresssion();
+            var rhs = Utilities.GetFuncCallExpresssion();
 
             EqualExpression expression = new EqualExpression(lhs, rhs, 0, 0);
             expression.Type = TypeEnum.Function;
@@ -332,6 +332,102 @@ namespace InterpreterLib.Tests
             bool res = booleanHelper.EqualBoolean(expression, new List<object>());
             
             Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void EqualBoolean_Int_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetIntLitExpression();
+            var rhs = Utilities.GetIntLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Integer;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchInt(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchInt(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+        
+        [TestMethod]
+        public void EqualBoolean_Function_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetFuncCallExpresssion();
+            var rhs = Utilities.GetFuncCallExpresssion();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Function;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+        
+        [TestMethod]
+        public void EqualBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Real;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+
+        [TestMethod]
+        public void EqualBoolean_Bool_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetBoolLitExpression();
+            var rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Boolean;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchBoolean(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchBoolean(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
         }
         #endregion
 
@@ -424,6 +520,102 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        
+        [TestMethod]
+        public void NotEqualBoolean_Int_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetIntLitExpression();
+            var rhs = Utilities.GetIntLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Integer;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchInt(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchInt(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.NotEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+        
+        [TestMethod]
+        public void NotEqualBoolean_Function_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetFuncCallExpresssion();
+            var rhs = Utilities.GetFuncCallExpresssion();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Function;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.NotEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+        
+        [TestMethod]
+        public void NotEqualBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Real;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.NotEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+
+        [TestMethod]
+        public void NotEqualBoolean_Bool_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetBoolLitExpression();
+            var rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new NotEqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Boolean;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchBoolean(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchBoolean(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.NotEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
         #endregion
 
         // Assumption: Relational operators only works for real
@@ -452,6 +644,29 @@ namespace InterpreterLib.Tests
             
             Assert.AreEqual(expected, res);
         }
+        
+        [TestMethod]
+        public void GreaterEqualBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new GreaterEqualExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.GreaterEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
         #endregion
         
         #region GreaterBoolean
@@ -476,6 +691,29 @@ namespace InterpreterLib.Tests
             bool res = booleanHelper.GreaterBoolean(expression, new List<object>());
             
             Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void GreaterBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new GreaterExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.GreaterBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
         }
         #endregion
         
@@ -502,6 +740,29 @@ namespace InterpreterLib.Tests
             
             Assert.AreEqual(expected, res);
         }
+        
+        [TestMethod]
+        public void LessEqualBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new LessEqualExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.LessEqualBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
         #endregion
         
         #region LessBoolean
@@ -526,6 +787,29 @@ namespace InterpreterLib.Tests
             bool res = booleanHelper.LessBoolean(expression, new List<object>());
             
             Assert.AreEqual(expected, res);
+        }
+        
+        [TestMethod]
+        public void LessBoolean_Real_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new LessExpression(lhs, rhs, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            parent.DispatchReal(lhs, Arg.Do<List<object>>(x => lhsParams = x));
+            parent.DispatchReal(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.LessBoolean(expression, parameters);
+            
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
         }
         #endregion
 
