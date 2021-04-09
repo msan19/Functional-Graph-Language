@@ -44,9 +44,14 @@ namespace Main
                     Console.WriteLine();
                     if (e.Node != null)
                     {
-                        string s = e.Node.LetterNumber <= 0 ? "" : "\n" + new string(' ', e.Node.LetterNumber - 1) + "\u2191";
-                        Console.WriteLine($"An error was detected on line {e.Node.LineNumber}:\n" +
-                                          $"{e.Message}\n{program.Lines[e.Node.LineNumber - 1]}{s}");
+                        string s = e.Node.LetterNumber <= 0 ? "" : new string(' ', e.Node.LetterNumber - 1) + "\u2191";
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"An error was detected on line {e.Node.LineNumber}:\n{e.Message}");
+                        Console.ResetColor();
+                        Console.WriteLine(program.Lines[e.Node.LineNumber - 1]);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(s);
+                        Console.ResetColor();
                     }
                     else
                         Console.WriteLine($"An error was detected:\n{e.Message}");
