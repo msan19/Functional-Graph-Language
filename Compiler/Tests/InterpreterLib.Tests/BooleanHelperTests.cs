@@ -18,9 +18,6 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class BooleanHelperTests
     {
-        #region ConditionBoolean
-        #endregion
-
         #region FunctionCallBoolean
         // Global
         // Local
