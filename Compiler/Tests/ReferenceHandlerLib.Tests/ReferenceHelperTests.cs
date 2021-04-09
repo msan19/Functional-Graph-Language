@@ -11,6 +11,7 @@ using NSubstitute;
 using FluentAssertions;
 using ASTLib.Exceptions;
 using System.Linq.Expressions;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -410,6 +411,99 @@ namespace ReferenceHandlerLib.Tests
             bool expected = false;
 
             Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitFunctionCall_LocalWithTwoIntParameters_DispatchesCorrectChildren()
+        {
+            IntegerLiteralExpression expr1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression expr2 = new IntegerLiteralExpression("2", 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("func1", new List<ExpressionNode> { expr1, expr2 }, 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            referenceHelper.BuildTables(new List<FunctionNode>());
+            List<ExpressionNode> result = new List<ExpressionNode>();
+            parent.Dispatch(Arg.Do<ExpressionNode>(x => result.Add(x)), Arg.Any<List<string>>());
+
+            referenceHelper.VisitFunctionCall(funcCallExpr, new List<string> { "func1" });
+
+            CollectionAssert.AreEqual(new List<ExpressionNode> { expr1, expr2 }, result);
+        }
+
+        [TestMethod]
+        public void VisitFunctionCall_ReferenceIsGlobal_CorrectLocalReference()
+        {
+            IntegerLiteralExpression expr1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression expr2 = new IntegerLiteralExpression("2", 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("func1", new List<ExpressionNode> { expr1, expr2 }, 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1);
+            FunctionNode func = new FunctionNode("func1", null, new List<string> { "param1", "param2" }, funcTypeNode, 1, 1);
+            List<FunctionNode> funcs = new List<FunctionNode> { func };
+            referenceHelper.BuildTables(funcs);
+
+            referenceHelper.VisitFunctionCall(funcCallExpr, new List<string>());
+
+            Assert.AreEqual(-1, funcCallExpr.LocalReference);
+        }
+
+        [TestMethod]
+        public void VisitFunctionCall_ReferenceIsGlobal_CorrectGlobalReferences()
+        {
+            IntegerLiteralExpression expr1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression expr2 = new IntegerLiteralExpression("2", 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("func1", new List<ExpressionNode> { expr1, expr2 }, 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1);
+            FunctionNode func = new FunctionNode("func1", null, new List<string> { "param1", "param2" }, funcTypeNode, 1, 1);
+            List<FunctionNode> funcs = new List<FunctionNode> { func };
+            referenceHelper.BuildTables(funcs);
+
+            referenceHelper.VisitFunctionCall(funcCallExpr, new List<string>());
+
+            CollectionAssert.AreEqual(new List<int> { 0 }, funcCallExpr.GlobalReferences);
+        }
+
+        [TestMethod]
+        public void VisitFunctionCall_ReferenceIsLocal_CorrectLocalReference()
+        {
+            IntegerLiteralExpression expr1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression expr2 = new IntegerLiteralExpression("2", 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("func1", new List<ExpressionNode> { expr1, expr2 }, 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1);
+            FunctionNode func = new FunctionNode("func2", null, new List<string> { "param1", "param2" }, funcTypeNode, 1, 1);
+            List<FunctionNode> funcs = new List<FunctionNode> { func };
+            referenceHelper.BuildTables(funcs);
+
+            referenceHelper.VisitFunctionCall(funcCallExpr, new List<string> { "func1" });
+
+            Assert.AreEqual(0, funcCallExpr.LocalReference);
+        }
+
+        [TestMethod]
+        public void VisitFunctionCall_ReferenceIsLocal_CorrectGlobalReference()
+        {
+            IntegerLiteralExpression expr1 = new IntegerLiteralExpression("1", 1, 1);
+            IntegerLiteralExpression expr2 = new IntegerLiteralExpression("2", 1, 1);
+            FunctionCallExpression funcCallExpr = new FunctionCallExpression("func1", new List<ExpressionNode> { expr1, expr2 }, 1, 1);
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
+            FunctionTypeNode funcTypeNode = new FunctionTypeNode(typeNode, new List<TypeNode> { typeNode, typeNode }, 1, 1);
+            FunctionNode func = new FunctionNode("func2", null, new List<string> { "param1", "param2" }, funcTypeNode, 1, 1);
+            List<FunctionNode> funcs = new List<FunctionNode> { func };
+            referenceHelper.BuildTables(funcs);
+
+            referenceHelper.VisitFunctionCall(funcCallExpr, new List<string> { "func1" });
+
+            Assert.AreEqual(0, funcCallExpr.GlobalReferences.Count);
         }
 
         #endregion
