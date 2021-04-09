@@ -654,7 +654,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        public void VisitBinaryBoolOp_AndExpressio_ReturnsBooleanTypeNode()
+        public void VisitEquivalenceOperator_EqualExpressionWithIntegerAndReal_ReturnsBooleanTypeNode()
         {
             var expected = TypeEnum.Boolean;
             IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Integer, TypeEnum.Real);
@@ -664,6 +664,63 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             Assert.AreEqual(expected, res);
         }
+
+        [TestMethod]
+        public void VisitEquivalenceOperator_EqualExpressionWithIntegerAndInteger_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Integer, TypeEnum.Integer);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitEquivalenceOperator_EqualExpressionWithRealAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Real, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitEquivalenceOperator_EqualExpressionWithIntegerAndBoolean_ThrowsUnmatchableTypesException()
+        {
+            IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Integer, TypeEnum.Boolean);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitEquivalenceOperator_EqualExpressionWithBooleanAndReal_ThrowsUnmatchableTypesException()
+        {
+            IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Boolean, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+        }
+
+        [TestMethod]
+        public void VisitEquivalenceOperator_NotEqualExpressionWithRealAndReal_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            IEquivalenceOperator input1 = GetNotEqualExpression(TypeEnum.Real, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
         #endregion
     }
 }
