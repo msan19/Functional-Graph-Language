@@ -18,8 +18,8 @@ namespace Main
             if (Environment.OSVersion.ToString().StartsWith("Unix"))
                 path = $"{projectDirectory}/{INPUT_FOLDER_NAME}/{fileName}";
             else if (Environment.OSVersion.ToString().StartsWith("Microsoft Windows"))
-                path = $"{projectDirectory}/{INPUT_FOLDER_NAME}/{fileName}";
-
+                path = $"{projectDirectory}\\{INPUT_FOLDER_NAME}\\{fileName}";
+                
             if (path == "")
                 throw new Exception("Could not detect operating system!");
                     
