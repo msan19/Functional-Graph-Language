@@ -120,9 +120,9 @@ namespace LexParserLib
             {
                 ConditionNode node = CreateConditionNode(himeNode.Children[1]);
                 conditions.Add(node);
-                if (hasFoundDefault && node.IsDefaultCase())
+                if (hasFoundDefault && node.IsDefaultCase)
                     throw new Exception("More than one default case");
-                VisitConditions(himeNode.Children[0], conditions, hasFoundDefault || node.IsDefaultCase());
+                VisitConditions(himeNode.Children[0], conditions, hasFoundDefault || node.IsDefaultCase);
             }
         }
 

@@ -35,8 +35,9 @@ namespace LexParserLib
             {
                 List<ParseError> list = result.Errors.ToList();
                 List<int> lines = list.ConvertAll(e => e.Position.Line);
+                List<int> letters = list.ConvertAll(e => e.Position.Column);
                 List<string> messages = list.ConvertAll(e => e.Message);
-                throw new ParserException(messages, lines);
+                throw new ParserException(messages, lines, letters);
             }
         }
 

@@ -1,6 +1,7 @@
 using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -73,11 +74,28 @@ namespace TypeCheckerLib.Tests.HelperTests
             return node;
         }
 
+        private EqualExpression GetEqualExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new EqualExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
+        private NotEqualExpression GetNotEqualExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetLiteral(left);
+            ExpressionNode rightNode = GetLiteral(right);
+            var node = new NotEqualExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
         private ExpressionNode GetLiteral(TypeEnum type)
         {
             return type switch
             {
                 TypeEnum.Real => new RealLiteralExpression("2.2", 0, 0),
+                TypeEnum.Boolean => new BooleanLiteralExpression(true, 0, 0),
                 TypeEnum.Integer => new IntegerLiteralExpression("1", 1, 1),
                 TypeEnum.Function => throw new Exception("Functions is not supported in GetBinaryOperator"),
                 _ => throw new NotImplementedException()
@@ -610,6 +628,41 @@ namespace TypeCheckerLib.Tests.HelperTests
             CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
 
             Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitRelationalOperator(input, null));
+        }
+        #endregion
+
+        #region VisitEquivalenceOperator
+        [TestMethod]
+        public void VisitEquivalenceOperator_ForEqualExpression_CorrectParameterPassDown()
+        {
+            var expected = new List<TypeNode>()
+            {
+                Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>() {TypeEnum.Integer})
+            };
+
+            EqualExpression input1 = GetEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            List<TypeNode> res = null;
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitEquivalenceOperator(input1, expected.ToList());
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitBinaryBoolOp_AndExpressio_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            IEquivalenceOperator input1 = GetEqualExpression(TypeEnum.Integer, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitEquivalenceOperator(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
         }
         #endregion
     }

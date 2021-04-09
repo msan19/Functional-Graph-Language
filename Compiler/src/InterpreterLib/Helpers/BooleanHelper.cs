@@ -29,8 +29,8 @@ namespace InterpreterLib.Helpers
         
         public bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters)
         {
-            FunctionNode funcNode = GetFuncNode(node, parameters);
-            return GetResult(node, funcNode, parameters);
+            FunctionNode funcNode = GetFuncNode(node, null);
+            return GetResult(node, funcNode, null);
         }
 
         private bool GetResult(FunctionCallExpression node, FunctionNode funcNode, List<object> parameters)
@@ -39,7 +39,7 @@ namespace InterpreterLib.Helpers
             for (int i = 0; i < node.Children.Count; i++)
             {
                 TypeEnum type = funcNode.FunctionType.ParameterTypes[i].Type;
-                funcParameters.Add(_interpreter.Dispatch(node, parameters, type));
+                funcParameters.Add(_interpreter.Dispatch(node, null, type));
             }
             return _interpreter.FunctionBoolean(funcNode, funcParameters);
         }
