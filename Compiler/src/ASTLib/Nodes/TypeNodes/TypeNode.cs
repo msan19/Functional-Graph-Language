@@ -6,6 +6,7 @@ namespace ASTLib.Nodes.TypeNodes
 {
     public enum TypeEnum
     {
+        InvalidType,
         Real,
         Integer,
         Boolean,
