@@ -28,8 +28,13 @@ namespace Main
 
         private static string GetProjectDirectory()
         {
+            string separator = null;
             string projectDirectory = Directory.GetCurrentDirectory();
-            string[] dirNames = projectDirectory.Split("/");
+            if (Environment.OSVersion.ToString().StartsWith("Unix"))
+                separator = "/";
+            else if (Environment.OSVersion.ToString().StartsWith("Microsoft Windows"))
+                separator = "\\";
+            string[] dirNames = projectDirectory.Split(separator);
             if (dirNames.Length >= 3 && dirNames[dirNames.Length - 3].Equals("bin"))
                 projectDirectory = (Directory.GetParent(projectDirectory).Parent).Parent.FullName;
             return projectDirectory;
