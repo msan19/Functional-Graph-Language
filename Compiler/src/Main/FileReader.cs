@@ -6,6 +6,8 @@ namespace Main
     public static class FileReader
     {
         private const string INPUT_FOLDER_NAME = "InputFiles";
+        private const string UNIX_PREFIX = "Unix";
+        private const string WINDOWS_PREFIX = "Microsoft Windows";
         
         public static string Read(string fileName)
         {
@@ -15,9 +17,9 @@ namespace Main
             string projectDirectory = GetProjectDirectory();
             Console.WriteLine(projectDirectory);
 
-            if (Environment.OSVersion.ToString().StartsWith("Unix"))
+            if (IsUnix)
                 path = $"{projectDirectory}/{INPUT_FOLDER_NAME}/{fileName}";
-            else if (Environment.OSVersion.ToString().StartsWith("Microsoft Windows"))
+            else if (IsWindows)
                 path = $"{projectDirectory}\\{INPUT_FOLDER_NAME}\\{fileName}";
                 
             if (path == "")
@@ -30,14 +32,18 @@ namespace Main
         {
             string separator = null;
             string projectDirectory = Directory.GetCurrentDirectory();
-            if (Environment.OSVersion.ToString().StartsWith("Unix"))
+            if (IsUnix)
                 separator = "/";
-            else if (Environment.OSVersion.ToString().StartsWith("Microsoft Windows"))
+            else if (IsWindows)
                 separator = "\\";
             string[] dirNames = projectDirectory.Split(separator);
             if (dirNames.Length >= 3 && dirNames[dirNames.Length - 3].Equals("bin"))
                 projectDirectory = (Directory.GetParent(projectDirectory).Parent).Parent.FullName;
             return projectDirectory;
         }
+        
+        private static bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
+        private static bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
+
     }
 }
