@@ -19,6 +19,7 @@ namespace Main
     {
         public List<string> Lines { get; }
 
+        private readonly string _fileName = "test.fgl";
         private readonly string _input;
 
         private readonly LexParser _lexParse;
@@ -73,8 +74,7 @@ namespace Main
             _interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
-            string fileName = "test.fgl";
-            _input = FileReader.Read(fileName);
+            _input = FileReader.Read(_fileName);
             _input = _input.Replace('\t', ' ');
             Lines = _input.Split("\n").ToList();
             Console.WriteLine(_input);
