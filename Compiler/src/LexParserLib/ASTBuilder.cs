@@ -263,6 +263,27 @@ namespace LexParserLib
 
         private ExpressionNode VisitExpression(ASTNode himeNode)
         {
+            switch (himeNode.Children.Count)
+            {
+                case 2: return VisitExpressionWithTwoChildren(himeNode); // Unary operator expression 
+                case 3: return VisitExpressionWithThreeChildren(himeNode); // Binary operator expression
+                default: throw new UnimplementedASTException(himeNode.Symbol.Name, "symbol");
+            }
+        }
+
+        private ExpressionNode VisitExpressionWithTwoChildren(ASTNode himeNode)
+        {
+            NegativeExpression negativeExpression = new NegativeExpression(new List<ExpressionNode>(),
+                                                                    himeNode.Children[0].Position.Line,
+                                                                    himeNode.Children[0].Position.Column);
+            
+            ExpressionNode rightOperand = DispatchExpression(himeNode.Children[1]);
+            negativeExpression.Children.Add(rightOperand);
+            return negativeExpression;
+        }
+
+        private ExpressionNode VisitExpressionWithThreeChildren(ASTNode himeNode)
+        {
             ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
             ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
 
