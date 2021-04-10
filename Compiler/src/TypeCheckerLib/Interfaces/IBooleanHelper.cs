@@ -13,6 +13,5 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitNot(NotExpression node, List<TypeNode> parameterTypes);
 
         TypeNode VisitBinaryBoolOp(IBinaryBooleanOperator binaryNode, List<TypeNode> parameterTypes);
-
     }
 }

@@ -150,6 +150,14 @@ namespace TypeCheckerLib.Helpers
                 
         }
 
+        public TypeNode VisitNegative(NegativeExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode childNodeType = _getType(node.Children[0], parameterTypes);
+            if (!IsNumber(childNodeType.Type))
+                throw new UnableToNegateTermException(node.Children[0], childNodeType.ToString());
+            return childNodeType;
+        }
+
         private bool IsNumber(TypeEnum t)
         {
             return t == TypeEnum.Integer || t == TypeEnum.Real;

@@ -5,6 +5,7 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -56,6 +57,7 @@ namespace TypeCheckerLib
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
                 IRelationOperator n         => _commonOperatorHelper.VisitRelationalOperator(n, parameterTypes),
                 IEquivalenceOperator n      => _commonOperatorHelper.VisitEquivalenceOperator(n, parameterTypes),
+                NegativeExpression n        => _commonOperatorHelper.VisitNegative(n, parameterTypes),
 
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };

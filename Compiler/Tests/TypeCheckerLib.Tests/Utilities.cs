@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using NSubstitute;
 using TypeCheckerLib.Interfaces;
@@ -132,6 +134,24 @@ namespace TypeCheckerLib.Tests
         public static AST GetAst()
         {
             return new AST(new List<FunctionNode>(), new List<ExportNode>(), 0, 0);
+        }
+
+        public static NegativeExpression GetNegativeExpressionWithInt()
+        {
+            IntegerLiteralExpression intLitExpr = new IntegerLiteralExpression("", 0, 0);
+            return new NegativeExpression(new List<ExpressionNode>(){intLitExpr}, 0, 0);
+        }
+        
+        public static NegativeExpression GetNegativeExpressionWithReal()
+        {
+            RealLiteralExpression realLitExpr = new RealLiteralExpression("", 0, 0);
+            return new NegativeExpression(new List<ExpressionNode>(){realLitExpr}, 0, 0);
+        }
+        
+        public static NegativeExpression GetNegativeExpressionWithBool()
+        {
+            BooleanLiteralExpression boolLitExpr = new BooleanLiteralExpression(false, 0, 0);
+            return new NegativeExpression(new List<ExpressionNode>(){boolLitExpr}, 0, 0);
         }
     }
 }

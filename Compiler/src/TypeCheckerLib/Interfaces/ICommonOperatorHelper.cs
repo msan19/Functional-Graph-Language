@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -16,6 +17,6 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes);
         TypeNode VisitEquivalenceOperator(IEquivalenceOperator node, List<TypeNode> parameterTypes);
-
+        TypeNode VisitNegative(NegativeExpression negativeExpression, List<TypeNode> parameterTypes);
     }
 }

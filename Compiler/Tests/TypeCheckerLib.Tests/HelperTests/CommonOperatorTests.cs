@@ -722,5 +722,47 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         #endregion
+
+        #region VisitNegative
+        // Format "- Term"
+        // if Term is type Boolean    --> throw exception (not boolean operator, use ! instead)
+        // if Term is type Real       --> OK
+        // if Term is type Integer    --> OK
+
+        [TestMethod]
+        public void VisitNegative_Integer_ReturnsTypeInteger()
+        {
+            var expected = TypeEnum.Integer;
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithInt();
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitNegative(negExpr, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitNegative_Real_ReturnsTypeReal()
+        {
+            var expected = TypeEnum.Real;
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithReal();
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitNegative(negExpr, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        [ExpectedException(typeof(UnableToNegateTermException))]
+        [TestMethod]
+        public void VisitNegative_Boolean_CausesUnableToNegateTermException()
+        {
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithBool();
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            
+            var res = helper.VisitNegative(negExpr, null).Type;
+        }
+        
+        #endregion
     }
 }
