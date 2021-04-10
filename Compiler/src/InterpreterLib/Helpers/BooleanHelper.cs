@@ -14,42 +14,10 @@ namespace InterpreterLib.Helpers
     public class BooleanHelper : IBooleanHelper
     {
         private IInterpreterBoolean _interpreter;
-        private AST _root;
-        private List<FunctionNode> _functions => _root.Functions;
-
-        public void SetASTRoot(AST root)
-        {
-            _root = root;
-        }
 
         public void SetInterpreter(IInterpreterBoolean interpreter)
         {
             _interpreter = interpreter;
-        }
-        
-        public bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters)
-        {
-            FunctionNode funcNode = GetFuncNode(node, null);
-            return GetResult(node, funcNode, null);
-        }
-
-        private bool GetResult(FunctionCallExpression node, FunctionNode funcNode, List<object> parameters)
-        {
-            List<object> funcParameters = new List<object>();
-            for (int i = 0; i < node.Children.Count; i++)
-            {
-                TypeEnum type = funcNode.FunctionType.ParameterTypes[i].Type;
-                funcParameters.Add(_interpreter.Dispatch(node, null, type));
-            }
-            return _interpreter.FunctionBoolean(funcNode, funcParameters);
-        }
-
-        private FunctionNode GetFuncNode(FunctionCallExpression node, List<object> parameters)
-        {
-            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
-                return _functions[node.GlobalReferences[0]];
-            else
-                return _functions[(int)parameters[node.LocalReference]];
         }
 
         public bool AndBoolean(AndExpression node, List<object> parameters)
@@ -66,11 +34,6 @@ namespace InterpreterLib.Helpers
             bool rightOperand = _interpreter.DispatchBoolean(node.Children[1], parameters);
 
             return leftOperand || rightOperand;
-        }
-        
-        public bool? ConditionBoolean(ConditionNode node, List<object> parameters)
-        {
-            throw new NotImplementedException();
         }
 
         public bool GreaterBoolean(GreaterExpression node, List<object> parameters)

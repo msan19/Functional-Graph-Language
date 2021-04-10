@@ -21,8 +21,20 @@ namespace InterpreterLib.Tests
         public static BooleanHelper GetBooleanHelper(IInterpreterBoolean interpreter, AST ast)
         {
             BooleanHelper booleanHelper = GetBooleanHelper(interpreter);
-            booleanHelper.SetASTRoot(ast);
             return booleanHelper;
+        }
+
+        public static GenericHelper GetGenericHelper(IInterpreterGeneric interpreter)
+        {
+            GenericHelper helper = new GenericHelper();
+            helper.SetInterpreter(interpreter);
+            return helper;
+        }
+        public static GenericHelper GetGenericHelper(IInterpreterGeneric interpreter, AST ast)
+        {
+            GenericHelper helper = GetGenericHelper(interpreter);
+            helper.SetASTRoot(ast);
+            return helper;
         }
 
         public static Interpreter GetFullyMockedIntepretor()
@@ -31,7 +43,8 @@ namespace InterpreterLib.Tests
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
             IRealHelper realHelper = Substitute.For<IRealHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
         }
         
         public static Interpreter GetIntepretorOnlyWith(IFunctionHelper functionHelper)
@@ -39,7 +52,16 @@ namespace InterpreterLib.Tests
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
             IRealHelper realHelper = Substitute.For<IRealHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
+        }
+        public static Interpreter GetIntepretorOnlyWith(IGenericHelper genericHelper)
+        {
+            IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
+            IRealHelper realHelper = Substitute.For<IRealHelper>();
+            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
+            IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
         }
 
         internal static FunctionNode GetFunction()
@@ -83,7 +105,8 @@ namespace InterpreterLib.Tests
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
             IRealHelper realHelper = Substitute.For<IRealHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
         }
         
         public static Interpreter GetIntepretorOnlyWith(IRealHelper realHelper)
@@ -91,7 +114,8 @@ namespace InterpreterLib.Tests
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
         }
 
         internal static FunctionTypeNode GetFunctionTypeNode(int expectedElementCount, TypeEnum returnType)
@@ -114,8 +138,9 @@ namespace InterpreterLib.Tests
         {
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
-            IRealHelper realHelper = Substitute.For<IRealHelper>();
-            return new Interpreter(functionHelper, integerHelper, realHelper, booleanHelper);
+            IRealHelper realHelper = Substitute.For<IRealHelper>(); 
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper);
         }
 
         public static IntegerLiteralExpression GetIntLitExpression()

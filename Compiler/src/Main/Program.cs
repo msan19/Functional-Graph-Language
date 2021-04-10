@@ -30,18 +30,18 @@ namespace Main
 
         static void Main(string[] args)
         {
-            if (ShouldPrintExceoptions(args))
+            if (ShouldThrowExceptions(args))
                 RunWithoutExecptionPrinting(args);
             else
-                RunWithExecptionPrinting(args);
+                RunWithExceptionPrinting(args);
         }
 
-        private static bool ShouldPrintExceoptions(string[] args)
+        private static bool ShouldThrowExceptions(string[] args)
         {
             return args.Length >= 1 && args[0] == "throw";
         }
 
-        private static void RunWithExecptionPrinting(string[] args)
+        private static void RunWithExceptionPrinting(string[] args)
         {
             Program program = new Program(args);
             IExceptionPrinter exceptionPrinter = new ExceptionPrinter(program.Lines);
@@ -71,7 +71,7 @@ namespace Main
             _lexParse = new LexParser(new ASTBuilder());
             _referenceHandler = new ReferenceHandler(new ReferenceHelper());
             _typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeBooleanHelper());
-            _interpreter = new Interpreter(new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
+            _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);

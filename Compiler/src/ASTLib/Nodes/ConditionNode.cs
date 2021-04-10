@@ -22,6 +22,13 @@ namespace ASTLib.Nodes
             Condition = conditionExpression;
         }
 
+        public ConditionNode(List<ElementNode> elements, ExpressionNode conditionExpression, ExpressionNode returnExpression, int line, int letter) : base(line, letter)
+        {
+            ReturnExpression = returnExpression;
+            Condition = conditionExpression;
+            Elements = elements;
+        }
+
         public bool IsDefaultCase => Elements == null && Condition == null;
     }
 }

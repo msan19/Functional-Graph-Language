@@ -18,7 +18,5 @@ namespace InterpreterLib.Interfaces
         bool DispatchBoolean(ExpressionNode node, List<object> parameters);
 
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
-
-        public bool FunctionBoolean(FunctionNode node, List<object> parameters);
     }
 }

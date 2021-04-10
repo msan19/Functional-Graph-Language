@@ -10,11 +10,10 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IBooleanHelper : IInterpretorHelper
+    public interface IBooleanHelper : IInterpreterHelper
     {
-        void SetInterpreter(IInterpreterBoolean interpreter);
 
-        bool? ConditionBoolean(ConditionNode node, List<object> parameters);
+        void SetInterpreter(IInterpreterBoolean interpreter);
 
         bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
 
@@ -35,7 +34,5 @@ namespace InterpreterLib.Interfaces
         bool LessEqualBoolean(LessEqualExpression node, List<object> parameters);
 
         bool LessBoolean(LessExpression node, List<object> parameters);
-
-        bool FunctionCallBoolean(FunctionCallExpression node, List<object> parameters);
     }
 }

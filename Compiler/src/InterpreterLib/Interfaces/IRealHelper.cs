@@ -8,13 +8,11 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IRealHelper : IInterpretorHelper
+    public interface IRealHelper : IInterpreterHelper
     {
         void SetInterpreter(IInterpreterReal interpreter);
 
         double ExportReal(ExportNode node, List<object> parameters);
-
-        double? ConditionReal(ConditionNode node, List<object> parameters);
 
         double AdditionReal(AdditionExpression node, List<object> parameters);
 
@@ -35,8 +33,6 @@ namespace InterpreterLib.Interfaces
         double LiteralReal(RealLiteralExpression node, List<object> parameters);
 
         double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters);
-
-        double FunctionCallReal(FunctionCallExpression node, List<object> parameters);
 
     }
 }

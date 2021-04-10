@@ -14,23 +14,10 @@ namespace InterpreterLib.Helpers
     {
 
         private IInterpreterInteger _interpreter;
-        private AST _root;
-
-        public void SetASTRoot(AST root)
-        {
-            _root = root;
-        }
 
         public void SetInterpreter(IInterpreterInteger interpreter) 
         {
             _interpreter = interpreter;
-        }
-
-        public int? ConditionInteger(ConditionNode node, List<Object> parameters)
-        {
-            if (node.Condition == null || _interpreter.DispatchBoolean(node.Condition, parameters))
-                return _interpreter.DispatchInt(node.ReturnExpression, parameters);
-            return null;
         }
 
         public int AdditionInteger(AdditionExpression node, List<Object> parameters)
@@ -101,28 +88,5 @@ namespace InterpreterLib.Helpers
             return node.Value;
         }
 
-        public int FunctionCallInteger(FunctionCallExpression node, List<Object> parameters)
-        {
-            FunctionNode funcNode;
-            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
-                funcNode = _root.Functions[node.GlobalReferences[0]];
-            else
-                funcNode = _root.Functions[(int)parameters[node.LocalReference]];
-
-            return FunctionCallIntegerIterator(node, funcNode, parameters);
-        }
-
-        private int FunctionCallIntegerIterator(FunctionCallExpression node, FunctionNode funcNode, List<Object> parameters)
-        {
-            List<object> listOfFuncParam = new List<object>();
-
-            for (int i = 0; i < node.Children.Count; i++)
-            {
-                TypeEnum parameterType = funcNode.FunctionType.ParameterTypes[i].Type;
-                listOfFuncParam.Add(_interpreter.Dispatch(node.Children[i], parameters, parameterType));
-            }
-
-            return _interpreter.FunctionInteger(funcNode, listOfFuncParam);
-        }
     }
 }

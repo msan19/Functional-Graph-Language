@@ -13,8 +13,6 @@ namespace InterpreterLib.Interfaces
 
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 
-        int FunctionFunction(FunctionNode node, List<Object> parameters);
-
         bool DispatchBoolean(ExpressionNode node, List<object> parameters);
     }
 }
