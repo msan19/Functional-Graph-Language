@@ -68,7 +68,7 @@ namespace Main
 
         public Program(string[] args)
         {
-            _lexParse = new LexParser(new ASTBuilder());
+            _lexParse = new LexParser(new ASTBuilder(new ExpressionHelper()));
             _referenceHandler = new ReferenceHandler(new ReferenceHelper());
             _typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeBooleanHelper());
             _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());

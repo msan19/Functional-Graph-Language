@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public class SetExpression : ExpressionNode, INonIdentifierExpression
+    public class SetExpression : ExpressionNode
     {
         public ElementNode Element { get; }
         public List<BoundNode> Bounds { get; }
