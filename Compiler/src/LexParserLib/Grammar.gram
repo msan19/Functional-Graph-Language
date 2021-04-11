@@ -24,8 +24,13 @@ grammar Grammar
                       |  Func '=' Conditions ;
         Conditions    -> Conditions Condition
                       |  Condition ;
-        Condition     -> '|' Expression '=' Expression
+        Condition     -> '|' Elements ',' Expression '=' Expression
+                      |  '|' Elements '=' Expression
+                      |  '|' Expression '=' Expression
                       |  '|' '_' '=' Expression ;
+        Elements      -> Elements comma Element
+                      |  Element ;
+        Element       -> id '[' Ids ']' ;
         Func          -> id ':' FuncTypeDecl id '(' ')'
                       |  id ':' FuncTypeDecl id '(' Ids ')' ;
         FuncTypeDecl  -> '(' Types ')' '->' Type
@@ -35,11 +40,17 @@ grammar Grammar
         Type          -> 'integer'
                       |  'real'
                       |  'boolean'
+                      |  'set'
+                      |  'element'
                       |  FuncTypeDecl ;
         Ids           -> Ids ',' id
                       |  id ;
-        Expression    -> Expression '!=' NumExpression
-                      |  Expression '==' NumExpression
+        Bounds        -> Bounds ',' Bound
+                      |  Bound ;
+        Bound         -> NumExpression BoundComp '[' id ']' BoundComp NumExpression
+                      |  '[' id ']' '==' NumExpression ;
+        Expression    -> Expression '!=' MaxTerm
+                      |  Expression '==' MaxTerm
                       |  MaxTerm ;
         MaxTerm	      -> MaxTerm 'or' MinTerm
                       |  MinTerm ;
@@ -47,6 +58,8 @@ grammar Grammar
                       |  LogicTerm ;
         LogicTerm     -> 'not' LogicTerm
                       |  NumExpression Compare NumExpression
+                      |  Exponent 'in' SetExpression
+                      |  SetExpression 'subset' SetExpression
                       |  NumExpression ;
         Compare	      -> '>='
                       |  '>'
@@ -62,13 +75,20 @@ grammar Grammar
                       |  Term 'mod' Factor
                       |  Factor ;
         Factor        -> Factor '^' Exponent
+                      |  SetExpression ;
+        SetExpression -> SetExpression 'union' SetTerm
+                      |  SetTerm ;
+        SetTerm       -> SetTerm 'intersection' Exponent
                       |  Exponent ;
         Exponent      -> id
                       |  '|' Expression '|'
                       |  '(' Expression ')'
                       |  Literal
                       |  id '(' Expressions ')'
-                      |  id '(' ')' ;
+                      |  id '(' ')' 
+                      |  '{' Element '|' Bounds '}'
+                      |  '{' Element '|' Bounds ',' Expression '}'
+                      |  'element' '[' Expressions ']' ;
         Expressions   -> Expression ',' Expressions
                       |  Expression ;
         Literal	      -> realNumber
