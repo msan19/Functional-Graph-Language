@@ -5,6 +5,7 @@ using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -284,5 +285,27 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
+        #region NegativeReal
+        [DataRow(0.0, -0.0)]
+        [DataRow(-0.0, 0.0)]
+        [DataRow(-1.0, 1.0)]
+        [DataRow(1.0, -1.0)]
+        [DataRow(3.1425132, -3.1425132)]
+        [TestMethod]
+        public void NegativeReal_Real_CorrectNegativeValue(double input, double expected)
+        {
+            RealLiteralExpression realLitExpr = new RealLiteralExpression(input, 0, 0);
+
+            NegativeExpression negExpr = new NegativeExpression(new List<ExpressionNode>() {realLitExpr}, 0, 0);
+            
+            IInterpreterReal parent = Substitute.For<IInterpreterReal>();
+            parent.DispatchReal(realLitExpr, Arg.Any<List<object>>()).Returns(input);
+            RealHelper realHelper = SetUpHelper(parent);
+
+            double res = realHelper.NegativeReal(negExpr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
     }
 }

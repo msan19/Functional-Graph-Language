@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Exceptions;
@@ -80,6 +80,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _realHelper.DivisionReal(e, parameters),
                 ModuloExpression e          => _realHelper.ModuloReal(e, parameters),
                 AbsoluteValueExpression e   => _realHelper.AbsoluteReal(e, parameters),
+                NegativeExpression e        => _realHelper.NegativeReal(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<double>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchReal")
             };
