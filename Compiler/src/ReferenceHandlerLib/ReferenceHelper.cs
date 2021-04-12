@@ -24,36 +24,38 @@ namespace ReferenceHandlerLib
 
         public void BuildTables(List<FunctionNode> functions)
         {
+            _functionTable = GetFunctionTable(functions);
+            _functionIdentifierTable = GetFunctionIdentifierTable(functions);
+        }
+
+        private Dictionary<string, List<int>> GetFunctionTable(List<FunctionNode> functions)
+        {
             Dictionary<string, List<int>> table = new Dictionary<string, List<int>>();
-            Dictionary<string, int> functionIdentifierTable = new Dictionary<string, int>();
 
             for (int i = 0; i < functions.Count; i++)
             {
                 string name = functions[i].ParameterIdentifiers.Count + functions[i].Identifier;
                 if (!table.ContainsKey(name))
-                {
                     table.Add(name, new List<int>() { i });
-                }
                 else
-                {
                     table[name].Add(i);
-                }
             }
-            _functionTable = table;
+            return table;
+        }
+        
+        private Dictionary<string, int> GetFunctionIdentifierTable(List<FunctionNode> functions)
+        {
+            Dictionary<string, int> functionIdentifierTable = new Dictionary<string, int>();
 
             for (int i = 0; i < functions.Count; i++)
             {
                 string identifier = functions[i].Identifier;
                 if (!functionIdentifierTable.ContainsKey(identifier))
-                {
                     functionIdentifierTable.Add(identifier, i);
-                }
                 else
-                {
                     functionIdentifierTable[identifier] = NO_LOCAL_REF;
-                } 
             }
-            _functionIdentifierTable = functionIdentifierTable;
+            return functionIdentifierTable;
         }
 
         public void VisitExport(ExportNode node)
