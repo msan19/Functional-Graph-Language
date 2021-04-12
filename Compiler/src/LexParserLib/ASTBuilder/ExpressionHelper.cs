@@ -53,8 +53,8 @@ namespace LexParserLib
         {
             return himeNode.Children.Count switch
             {
-                2 => VisitExpressionWithTwoChildren(himeNode),// Unary operator expression 
-                3 => VisitExpressionWithThreeChildren(himeNode),// Binary operator expression
+                2 => VisitExpressionWithTwoChildren(himeNode), 
+                3 => VisitExpressionWithThreeChildren(himeNode),
                 _ => throw new UnimplementedASTException(himeNode.Symbol.Name, "symbol"),
             };
         }

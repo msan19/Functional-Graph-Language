@@ -57,7 +57,7 @@ namespace TypeCheckerLib
                 AbsoluteValueExpression n   => _commonOperatorHelper.VisitAbsoluteValue(n, parameterTypes),
                 IRelationOperator n         => _commonOperatorHelper.VisitRelationalOperator(n, parameterTypes),
                 IEquivalenceOperator n      => _commonOperatorHelper.VisitEquivalenceOperator(n, parameterTypes),
-                NegativeExpression n        => _commonOperatorHelper.VisitNegative(n, parameterTypes),
+                NegativeExpression n        => _numberHelper.VisitNegative(n, parameterTypes),
 
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };

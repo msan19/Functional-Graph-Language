@@ -17,6 +17,5 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes);
         TypeNode VisitEquivalenceOperator(IEquivalenceOperator node, List<TypeNode> parameterTypes);
-        TypeNode VisitNegative(NegativeExpression negativeExpression, List<TypeNode> parameterTypes);
     }
 }
