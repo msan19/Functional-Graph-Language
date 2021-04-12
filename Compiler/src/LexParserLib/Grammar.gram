@@ -28,7 +28,7 @@ grammar Grammar
                       |  '|' Elements '=' Expression
                       |  '|' Expression '=' Expression
                       |  '|' '_' '=' Expression ;
-        Elements      -> Elements comma Element
+        Elements      -> Elements ',' Element
                       |  Element ;
         Element       -> id '[' Ids ']' ;
         Func          -> id ':' FuncTypeDecl id '(' ')'
