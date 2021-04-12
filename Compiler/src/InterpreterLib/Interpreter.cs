@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Exceptions;
@@ -61,6 +61,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _integerHelper.DivisionInteger(e, parameters),
                 ModuloExpression e          => _integerHelper.ModuloInteger(e, parameters),
                 AbsoluteValueExpression e   => _integerHelper.AbsoluteInteger(e, parameters),
+                NegativeExpression e        => _integerHelper.NegativeInteger(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<int>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchInt")
             };
