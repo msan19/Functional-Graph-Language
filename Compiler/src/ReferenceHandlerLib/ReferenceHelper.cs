@@ -11,7 +11,7 @@ namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        private const int NO_LOCAL_REF = -1;
+        private const int NO_LOCAL_REF = FunctionCallExpression.NO_LOCAL_REF;
         private Dictionary<string, List<int>> _functionTable;
         private Dictionary<string, int> _functionIdentifierTable;
 
@@ -132,6 +132,9 @@ namespace ReferenceHandlerLib
                 _dispatch(n, identifiers);
         }
 
+        public void VisitSet(SetExpression node, List<string> identifiers)
+        {
 
+        }
     }
 }
