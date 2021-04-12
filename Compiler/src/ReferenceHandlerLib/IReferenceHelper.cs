@@ -16,5 +16,6 @@ namespace ReferenceHandlerLib
         void VisitFunctionCall(FunctionCallExpression node, List<string> identifiers);
         void VisitIdentifier(IdentifierExpression node, List<string> identifiers);
         void VisitNonIdentifier(INonIdentifierExpression node, List<string> identifiers);
+        void VisitSet(SetExpression node, List<string> identifiers);
     }
 }
