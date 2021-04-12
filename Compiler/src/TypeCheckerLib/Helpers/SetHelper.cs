@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using ASTLib;
-using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.TypeNodes;
-using TypeCheckerLib.Interfaces;
 using ASTLib.Interfaces;
+using TypeCheckerLib.Interfaces;
+using ASTLib.Exceptions;
 
 namespace TypeCheckerLib.Helpers
 {
-    public class BooleanHelper : IBooleanHelper
+    public class SetHelper : ISetHelper
     {
         private List<FunctionNode> _functions;
         private Func<ExpressionNode, List<TypeNode>, TypeNode> _getType;
@@ -22,32 +22,20 @@ namespace TypeCheckerLib.Helpers
             _getType = dispatcher;
         }
 
-        public TypeNode VisitNot(NotExpression node, List<TypeNode> parameterTypes)
-        {
-            TypeNode notNode = _getType(node.Children[0], parameterTypes);
-
-            if (!IsBool(notNode.Type))
-            {
-                throw new Exception();
-            }
-            return new TypeNode(TypeEnum.Boolean, 0, 0);
-        }
-
-        public TypeNode VisitBinaryBoolOp(IBinaryBooleanOperator binaryNode, List<TypeNode> parameterTypes)
+        public TypeNode VisitBinarySetOp(IBinarySetOperator binaryNode, List<TypeNode> parameterTypes)
         {
             TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
             TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
 
-            if (!IsBool(left.Type) || !IsBool(right.Type))
+            if (!IsSet(left.Type) || !IsSet(right.Type))
             {
                 throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "bool");
             }
-            return new TypeNode(TypeEnum.Boolean, 0, 0);
+            return new TypeNode(TypeEnum.Set, 0, 0);
         }
-
-        private bool IsBool(TypeEnum t)
+        private bool IsSet(TypeEnum t)
         {
-            return t == TypeEnum.Boolean;
+            return t == TypeEnum.Set;
         }
     }
 }

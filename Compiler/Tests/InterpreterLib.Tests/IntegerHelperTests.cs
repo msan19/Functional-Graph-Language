@@ -4,6 +4,7 @@ using System.Linq;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -175,5 +176,26 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
+        #region NegativeInteger
+        [DataRow(0, -0)]
+        [DataRow(-0, 0)]
+        [DataRow(-1, 1)]
+        [DataRow(1, -1)]
+        [TestMethod]
+        public void NegativeInteger_Integer_CorrectNegativeValue(int input, int expected)
+        {
+            IntegerLiteralExpression intLitExpr = new IntegerLiteralExpression(input, 0, 0);
+
+            NegativeExpression negExpr = new NegativeExpression(new List<ExpressionNode>() {intLitExpr}, 0, 0);
+            
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchInt(intLitExpr, Arg.Any<List<object>>()).Returns(input);
+            IntegerHelper integerHelper = SetUpHelper(parent);
+
+            double res = integerHelper.NegativeInteger(negExpr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
     }
 }

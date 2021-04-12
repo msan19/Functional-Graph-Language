@@ -12,6 +12,8 @@ using FluentAssertions;
 using ASTLib.Exceptions;
 using System.Linq.Expressions;
 using Microsoft.VisualBasic.CompilerServices;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using System.Linq;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -30,8 +32,8 @@ namespace ReferenceHandlerLib.Tests
         public void VisitExport_IntegerLiteralExpression_Correct()
         {
             System.Type expected = typeof(IntegerLiteralExpression);
-            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2",1,1);
-            ExportNode input = new ExportNode(integerLiteralExpression,3,3);
+            IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
+            ExportNode input = new ExportNode(integerLiteralExpression, 3, 3);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = BuildHelper(parent);
 
@@ -64,12 +66,12 @@ namespace ReferenceHandlerLib.Tests
         {
             System.Type expected = typeof(IntegerLiteralExpression);
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
-            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2,2);
+            ConditionNode conditionNode = new ConditionNode(integerLiteralExpression, 2, 2);
             List<string> parameterIdentifiers = new List<string> { "a", "b" };
-            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1,1);
+            TypeNode typeNode = new TypeNode(TypeEnum.Integer, 1, 1);
             List<TypeNode> parameterTypes = new List<TypeNode>() { typeNode, typeNode };
-            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3,3);
-            FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4,4);
+            FunctionTypeNode functionType = new FunctionTypeNode(typeNode, parameterTypes, 3, 3);
+            FunctionNode input = new FunctionNode("func1", conditionNode, parameterIdentifiers, functionType, 4, 4);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = BuildHelper(parent);
 
@@ -581,7 +583,224 @@ namespace ReferenceHandlerLib.Tests
 
         #endregion
 
+        #region VisitSet
+        // TODO:
+        //  Indecies names correct
+        //  Predicate is discpatced with more parameters 
 
+
+        [DataRow(new string[] { "a", "b" }, "a")]
+        [DataRow(new string[] { "abc", "b" }, "b")]
+        [DataRow(new string[] { "abc", "error", "b" }, "error")]
+        [TestMethod]
+        [ExpectedException(typeof(IdenticalParameterIdentifiersException))]
+        public void VisitSet_ElementHideIdentifier_Exception(string[] parameters, string identifier)
+        {
+            var indicies = new List<string>();
+            var element = GetElementNode(identifier, indicies);
+            var bounds = new List<BoundNode>();
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters.ToList());
+        }
+
+        [DataRow(new string[] { "a", "b" }, "a")]
+        [DataRow(new string[] { "abc", "b" }, "b")]
+        [DataRow(new string[] { "abc", "error", "b" }, "error")]
+        [TestMethod]
+        [ExpectedException(typeof(IdenticalParameterIdentifiersException))]
+        public void VisitSet_IndexHideIdentifier_Exception(string[] parameters, string identifier)
+        {
+            var indicies = GetStringList(identifier);
+
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var bounds = new List<BoundNode>();
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters.ToList());
+        }
+
+        [DataRow(new string[] { "i", "j" }, 1)]
+        [DataRow(new string[] { "i", "j", "k" }, 2)]
+        [TestMethod]
+        [ExpectedException(typeof(BoundException))]
+        public void VisitSet_XBoundsYIndicies_Exception(string[] boundIds, int indexCount)
+        {
+            var indicies = GetStringList(boundIds.Take(indexCount));
+            var bounds = GetBounds(boundIds);
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, GetStringList());
+        }
+
+        [DataRow(new string[] { "i", "j" }, 1)]
+        [DataRow(new string[] { "i", "j", "k" }, 2)]
+        [TestMethod]
+        [ExpectedException(typeof(BoundException))]
+        public void VisitSet_YBoundsXIndicies_Exception(string[] boundIds, int boundCount)
+        {
+            var indicies = GetStringList(boundIds);
+            var bounds = GetBounds(boundIds.Take(boundCount));
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, GetStringList());
+        }
+
+        [DataRow(new string[] { "i", "j" })]
+        [DataRow(new string[] { "i", "j", "k" })]
+        [TestMethod]
+        public void VisitSet_XBoundsXIndicies_DispatchBoundMin(string[] ids)
+        {
+            int expected = ids.Length;
+            int res = 0;
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(bounds.ConvertAll(x => x.MinValue), () => res++, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow(new string[] { "i", "j" })]
+        [DataRow(new string[] { "i", "j", "k" })]
+        [TestMethod]
+        public void VisitSet_XBoundsXIndicies_DispatchBoundMax(string[] ids)
+        {
+            int expected = ids.Length;
+            int res = 0;
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(bounds.ConvertAll(x => x.MaxValue), () => res++, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitSet_Predicate_DispatchPredicate()
+        {
+            var ids = new string[] { "i", "j" };
+            int expected = 1;
+            int res = 0;
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(predicate, () => res++, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private void AddDispache(List<ExpressionNode> expressions, Func<int> func, IReferenceHandler parent)
+        {
+            foreach (var expr in expressions)
+            {
+                parent.Dispatch(expr, Arg.Do<List<string>>(x => func()));
+            }
+        }
+
+        private void AddDispache(ExpressionNode expression, Func<int> func, IReferenceHandler parent)
+        {
+            parent.Dispatch(expression, Arg.Do<List<string>>(x => func()));
+        }
+
+        private List<string> GetStringList()
+        {
+            return new List<string>();
+        }
+
+        private List<BoundNode> GetBounds(IEnumerable<string> parameters)
+        {
+            var res = new List<BoundNode>();
+            foreach (var id in parameters)
+                res.Add(GetBoundnode(id));
+            return res;
+        }
+
+        private BoundNode GetBoundnode(string id)
+        {
+            return new BoundNode(id, GetIntLit(0), GetIntLit(1), 0, 0);
+        }
+
+        private List<string> GetStringList(IEnumerable<string> enumerable)
+        {
+            return enumerable.ToList();
+        }
+
+        private List<string> GetStringList(string identifier)
+        {
+            return new List<string>() { identifier };
+        }
+
+        private IReferenceHandler GetReferenceHandler()
+        {
+            return Substitute.For<IReferenceHandler>();
+        }
+
+        private SetExpression GetSetExpr(ElementNode element, List<BoundNode> bounds, IntegerLiteralExpression predicate)
+        {
+            return new SetExpression(element, bounds, predicate, 0, 0);
+        }
+        #endregion
+
+        private ElementNode GetElementNode(string identifier, List<string> indicies)
+        {
+            return new ElementNode(identifier, indicies, 0, 0);
+        }
+
+        private IntegerLiteralExpression GetIntLit()
+        {
+            return new IntegerLiteralExpression(0, 0, 0);
+        }
+
+        private IntegerLiteralExpression GetIntLit(int n)
+        {
+            return new IntegerLiteralExpression(n, 0, 0);
+        }
 
     }
 

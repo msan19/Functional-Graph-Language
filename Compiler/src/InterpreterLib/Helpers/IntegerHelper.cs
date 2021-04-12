@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using InterpreterLib.Interfaces;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Exceptions;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -88,5 +89,9 @@ namespace InterpreterLib.Helpers
             return node.Value;
         }
 
+        public int NegativeInteger(NegativeExpression node, List<object> parameters)
+        {
+            return - _interpreter.DispatchInt(node.Children[0], parameters);
+        }
     }
 }

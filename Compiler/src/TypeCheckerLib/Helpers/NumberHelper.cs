@@ -8,6 +8,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
 using ASTLib.Exceptions;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -52,6 +53,19 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(left.Type, 0, 0);
         }
 
+        public TypeNode VisitNegative(NegativeExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode childNodeType = _getType(node.Children[0], parameterTypes);
+            if (!IsNumber(childNodeType.Type))
+                throw new UnableToNegateTermException(node.Children[0], childNodeType.ToString());
+            return childNodeType;
+        }
+
+        private bool IsNumber(TypeEnum t)
+        {
+            return t == TypeEnum.Integer || t == TypeEnum.Real;
+        }
+        
         private bool IsNumberType(TypeEnum t)
         {
             return t == TypeEnum.Integer || t == TypeEnum.Real;

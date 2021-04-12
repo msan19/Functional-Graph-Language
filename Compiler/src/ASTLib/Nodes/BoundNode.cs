@@ -7,15 +7,15 @@ namespace ASTLib.Nodes
 {
     public class BoundNode: Node
     {
-        public ExpressionNode SmallestValue { get; }
-        public ExpressionNode LargestValue { get; }
+        public ExpressionNode MinValue { get; }
+        public ExpressionNode MaxValue { get; }
         public string Identifier { get; }
 
         public BoundNode(string identifier, ExpressionNode smallesValue, ExpressionNode largestValue, int line, int letter) : base(line, letter)
         {
             Identifier = identifier;
-            SmallestValue = smallesValue;
-            LargestValue = largestValue;
+            MinValue = smallesValue;
+            MaxValue = largestValue;
         }
     }
 }

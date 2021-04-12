@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 
@@ -34,5 +35,6 @@ namespace InterpreterLib.Interfaces
 
         double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters);
 
+        double NegativeReal(NegativeExpression node, List<object> parameters);
     }
 }

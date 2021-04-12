@@ -62,7 +62,8 @@ namespace TypeCheckerLib.Tests
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(ICommonOperatorHelper commonOperatorHelper)
@@ -70,7 +71,8 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(INumberHelper numberHelper)
@@ -78,7 +80,8 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(IBooleanHelper booleanHelper)
@@ -86,9 +89,18 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
+        public static ITypeChecker GetTypeCheckerOnlyWith(ISetHelper setHelper)
+        {
+            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
+            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
+        }
 
         public static FunctionTypeNode GetFunctionType(TypeEnum returnType, List<TypeEnum> inputTypes)
         {

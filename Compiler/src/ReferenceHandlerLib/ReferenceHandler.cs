@@ -35,6 +35,7 @@ namespace ReferenceHandlerLib
                 case IdentifierExpression       e: _helper.VisitIdentifier(e, parameters);      break;
                 case INonIdentifierExpression   e: _helper.VisitNonIdentifier(e, parameters);   break;
                 case FunctionCallExpression     e: _helper.VisitFunctionCall(e, parameters);    break;
+                case SetExpression              e: _helper.VisitSet(e, parameters);             break;
 
                 default: throw new UnimplementedReferenceHandlerException(node);
             }
