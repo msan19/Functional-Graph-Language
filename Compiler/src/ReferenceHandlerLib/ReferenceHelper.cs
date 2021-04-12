@@ -66,13 +66,9 @@ namespace ReferenceHandlerLib
         public void VisitFunction(FunctionNode node)
         {
             if (HasUniqueParameters(node.ParameterIdentifiers))
-            {
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
-            }
             foreach (ConditionNode conditionNode in node.Conditions)
-            {
                 VisitCondition(conditionNode, node.ParameterIdentifiers);
-            }
         }
 
         private bool HasUniqueParameters(List<string> parameters)
@@ -92,9 +88,7 @@ namespace ReferenceHandlerLib
             if (node.Children != null)
             {
                 foreach (ExpressionNode child in node.Children)
-                {
                     _dispatch(child, identifiers);
-                }
             }
         }
 
@@ -103,23 +97,18 @@ namespace ReferenceHandlerLib
             for (int i = 0; i < identifiers.Count; i++)
             {
                 if (identifiers[i] == node.ID)
-                {
                     node.Reference = i;
-                }
             }
             node.IsLocal = (node.Reference != NO_LOCAL_REF);
             if (!node.IsLocal)
             {
                 if (_functionIdentifierTable.ContainsKey(node.ID))
-                {
                     node.Reference = _functionIdentifierTable[node.ID];
-                }
-                else throw new InvalidIdentifierException(node);
+                else 
+                    throw new InvalidIdentifierException(node);
 
                 if (node.Reference == NO_LOCAL_REF)
-                {
                     throw new OverloadedFunctionIdentifierException(node);
-                }
             }
         }
 
