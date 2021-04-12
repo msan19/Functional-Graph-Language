@@ -2,6 +2,7 @@
 using ASTLib.Nodes.TypeNodes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
@@ -18,5 +19,7 @@ namespace ASTLib.Nodes.ExpressionNodes
             Element = element;
             Bounds = bounds;
         }
+
+        public ExpressionNode Predicate => Children.First();
     }
 }

@@ -123,9 +123,44 @@ namespace ReferenceHandlerLib
                 _dispatch(n, identifiers);
         }
 
-        public void VisitSet(SetExpression node, List<string> identifiers)
+        /*
+            GetSet:(integer) -> set
+            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, i < j}
+            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, e in {v[a, b] | 0 <= [a] < n, 0 < [b] < n * n, a < b}}
+         */
+        public void VisitSet(SetExpression node, List<string> parameters)
         {
+            //_dispatch(node.Predicate, parameters);
 
+            //foreach (var bound in node.Bounds)
+            //{
+            //    _dispatch(bound.MinValue, parameters);
+            //    _dispatch(bound.MaxValue, parameters);
+            //}
+
+            //if (node.Element.IndexIdentifiers.Count != node.Bounds.Count)
+            //    throw new BoundException(node, "");
+            
+            //foreach (var identigier in node.Element.IndexIdentifiers)
+            //{
+            //    if (parameters.Contains(identigier))
+            //        throw new IdenticalParameterIdentifiersException(parameters);
+            //}
+
+            //if (parameters.Contains(node.Element.ElementIdentifier))
+            //    throw new IdenticalParameterIdentifiersException(parameters);
+
+
+            // Check if element and indcies hides another identifier
+
+            // Foreach bound
+            //  Check that identifiers matches an index in the element
+            //  Dispatch min and max boundExpressions
+            // Reorder Bound List
+
+            // Add identifiers to list of identifier
+            //  Dispatch Predicate
+            // Remove identifiers from list of identifier
         }
     }
 }
