@@ -15,6 +15,13 @@ namespace ASTLib.Nodes.ExpressionNodes
             Value = ConvertToDouble(token);
             Children = new List<ExpressionNode>();
         }
+        
+        public RealLiteralExpression(double value, int line, int letter) : base(null, line, letter) 
+        {
+            Value = value;
+            Children = new List<ExpressionNode>();
+        }
+        
         private double ConvertToDouble(string str)
         {
             double result = -1.00;
