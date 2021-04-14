@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -87,6 +88,26 @@ namespace TypeCheckerLib.Tests.HelperTests
             var res = helper.VisitBinarySetOp(input1, null).Type;
 
             Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitBinarySetOp_UnionExpressionWithIntAndBoolChilds_ThrowsException()
+        {
+            UnionExpression union = new UnionExpression(GetLiteral(TypeEnum.Integer), GetLiteral(TypeEnum.Boolean), 0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            helper.VisitBinarySetOp(union, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitBinarySetOp_UnionExpressionWithIntAndSetChilds_ThrowsException()
+        {
+            UnionExpression union = new UnionExpression(GetLiteral(TypeEnum.Integer), GetSet(), 0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            helper.VisitBinarySetOp(union, null);
         }
     }
 }
