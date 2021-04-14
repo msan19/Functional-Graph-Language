@@ -93,6 +93,14 @@ namespace TypeCheckerLib.Tests
             return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
+        public static ITypeChecker GetTypeCheckerOnlyWith(ISetHelper setHelper)
+        {
+            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
+            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
+        }
 
         public static FunctionTypeNode GetFunctionType(TypeEnum returnType, List<TypeEnum> inputTypes)
         {

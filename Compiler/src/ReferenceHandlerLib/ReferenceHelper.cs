@@ -24,36 +24,38 @@ namespace ReferenceHandlerLib
 
         public void BuildTables(List<FunctionNode> functions)
         {
+            _functionTable = GetFunctionTable(functions);
+            _functionIdentifierTable = GetFunctionIdentifierTable(functions);
+        }
+
+        private Dictionary<string, List<int>> GetFunctionTable(List<FunctionNode> functions)
+        {
             Dictionary<string, List<int>> table = new Dictionary<string, List<int>>();
-            Dictionary<string, int> functionIdentifierTable = new Dictionary<string, int>();
 
             for (int i = 0; i < functions.Count; i++)
             {
                 string name = functions[i].ParameterIdentifiers.Count + functions[i].Identifier;
                 if (!table.ContainsKey(name))
-                {
                     table.Add(name, new List<int>() { i });
-                }
                 else
-                {
                     table[name].Add(i);
-                }
             }
-            _functionTable = table;
+            return table;
+        }
+        
+        private Dictionary<string, int> GetFunctionIdentifierTable(List<FunctionNode> functions)
+        {
+            Dictionary<string, int> functionIdentifierTable = new Dictionary<string, int>();
 
             for (int i = 0; i < functions.Count; i++)
             {
                 string identifier = functions[i].Identifier;
                 if (!functionIdentifierTable.ContainsKey(identifier))
-                {
                     functionIdentifierTable.Add(identifier, i);
-                }
                 else
-                {
                     functionIdentifierTable[identifier] = NO_LOCAL_REF;
-                } 
             }
-            _functionIdentifierTable = functionIdentifierTable;
+            return functionIdentifierTable;
         }
 
         public void VisitExport(ExportNode node)
@@ -64,13 +66,9 @@ namespace ReferenceHandlerLib
         public void VisitFunction(FunctionNode node)
         {
             if (HasUniqueParameters(node.ParameterIdentifiers))
-            {
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
-            }
             foreach (ConditionNode conditionNode in node.Conditions)
-            {
                 VisitCondition(conditionNode, node.ParameterIdentifiers);
-            }
         }
 
         private bool HasUniqueParameters(List<string> parameters)
@@ -90,9 +88,7 @@ namespace ReferenceHandlerLib
             if (node.Children != null)
             {
                 foreach (ExpressionNode child in node.Children)
-                {
                     _dispatch(child, identifiers);
-                }
             }
         }
 
@@ -101,23 +97,18 @@ namespace ReferenceHandlerLib
             for (int i = 0; i < identifiers.Count; i++)
             {
                 if (identifiers[i] == node.ID)
-                {
                     node.Reference = i;
-                }
             }
             node.IsLocal = (node.Reference != NO_LOCAL_REF);
             if (!node.IsLocal)
             {
                 if (_functionIdentifierTable.ContainsKey(node.ID))
-                {
                     node.Reference = _functionIdentifierTable[node.ID];
-                }
-                else throw new InvalidIdentifierException(node);
+                else 
+                    throw new InvalidIdentifierException(node);
 
                 if (node.Reference == NO_LOCAL_REF)
-                {
                     throw new OverloadedFunctionIdentifierException(node);
-                }
             }
         }
 
@@ -132,9 +123,44 @@ namespace ReferenceHandlerLib
                 _dispatch(n, identifiers);
         }
 
-        public void VisitSet(SetExpression node, List<string> identifiers)
+        /*
+            GetSet:(integer) -> set
+            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, i < j}
+            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, e in {v[a, b] | 0 <= [a] < n, 0 < [b] < n * n, a < b}}
+         */
+        public void VisitSet(SetExpression node, List<string> parameters)
         {
+            //_dispatch(node.Predicate, parameters);
 
+            //foreach (var bound in node.Bounds)
+            //{
+            //    _dispatch(bound.MinValue, parameters);
+            //    _dispatch(bound.MaxValue, parameters);
+            //}
+
+            //if (node.Element.IndexIdentifiers.Count != node.Bounds.Count)
+            //    throw new BoundException(node, "");
+            
+            //foreach (var identigier in node.Element.IndexIdentifiers)
+            //{
+            //    if (parameters.Contains(identigier))
+            //        throw new IdenticalParameterIdentifiersException(parameters);
+            //}
+
+            //if (parameters.Contains(node.Element.ElementIdentifier))
+            //    throw new IdenticalParameterIdentifiersException(parameters);
+
+
+            // Check if element and indcies hides another identifier
+
+            // Foreach bound
+            //  Check that identifiers matches an index in the element
+            //  Dispatch min and max boundExpressions
+            // Reorder Bound List
+
+            // Add identifiers to list of identifier
+            //  Dispatch Predicate
+            // Remove identifiers from list of identifier
         }
     }
 }
