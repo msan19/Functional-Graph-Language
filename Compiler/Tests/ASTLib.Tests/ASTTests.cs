@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ASTLib.Tests
+namespace AST.Tests
 {
     [TestClass]
     public class ASTTests
