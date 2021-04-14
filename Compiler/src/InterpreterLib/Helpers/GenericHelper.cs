@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using InterpreterLib.Interfaces;
 using InterpreterLib.MatchPair;
 
@@ -70,6 +71,10 @@ namespace InterpreterLib.Helpers
                 return TypeEnum.Boolean;
             else if (t == typeof(long))
                 return TypeEnum.Function;
+            else if (t == typeof(Set))
+                return TypeEnum.Set;
+            else if (t == typeof(Element))
+                return TypeEnum.Element;
             else
                 throw new Exception($"Unimplemented type {t}");
         }
