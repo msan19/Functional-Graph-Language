@@ -29,7 +29,7 @@ namespace TypeCheckerLib.Helpers
 
             if (!IsSet(left.Type) || !IsSet(right.Type))
             {
-                throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "bool");
+                throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "set");
             }
             return new TypeNode(TypeEnum.Set, 0, 0);
         }

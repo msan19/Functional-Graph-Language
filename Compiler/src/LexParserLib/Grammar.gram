@@ -11,7 +11,7 @@ grammar Grammar
         realNumber    -> [0-9]+ '.' [0-9]+ ;
         integerNumber -> [0-9]+ ;
 
-        WHITE_SPACE   -> U+0020 | U+0009 | U+000A | U+000B | U+000C | U+000D ;
+        WHITE_SPACE   -> U+0020 | U+0009 | U+000A | U+000B | U+000C | U+000D | '//'.*'\n';
         SEPARATOR     -> WHITE_SPACE+ ;
     }
     rules
