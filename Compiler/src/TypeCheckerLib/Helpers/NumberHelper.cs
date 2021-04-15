@@ -9,6 +9,7 @@ using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace TypeCheckerLib.Helpers
 {

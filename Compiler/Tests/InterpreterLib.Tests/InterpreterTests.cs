@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace InterpreterLib.Tests
 {
