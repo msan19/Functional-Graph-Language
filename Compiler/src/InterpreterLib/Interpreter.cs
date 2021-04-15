@@ -10,6 +10,7 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Objects;
 using InterpreterLib.Helpers;
@@ -60,6 +61,8 @@ namespace InterpreterLib
         {
             return node switch
             {
+                UnionExpression e          => _setHelper.UnionSet(e, parameters),
+                IntersectionExpression e   => _setHelper.IntersectionSet(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
