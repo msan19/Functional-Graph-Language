@@ -828,5 +828,143 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
         #endregion
 
+        #region CheckConditionNode
+        [DataRow(2, 1)]
+        [DataRow(10, 7)]
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void CheckConditionNode_xElementsWithOneNotElement_Exception(int elementNum, int indexOfNonElement)
+        {
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            parameters[indexOfNonElement] = Utilities.GetTypeNode(TypeEnum.Boolean);
+
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
+        public void CheckConditionNode_xElementsWithOneIndex_AddToParameters(int elementNum)
+        {
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
+        public void CheckConditionNode_ElementWithXIndicies_AddToParameters(int indexNum)
+        {
+            var indicies = Utilities.GetListWithXStrings(indexNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(1);
+            var expected = parameters.ToList();
+            expected.AddRange(indicies.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElement(indicies, 0);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
+        public void CheckConditionNode_ElementWithXIndicies_RemoveExtraParameters(int indexNum)
+        {
+            var parameters = Utilities.GetTypeNodeListWithXElements(1);
+            var expected = parameters.ToList();
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElement(Utilities.GetListWithXStrings(indexNum), 0);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetBoolLit(true);
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            parameters.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void CheckConditionNode_NoElements_NoException()
+        {
+            var parameters = Utilities.GetTypeNodeList();
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+            
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetBoolLit(true);
+            var conditionNode = Utilities.GetConditionNode(conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void CheckConditionNode_ConditionIsNotBoolean_Exception()
+        {
+            var parameters = Utilities.GetTypeNodeList();
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var returnExpr = Utilities.GetIntLit();
+            var conditionExpr = Utilities.GetIntLit();
+            var conditionNode = Utilities.GetConditionNode(conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+        #endregion
+
     }
 }
