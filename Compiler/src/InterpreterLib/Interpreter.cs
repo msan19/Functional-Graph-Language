@@ -6,6 +6,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -113,10 +114,11 @@ namespace InterpreterLib
                 OrExpression e              => _booleanHelper.OrBoolean(e, parameters),
                 IdentifierExpression e      => _booleanHelper.IdentifierBoolean(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
+                InExpression e              => _booleanHelper.InBoolean(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }
-        
+
         public object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type)
         {
             return type switch
@@ -125,6 +127,7 @@ namespace InterpreterLib
                 TypeEnum.Real       => (object) DispatchReal(node, parameters),
                 TypeEnum.Function   => (object) DispatchFunction(node, parameters),
                 TypeEnum.Boolean    => (object) DispatchBoolean(node, parameters),
+                TypeEnum.Set        => (object) DispatchSet(node, parameters),
                 _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }

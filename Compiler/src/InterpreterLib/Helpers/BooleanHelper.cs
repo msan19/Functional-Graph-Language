@@ -5,6 +5,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Interfaces;
@@ -127,5 +128,13 @@ namespace InterpreterLib.Helpers
             }
             return res;
         }
+
+        public bool InBoolean(InExpression node, List<object> parameters)
+        {
+            SetExpression leftOperand = _interpreter.DispatchBooleanl(node.Children[0], parameters);
+            SetExpression rightOperand = _interpreter.DispatchBooleanl(node.Children[1], parameters);
+            return lhs.Con
+        }
+
     }
 }
