@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations
+namespace ASTLib.Nodes.ExpressionNodes.SetOperationNodes
 {
     public class UnionExpression : ExpressionNode, INonIdentifierExpression, IBinarySetOperator
     {

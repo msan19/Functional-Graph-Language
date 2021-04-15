@@ -7,6 +7,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Objects;
 using FluentAssertions;
@@ -95,7 +96,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void VisitBinarySetOp_UnionExpressionWithIntAndBoolChilds_ThrowsException()
         {
             UnionExpression union = new UnionExpression(GetLiteral(TypeEnum.Integer), GetLiteral(TypeEnum.Boolean), 0, 0);
-
+            
             SetHelper helper = Utilities.GetHelper<SetHelper>();
             helper.VisitBinarySetOp(union, null);
         }
