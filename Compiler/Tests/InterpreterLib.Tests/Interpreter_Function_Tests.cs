@@ -24,7 +24,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             List<Object> res = null;
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -40,7 +40,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             IdentifierExpression res = null;
             fhelper.IdentifierFunction(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -56,7 +56,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchFunction(input1, input2);

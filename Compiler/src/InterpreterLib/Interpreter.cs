@@ -11,6 +11,7 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using InterpreterLib.MatchPair;
@@ -47,8 +48,24 @@ namespace InterpreterLib
             
             _genericHelper.SetASTRoot(node);
             List<double> results = new List<double>();
-            foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<object>()));
+            foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<Object>()));
             return results;
+        }
+
+        public Set DispatchSet(ExpressionNode node, List<Object> parameters)
+        {
+            return node switch
+            {
+                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
+            };
+        }
+
+        public Element DispatchElement(ExpressionNode node, List<Object> parameters)
+        {
+            return node switch
+            {
+                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
+            };
         }
 
         public int DispatchInt(ExpressionNode node, List<Object> parameters)
@@ -99,7 +116,7 @@ namespace InterpreterLib
             };
         }
 
-        public bool DispatchBoolean(ExpressionNode node, List<object> parameters)
+        public bool DispatchBoolean(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
@@ -115,19 +132,21 @@ namespace InterpreterLib
                 IdentifierExpression e      => _booleanHelper.IdentifierBoolean(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
                 InExpression e              => _booleanHelper.InBoolean(e, parameters),
+                BooleanLiteralExpression e => _booleanHelper.LiteralBoolean(e),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }
-
-        public object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type)
+        
+        public Object Dispatch(ExpressionNode node, List<Object> parameters, TypeEnum type)
         {
             return type switch
             {
-                TypeEnum.Integer    => (object) DispatchInt(node, parameters),
-                TypeEnum.Real       => (object) DispatchReal(node, parameters),
-                TypeEnum.Function   => (object) DispatchFunction(node, parameters),
-                TypeEnum.Boolean    => (object) DispatchBoolean(node, parameters),
-                TypeEnum.Set        => (object) DispatchSet(node, parameters),
+                TypeEnum.Integer    => (Object) DispatchInt(node, parameters),
+                TypeEnum.Real       => (Object) DispatchReal(node, parameters),
+                TypeEnum.Function   => (Object) DispatchFunction(node, parameters),
+                TypeEnum.Boolean    => (Object) DispatchBoolean(node, parameters),
+                TypeEnum.Set        => (Object) DispatchSet(node, parameters),
+                TypeEnum.Element    => (Object) DispatchElement(node, parameters),
                 _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }

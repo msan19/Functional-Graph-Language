@@ -169,7 +169,7 @@ namespace InterpreterLib.Tests
         private void DispatchBool_ReturnsCorrect(ExpressionNode node, IBooleanHelper boolHelper, bool expected)
         {
             var parameters = GetParameterList();
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
 
             var res = interpreter.DispatchBoolean(node, parameters);
 
@@ -177,6 +177,24 @@ namespace InterpreterLib.Tests
         }
         #endregion
         #region Pass Node Down
+        [TestMethod]
+        public void DispatchBool_Literal_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = new BooleanLiteralExpression(false, 0, 0);
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.LiteralBoolean(Arg.Do<BooleanLiteralExpression>(x => res = x))
+                .Returns(false);
+
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
         [TestMethod]
         public void DispatchBool_Greater_PassNodeDown()
         {
@@ -189,7 +207,7 @@ namespace InterpreterLib.Tests
             boolHelper.GreaterBoolean(Arg.Do<GreaterExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -207,7 +225,7 @@ namespace InterpreterLib.Tests
             boolHelper.LessBoolean(Arg.Do<LessExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -225,7 +243,7 @@ namespace InterpreterLib.Tests
             boolHelper.GreaterEqualBoolean(Arg.Do<GreaterEqualExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -243,7 +261,7 @@ namespace InterpreterLib.Tests
             boolHelper.LessEqualBoolean(Arg.Do<LessEqualExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -261,7 +279,7 @@ namespace InterpreterLib.Tests
             boolHelper.EqualBoolean(Arg.Do<EqualExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -279,7 +297,7 @@ namespace InterpreterLib.Tests
             boolHelper.NotEqualBoolean(Arg.Do<NotEqualExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -297,7 +315,7 @@ namespace InterpreterLib.Tests
             boolHelper.NotBoolean(Arg.Do<NotExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -315,7 +333,7 @@ namespace InterpreterLib.Tests
             boolHelper.AndBoolean(Arg.Do<AndExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -333,7 +351,7 @@ namespace InterpreterLib.Tests
             boolHelper.OrBoolean(Arg.Do<OrExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -351,7 +369,7 @@ namespace InterpreterLib.Tests
             boolHelper.IdentifierBoolean(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -371,7 +389,7 @@ namespace InterpreterLib.Tests
             boolHelper.GreaterBoolean(Arg.Any<GreaterExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -390,7 +408,7 @@ namespace InterpreterLib.Tests
             boolHelper.LessBoolean(Arg.Any<LessExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -409,7 +427,7 @@ namespace InterpreterLib.Tests
             boolHelper.GreaterEqualBoolean(Arg.Any<GreaterEqualExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -428,7 +446,7 @@ namespace InterpreterLib.Tests
             boolHelper.LessEqualBoolean(Arg.Any<LessEqualExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -447,7 +465,7 @@ namespace InterpreterLib.Tests
             boolHelper.EqualBoolean(Arg.Any<EqualExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -466,7 +484,7 @@ namespace InterpreterLib.Tests
             boolHelper.NotEqualBoolean(Arg.Any<NotEqualExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -485,7 +503,7 @@ namespace InterpreterLib.Tests
             boolHelper.NotBoolean(Arg.Any<NotExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -504,7 +522,7 @@ namespace InterpreterLib.Tests
             boolHelper.AndBoolean(Arg.Any<AndExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -523,7 +541,7 @@ namespace InterpreterLib.Tests
             boolHelper.OrBoolean(Arg.Any<OrExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
@@ -542,7 +560,7 @@ namespace InterpreterLib.Tests
             boolHelper.IdentifierBoolean(Arg.Any<IdentifierExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);
