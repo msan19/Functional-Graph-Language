@@ -15,6 +15,8 @@ namespace InterpreterLib.Interfaces
 
         void SetInterpreter(IInterpreterBoolean interpreter);
 
+        bool LiteralBoolean(BooleanLiteralExpression node);
+
         bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
 
         bool NotBoolean(NotExpression node, List<object> parameters);

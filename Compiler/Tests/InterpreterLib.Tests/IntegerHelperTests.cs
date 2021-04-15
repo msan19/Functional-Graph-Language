@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using FluentAssertions;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
@@ -141,6 +142,36 @@ namespace InterpreterLib.Tests
             int res = integerHelper.AbsoluteInteger(absExpr, new List<object>());
 
             Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void AbsoluteInteger_Set_ReturnsLength()
+        {
+            IdentifierExpression intLit = new IdentifierExpression("", 1, 1);
+            AbsoluteValueExpression absExpr = new AbsoluteValueExpression(intLit, 1, 1);
+            absExpr.Type = TypeEnum.Set;
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchSet(intLit, Arg.Any<List<object>>()).Returns(new Set(new Element(0)));
+            IntegerHelper integerHelper = SetUpHelper(parent);
+
+            int res = integerHelper.AbsoluteInteger(absExpr, new List<object>());
+
+            Assert.AreEqual(1, res);
+        }
+
+        [TestMethod]
+        public void AbsoluteInteger_SetWithEmptyList_ReturnsLength()
+        {
+            IdentifierExpression intLit = new IdentifierExpression("", 1, 1);
+            AbsoluteValueExpression absExpr = new AbsoluteValueExpression(intLit, 1, 1);
+            absExpr.Type = TypeEnum.Set;
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchSet(intLit, Arg.Any<List<object>>()).Returns(new Set(new List<Element>()));
+            IntegerHelper integerHelper = SetUpHelper(parent);
+
+            int res = integerHelper.AbsoluteInteger(absExpr, new List<object>());
+
+            Assert.AreEqual(0, res);
         }
         #endregion
 

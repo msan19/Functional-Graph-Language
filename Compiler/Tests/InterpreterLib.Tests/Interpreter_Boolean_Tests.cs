@@ -178,6 +178,24 @@ namespace InterpreterLib.Tests
         #endregion
         #region Pass Node Down
         [TestMethod]
+        public void DispatchBool_Literal_PassNodeDown()
+        {
+            var parameters = GetParameterList();
+            var node = new BooleanLiteralExpression(false, 0, 0);
+            var expected = node;
+
+            var boolHelper = GetBooleanHelper();
+            Node res = null;
+            boolHelper.LiteralBoolean(Arg.Do<BooleanLiteralExpression>(x => res = x))
+                .Returns(false);
+
+            var interpreter = Utilities.GetIntepretorOnlyWith(boolHelper);
+            interpreter.DispatchBoolean(node, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
         public void DispatchBool_Greater_PassNodeDown()
         {
             var parameters = GetParameterList();
