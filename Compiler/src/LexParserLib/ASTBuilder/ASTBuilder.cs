@@ -148,7 +148,8 @@ namespace LexParserLib
             {
                 return new ConditionNode(returnExpression,
                                          position.Line, position.Column);
-            } else
+            } 
+            else
             {
                 bool both = himeNode.Children.Count == CONDITION_BOTH_ELEMENTS_AND_PREDICATE;
                 string symbol = himeNode.Children[1].Symbol.Name;
@@ -156,7 +157,7 @@ namespace LexParserLib
                 ExpressionNode conditionExpr = both ? 
                     _expressionHelper.DispatchExpression(himeNode.Children[3]) : 
                     null;
-                List<ElementNode> elements = null;
+                List<ElementNode> elements = new List<ElementNode>();
                 if (symbol == "Elements")
                     elements = VisitElements(himeNode.Children[1]);
                 else
