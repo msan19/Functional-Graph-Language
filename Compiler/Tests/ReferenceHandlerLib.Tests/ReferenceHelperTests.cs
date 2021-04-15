@@ -678,7 +678,7 @@ namespace ReferenceHandlerLib.Tests
 
         [DataRow("a")]
         [TestMethod]
-        [ExpectedException(typeof(InvalidIdentifierException))]
+        [ExpectedException(typeof(BoundException))]
         public void VisitSet_BoundNotPartOfElement_Exception(string boundId)
         {
             var parameters = new List<string>() { "a", "b", "c" };
