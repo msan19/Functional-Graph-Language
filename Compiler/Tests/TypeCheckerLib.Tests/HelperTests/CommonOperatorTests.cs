@@ -782,6 +782,58 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
+        public void VisitEquivalenceOperator_EqualExpressionWithSetAndSet_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            ExpressionNode leftNode = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode rightNode = new SetExpression(null, null, null, 1, 1);
+            EqualExpression input = new EqualExpression(leftNode, rightNode, 1, 1);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            var res = helper.VisitEquivalenceOperator(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitEquivalenceOperator_EqualExpressionWithElementAndElement_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            ExpressionNode leftNode = new ElementExpression(null, 0, 0);
+            ExpressionNode rightNode = new ElementExpression(null, 1, 1);
+            EqualExpression input = new EqualExpression(leftNode, rightNode, 1, 1);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            var res = helper.VisitEquivalenceOperator(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitEquivalenceOperator_EqualExpressionWithSetAndElement_ThrowsException()
+        {
+            ExpressionNode leftNode = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode rightNode = new ElementExpression(null, 1, 1);
+            EqualExpression input = new EqualExpression(leftNode, rightNode, 1, 1);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitEquivalenceOperator(input, null);
+        }
+
+        [TestMethod]
         public void VisitEquivalenceOperator_NotEqualExpressionWithRealAndReal_ReturnsBooleanTypeNode()
         {
             var expected = TypeEnum.Boolean;
@@ -794,7 +846,6 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         #endregion
-<<<<<<< HEAD
 
         #region VisitNegative
         // Format "- Term"
@@ -808,7 +859,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             var expected = TypeEnum.Integer;
             NegativeExpression negExpr = Utilities.GetNegativeExpressionWithInt();
 
-            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             var res = helper.VisitNegative(negExpr, null).Type;
 
             Assert.AreEqual(expected, res);
@@ -820,7 +871,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             var expected = TypeEnum.Real;
             NegativeExpression negExpr = Utilities.GetNegativeExpressionWithReal();
 
-            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             var res = helper.VisitNegative(negExpr, null).Type;
 
             Assert.AreEqual(expected, res);
@@ -831,7 +882,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         public void VisitNegative_Boolean_CausesUnableToNegateTermException()
         {
             NegativeExpression negExpr = Utilities.GetNegativeExpressionWithBool();
-            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
             
             var res = helper.VisitNegative(negExpr, null).Type;
         }
@@ -893,7 +944,5 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitIn(input, null);
         }
         #endregion
-=======
->>>>>>> 3917c3f5a47dd5fc44b21065fd69d2f6ff43d882
     }
 }

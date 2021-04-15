@@ -5,12 +5,8 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
-<<<<<<< HEAD
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
-=======
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
->>>>>>> 3917c3f5a47dd5fc44b21065fd69d2f6ff43d882
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
