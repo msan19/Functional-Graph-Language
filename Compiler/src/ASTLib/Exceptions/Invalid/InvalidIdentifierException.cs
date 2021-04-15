@@ -13,14 +13,14 @@ namespace ASTLib.Exceptions
 
         }
 
-        public InvalidIdentifierException(BoundNode node, SetExpression set) : base(node, GetBoundMessage(node, set))
+        public InvalidIdentifierException(string id, SetExpression set) : base(set, GetBoundMessage(id, set))
         {
 
         }
 
-        private static string GetBoundMessage(BoundNode node, SetExpression set)
+        private static string GetBoundMessage(string id, SetExpression set)
         {
-            string s = $"{ node.Identifier } is not defined as an identifier in " +
+            string s = $"{ id } is not defined as an identifier in " +
                 $"{ set.Element.ElementIdentifier }[{ GetIdentifiers(set.Element.IndexIdentifiers) }]";
 
             return s;
