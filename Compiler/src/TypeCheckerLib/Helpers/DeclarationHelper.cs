@@ -51,7 +51,7 @@ namespace TypeCheckerLib.Helpers
             }
         }
 
-        private void CheckConditionNode(TypeNode expectedType, ConditionNode condition, List<TypeNode> parameterTypes)
+        public void CheckConditionNode(TypeNode expectedType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
             TypeNode returnType = _getType(condition.ReturnExpression, parameterTypes);
             if(!condition.IsDefaultCase)

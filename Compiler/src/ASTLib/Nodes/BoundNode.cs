@@ -11,10 +11,10 @@ namespace ASTLib.Nodes
         public ExpressionNode MaxValue { get; }
         public string Identifier { get; }
 
-        public BoundNode(string identifier, ExpressionNode smallesValue, ExpressionNode largestValue, int line, int letter) : base(line, letter)
+        public BoundNode(string identifier, ExpressionNode smallestValue, ExpressionNode largestValue, int line, int letter) : base(line, letter)
         {
             Identifier = identifier;
-            MinValue = smallesValue;
+            MinValue = smallestValue;
             MaxValue = largestValue;
         }
     }

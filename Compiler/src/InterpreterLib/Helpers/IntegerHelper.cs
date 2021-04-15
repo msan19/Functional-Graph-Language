@@ -8,6 +8,7 @@ using InterpreterLib.Interfaces;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Objects;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace InterpreterLib.Helpers
@@ -73,11 +74,18 @@ namespace InterpreterLib.Helpers
 
         public int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters)
         {
-            int operand = _interpreter.DispatchInt(node.Children[0], parameters);
-
-            if (node.Type != TypeEnum.Integer) { throw new InvalidAbsoluteIntegerException(node); }
-
-            return Math.Abs(operand);
+            if (node.Type == TypeEnum.Integer)
+            {
+                int operand = _interpreter.DispatchInt(node.Children[0], parameters);
+                return Math.Abs(operand);
+            }
+            else if (node.Type == TypeEnum.Set)
+            {
+                Set operand = _interpreter.DispatchSet(node.Children[0], parameters);
+                return operand.Elements.Count;
+            }
+            else
+                throw new InvalidAbsoluteIntegerException(node);
         }
         
         public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)

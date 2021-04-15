@@ -205,37 +205,114 @@ namespace ReferenceHandlerLib
          */
         public void VisitSet(SetExpression node, List<string> parameters)
         {
-            //_dispatch(node.Predicate, parameters);
+            ThrowExceptionIfIdentifiersAreInParameters(node.Element.IndexIdentifiers, parameters);
+            ThrowExceptionIfIdentifiersAreNotUnique(node.Element.IndexIdentifiers);
+            ThrowExceptionIfBoundsAndIndentifiersDoNotMatch(node);
+            ThrowExceptionIfBoundsAreInParameters(node.Bounds, parameters, node);
+            ThrowExceptionIfElementAreInParameters(node.Element, parameters);
 
-            //foreach (var bound in node.Bounds)
-            //{
-            //    _dispatch(bound.MinValue, parameters);
-            //    _dispatch(bound.MaxValue, parameters);
-            //}
+            node.Bounds = GetSortedBounds(node);
+            DispatchBounds(node, parameters);
+            DispatchPredicate(node, parameters);
+        }
 
-            //if (node.Element.IndexIdentifiers.Count != node.Bounds.Count)
-            //    throw new BoundException(node, "");
-            
-            //foreach (var identigier in node.Element.IndexIdentifiers)
-            //{
-            //    if (parameters.Contains(identigier))
-            //        throw new IdenticalParameterIdentifiersException(parameters);
-            //}
+        private void DispatchPredicate(SetExpression node, List<string> parameters)
+        {
+            var newParameters = parameters.ToList();
+            newParameters.Add(node.Element.ElementIdentifier);
+            newParameters.AddRange(node.Element.IndexIdentifiers);
+            _dispatch(node.Predicate, newParameters);
+        }
 
-            //if (parameters.Contains(node.Element.ElementIdentifier))
-            //    throw new IdenticalParameterIdentifiersException(parameters);
+        private void DispatchBounds(SetExpression node, List<string> parameters)
+        {
+            foreach (var bound in node.Bounds)
+            {
+                _dispatch(bound.MinValue, parameters);
+                _dispatch(bound.MaxValue, parameters);
+            }
+        }
 
+        private void ThrowExceptionIfIdentifiersAreInParameters(List<string> indexIdentifiers, List<string> parameters)
+        {
+            foreach (var id in indexIdentifiers)
+            {
+                if (parameters.Contains(id))
+                    throw new IdenticalParameterIdentifiersException(parameters);
+            }
+        }
 
-            // Check if element and indcies hides another identifier
+        private void ThrowExceptionIfBoundsAndIndentifiersDoNotMatch(SetExpression node)
+        {
+            if (node.Element.IndexIdentifiers.Count != node.Bounds.Count)
+                throw new BoundException(node, "The number of bounds is not the same as element identifiers.");
+            ThrowExceptionIfBoundsAreNotUnique(node.Bounds);
+        }
 
-            // Foreach bound
-            //  Check that identifiers matches an index in the element
-            //  Dispatch min and max boundExpressions
-            // Reorder Bound List
+        private void ThrowExceptionIfElementAreInParameters(ElementNode element, List<string> parameters)
+        {
+            if(parameters.Contains(element.ElementIdentifier))
+                throw new IdenticalParameterIdentifiersException(parameters);
+        }
 
-            // Add identifiers to list of identifier
-            //  Dispatch Predicate
-            // Remove identifiers from list of identifier
+        private void ThrowExceptionIfBoundsAreInParameters(List<BoundNode> bounds, List<string> parameters, SetExpression set)
+        {
+            foreach (var bound in bounds)
+            {
+                if (parameters.Contains(bound.Identifier))
+                    throw new InvalidIdentifierException(bound.Identifier, set);
+            }
+        }
+
+        private void ThrowExceptionIfIdentifiersAreNotUnique(List<string> indexIdentifiers)
+        {
+            if(!StringsAreUnique(indexIdentifiers))
+                throw new IdenticalParameterIdentifiersException(indexIdentifiers);
+        }
+
+        private void ThrowExceptionIfBoundsAreNotUnique(List<BoundNode> bounds)
+        {
+            if(!StringsAreUnique(bounds.ConvertAll(x => x.Identifier)))
+                throw new IdenticalParameterIdentifiersException(bounds.ConvertAll(x => x.Identifier));
+        }
+
+        private bool StringsAreUnique(List<string> strings)
+        {
+            var dic = new Dictionary<string, int>();
+            foreach (var id in strings)
+            {
+                if (dic.ContainsKey(id))
+                    dic[id]++;
+                else
+                    dic.Add(id, 1);
+            }
+
+            foreach (var pair in dic)
+            {
+                if (pair.Value > 1)
+                    return false;
+            }
+            return true;
+        }
+
+        private List<BoundNode> GetSortedBounds(SetExpression node)
+        {
+            List<BoundNode> bounds = new List<BoundNode>();
+            foreach (var id in node.Element.IndexIdentifiers)
+            {
+                bounds.Add(GetBound(id, node.Bounds, node));
+            }
+            return bounds;
+        }
+
+        private BoundNode GetBound(string id, List<BoundNode> bounds, SetExpression set)
+        {
+            foreach (var bound in bounds)
+            {
+                if (bound.Identifier.Equals(id))
+                    return bound;
+            }
+            throw new InvalidIdentifierException(id, set);
         }
     }
 }
