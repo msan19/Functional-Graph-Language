@@ -11,6 +11,7 @@ using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
 

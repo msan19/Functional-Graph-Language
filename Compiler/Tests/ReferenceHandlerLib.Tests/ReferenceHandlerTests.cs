@@ -9,6 +9,7 @@ using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace ReferenceHandlerLib.Tests
 {

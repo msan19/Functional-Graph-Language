@@ -8,6 +8,7 @@ using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -188,7 +189,7 @@ namespace LexParserLib
         private SetExpression GetSet(ASTNode himeNode)
         {
             ExpressionNode predicate = (himeNode.Children.Count == SET_WITH_PREDICATE) ?
-                                        DispatchExpression(himeNode.Children[6]) : null;
+                                        DispatchExpression(himeNode.Children[5]) : null;
             ElementNode element = GetElementNode(himeNode.Children[1]);
             List<BoundNode> bounds = VisitBounds(himeNode.Children[3]);
             TextPosition position = himeNode.Children[0].Position;
@@ -197,10 +198,10 @@ namespace LexParserLib
 
         public ElementNode GetElementNode(ASTNode himeNode)
         {
-            ASTNode himeElement = himeNode.Children[1];
-            TextPosition position = himeElement.Children[0].Position;
-            return new ElementNode(himeElement.Children[0].Value,
-                                                  VisitIdentifiers(himeElement.Children[2]),
+            ASTNode himeElement = himeNode.Children[0];
+            TextPosition position = himeElement.Position;
+            return new ElementNode(himeElement.Value,
+                                                  VisitIdentifiers(himeNode.Children[2]),
                                                   position.Line, position.Column);
         }
 
@@ -235,8 +236,8 @@ namespace LexParserLib
             {
                 position = himeNode.Children[3].Position;
                 return new BoundNode(himeNode.Children[3].Value,
-                                     GetLimit(himeNode.Children[0], himeNode.Children[1].Value, 1),
-                                     GetLimit(himeNode.Children[6], himeNode.Children[5].Value, -1),
+                                     GetLimit(himeNode.Children[0], himeNode.Children[1].Children[0].Value, 1),
+                                     GetLimit(himeNode.Children[6], himeNode.Children[5].Children[0].Value, -1),
                                      position.Line, position.Column);
             }
             else

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes.OperationNodes
+namespace ASTLib.Nodes.ExpressionNodes.NumberOperationNodes
 {
     public class DivisionExpression : ExpressionNode, INonIdentifierExpression, IBinaryNumberOperator
     {
