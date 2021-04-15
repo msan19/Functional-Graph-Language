@@ -10,7 +10,7 @@ namespace ASTLib.Nodes.ExpressionNodes
     public class SetExpression : ExpressionNode
     {
         public ElementNode Element { get; }
-        public List<BoundNode> Bounds { get; }
+        public List<BoundNode> Bounds { get; set; }
 
         public SetExpression(ElementNode element, List<BoundNode> bounds,
                              ExpressionNode predicate, int line, int letter) : 
