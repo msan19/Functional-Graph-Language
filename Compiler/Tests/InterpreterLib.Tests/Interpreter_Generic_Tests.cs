@@ -22,7 +22,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.Condition<int>(Arg.Any<ConditionNode>(), 
                                    Arg.Do<List<Object>>(x => res = x)).
@@ -40,7 +40,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode("", expected, null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ConditionNode res = null;
             ihelper.Condition<int>(Arg.Do<ConditionNode>(x => res = x), 
                                    Arg.Any<List<Object>>()).
@@ -58,7 +58,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode("", new ConditionNode(null, 0, 0), null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.Condition<int>(Arg.Any<ConditionNode>(), Arg.Any<List<Object>>()).Returns( new MatchPair<int>(true, expected));
 
             int res = (int)interpreter.Function<int>(input1, input2);
@@ -77,7 +77,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper fhelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             fhelper.Condition<int>(cn1, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(aValid, a));
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(bValid, b));
 
@@ -94,7 +94,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper fhelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             fhelper.Condition<int>(cn1, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(true, 17));
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(true, 18));
 
@@ -109,7 +109,7 @@ namespace InterpreterLib.Tests
             FunctionNode input1 = new FunctionNode(new List<ConditionNode> { cn1, cn2 }, "", null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper fhelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             fhelper.Condition<int>(cn1, Arg.Any<List<Object>>()).
                                    Returns(new MatchPair<int>(false, 1));
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).
@@ -127,7 +127,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.FunctionCall<int>(Arg.Any<FunctionCallExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -143,7 +143,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             FunctionCallExpression res = null;
             ihelper.FunctionCall<int>(Arg.Do<FunctionCallExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -159,7 +159,7 @@ namespace InterpreterLib.Tests
             FunctionCallExpression input1 = new FunctionCallExpression("", null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IGenericHelper ihelper = Substitute.For<IGenericHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.FunctionCall<int>(Arg.Any<FunctionCallExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);

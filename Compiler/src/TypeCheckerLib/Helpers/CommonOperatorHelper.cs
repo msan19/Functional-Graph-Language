@@ -5,7 +5,7 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -51,21 +51,24 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(n.Children[0], parameterTypes);
             TypeNode right = GetType(n.Children[1], parameterTypes);
 
-            if (!IsSubtractableType(left.Type) || !IsSubtractableType(right.Type))
-                throw new UnmatchableTypesException(n, left.Type, right.Type, "number");
-
-            if (left.Type != right.Type)
+            if ((left.Type == TypeEnum.Integer && right.Type == TypeEnum.Real) || (left.Type == TypeEnum.Real && right.Type == TypeEnum.Integer))
             {
                 CastToReal(n, left, 0);
                 CastToReal(n, right, 1);
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
-            return new TypeNode(left.Type, 0, 0);
-        }
-
-        private bool IsSubtractableType(TypeEnum t)
-        {
-            return t == TypeEnum.Integer || t == TypeEnum.Real;
+            else if (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Integer)
+            {
+                return new TypeNode(left.Type, 0, 0);
+            }
+            else if (left.Type == TypeEnum.Set && right.Type == TypeEnum.Set)
+            {
+                return new TypeNode(TypeEnum.Set, 0, 0);
+            }
+            else
+            {
+                throw new UnmatchableTypesException(n, left.Type, right.Type, "Unmatchable types for subtraction");
+            }
         }
 
         public TypeNode VisitAbsoluteValue(AbsoluteValueExpression n, List<TypeNode> parameterTypes)
@@ -80,6 +83,11 @@ namespace TypeCheckerLib.Helpers
             else if (childType.Type == TypeEnum.Integer) //More types are added later, they all return integer 
             {
                 n.Type = TypeEnum.Integer;
+                return new TypeNode(TypeEnum.Integer, 0, 0);
+            }
+            else if (childType.Type == TypeEnum.Set)
+            {
+                n.Type = TypeEnum.Set;
                 return new TypeNode(TypeEnum.Integer, 0, 0);
             }
             else
@@ -154,6 +162,17 @@ namespace TypeCheckerLib.Helpers
         private bool IsNumber(TypeEnum t)
         {
             return t == TypeEnum.Integer || t == TypeEnum.Real;
+        }
+
+        public TypeNode VisitIn(InExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = GetType(node.Children[0], parameterTypes);
+            TypeNode right = GetType(node.Children[1], parameterTypes);
+
+            if (left.Type != TypeEnum.Element || right.Type != TypeEnum.Set)
+                throw new UnmatchableTypesException(node, left.Type, right.Type, "Lhs and rhs must be of type 'Element' and 'Set' respectivly");
+
+            return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
     }
 }

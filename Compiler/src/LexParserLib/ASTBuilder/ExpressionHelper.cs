@@ -189,7 +189,7 @@ namespace LexParserLib
         private SetExpression GetSet(ASTNode himeNode)
         {
             ExpressionNode predicate = (himeNode.Children.Count == SET_WITH_PREDICATE) ?
-                                        DispatchExpression(himeNode.Children[5]) : null;
+                                        DispatchExpression(himeNode.Children[5]) : new BooleanLiteralExpression(true, 0, 0);
             ElementNode element = GetElementNode(himeNode.Children[1]);
             List<BoundNode> bounds = VisitBounds(himeNode.Children[3]);
             TextPosition position = himeNode.Children[0].Position;

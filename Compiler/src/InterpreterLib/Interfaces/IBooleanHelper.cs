@@ -5,6 +5,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 
@@ -14,6 +15,8 @@ namespace InterpreterLib.Interfaces
     {
 
         void SetInterpreter(IInterpreterBoolean interpreter);
+
+        bool LiteralBoolean(BooleanLiteralExpression node);
 
         bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
 
@@ -34,5 +37,7 @@ namespace InterpreterLib.Interfaces
         bool LessEqualBoolean(LessEqualExpression node, List<object> parameters);
 
         bool LessBoolean(LessExpression node, List<object> parameters);
+
+        bool InBoolean(InExpression node, List<object> parameters);
     }
 }

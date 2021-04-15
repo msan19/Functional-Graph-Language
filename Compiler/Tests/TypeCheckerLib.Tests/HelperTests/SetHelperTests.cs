@@ -29,6 +29,14 @@ namespace TypeCheckerLib.Tests.HelperTests
             return node;
         }
 
+        private SubsetExpression GetSubsetExpression(TypeEnum left, TypeEnum right)
+        {
+            ExpressionNode leftNode = GetSet();
+            ExpressionNode rightNode = GetSet();
+            var node = new SubsetExpression(leftNode, rightNode, 0, 0);
+            return node;
+        }
+
         private SetExpression GetSet()
         {
             ElementNode element = GetElement();
@@ -79,6 +87,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
         }
 
+        #region VisitBinarySetOp
         [TestMethod]
         public void VisitBinarySetOp_UnionExpressionWithSetAndSet_ReturnsSetTypeNode()
         {
@@ -110,5 +119,41 @@ namespace TypeCheckerLib.Tests.HelperTests
             SetHelper helper = Utilities.GetHelper<SetHelper>();
             helper.VisitBinarySetOp(union, null);
         }
+        #endregion
+
+        #region VisitSubset
+        [TestMethod]
+        public void VisitSubset_SubsetExpressionWithSetAndSet_ReturnsBooleanTypeNode()
+        {
+            var expected = TypeEnum.Boolean;
+            SubsetExpression input1 = GetSubsetExpression(TypeEnum.Set, TypeEnum.Set);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            var res = helper.VisitSubset(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitSubset_SubsetExpressionWithIntAndSetChilds_ThrowsException()
+        {
+            SubsetExpression subset = new SubsetExpression(GetLiteral(TypeEnum.Integer), GetSet(), 0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            helper.VisitSubset(subset, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void VisitSubset_SubsetExpressionWithSetAndRealChilds_ThrowsException()
+        {
+            SubsetExpression subset = new SubsetExpression(GetSet(), GetLiteral(TypeEnum.Real), 0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            helper.VisitSubset(subset, null);
+        }
+        #endregion
+
     }
 }

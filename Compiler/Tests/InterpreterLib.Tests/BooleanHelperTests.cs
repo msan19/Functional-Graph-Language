@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -64,7 +67,7 @@ namespace InterpreterLib.Tests
         public void NotBoolean_CorrectValuesReturned(bool input, bool expected)
         {
             BooleanLiteralExpression child = Utilities.GetBoolLitExpression(input);
-            
+
             var expr = new NotExpression(child, 0, 0);
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
             parent.DispatchBoolean(child, Arg.Any<List<object>>()).Returns(input);
@@ -75,7 +78,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
-        
+
         [TestMethod]
         public void NotBoolean__CheckParametersPassedDown()
         {
@@ -92,7 +95,7 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             booleanHelper.NotBoolean(expression, parameters);
-            
+
             Assert.AreEqual(expectedParams, lhsParams);
         }
         #endregion
@@ -119,7 +122,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
-        
+
         [TestMethod]
         public void AndBoolean__CheckParametersPassedDown()
         {
@@ -138,12 +141,12 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             booleanHelper.AndBoolean(expression, parameters);
-            
+
             Assert.AreEqual(expectedParams, lhsParams);
             Assert.AreEqual(expectedParams, rhsParams);
         }
         #endregion
-        
+
         #region OrBoolean
         [DataRow(true, true, true)]
         [DataRow(true, false, true)]
@@ -166,7 +169,7 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
-        
+
         [TestMethod]
         public void OrBoolean__CheckParametersPassedDown()
         {
@@ -185,9 +188,25 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             booleanHelper.OrBoolean(expression, parameters);
-            
+
             Assert.AreEqual(expectedParams, lhsParams);
             Assert.AreEqual(expectedParams, rhsParams);
+        }
+        #endregion
+
+        #region LiteralBoolean
+        [DataRow(false, false)]
+        [DataRow(true, true)]
+        [TestMethod]
+        public void LiteralBoolean_BooleanLiteralExpression_ReturnedCorrectValue(bool value, bool expected)
+        {
+            BooleanLiteralExpression e = new BooleanLiteralExpression(value, 0, 0);
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool result = booleanHelper.LiteralBoolean(e);
+
+            Assert.AreEqual(expected, result);
         }
         #endregion
 
@@ -210,7 +229,7 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             bool res = booleanHelper.EqualBoolean(expression, new List<object>());
-            
+
             Assert.AreEqual(expected, res);
         }
 
@@ -254,10 +273,10 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             bool res = booleanHelper.EqualBoolean(expression, new List<object>());
-            
+
             Assert.AreEqual(expected, res);
         }
-        
+
         [DataRow(true, true, true)]
         [DataRow(true, false, false)]
         [DataRow(false, true, false)]
@@ -277,10 +296,78 @@ namespace InterpreterLib.Tests
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             bool res = booleanHelper.EqualBoolean(expression, new List<object>());
-            
+
             Assert.AreEqual(expected, res);
         }
-        
+
+        [DataRow(new int[] { 0 }, new int[] { 0 }, true)]
+        [DataRow(new int[] { 0 }, new int[] { 1 }, false)]
+        [DataRow(new int[] { 1, 0 }, new int[] { 1 }, false)]
+        [DataRow(new int[] { 1, 17 }, new int[] { 1, 17 }, true)]
+        [TestMethod]
+        public void EqualBoolean_Element_CorrectValuesReturned(int[] a, int[] b, bool expected)
+        {
+            Element lhsValue = new Element(a.ToList());
+            Element rhsValue = new Element(b.ToList());
+
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            EqualExpression expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Element;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchElement(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchElement(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.EqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow(0, 0, true)]
+        [DataRow(1, 0, false)]
+        [DataRow(2, 3, false)]
+        [DataRow(3, 3, true)]
+        [TestMethod]
+        public void EqualBoolean_Set_CorrectValuesReturned(int leftDataRow, int rightDataRow,  bool expected)
+        {
+            Set lhsValue = GetSet(leftDataRow);
+            Set rhsValue = GetSet(rightDataRow);
+
+            var lhs = Utilities.GetRealLitExpression();
+            var rhs = Utilities.GetRealLitExpression();
+
+            EqualExpression expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Set;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchSet(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchSet(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.EqualBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private Set GetSet(int i)
+        {
+            Element[] elements = new Element[] { new Element(0),
+                                                 new Element(new List<int> { 13, 4}),
+                                                 new Element(new List<int> { 4, 10})};
+            Set[] sets = new Set[] { new Set(new List<Element> { elements[0], 
+                                                                 elements[2] }),
+                                     new Set(new List<Element> { elements[0],
+                                                                 elements[1] }),
+                                     new Set(new List<Element> { elements[1] }),
+                                     new Set(new List<Element> { elements[0],
+                                                                 elements[2],
+                                                                 elements[1]})};
+            return sets[i];
+        }
+
         [TestMethod]
         public void EqualBoolean_Int_CheckParametersPassedDown()
         {
@@ -373,6 +460,56 @@ namespace InterpreterLib.Tests
 
             booleanHelper.EqualBoolean(expression, parameters);
             
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+
+        [TestMethod]
+        public void EqualBoolean_Set_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetBoolLitExpression();
+            var rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Set;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            Set testSet = new Set(new Element(17));
+            parent.DispatchSet(lhs, Arg.Do<List<object>>(x => lhsParams = x)).Returns(testSet);
+            parent.DispatchSet(rhs, Arg.Do<List<object>>(x => rhsParams = x)).Returns(testSet);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+
+            Assert.AreEqual(expectedParams, lhsParams);
+            Assert.AreEqual(expectedParams, rhsParams);
+        }
+
+        [TestMethod]
+        public void EqualBoolean_Element_CheckParametersPassedDown()
+        {
+            var lhs = Utilities.GetBoolLitExpression();
+            var rhs = Utilities.GetBoolLitExpression();
+
+            List<object> parameters = Utilities.GetParameterList(4);
+            List<object> expectedParams = parameters;
+            var expression = new EqualExpression(lhs, rhs, 0, 0);
+            expression.Type = TypeEnum.Element;
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            List<object> lhsParams = new List<object>();
+            List<object> rhsParams = new List<object>();
+            Element testElement = new Element(17);
+            parent.DispatchElement(lhs, Arg.Do<List<object>>(x => lhsParams = x)).Returns(testElement);
+            parent.DispatchElement(rhs, Arg.Do<List<object>>(x => rhsParams = x)).Returns(testElement);
+
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            booleanHelper.EqualBoolean(expression, parameters);
+
             Assert.AreEqual(expectedParams, lhsParams);
             Assert.AreEqual(expectedParams, rhsParams);
         }
@@ -757,6 +894,30 @@ namespace InterpreterLib.Tests
             
             Assert.AreEqual(expectedParams, lhsParams);
             Assert.AreEqual(expectedParams, rhsParams);
+        }
+        #endregion
+
+        #region InBoolean
+        [DataRow(new int[] { 1 }, new int[] { 1 }, true)]
+        [DataRow(new int[] { 2, 6 }, new int[] { 1 }, false)]
+        [DataRow(new int[] { 1, 4, 9 }, new int[] { 1, 2, 3, 4, 5 }, false)]
+        [TestMethod]
+        public void InBoolean_GivenElementAndSet_CorrectValueReturned(int[] a, int[] b, bool expected)
+        {
+            Element lhsValue = new Element(a.ToList());
+            Set rhsValue = new Set(new List<Element>() { new Element(b.ToList()) });
+            ElementExpression lhs = new ElementExpression(null, 0, 0);
+            SetExpression rhs = new SetExpression(null, null, null, 1, 1);
+            InExpression expression = new InExpression(lhs, rhs, 0, 0);
+
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            parent.DispatchElement(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
+            parent.DispatchSet(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.InBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
         }
         #endregion
 

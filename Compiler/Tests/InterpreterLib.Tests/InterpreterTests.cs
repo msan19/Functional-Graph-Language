@@ -30,7 +30,7 @@ namespace InterpreterLib.Tests
                                                               new ExportNode(null,0,0)};
             AST input1 = new AST(null, exports, 0, 0);
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
             
             interpreter.Interpret(input1);
 
@@ -46,7 +46,7 @@ namespace InterpreterLib.Tests
                                                               new ExportNode(null,0,0)};
             AST input1 = new AST(null, exports, 0, 0);
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
             rhelper.ExportReal(exports[0], Arg.Any<List<Object>>()).Returns(0.1);
             rhelper.ExportReal(exports[1], Arg.Any<List<Object>>()).Returns(3.3);
             rhelper.ExportReal(exports[2], Arg.Any<List<Object>>()).Returns(7.0);
@@ -114,7 +114,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
             List<Object> res = null;
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -130,7 +130,7 @@ namespace InterpreterLib.Tests
             AdditionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
             AdditionExpression res = null;
             rhelper.AdditionReal(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -146,7 +146,7 @@ namespace InterpreterLib.Tests
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(rhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
             rhelper.AdditionReal(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             double res = (double)interpreter.Dispatch(input1, input2, TypeEnum.Real);
@@ -162,7 +162,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             List<Object> res = null;
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -178,7 +178,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             IdentifierExpression res = null;
             fhelper.IdentifierFunction(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -194,7 +194,7 @@ namespace InterpreterLib.Tests
             IdentifierExpression input1 = new IdentifierExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(fhelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
             fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Function);

@@ -9,7 +9,7 @@ namespace ASTLib.Nodes
     {
         public ExpressionNode Condition { get; }
         public ExpressionNode ReturnExpression { get; set; }
-        public List<ElementNode> Elements { get; }
+        public List<ElementNode> Elements { get; } = new List<ElementNode>();
 
         public ConditionNode(ExpressionNode returnExpression, int line, int letter) : base(line, letter)
         {
@@ -29,6 +29,6 @@ namespace ASTLib.Nodes
             Elements = elements;
         }
 
-        public bool IsDefaultCase => Elements == null && Condition == null;
+        public bool IsDefaultCase => Elements.Count == 0 && Condition == null;
     }
 }

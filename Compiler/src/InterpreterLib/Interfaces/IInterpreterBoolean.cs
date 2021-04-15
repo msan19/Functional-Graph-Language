@@ -4,12 +4,17 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Interfaces
 {
     public interface IInterpreterBoolean
     {
         int DispatchFunction(ExpressionNode node, List<object> parameters);
+
+        Element DispatchElement(ExpressionNode node, List<object> parameters);
+
+        Set DispatchSet(ExpressionNode node, List<object> parameters);
 
         double DispatchReal(ExpressionNode node, List<object> parameters);
         
