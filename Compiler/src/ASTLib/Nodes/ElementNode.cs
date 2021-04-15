@@ -7,6 +7,7 @@ namespace ASTLib.Nodes
 {
     public class ElementNode: Node
     {
+        private const int REFERENCE_NOT_SET = -1;
         public string ElementIdentifier { get; }
         public List<string> IndexIdentifiers { get; }
         public int Reference { get; set; }
@@ -15,7 +16,7 @@ namespace ASTLib.Nodes
         {
             ElementIdentifier = elementName;
             IndexIdentifiers = identifiers;
-            Reference = -1;
+            Reference = REFERENCE_NOT_SET;
         }
     }
 }
