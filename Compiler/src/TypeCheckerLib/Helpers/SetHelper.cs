@@ -8,6 +8,7 @@ using ASTLib.Nodes.TypeNodes;
 using ASTLib.Interfaces;
 using TypeCheckerLib.Interfaces;
 using ASTLib.Exceptions;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -33,6 +34,19 @@ namespace TypeCheckerLib.Helpers
             }
             return new TypeNode(TypeEnum.Set, 0, 0);
         }
+
+        public TypeNode VisitSubset(SubsetExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode left = _getType(node.Children[0], parameterTypes);
+            TypeNode right = _getType(node.Children[1], parameterTypes);
+
+            if (!IsSet(left.Type) || !IsSet(right.Type))
+            {
+                throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "boolean");
+            }
+            return new TypeNode(TypeEnum.Boolean, 0, 0);
+        }
+
         private bool IsSet(TypeEnum t)
         {
             return t == TypeEnum.Set;

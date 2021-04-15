@@ -12,5 +12,31 @@ namespace ASTLib.Exceptions
         {
 
         }
+
+        public InvalidIdentifierException(BoundNode node, SetExpression set) : base(node, GetBoundMessage(node, set))
+        {
+
+        }
+
+        private static string GetBoundMessage(BoundNode node, SetExpression set)
+        {
+            string s = $"{ node.Identifier } is not defined as an identifier in " +
+                $"{ set.Element.ElementIdentifier }[{ GetIdentifiers(set.Element.IndexIdentifiers) }]";
+
+            return s;
+        }
+
+        private static string GetIdentifiers(List<string> indexIdentifiers)
+        {
+            var s = "";
+            foreach (var id in indexIdentifiers)
+            {
+                if (s.Length == 0)
+                    s = id;
+                else
+                    s += ", " + id;
+            }
+            return s;
+        }
     }
 }

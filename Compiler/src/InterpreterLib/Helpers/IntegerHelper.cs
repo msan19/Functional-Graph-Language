@@ -9,6 +9,7 @@ using ASTLib.Nodes.TypeNodes;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Objects;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace InterpreterLib.Helpers
 {
