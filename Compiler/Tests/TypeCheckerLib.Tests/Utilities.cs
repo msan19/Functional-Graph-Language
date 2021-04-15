@@ -5,6 +5,7 @@ using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using NSubstitute;
 using TypeCheckerLib.Interfaces;
@@ -18,6 +19,7 @@ namespace TypeCheckerLib.Tests
             typeChecker.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
             typeChecker.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
             typeChecker.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
+            typeChecker.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
         }
 
         public static T GetHelper<T>() where T : ITypeHelper, new()
@@ -62,7 +64,8 @@ namespace TypeCheckerLib.Tests
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(ICommonOperatorHelper commonOperatorHelper)
@@ -70,7 +73,8 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(INumberHelper numberHelper)
@@ -78,7 +82,8 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
         public static ITypeChecker GetTypeCheckerOnlyWith(IBooleanHelper booleanHelper)
@@ -86,9 +91,18 @@ namespace TypeCheckerLib.Tests
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
             ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
             INumberHelper numberHelper = Substitute.For<INumberHelper>();
-            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper);
+            ISetHelper setHelper = Substitute.For<ISetHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
         
+        public static ITypeChecker GetTypeCheckerOnlyWith(ISetHelper setHelper)
+        {
+            IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();
+            INumberHelper numberHelper = Substitute.For<INumberHelper>();
+            ICommonOperatorHelper commonOperatorHelper = Substitute.For<ICommonOperatorHelper>();
+            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
+            return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
+        }
 
         public static FunctionTypeNode GetFunctionType(TypeEnum returnType, List<TypeEnum> inputTypes)
         {

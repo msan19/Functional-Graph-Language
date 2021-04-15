@@ -4,6 +4,8 @@ using System.Linq;
 using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using FluentAssertions;
@@ -320,5 +322,46 @@ namespace TypeCheckerLib.Tests.HelperTests
         #endregion
 
 
+        #region VisitNegative
+        // Format "- Term"
+        // if Term is type Boolean    --> throw exception (not boolean operator, use ! instead)
+        // if Term is type Real       --> OK
+        // if Term is type Integer    --> OK
+
+        [TestMethod]
+        public void VisitNegative_Integer_ReturnsTypeInteger()
+        {
+            var expected = TypeEnum.Integer;
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithInt();
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            var res = helper.VisitNegative(negExpr, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitNegative_Real_ReturnsTypeReal()
+        {
+            var expected = TypeEnum.Real;
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithReal();
+
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            var res = helper.VisitNegative(negExpr, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+        
+        [ExpectedException(typeof(UnableToNegateTermException))]
+        [TestMethod]
+        public void VisitNegative_Boolean_CausesUnableToNegateTermException()
+        {
+            NegativeExpression negExpr = Utilities.GetNegativeExpressionWithBool();
+            NumberHelper helper = Utilities.GetHelper<NumberHelper>();
+            
+            var res = helper.VisitNegative(negExpr, null).Type;
+        }
+        
+        #endregion
     }
 }

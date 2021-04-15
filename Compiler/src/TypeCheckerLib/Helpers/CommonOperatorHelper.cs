@@ -6,7 +6,11 @@ using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+<<<<<<< HEAD
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
+=======
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
+>>>>>>> 3917c3f5a47dd5fc44b21065fd69d2f6ff43d882
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
@@ -157,14 +161,6 @@ namespace TypeCheckerLib.Helpers
                 throw new UnmatchableTypesException((Node)node, left.Type, right.Type, "expected same type");
             }
                 
-        }
-
-        public TypeNode VisitNegative(NegativeExpression node, List<TypeNode> parameterTypes)
-        {
-            TypeNode childNodeType = _getType(node.Children[0], parameterTypes);
-            if (!IsNumber(childNodeType.Type))
-                throw new UnableToNegateTermException(node.Children[0], childNodeType.ToString());
-            return childNodeType;
         }
 
         private bool IsNumber(TypeEnum t)

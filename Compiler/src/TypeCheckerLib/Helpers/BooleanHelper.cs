@@ -49,7 +49,5 @@ namespace TypeCheckerLib.Helpers
         {
             return t == TypeEnum.Boolean;
         }
-
-
     }
 }

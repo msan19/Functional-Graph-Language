@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Main.Tests", "Tests\Main.Tests\Main.Tests.csproj", "{CBA06F41-5BC0-44B4-975D-F18247F09E2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASTLib.Tests", "Tests\ASTLib.Tests\ASTLib.Tests.csproj", "{21F676F0-D2B3-42F4-BA18-5654C7936A53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AST.Tests", "Tests\ASTLib.Tests\AST.Tests.csproj", "{21F676F0-D2B3-42F4-BA18-5654C7936A53}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileGeneratorLib.Tests", "Tests\FileGeneratorLib.Tests\FileGeneratorLib.Tests.csproj", "{C103C58C-174A-4947-9155-14C4588059B9}"
 EndProject

@@ -8,6 +8,8 @@ using InterpreterLib.Interfaces;
 using System.Linq;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Exceptions;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -98,5 +100,9 @@ namespace InterpreterLib.Helpers
             return Convert.ToDouble(_interpreter.DispatchInt(node.Children[0], parameters));
         }
 
+        public double NegativeReal(NegativeExpression node, List<object> parameters)
+        {
+            return - _interpreter.DispatchReal(node.Children[0], parameters);
+        }
     }
 }

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using ASTLib.Interfaces;
-using ASTLib.Nodes.TypeNodes;
 
-namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes
+namespace ASTLib.Nodes.ExpressionNodes.NumberOperationNodes
 {
     public class NegativeExpression : ExpressionNode, INonIdentifierExpression
     {

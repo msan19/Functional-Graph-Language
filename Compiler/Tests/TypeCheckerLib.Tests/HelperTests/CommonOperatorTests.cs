@@ -13,6 +13,7 @@ using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
 
@@ -793,6 +794,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         #endregion
+<<<<<<< HEAD
 
         #region VisitNegative
         // Format "- Term"
@@ -891,5 +893,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitIn(input, null);
         }
         #endregion
+=======
+>>>>>>> 3917c3f5a47dd5fc44b21065fd69d2f6ff43d882
     }
 }

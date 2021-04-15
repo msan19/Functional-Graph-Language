@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using InterpreterLib.Helpers;
@@ -61,6 +62,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _integerHelper.DivisionInteger(e, parameters),
                 ModuloExpression e          => _integerHelper.ModuloInteger(e, parameters),
                 AbsoluteValueExpression e   => _integerHelper.AbsoluteInteger(e, parameters),
+                NegativeExpression e        => _integerHelper.NegativeInteger(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<int>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchInt")
             };
@@ -80,6 +82,7 @@ namespace InterpreterLib
                 DivisionExpression e        => _realHelper.DivisionReal(e, parameters),
                 ModuloExpression e          => _realHelper.ModuloReal(e, parameters),
                 AbsoluteValueExpression e   => _realHelper.AbsoluteReal(e, parameters),
+                NegativeExpression e        => _realHelper.NegativeReal(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<double>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchReal")
             };
