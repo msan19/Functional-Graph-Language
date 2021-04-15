@@ -5,13 +5,15 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace ReferenceHandlerLib
 {
     public class ReferenceHelper : IReferenceHelper
     {
-        private const int NO_LOCAL_REF = FunctionCallExpression.NO_LOCAL_REF;
+        private const int DUPLICATE_IDENTIFIER_FOUND = FunctionCallExpression.NO_LOCAL_REF;
+        private const int MATCHING_ID_NOT_FOUND = -1;
         private Dictionary<string, List<int>> _functionTable;
         private Dictionary<string, int> _functionIdentifierTable;
 
@@ -53,7 +55,7 @@ namespace ReferenceHandlerLib
                 if (!functionIdentifierTable.ContainsKey(identifier))
                     functionIdentifierTable.Add(identifier, i);
                 else
-                    functionIdentifierTable[identifier] = NO_LOCAL_REF;
+                    functionIdentifierTable[identifier] = DUPLICATE_IDENTIFIER_FOUND;
             }
             return functionIdentifierTable;
         }
@@ -76,11 +78,84 @@ namespace ReferenceHandlerLib
             return (parameters.Count != parameters.Distinct().ToList().Count);
         }
 
-        private void VisitCondition(ConditionNode node, List<string> identifiers)
+        public void VisitCondition(ConditionNode node, List<string> identifiers)
+        {
+            if (node.IsDefaultCase)
+            {
+                CheckCondition(node, identifiers);
+                _dispatch(node.ReturnExpression, identifiers);
+            }
+            else
+            {
+                EnsureElementAreUnique(node.Elements);
+                SetElementReference(node.Elements, identifiers);
+                List<string> copyOfIdentifiers = identifiers.ToList();
+                AddElementIndicesToIdentifierList(node.Elements, copyOfIdentifiers);
+                CheckCondition(node, copyOfIdentifiers);
+                _dispatch(node.ReturnExpression, copyOfIdentifiers);
+            }
+        }
+
+        private void CheckCondition(ConditionNode node, List<string> identifiers)
         {
             if (node.Condition != null)
                 _dispatch(node.Condition, identifiers);
-            _dispatch(node.ReturnExpression, identifiers);
+        }
+
+        private void EnsureElementAreUnique(List<ElementNode> elementsNodes)
+        {
+            List<string> uniqueIndices = new List<string>();
+            foreach (ElementNode elementNode in elementsNodes)
+                EnsureElementIndicesAreUnique(uniqueIndices, elementNode);
+        }
+
+        private void EnsureElementIndicesAreUnique(List<string> uniqueIndices, ElementNode elementNode)
+        {
+            foreach (var indexId in elementNode.IndexIdentifiers)
+            {
+                if (!uniqueIndices.Contains(indexId))
+                    uniqueIndices.Add(indexId);
+                else
+                    throw new DuplicateElementIndexException(elementNode, indexId);
+            }
+        }
+
+        private void SetElementReference(List<ElementNode> elementNodes, List<string> identifiers)
+        {
+            foreach (ElementNode elementNode in elementNodes)
+            {
+                int positionInParameterlist = FindPositionForMatchingIdentifier(elementNode, identifiers);
+                elementNode.Reference = positionInParameterlist;
+            }
+        }
+
+        private int FindPositionForMatchingIdentifier(ElementNode elementNode, List<string> identifiers)
+        {
+            for (var i = 0; i < identifiers.Count; i++)
+            {
+                string identifier = identifiers[i];
+                if (identifier == elementNode.ElementIdentifier)
+                    return i;
+            }
+            throw new NoMatchingIdentifierFoundException(elementNode, elementNode.ElementIdentifier);
+        }
+
+        private void AddElementIndicesToIdentifierList(List<ElementNode> elementNodes, List<string> identifiers)
+        {
+            for (var index = 0; index < elementNodes.Count; index++)
+            {
+                ElementNode elementNode = elementNodes[index];
+                AddIndexIdentifiers(elementNode.IndexIdentifiers, identifiers);
+            }
+        }
+
+        private void AddIndexIdentifiers(List<string> elementNodeIndexIdentifiers, List<string> identifiers)
+        {
+            for (int i = 0; i < elementNodeIndexIdentifiers.Count; i++)
+            {
+                string id = elementNodeIndexIdentifiers[i];
+                identifiers.Add(id);
+            }
         }
 
         public void VisitNonIdentifier(INonIdentifierExpression node, List<string> identifiers)
@@ -99,7 +174,7 @@ namespace ReferenceHandlerLib
                 if (identifiers[i] == node.ID)
                     node.Reference = i;
             }
-            node.IsLocal = (node.Reference != NO_LOCAL_REF);
+            node.IsLocal = (node.Reference != DUPLICATE_IDENTIFIER_FOUND);
             if (!node.IsLocal)
             {
                 if (_functionIdentifierTable.ContainsKey(node.ID))
@@ -107,7 +182,7 @@ namespace ReferenceHandlerLib
                 else 
                     throw new InvalidIdentifierException(node);
 
-                if (node.Reference == NO_LOCAL_REF)
+                if (node.Reference == DUPLICATE_IDENTIFIER_FOUND)
                     throw new OverloadedFunctionIdentifierException(node);
             }
         }

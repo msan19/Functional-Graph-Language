@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using ASTLib;
-using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -10,10 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using FluentAssertions;
 using ASTLib.Exceptions;
-using System.Linq.Expressions;
-using Microsoft.VisualBasic.CompilerServices;
-using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using System.Linq;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 
 namespace ReferenceHandlerLib.Tests
 {
@@ -1012,6 +1007,159 @@ namespace ReferenceHandlerLib.Tests
             return new IntegerLiteralExpression(n, 0, 0);
         }
 
+        
+        #region VisitCondition
+
+        [ExpectedException(typeof(DuplicateElementIndexException))]
+        [TestMethod]
+        public void VisitCondition_MultipleElements_CausesDuplicateElementIndexException()
+        {
+	        string elementName = "e";
+	        List<string> indexIdentifiers1 = new List<string>() {"i", "j"};
+	        ElementNode elementNode1 = Utilities.GetElementNode(elementName, indexIdentifiers1);
+	        
+	        List<string> indexIdentifiers2 = new List<string>() {"i", "g"};
+	        ElementNode elementNode2 = Utilities.GetElementNode(elementName, indexIdentifiers2);
+	        
+	        List<ElementNode> elementNodes = new List<ElementNode>() {elementNode1, elementNode2};
+	        ConditionNode conditionNode = Utilities.GetConditionNodeOnlyWith(elementNodes);
+
+	        ReferenceHelper referenceHelper = new ReferenceHelper();
+	        
+	        referenceHelper.VisitCondition(conditionNode, new List<string>());
+        }
+        
+        
+        // 2. Set element reference
+        
+        // OneParameterOneElement
+        [TestMethod]
+        public void VisitCondition_OneParameterOneElement_ExpectElementHasCorrectReferenceToParamList()
+        {
+	        List<string> indexIdentifiers = new List<string>() {"i", "j"};
+	        ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+	        List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+	        ConditionNode conditionNode = Utilities.GetConditionNodeOnlyWith(elementNodes);
+
+	        int expectedReference = 0;
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+	        List<string> parameterIdentifiers = new List<string>() {"e"};
+	        referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+	        
+	        Assert.AreEqual(expectedReference, conditionNode.Elements[0].Reference);
+        }
+        
+        // TwoParametersOneElement
+        [TestMethod]
+        public void VisitCondition_TwoParametersOneElement_ExpectElementHasCorrectReferenceToParamList()
+        {
+	        List<string> indexIdentifiers = new List<string>() {"i", "j"};
+	        ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+	        List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+	        ConditionNode conditionNode = Utilities.GetConditionNodeOnlyWith(elementNodes);
+
+	        int expectedReference = 1;
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+	        List<string> parameterIdentifiers = new List<string>() {"v", "e"};
+	        referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+	        
+	        Assert.AreEqual(expectedReference, conditionNode.Elements[0].Reference);
+        }
+        
+        // ElementId does not appear in list of parameterIdentifiers 
+        [ExpectedException(typeof(NoMatchingIdentifierFoundException))]
+        [TestMethod]
+        public void VisitCondition_NoMatching_CausesNoMatchingIdentifierFoundException()
+        {
+	        List<string> indexIdentifiers = new List<string>() {"i", "j"};
+	        ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+	        List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+	        ConditionNode conditionNode = Utilities.GetConditionNodeOnlyWith(elementNodes);
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+	        List<string> parameterIdentifiers = new List<string>() {"a", "b", "c"};
+	        referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+        }
+        
+        [TestMethod]
+        public void VisitCondition__EnsureIndexIdentifiersAreAddedBeforeDispatchCondition()
+        {
+            List<string> indexIdentifiers = new List<string>() {"i", "j"};
+            ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+            List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+            GreaterExpression greaterExpression = GetGreaterExpression();
+            ConditionNode conditionNode = new ConditionNode(elementNodes, greaterExpression, null, 0, 0);
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            List<string> res = new List<string>();
+            parent.Dispatch(greaterExpression, Arg.Do<List<string>>(x => res = x));
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            List<string> parameterIdentifiers = new List<string>() {"e"};
+            List<string> expectedIdentiferList = parameterIdentifiers.ToList();
+            expectedIdentiferList.AddRange(indexIdentifiers);
+            referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+
+            res.Should().BeEquivalentTo(expectedIdentiferList);
+        }
+
+        [TestMethod]
+        public void VisitCondition__EnsureIndexIdentifiersAreAddedBeforeDispatchReturnExpression()
+        {
+            List<string> indexIdentifiers = new List<string>() {"i", "j"};
+            ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+            List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+            GreaterExpression greaterExpression = GetGreaterExpression();
+            ConditionNode conditionNode = new ConditionNode(elementNodes, null, greaterExpression, 0, 0);
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            List<string> res = new List<string>();
+            parent.Dispatch(greaterExpression, Arg.Do<List<string>>(x => res = x));
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            List<string> parameterIdentifiers = new List<string>() {"e"};
+            List<string> expectedIdentiferList = parameterIdentifiers.ToList();
+            expectedIdentiferList.AddRange(indexIdentifiers);
+            referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+
+            res.Should().BeEquivalentTo(expectedIdentiferList);
+        }
+
+        [TestMethod]
+        public void VisitCondition__EnsureIndexIdentifiersAreRemoved()
+        {
+            List<string> indexIdentifiers = new List<string>() {"i", "j"};
+            ElementNode elementNode = Utilities.GetElementNode("e", indexIdentifiers); 
+            List<ElementNode> elementNodes = new List<ElementNode>() {elementNode};
+            GreaterExpression greaterExpression = GetGreaterExpression();
+            ConditionNode conditionNode = new ConditionNode(elementNodes, null, greaterExpression, 0, 0);
+
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+            
+            List<string> parameterIdentifiers = new List<string>() {"e"};
+            List<string> expectedIdentiferList = parameterIdentifiers.ToList(); // A copy!
+            referenceHelper.VisitCondition(conditionNode, parameterIdentifiers);
+
+            parameterIdentifiers.Should().BeEquivalentTo(expectedIdentiferList);
+        }
+
+        private GreaterExpression GetGreaterExpression()
+        {
+            ExpressionNode lhs = new IntegerLiteralExpression("1", 0, 0);
+            ExpressionNode rhs = new IntegerLiteralExpression("3", 0, 0);
+            return new GreaterExpression(lhs, rhs, 0, 0);
+        }
+        
+        #endregion
     }
 
 

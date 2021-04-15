@@ -17,5 +17,10 @@ namespace ASTLib.Objects
         {
             Elements = new List<Element> { element };
         }
+
+        public Set()
+        {
+            Elements = new List<Element>();
+        }
     }
 }

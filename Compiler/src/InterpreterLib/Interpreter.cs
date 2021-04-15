@@ -25,8 +25,9 @@ namespace InterpreterLib
         private readonly IRealHelper _realHelper;
         private readonly IBooleanHelper _booleanHelper;
         private readonly IGenericHelper _genericHelper;
+        private readonly ISetHelper _setHelper;
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper)
         {
             _functionHelper = functionHelper;
 
@@ -41,6 +42,9 @@ namespace InterpreterLib
 
             _genericHelper = genericHelper;
             _genericHelper.SetInterpreter(this);
+
+            _setHelper = setHelper;
+            _setHelper.SetInterpreter(this);
         }
 
         public List<double> Interpret(AST node)
