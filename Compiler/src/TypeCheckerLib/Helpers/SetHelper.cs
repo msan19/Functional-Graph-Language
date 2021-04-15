@@ -51,5 +51,12 @@ namespace TypeCheckerLib.Helpers
         {
             return t == TypeEnum.Set;
         }
+
+        public TypeNode VisitSet(SetExpression node, List<TypeNode> parameterTypes)
+        {
+
+
+            return new TypeNode(TypeEnum.Set, 0, 0);
+        }
     }
 }
