@@ -584,10 +584,115 @@ namespace ReferenceHandlerLib.Tests
         #endregion
 
         #region VisitSet
-        // TODO:
-        //  Indecies names correct
-        //  Predicate is discpatced with more parameters 
 
+        [DataRow(new string[] { "i", "j" })]
+        [DataRow(new string[] { "i", "j", "k" })]
+        [TestMethod]
+        public void VisitSet_XReversedBoundsXIndicies_Sorted(string[] ids)
+        {
+            int res = 0;
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids.Reverse());
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(bounds.ConvertAll(x => x.MinValue), () => res++, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Assert.AreEqual(ids[i], input.Bounds[i].Identifier);
+            }
+        }
+
+        [TestMethod]
+        public void VisitSet_XShuffeldBoundsXIndicies_Sorted()
+        {
+            string[] ids = new string[] { "i", "j", "k", "g" };
+            string[] boundIds = new string[] { "j", "i", "g", "k" };
+
+            int res = 0;
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids.Reverse());
+            var element = GetElementNode("this string should not be included in parameters", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(bounds.ConvertAll(x => x.MinValue), () => res++, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Assert.AreEqual(ids[i], input.Bounds[i].Identifier);
+            }
+        }
+
+        [DataRow(new string[] { "a", "b", "a" })]
+        [DataRow(new string[] { "c", "a", "c" })]
+        [TestMethod]
+        [ExpectedException(typeof(IdenticalParameterIdentifiersException))]
+        public void VisitSet_MultipleBoundsOfSameName_Exception(string[] boundIds)
+        {
+            var parameters = GetStringList();
+            var indicies = new List<string>() { "x", "y", "z" };
+            var bounds = GetBounds(boundIds);
+            var element = GetElementNode("e", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+        }
+
+        [DataRow(new string[] { "a", "b", "a" })]
+        [DataRow(new string[] { "c", "a", "c" })]
+        [TestMethod]
+        [ExpectedException(typeof(IdenticalParameterIdentifiersException))]
+        public void VisitSet_MultipleIndiciesOfSameName_Exception(string[] ids)
+        {
+            var parameters = GetStringList();
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(new List<string>() { "x", "y", "z" });
+            var element = GetElementNode("e", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+        }
+
+        [DataRow("a")]
+        [TestMethod]
+        [ExpectedException(typeof(InvalidIdentifierException))]
+        public void VisitSet_BoundNotPartOfElement_Exception(string boundId)
+        {
+            var parameters = new List<string>() { "a", "b", "c" };
+            var indicies = new List<string>() { "x", "y", "z" };
+            var bounds = GetBounds(boundId);
+            var element = GetElementNode("e", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+        }
 
         [DataRow(new string[] { "a", "b" }, "a")]
         [DataRow(new string[] { "abc", "b" }, "b")]
@@ -712,6 +817,30 @@ namespace ReferenceHandlerLib.Tests
             Assert.AreEqual(expected, res);
         }
 
+        [DataRow(new string[] { "i", "j" })]
+        [DataRow(new string[] { "i", "j", "k" })]
+        [TestMethod]
+        public void VisitSet_XBoundsXIndicies_DispatchBoundWithSameProperties(string[] ids)
+        {
+            var parameters = GetStringList();
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode("e", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            var res = new List<string>();
+            AddDispachSaveList(bounds.ConvertAll(x => x.MaxValue), (x) => res = x, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            for (int i = 0; i < res.Count; i++)
+                Assert.AreEqual(parameters[i], res[i]);
+        }
+
         [TestMethod]
         public void VisitSet_Predicate_DispatchPredicate()
         {
@@ -735,12 +864,87 @@ namespace ReferenceHandlerLib.Tests
             Assert.AreEqual(expected, res);
         }
 
+        [TestMethod]
+        public void VisitSet_Predicate_DispatchPredicateWithAddedParameters()
+        {
+            var ids = new string[] { "i", "j" };
+            var res = new List<string>();
+            var parameters = GetStringList("x");
+            var elementId = "e";
+
+            var expected = parameters.ToList();
+            expected.Add(elementId);
+            expected.AddRange(ids);
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode(elementId, indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispachSaveList(predicate, (x) => res = x, parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, parameters);
+
+            for (int i = 0; i < expected.Count; i++)
+                Assert.AreEqual(expected[i], res[i]);
+        }
+
+        [DataRow(new string[] { "i", "j" })]
+        [DataRow(new string[] { "i", "j", "k" })]
+        [TestMethod]
+        public void VisitSet_XBoundsXIndicies_RemoveAddedProperties(string[] ids)
+        {
+            var parameters = GetStringList();
+            var inputParams = parameters.ToList();
+            int expected = parameters.Count;
+
+            var indicies = GetStringList(ids);
+            var bounds = GetBounds(ids);
+            var element = GetElementNode("e", indicies);
+            var predicate = GetIntLit();
+            var input = GetSetExpr(element, bounds, predicate);
+
+            var parent = GetReferenceHandler();
+            AddDispache(bounds.ConvertAll(x => x.MaxValue), parent);
+            var referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitSet(input, inputParams);
+            int res = parameters.Count;
+
+            for (int i = 0; i < parameters.Count; i++)
+                Assert.AreEqual(parameters[i], inputParams[i]);
+        }
+
         private void AddDispache(List<ExpressionNode> expressions, Func<int> func, IReferenceHandler parent)
         {
             foreach (var expr in expressions)
             {
                 parent.Dispatch(expr, Arg.Do<List<string>>(x => func()));
             }
+        }
+
+        private void AddDispache(List<ExpressionNode> expressions, IReferenceHandler parent)
+        {
+            foreach (var expr in expressions)
+            {
+                parent.Dispatch(expr, Arg.Any<List<string>>());
+            }
+        }
+
+        private void AddDispachSaveList(List<ExpressionNode> expressions, Action<List<string>> func, IReferenceHandler parent)
+        {
+            foreach (var expr in expressions)
+            {
+                parent.Dispatch(expr, Arg.Do<List<string>>(x => func(x)));
+            }
+        }
+
+        private void AddDispachSaveList(ExpressionNode expression, Action<List<string>> func, IReferenceHandler parent)
+        {
+            parent.Dispatch(expression, Arg.Do<List<string>>(x => func(x)));
         }
 
         private void AddDispache(ExpressionNode expression, Func<int> func, IReferenceHandler parent)
@@ -758,6 +962,12 @@ namespace ReferenceHandlerLib.Tests
             var res = new List<BoundNode>();
             foreach (var id in parameters)
                 res.Add(GetBoundnode(id));
+            return res;
+        }
+        private List<BoundNode> GetBounds(string parameter)
+        {
+            var res = new List<BoundNode>();
+                res.Add(GetBoundnode(parameter));
             return res;
         }
 
