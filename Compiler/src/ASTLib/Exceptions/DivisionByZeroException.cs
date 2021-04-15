@@ -14,6 +14,7 @@ namespace ASTLib.Exceptions
             base(node, $"Expected integer types for bounds but found '{type}'")
         {
         }
+
         public InvalidSetTypeException(ExpressionNode node, TypeEnum type) :
             base(node, $"Expected a boolean type for predicate of set but found '{type}'")
         {
