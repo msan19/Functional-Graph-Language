@@ -1,7 +1,9 @@
 using ASTLib.Exceptions;
 using ASTLib.Interfaces;
+using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -321,6 +323,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             Assert.AreEqual(expected, res);
         }
 
+        // Int Real -> Real
         [TestMethod]
         public void VisitSubtraction_SubtractionExpressionWithIntAndReal_ReturnsRealTypeNode()
         {
@@ -333,6 +336,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             Assert.AreEqual(expected, res);
         }
 
+        // Int Int -> Int
         [TestMethod]
         public void VisitSubtraction_SubtractionExpressionWithTwoInt_ReturnsIntTypeNode()
         {
@@ -343,6 +347,58 @@ namespace TypeCheckerLib.Tests.HelperTests
             var res = helper.VisitSubtraction(input1, null).Type;
 
             Assert.AreEqual(expected, res);
+        }
+
+        // Set Set -> Set
+        [TestMethod]
+        public void VisitSubtraction_SubtractionExpressionWithTwoSets_ReturnsSetTypeNode()
+        {
+            var expected = TypeEnum.Set;
+            ExpressionNode leftNode = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode rightNode = new SetExpression(null, null, null, 1, 1);
+            SubtractionExpression input = new SubtractionExpression(leftNode, rightNode, 1, 1);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            var res = helper.VisitSubtraction(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        // Set Int -> Throw Error 
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitSubtraction_SubtractionExpressionWithSetAndInt_ThrowsException()
+        {
+
+            SetExpression leftNode = new SetExpression(null, null, null, 0, 0);
+            IntegerLiteralExpression rightNode = new IntegerLiteralExpression("1", 1, 1);
+            SubtractionExpression input = new SubtractionExpression(leftNode, rightNode, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitSubtraction(input, null);
+        }
+
+        // Func Set -> Throw Error 
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitSubtraction_SubtractionExpressionWithFuncAndSet_ThrowsException()
+        {
+            IdentifierExpression leftNode = new IdentifierExpression("f", 0, 0);
+            SetExpression rightNode = new SetExpression(null, null, null, 0, 0);
+            SubtractionExpression input = new SubtractionExpression(leftNode, rightNode, 1, 1);
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitSubtraction(input, null);
         }
 
         // Int Func -> Throw Error 
@@ -382,7 +438,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         #region VisitAbsoluteValue
         [TestMethod]
-        public void VisitAbsoluteValue_AbsoluteValueExpressionWithIntAndReal_ReturnsRealTypeNode()
+        public void VisitAbsoluteValue_AbsoluteValueExpressionWithReal_ReturnsRealTypeNode()
         {
             var expected = TypeEnum.Real;
             AbsoluteValueExpression input1 = GetAbsoluteValueExpression(TypeEnum.Real);
@@ -394,12 +450,27 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        public void VisitAbsoluteValue_AbsoluteValueExpressionWithTwoInt_ReturnsIntTypeNode()
+        public void VisitAbsoluteValue_AbsoluteValueExpressionWithInt_ReturnsIntTypeNode()
         {
             var expected = TypeEnum.Integer;
             AbsoluteValueExpression input1 = GetAbsoluteValueExpression(TypeEnum.Integer);
 
             CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitAbsoluteValue(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitAbsoluteValue_AbsoluteValueExpressionForSet_ReturnsIntTypeNode()
+        {
+            var expected = TypeEnum.Integer;
+            AbsoluteValueExpression input1 = new AbsoluteValueExpression(new SetExpression(null, null, null, 0, 0), 0, 0);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
             var res = helper.VisitAbsoluteValue(input1, null).Type;
 
             Assert.AreEqual(expected, res);
@@ -762,7 +833,63 @@ namespace TypeCheckerLib.Tests.HelperTests
             
             var res = helper.VisitNegative(negExpr, null).Type;
         }
-        
+        #endregion
+
+        #region VisitIn
+        // Element Set -> Boolean
+        [TestMethod]
+        public void VisitIn_ElementAndSet_ReturnsTypeBoolean()
+        {
+            var expected = TypeEnum.Boolean;
+            ExpressionNode leftNode = new ElementExpression(null, 0, 0);
+            ExpressionNode rightNode = new SetExpression(null, null, null, 1, 1);
+            InExpression input = new InExpression(leftNode, rightNode, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            var res = helper.VisitIn(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        // Int Set -> Throw Exception
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitIn_GivenIntegerAndSet_ThrowException()
+        {
+            IntegerLiteralExpression leftNode = new IntegerLiteralExpression("1", 1, 1);
+            SetExpression rightNode = new SetExpression(null, null, null, 1, 1);
+            
+            InExpression input = new InExpression(leftNode, rightNode, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitIn(input, null);
+        }
+
+        // Int Real -> Throw Exception
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        public void VisitIn_GivenIntegerAndReal_ThrowException()
+        {
+            IntegerLiteralExpression leftNode = new IntegerLiteralExpression("1", 1, 1);
+            RealLiteralExpression rightNode = new RealLiteralExpression("1.1", 1, 1);
+
+            InExpression input = new InExpression(leftNode, rightNode, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            helper.VisitIn(input, null);
+        }
         #endregion
     }
 }

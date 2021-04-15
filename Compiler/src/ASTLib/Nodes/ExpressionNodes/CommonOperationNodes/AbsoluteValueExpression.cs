@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ASTLib.Interfaces;
 
 namespace ASTLib.Nodes.ExpressionNodes.OperationNodes
@@ -9,5 +10,10 @@ namespace ASTLib.Nodes.ExpressionNodes.OperationNodes
 
         public AbsoluteValueExpression(ExpressionNode child, int line, int letter) 
             : base(new List<ExpressionNode> { child }, line, letter) {}
+
+        public static implicit operator AbsoluteValueExpression(SetExpression v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
