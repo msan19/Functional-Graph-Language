@@ -3,6 +3,7 @@ using ASTLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 
 namespace InterpreterLib.Interfaces
 {
@@ -10,5 +11,7 @@ namespace InterpreterLib.Interfaces
     {
         public void SetInterpreter(IInterpreterSet interpreter);
         Set SetExpression(SetExpression node, List<Object> parameters);
+        Set UnionSet(UnionExpression node, List<Object> parameters);
+        Set IntersectionSet(IntersectionExpression node, List<Object> parameters);
     }
 }

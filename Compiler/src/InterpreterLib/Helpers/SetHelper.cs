@@ -5,6 +5,7 @@ using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -55,6 +56,16 @@ namespace InterpreterLib.Helpers
                     set.Elements.Add(element);
                 parameters.RemoveRange(parameters.Count - indices.Count - 1, parameters.Count);
             }
+        }
+        
+        public Set UnionSet(UnionExpression node, List<object> parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
+        {
+            throw new NotImplementedException();
         }
     }
 }
