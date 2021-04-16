@@ -6,7 +6,6 @@ using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using System.Linq;
 
 namespace InterpreterLib.Helpers
@@ -88,11 +87,6 @@ namespace InterpreterLib.Helpers
         }
         
         public Set UnionSet(UnionExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
         }
