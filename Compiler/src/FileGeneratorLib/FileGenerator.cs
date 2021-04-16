@@ -17,8 +17,9 @@ namespace FileGeneratorLib
         public void Export(List<Set> output, string file)
         {
             string text = "\nRESULTS:\n";
+            
             for(int i = 0; i < output.Count; i++)
-                text += $"\tOutput {i} = {output[i]} \n";
+                text += $"\tOutput {i} = {GetGraphString(output[i])} \n";
             try
             {
                 Console.WriteLine(text);
@@ -27,6 +28,19 @@ namespace FileGeneratorLib
             {
                 throw;
             }
+        }
+
+        private string GetGraphString(Set set)
+        {
+            string s = "";
+            for (int i = 0; i < set.Elements.Count; i++)
+                s += GetVertexString(set.Elements[i], i);
+            return "graph [ \n\tdirected 1\n" + s + "]"; 
+        }
+
+        private string GetVertexString(Element element, int i)
+        {
+            return "\tgraph [ \n\t\tid " + i + "\n\t]";
         }
     }
 }
