@@ -52,12 +52,13 @@ namespace InterpreterLib
             _elementHelper.SetInterpreter(this);
         }
 
-        public List<double> Interpret(AST node)
+        public List<Set> Interpret(AST node)
         {
             
             _genericHelper.SetASTRoot(node);
-            List<double> results = new List<double>();
-            foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<Object>()));
+            List<Set> results = new List<Set>();
+            foreach (ExportNode n in node.Exports) 
+                results.Add(_setHelper.ExportSet(n));
             return results;
         }
 
@@ -69,6 +70,7 @@ namespace InterpreterLib
                 UnionExpression e           => _setHelper.UnionSet(e, parameters),
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -77,7 +79,7 @@ namespace InterpreterLib
         {
             return node switch
             {
-                ElementExpression e => _elementHelper.DispatchElement(e, parameters),
+                ElementExpression e => _elementHelper.Element(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }

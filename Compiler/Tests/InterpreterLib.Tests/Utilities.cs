@@ -65,6 +65,18 @@ namespace InterpreterLib.Tests
             IElementHelper elemHelper = Substitute.For<IElementHelper>();
             return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
+
+        public static Interpreter GetIntepreterOnlyWith(ISetHelper setHelper)
+        {
+            IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();
+            IRealHelper realHelper = Substitute.For<IRealHelper>();
+            IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
+            IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
+            IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
+        }
+
         public static Interpreter GetIntepreterOnlyWith(IGenericHelper genericHelper)
         {
             IIntegerHelper integerHelper = Substitute.For<IIntegerHelper>();

@@ -27,7 +27,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
             ITypeChecker parent = Substitute.For<ITypeChecker>();
             List<TypeNode> res = null;
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Real, 1, 1));
+            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Set, 1, 1));
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
             
             declarationHelper.VisitExport(input1);
@@ -40,6 +40,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         // Integer  -> Insert Cast Node
         // Func     -> Throw Exception
         [TestMethod]
+        [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Real_Nothing()
         {
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -49,7 +50,9 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             declarationHelper.VisitExport(input1);
         }
+
         [TestMethod]
+        [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Integer_Nothing()
         {
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -60,6 +63,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             declarationHelper.VisitExport(input1);
         }
         [TestMethod]
+        [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Integer_InsertCastNode()
         {
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -68,12 +72,9 @@ namespace TypeCheckerLib.Tests.HelperTests
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitExport(input1);
-            var res = input1.ExportValue.GetType();
-
-            Assert.AreEqual(typeof(CastFromIntegerExpression), res);
         }
         [TestMethod]
-        [ExpectedException(typeof(InvalidCastException))]
+        [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Func_ThrowException()
         {
             ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
@@ -92,7 +93,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
             IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
-            Assert.ThrowsException<InvalidCastException>(() => declarationHelper.VisitExport(input));
+            Assert.ThrowsException<InvalidSetTypeException>(() => declarationHelper.VisitExport(input));
         }
 
         #endregion

@@ -4,6 +4,7 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Interfaces
 {
@@ -11,6 +12,6 @@ namespace InterpreterLib.Interfaces
         IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
         , IInterpreterFunction, IInterpreterSet, IInterpreterElement
     {
-        List<double> Interpret(AST node);
+        List<Set> Interpret(AST node);
     }
 }

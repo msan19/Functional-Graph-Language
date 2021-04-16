@@ -16,7 +16,7 @@ namespace InterpreterLib.Helpers
             _interpreter = interpreter;
         }
 
-        public Element DispatchElement(ElementExpression node, List<object> parameters)
+        public Element Element(ElementExpression node, List<object> parameters)
         {
             return default;
         }
