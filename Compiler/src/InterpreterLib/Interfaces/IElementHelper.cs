@@ -8,6 +8,6 @@ namespace InterpreterLib.Interfaces
     {
         void SetInterpreter(IInterpreterElement interpreter);
 
-        Element DispatchElement(ElementExpression node, List<object> parameters);
+        Element Element(ElementExpression node, List<object> parameters);
     }
 }
