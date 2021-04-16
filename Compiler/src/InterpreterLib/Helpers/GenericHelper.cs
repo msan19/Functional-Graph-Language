@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -56,9 +57,51 @@ namespace InterpreterLib.Helpers
 
         public MatchPair<T> Condition<T>(ConditionNode node, List<object> parameters)
         {
-            if (node.Condition == null || (bool)_interpreter.Dispatch(node.Condition, parameters, TypeEnum.Boolean))
-                return new MatchPair<T>(true, (T) _interpreter.Dispatch(node.ReturnExpression, parameters, GetType(typeof(T))));
-            return new MatchPair<T>(false, default);
+            bool conditionIsPass = true;
+            conditionIsPass &= IsElementsAMatch(node, parameters);
+            var newParameters = GetNewParameters(parameters, node.Elements);
+            conditionIsPass &= IsConditionAPass(node, newParameters);
+            if (conditionIsPass)
+                return GetReturnValue<T>(node, newParameters);
+            else 
+                return new MatchPair<T>(false, default);
+        }
+
+        private List<object> GetNewParameters(List<object> parameters, List<ElementNode> elements)
+        {
+            var res = parameters.ToList();
+            foreach (var eNode in elements)
+            {
+                var e = (Element) parameters[eNode.Reference];
+                foreach (var id in e.Indices)
+                {
+                    res.Add(id);
+                }
+            }
+            return res;
+        }
+
+        private MatchPair<T> GetReturnValue<T>(ConditionNode node, List<object> parameters)
+        {
+            return new MatchPair<T>(true, (T) _interpreter.Dispatch(node.ReturnExpression, parameters, GetType(typeof(T))));
+        }
+
+        private bool IsConditionAPass(ConditionNode node, List<object> parameters)
+        {
+            return 
+                node.IsDefaultCase || 
+                (bool)_interpreter.Dispatch(node.Condition, parameters, TypeEnum.Boolean);
+        }
+
+        private bool IsElementsAMatch(ConditionNode node, List<object> parameters)
+        {
+            foreach (var eNode in node.Elements)
+            {
+                var e = (Element) parameters[eNode.Reference];
+                if (e.Indices.Count != eNode.IndexIdentifiers.Count)
+                    return false;
+            }
+            return true;
         }
 
         private TypeEnum GetType(Type t)
