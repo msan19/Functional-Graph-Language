@@ -7,7 +7,9 @@ using ASTLib.Nodes.TypeNodes;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IInterpreter: IInterpreterGeneric, IInterpreterInteger, IInterpreterFunction, IInterpreterReal, IInterpreterBoolean, IInterpreterSet
+    public interface IInterpreter: 
+        IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
+        , IInterpreterFunction, IInterpreterSet, IInterpreterElement
     {
         List<double> Interpret(AST node);
     }

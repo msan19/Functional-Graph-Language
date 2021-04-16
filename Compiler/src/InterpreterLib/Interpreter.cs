@@ -27,8 +27,9 @@ namespace InterpreterLib
         private readonly IBooleanHelper _booleanHelper;
         private readonly IGenericHelper _genericHelper;
         private readonly ISetHelper _setHelper;
+        private readonly IElementHelper _elementHelper;
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper)
         {
             _functionHelper = functionHelper;
 
@@ -46,6 +47,9 @@ namespace InterpreterLib
 
             _setHelper = setHelper;
             _setHelper.SetInterpreter(this);
+
+            _elementHelper = elementHelper;
+            _elementHelper.SetInterpreter(this);
         }
 
         public List<double> Interpret(AST node)
@@ -61,9 +65,10 @@ namespace InterpreterLib
         {
             return node switch
             {
-                SetExpression e => _setHelper.SetExpression(e, parameters),
-                UnionExpression e          => _setHelper.UnionSet(e, parameters),
-                IntersectionExpression e   => _setHelper.IntersectionSet(e, parameters),
+                SetExpression e             => _setHelper.SetExpression(e, parameters),
+                UnionExpression e           => _setHelper.UnionSet(e, parameters),
+                IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
+                SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -72,6 +77,7 @@ namespace InterpreterLib
         {
             return node switch
             {
+                ElementExpression e => _elementHelper.DispatchElement(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -140,7 +146,8 @@ namespace InterpreterLib
                 IdentifierExpression e      => _booleanHelper.IdentifierBoolean(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
                 InExpression e              => _booleanHelper.InBoolean(e, parameters),
-                BooleanLiteralExpression e => _booleanHelper.LiteralBoolean(e),
+                SubsetExpression e          => _booleanHelper.SubsetBoolean(e, parameters),
+                BooleanLiteralExpression e  => _booleanHelper.LiteralBoolean(e),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }

@@ -39,5 +39,6 @@ namespace InterpreterLib.Interfaces
         bool LessBoolean(LessExpression node, List<object> parameters);
 
         bool InBoolean(InExpression node, List<object> parameters);
+        bool SubsetBoolean(SubsetExpression node, List<object> parameters);
     }
 }
