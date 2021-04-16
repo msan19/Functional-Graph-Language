@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ASTLib.Exceptions;
 using ASTLib.Interfaces;
@@ -154,6 +155,143 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitSubset(subset, null);
         }
         #endregion
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidSetTypeException))]
+        public void VisitSet_SetExpression_ThrowsExceptionBoundsWrongType()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new RealLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
+            SetExpression set = new SetExpression(null, 
+                                   new List<BoundNode> { 
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+
+            helper.VisitSet(set, new List<TypeNode>());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidSetTypeException))]
+        public void VisitSet_SetExpression_ThrowsExceptionPredicateWrongType()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new RealLiteralExpression(0.0, 0, 0);
+            SetExpression set = new SetExpression(null,
+                                   new List<BoundNode> {
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+
+            helper.VisitSet(set, new List<TypeNode>());
+        }
+
+        [TestMethod]
+        public void VisitSet_SetExpression_ReturnsCorrectType()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
+            SetExpression set = new SetExpression(null,
+                                   new List<BoundNode> {
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+
+            TypeNode type = helper.VisitSet(set, new List<TypeNode>());
+
+            Assert.AreEqual(TypeEnum.Set, type.Type);
+        }
+
+        [TestMethod]
+        public void VisitSet_SetExpression_PassesCorrectListToBounds()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
+            SetExpression set = new SetExpression(null,
+                                   new List<BoundNode> {
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+
+            ITypeChecker typeChecker = Substitute.For<ITypeChecker>();
+            List<TypeNode> result = null;
+            List<TypeNode> input = new List<TypeNode>() { new TypeNode(TypeEnum.Function,0,0) };
+            List<TypeNode> expected = input;
+            typeChecker.Dispatch(Arg.Any<IntegerLiteralExpression>(), 
+                                 Arg.Do<List<TypeNode>>(x => result = x)).
+                                    Returns(new TypeNode(TypeEnum.Integer, 0, 0));
+            typeChecker.Dispatch(Arg.Any<BooleanLiteralExpression>(), 
+                                 Arg.Any<List<TypeNode>>()).
+                                    Returns(new TypeNode(TypeEnum.Boolean, 0, 0)); ;
+            SetHelper helper = new SetHelper();
+            helper.Initialize(Utilities.GetAst(), typeChecker.Dispatch);
+
+            helper.VisitSet(set, input);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void VisitSet_SetExpression_PassesCorrectListToPredicate()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
+            SetExpression set = new SetExpression(null,
+                                   new List<BoundNode> {
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+
+            ITypeChecker typeChecker = Substitute.For<ITypeChecker>();
+            List<TypeNode> result = null;
+            List<TypeNode> input = new List<TypeNode>() { new TypeNode(TypeEnum.Function, 0, 0) };
+            List<TypeNode> expected = new List<TypeNode>() { new TypeNode(TypeEnum.Function, 0, 0),
+                                                             new TypeNode(TypeEnum.Element, 0,0),
+                                                             new TypeNode(TypeEnum.Integer, 0, 0)};
+            typeChecker.Dispatch(Arg.Any<BooleanLiteralExpression>(), 
+                                 Arg.Do<List<TypeNode>>(x => result = x.ToList())).
+                                    Returns(new TypeNode(TypeEnum.Boolean, 0, 0));
+            typeChecker.Dispatch(Arg.Any<IntegerLiteralExpression>(), 
+                                 Arg.Any<List<TypeNode>>()).
+                                    Returns(new TypeNode(TypeEnum.Integer, 0, 0));
+            SetHelper helper = new SetHelper();
+            helper.Initialize(Utilities.GetAst(), typeChecker.Dispatch);
+
+            helper.VisitSet(set, input);
+
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void VisitSet_SetExpression_PassedListUnaltered()
+        {
+            ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
+            ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
+            SetExpression set = new SetExpression(null,
+                                   new List<BoundNode> {
+                                   new BoundNode("", smallestValue, biggestValue, 0,0) },
+                                   predicate,
+                                   0, 0);
+            SetHelper helper = Utilities.GetHelper<SetHelper>();
+            List<TypeNode> expected = new List<TypeNode>();
+            List<TypeNode> input = new List<TypeNode>();
+
+            helper.VisitSet(set, input);
+
+            input.Should().BeEquivalentTo(expected);
+        }
 
     }
 }

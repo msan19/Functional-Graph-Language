@@ -9,6 +9,7 @@ using ASTLib.Interfaces;
 using TypeCheckerLib.Interfaces;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
+using System.Linq;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -54,9 +55,27 @@ namespace TypeCheckerLib.Helpers
 
         public TypeNode VisitSet(SetExpression node, List<TypeNode> parameterTypes)
         {
+            List<TypeNode> indexTypes = new List<TypeNode>();
+            foreach(BoundNode n in node.Bounds)
+            {
+                CheckType(n.MaxValue, parameterTypes, TypeEnum.Integer);
+                CheckType(n.MinValue, parameterTypes, TypeEnum.Integer);
+                indexTypes.Add(new TypeNode(TypeEnum.Integer, 0,0));
+            }
 
-
+            parameterTypes.Add(new TypeNode(TypeEnum.Element, 0, 0));
+            parameterTypes.AddRange(indexTypes);
+            CheckType(node.Predicate, parameterTypes, TypeEnum.Boolean);
+            parameterTypes.RemoveRange(parameterTypes.Count - node.Bounds.Count - 1, node.Bounds.Count + 1);
             return new TypeNode(TypeEnum.Set, 0, 0);
+        }
+
+        private void CheckType(ExpressionNode n, List<TypeNode> parameterTypes, TypeEnum expected)
+        {
+            TypeEnum t = _getType(n, parameterTypes).Type;
+
+            if (t != expected)
+                throw new InvalidSetTypeException(n, t, expected);
         }
     }
 }

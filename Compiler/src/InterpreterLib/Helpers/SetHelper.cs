@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
+using System.Linq;
 
 namespace InterpreterLib.Helpers
 {
@@ -49,12 +50,12 @@ namespace InterpreterLib.Helpers
             }
             else
             {
-                Element element = new Element(indices);
+                Element element = new Element(indices.ToList());
                 parameters.Add(element);
                 parameters.AddRange(indices.ConvertAll(x => (Object) x));
                 if (_interpreter.DispatchBoolean(condition, parameters))
                     set.Elements.Add(element);
-                parameters.RemoveRange(parameters.Count - indices.Count - 1, parameters.Count);
+                parameters.RemoveRange(parameters.Count - indices.Count - 1, indices.Count + 1);
             }
         }
         
