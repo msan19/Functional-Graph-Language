@@ -51,6 +51,7 @@ namespace TypeCheckerLib
                 IBinaryBooleanOperator n    => _booleanHelper.VisitBinaryBoolOp(n, parameterTypes),
                 IBinarySetOperator n        => _setHelper.VisitBinarySetOp(n, parameterTypes),
                 SubsetExpression n          => _setHelper.VisitSubset(n, parameterTypes),
+                SetExpression n             => _setHelper.VisitSet(n, parameterTypes),
                 NotExpression n             => _booleanHelper.VisitNot(n, parameterTypes),
                 PowerExpression n           => _numberHelper.VisitPower(n, parameterTypes),
                 FunctionCallExpression n    => _declarationHelper.VisitFunctionCall(n, parameterTypes),

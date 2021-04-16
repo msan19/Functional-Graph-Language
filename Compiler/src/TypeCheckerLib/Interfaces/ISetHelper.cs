@@ -13,6 +13,7 @@ namespace TypeCheckerLib.Interfaces
     public interface ISetHelper : ITypeHelper
     {
         TypeNode VisitBinarySetOp(IBinarySetOperator binaryNode, List<TypeNode> parameterTypes);
+        TypeNode VisitSet(SetExpression node, List<TypeNode> parameterTypes);
         TypeNode VisitSubset(SubsetExpression node, List<TypeNode> parameterTypes);
     }
 }
