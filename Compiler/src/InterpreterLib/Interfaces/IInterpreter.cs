@@ -8,7 +8,9 @@ using ASTLib.Objects;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IInterpreter: IInterpreterGeneric, IInterpreterInteger, IInterpreterFunction, IInterpreterReal, IInterpreterBoolean, IInterpreterSet
+    public interface IInterpreter: 
+        IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
+        , IInterpreterFunction, IInterpreterSet, IInterpreterElement
     {
         List<Set> Interpret(AST node);
     }

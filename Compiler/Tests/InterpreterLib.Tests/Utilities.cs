@@ -51,7 +51,8 @@ namespace InterpreterLib.Tests
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
             IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
         
         public static Interpreter GetIntepreterOnlyWith(IFunctionHelper functionHelper)
@@ -61,7 +62,8 @@ namespace InterpreterLib.Tests
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
             IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
 
         public static Interpreter GetIntepreterOnlyWith(ISetHelper setHelper)
@@ -81,7 +83,8 @@ namespace InterpreterLib.Tests
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
 
         internal static FunctionNode GetFunction()
@@ -127,7 +130,8 @@ namespace InterpreterLib.Tests
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
             IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
         
         public static Interpreter GetIntepreterOnlyWith(IRealHelper realHelper)
@@ -137,7 +141,8 @@ namespace InterpreterLib.Tests
             IBooleanHelper booleanHelper = Substitute.For<IBooleanHelper>();
             IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
 
         internal static FunctionTypeNode GetFunctionTypeNode(int expectedElementCount, TypeEnum returnType)
@@ -217,7 +222,8 @@ namespace InterpreterLib.Tests
             IRealHelper realHelper = Substitute.For<IRealHelper>(); 
             IGenericHelper genericHelper = Substitute.For<IGenericHelper>();
             ISetHelper setHelper = Substitute.For<ISetHelper>();
-            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper);
+            IElementHelper elemHelper = Substitute.For<IElementHelper>();
+            return new Interpreter(genericHelper, functionHelper, integerHelper, realHelper, booleanHelper, setHelper, elemHelper);
         }
 
         public static IntegerLiteralExpression GetIntLitExpression()
