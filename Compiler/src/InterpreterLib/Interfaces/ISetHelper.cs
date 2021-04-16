@@ -16,7 +16,6 @@ namespace InterpreterLib.Interfaces
         Set SetExpression(SetExpression node, List<Object> parameters);
         Set UnionSet(UnionExpression node, List<Object> parameters);
         Set IntersectionSet(IntersectionExpression node, List<Object> parameters);
-        void SetInterpreter(IInterpreterSet interpreter);
         Set SubtractionSet(SubtractionExpression node, List<object> parameters);
     }
 }
