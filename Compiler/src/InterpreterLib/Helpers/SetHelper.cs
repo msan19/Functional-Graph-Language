@@ -1,5 +1,6 @@
 ﻿using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Objects;
 using InterpreterLib.Interfaces;
 using System;
@@ -55,6 +56,33 @@ namespace InterpreterLib.Helpers
                     set.Elements.Add(element);
                 parameters.RemoveRange(parameters.Count - indices.Count - 1, parameters.Count);
             }
+        }
+
+        public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
+        {
+            Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
+            Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
+
+            int i = 0;
+            int j = 0;
+            List<Element> duplicates = new List<Element>();
+
+            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
+            {
+                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
+                if (res == 0)
+                {
+                    duplicates.Add(leftSet.Elements[i]);
+                    i++;
+                    j++;
+                }
+                else if (res == -1)
+                    i++;
+                else
+                    j++;
+            }
+
+            return new Set(duplicates);
         }
     }
 }

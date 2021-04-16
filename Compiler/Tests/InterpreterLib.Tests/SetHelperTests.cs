@@ -10,6 +10,7 @@ using InterpreterLib.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using FluentAssertions;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 
 namespace InterpreterLib.Tests
 {
@@ -71,6 +72,71 @@ namespace InterpreterLib.Tests
             Set expected = new Set(els);
 
             result.Should().BeEquivalentTo(expected);
+        }
+
+        #endregion
+
+        #region IntersectionSet
+
+        private Set getSetFrom2dArray(int[,] arr)
+        {
+            List<Element> elements = new List<Element>();
+
+            for (int i = 0; i < arr.GetLength(0); i++)
+            {
+                List<int> indices = new List<int>();
+
+                for (int j = 0; j < arr.GetLength(1); j++)
+                {
+                    indices.Add(arr[i, j]);
+                }
+
+                elements.Add(new Element(indices));
+            }
+
+            return new Set(elements);
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(IntersectionSet_TestDataMethod), DynamicDataSourceType.Method)]
+        public void IntersectionSet_f_f(int[,] left, int[,] right, int[,] exp)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
+            SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
+            IntersectionExpression intersectionExpr = new IntersectionExpression(leftExpr, rightExpr, 0, 0);
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(left));
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(right));
+
+            Set result = setHelper.IntersectionSet(intersectionExpr, new List<object>());
+
+            result.Should().BeEquivalentTo(getSetFrom2dArray(exp));
+        }
+
+        static IEnumerable<object[]> IntersectionSet_TestDataMethod()
+        {
+            return new[]
+            {
+                new[] 
+                {
+                    new int[4, 1] { { 0 }, { 1 }, { 2 }, { 3 } },
+                    new int[4, 1] { { 2 }, { 3 }, { 4 }, { 5 } },
+                    new int[2, 1] { { 2 }, { 3 } }
+                },
+                new[]
+                {
+                    new int[4, 2] { { 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 } },
+                    new int[4, 2] { { 0, 1 }, { 3, 2 }, { 5, 4 }, { 6, 7 } },
+                    new int[2, 2] { { 0, 1 }, { 6, 7 } }
+                },
+                new[]
+                {
+                    new int[3, 1] { { 0 }, { 1 }, { 2 } },
+                    new int[5, 1] { { 3 }, { 4 }, { 5 }, { 6 }, { 7 } },
+                    new int[0, 0]
+                }
+            };
         }
 
         #endregion

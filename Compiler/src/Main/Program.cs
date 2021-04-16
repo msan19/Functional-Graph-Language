@@ -72,7 +72,7 @@ namespace Main
             _lexParse = new LexParser(new ASTBuilder(new ExpressionHelper()));
             _referenceHandler = new ReferenceHandler(new ReferenceHelper());
             _typeChecker = new TypeChecker(new DeclarationHelper(), new NumberHelper(), new CommonOperatorHelper(), new TypeBooleanHelper(), new TypeSetHelper());
-            _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper());
+            _interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new InterpBooleanHelper(), new InterpreterLib.Helpers.SetHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);
