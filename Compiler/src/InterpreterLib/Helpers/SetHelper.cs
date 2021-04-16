@@ -1,11 +1,11 @@
 ﻿using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Objects;
 using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using System.Linq;
 
 namespace InterpreterLib.Helpers
@@ -58,13 +58,35 @@ namespace InterpreterLib.Helpers
                 parameters.RemoveRange(parameters.Count - indices.Count - 1, indices.Count + 1);
             }
         }
-        
-        public Set UnionSet(UnionExpression node, List<object> parameters)
-        {
-            throw new NotImplementedException();
-        }
 
         public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
+        {
+            Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
+            Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
+
+            int i = 0;
+            int j = 0;
+            List<Element> duplicates = new List<Element>();
+
+            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
+            {
+                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
+                if (res == 0)
+                {
+                    duplicates.Add(leftSet.Elements[i]);
+                    i++;
+                    j++;
+                }
+                else if (res == -1)
+                    i++;
+                else
+                    j++;
+            }
+
+            return new Set(duplicates);
+        }
+        
+        public Set UnionSet(UnionExpression node, List<object> parameters)
         {
             throw new NotImplementedException();
         }

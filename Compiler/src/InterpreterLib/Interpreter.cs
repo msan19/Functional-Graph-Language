@@ -61,6 +61,7 @@ namespace InterpreterLib
         {
             return node switch
             {
+                SetExpression e => _setHelper.SetExpression(e, parameters),
                 UnionExpression e          => _setHelper.UnionSet(e, parameters),
                 IntersectionExpression e   => _setHelper.IntersectionSet(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
