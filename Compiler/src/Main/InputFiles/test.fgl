@@ -2,9 +2,11 @@ export c(a)
 export a()
 export b(2.0, 0.5)
 
+// Test
 a:() -> integer
 a() = 17
 
+// This is a comment
 c:(() -> integer) -> real
 c(f) = f() ^ f()
 
