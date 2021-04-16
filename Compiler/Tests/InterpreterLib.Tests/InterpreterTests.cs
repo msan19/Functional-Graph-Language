@@ -67,7 +67,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
                         IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -83,7 +83,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
                         IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             IntegerLiteralExpression res = null;
             ihelper.LiteralInteger(Arg.Do<IntegerLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -99,7 +99,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
                         IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Integer);

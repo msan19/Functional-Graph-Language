@@ -26,7 +26,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.AdditionInteger(Arg.Any<AdditionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -42,7 +42,7 @@ namespace InterpreterLib.Tests
             AdditionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             AdditionExpression res = null;
             ihelper.AdditionInteger(Arg.Do<AdditionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -58,7 +58,7 @@ namespace InterpreterLib.Tests
             AdditionExpression input1 = new AdditionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.AdditionInteger(Arg.Any<AdditionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -74,7 +74,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -90,7 +90,7 @@ namespace InterpreterLib.Tests
             SubtractionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             SubtractionExpression res = null;
             ihelper.SubtractionInteger(Arg.Do<SubtractionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -106,7 +106,7 @@ namespace InterpreterLib.Tests
             SubtractionExpression input1 = new SubtractionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.SubtractionInteger(Arg.Any<SubtractionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -122,7 +122,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.MultiplicationInteger(Arg.Any<MultiplicationExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -138,7 +138,7 @@ namespace InterpreterLib.Tests
             MultiplicationExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             MultiplicationExpression res = null;
             ihelper.MultiplicationInteger(Arg.Do<MultiplicationExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -154,7 +154,7 @@ namespace InterpreterLib.Tests
             MultiplicationExpression input1 = new MultiplicationExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.MultiplicationInteger(Arg.Any<MultiplicationExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -170,7 +170,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.DivisionInteger(Arg.Any<DivisionExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -186,7 +186,7 @@ namespace InterpreterLib.Tests
             DivisionExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             DivisionExpression res = null;
             ihelper.DivisionInteger(Arg.Do<DivisionExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -202,7 +202,7 @@ namespace InterpreterLib.Tests
             DivisionExpression input1 = new DivisionExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.DivisionInteger(Arg.Any<DivisionExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -218,7 +218,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.ModuloInteger(Arg.Any<ModuloExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -234,7 +234,7 @@ namespace InterpreterLib.Tests
             ModuloExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ModuloExpression res = null;
             ihelper.ModuloInteger(Arg.Do<ModuloExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -250,7 +250,7 @@ namespace InterpreterLib.Tests
             ModuloExpression input1 = new ModuloExpression(null, null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.ModuloInteger(Arg.Any<ModuloExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
@@ -266,7 +266,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.AbsoluteInteger(Arg.Any<AbsoluteValueExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -282,7 +282,7 @@ namespace InterpreterLib.Tests
             AbsoluteValueExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             AbsoluteValueExpression res = null;
             ihelper.AbsoluteInteger(Arg.Do<AbsoluteValueExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -298,56 +298,8 @@ namespace InterpreterLib.Tests
             AbsoluteValueExpression input1 = new AbsoluteValueExpression(null, 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.AbsoluteInteger(Arg.Any<AbsoluteValueExpression>(), Arg.Any<List<Object>>()).Returns(expected);
-
-            int res = interpreter.DispatchInt(input1, input2);
-
-            Assert.AreEqual(expected, res);
-        }
-        #endregion
-
-        #region DispatchInt_IdentifierExpr
-        [TestMethod]
-        public void DispatchInteger_IdentifierAndObjectList_CorrectListPassed()
-        {
-            List<Object> expected = new List<Object>() { 23, 2.334, null };
-            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
-            List<Object> res = null;
-            ihelper.IdentifierInteger(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
-
-            interpreter.DispatchInt(input1, expected);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-
-        [TestMethod]
-        public void DispatchInteger_IdentifierAndObjectList_CorrectIdentifierExprPassed()
-        {
-            IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
-            IdentifierExpression input1 = expected;
-            List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
-            IdentifierExpression res = null;
-            ihelper.IdentifierInteger(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
-
-            interpreter.DispatchInt(input1, input2);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-
-        [TestMethod]
-        public void DispatchInteger_IdentifierAndObjectList_CorrectValueReturned()
-        {
-            int expected = 17;
-            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
-            ihelper.IdentifierInteger(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);
 
@@ -362,7 +314,7 @@ namespace InterpreterLib.Tests
             List<Object> expected = new List<Object>() { 23, 2.334, null };
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             List<Object> res = null;
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<Object>>(x => res = x));
 
@@ -378,7 +330,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression input1 = expected;
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             IntegerLiteralExpression res = null;
             ihelper.LiteralInteger(Arg.Do<IntegerLiteralExpression>(x => res = x), Arg.Any<List<Object>>());
 
@@ -394,7 +346,7 @@ namespace InterpreterLib.Tests
             IntegerLiteralExpression input1 = new IntegerLiteralExpression("", 0, 0);
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IIntegerHelper ihelper = Substitute.For<IIntegerHelper>();
-            Interpreter interpreter = Utilities.GetIntepretorOnlyWith(ihelper);
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
             ihelper.LiteralInteger(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<Object>>()).Returns(expected);
 
             int res = interpreter.DispatchInt(input1, input2);

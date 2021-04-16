@@ -234,23 +234,6 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-        #region IdentifierReal
-        [DataRow(0, new object[] { 5.1 }, 5.1)]
-        [DataRow(1, new object[] { 5.1, 3.0, 1.1 }, 3.0)]
-        [TestMethod]
-        public void IdentifierReal_ValidIdentifierExprAndParameters_ReturnsCorrectResult(int reference, object[] parameterArray, double expected)
-        {
-            IdentifierExpression identifierExpr = new IdentifierExpression("test", 1, 1);
-            identifierExpr.Reference = reference;
-            List<object> parameters = parameterArray.ToList();
-            RealHelper realHelper = new RealHelper();
-
-            double res = realHelper.IdentifierReal(identifierExpr, parameters);
-
-            Assert.AreEqual(expected, res);
-        }
-        #endregion
-
         #region LiteralReal
         [DataRow(1.0, 1.0)]
         [DataRow(-1.0, -1.0)]

@@ -402,54 +402,6 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-        #region DispatchReal_IdentifierExpr
-        [TestMethod]
-        public void DispatchReal_IdentifierAndObjectList_CorrectListPassed()
-        {
-            List<Object> expected = new List<Object>() { 23, 2.334, null };
-            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
-            List<Object> res = null;
-            rhelper.IdentifierReal(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
-
-            interpreter.DispatchReal(input1, expected);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-
-        [TestMethod]
-        public void DispatchReal_IdentifierAndObjectList_CorrectIdentifierExprPassed()
-        {
-            IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
-            IdentifierExpression input1 = expected;
-            List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
-            IdentifierExpression res = null;
-            rhelper.IdentifierReal(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
-
-            interpreter.DispatchReal(input1, input2);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-
-        [TestMethod]
-        public void DispatchReal_IdentifierAndObjectList_CorrectValueReturned()
-        {
-            double expected = 17;
-            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
-            List<Object> input2 = new List<Object>() { 23, 2.334, null };
-            IRealHelper rhelper = Substitute.For<IRealHelper>();
-            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
-            rhelper.IdentifierReal(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
-
-            double res = interpreter.DispatchReal(input1, input2);
-
-            Assert.AreEqual(expected, res);
-        }
-        #endregion
-
         #region DispatchReal_RealLiteralExpr
         [TestMethod]
         public void DispatchReal_RealLiteralAndObjectList_CorrectListPassed()

@@ -60,11 +60,6 @@ namespace InterpreterLib.Helpers
             return lhsValue >= rhsValue;
         }
 
-        public bool IdentifierBoolean(IdentifierExpression node, List<object> parameters)
-        {
-            return parameters[node.Reference].Equals("true");
-        }
-
         public bool LessBoolean(LessExpression node, List<object> parameters)
         {
             ExpressionNode lhs = node.Children[0];

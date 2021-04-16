@@ -124,7 +124,7 @@ namespace InterpreterLib.Tests
             return list;
         }
         
-        public static Interpreter GetIntepretorOnlyWith(IIntegerHelper integerHelper)
+        public static Interpreter GetIntepreterOnlyWith(IIntegerHelper integerHelper)
         {
             IFunctionHelper functionHelper = Substitute.For<IFunctionHelper>();
             IRealHelper realHelper = Substitute.For<IRealHelper>();

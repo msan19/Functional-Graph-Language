@@ -192,22 +192,6 @@ namespace InterpreterLib.Tests
         }
         #endregion
 
-        #region IdentifierInteger
-        [TestMethod]
-        public void IdentifierInteger_IdentifierNode_ReturnsCorrectResult()
-        {
-            IdentifierExpression identifierExpr = new IdentifierExpression("This is a test", 1, 1);
-            identifierExpr.Reference = 0;
-            List<object> parameters = new List<object> { 0 };
-            int expected = (int)parameters[0];
-            IntegerHelper integerHelper = new IntegerHelper();
-
-            int res = integerHelper.IdentifierInteger(identifierExpr, parameters);
-
-            Assert.AreEqual(expected, res);
-        }
-        #endregion
-
         #region NegativeInteger
         [DataRow(0, -0)]
         [DataRow(-0, 0)]

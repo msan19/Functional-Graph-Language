@@ -18,8 +18,6 @@ namespace InterpreterLib.Interfaces
 
         bool LiteralBoolean(BooleanLiteralExpression node);
 
-        bool IdentifierBoolean(IdentifierExpression node, List<object> parameters);
-
         bool NotBoolean(NotExpression node, List<object> parameters);
 
         bool AndBoolean(AndExpression node, List<object> parameters);

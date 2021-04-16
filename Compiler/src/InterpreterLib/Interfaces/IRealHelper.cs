@@ -30,8 +30,6 @@ namespace InterpreterLib.Interfaces
 
         double PowerReal(PowerExpression node, List<object> parameters);
 
-        double IdentifierReal(IdentifierExpression node, List<object> parameters);
-
         double LiteralReal(RealLiteralExpression node, List<object> parameters);
 
         double CastIntegerToReal(CastFromIntegerExpression node, List<object> parameters);

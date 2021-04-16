@@ -79,7 +79,8 @@ namespace InterpreterLib
         {
             return node switch
             {
-                ElementExpression e => _elementHelper.Element(e, parameters),
+                ElementExpression e         => _elementHelper.Element(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<Element>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -89,7 +90,7 @@ namespace InterpreterLib
             return node switch
             {
                 IntegerLiteralExpression e  => _integerHelper.LiteralInteger(e, parameters),
-                IdentifierExpression e      => _integerHelper.IdentifierInteger(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<int>(e, parameters),
                 SubtractionExpression e     => _integerHelper.SubtractionInteger(e, parameters),
                 AdditionExpression e        => _integerHelper.AdditionInteger(e, parameters),
                 MultiplicationExpression e  => _integerHelper.MultiplicationInteger(e, parameters),
@@ -109,7 +110,7 @@ namespace InterpreterLib
                 PowerExpression e           => _realHelper.PowerReal(e, parameters),
                 CastFromIntegerExpression e => _realHelper.CastIntegerToReal(e, parameters),
                 RealLiteralExpression e     => _realHelper.LiteralReal(e, parameters),
-                IdentifierExpression e      => _realHelper.IdentifierReal(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<double>(e, parameters),
                 SubtractionExpression e     => _realHelper.SubtractionReal(e, parameters),
                 AdditionExpression e        => _realHelper.AdditionReal(e, parameters),
                 MultiplicationExpression e  => _realHelper.MultiplicationReal(e, parameters),
@@ -145,7 +146,7 @@ namespace InterpreterLib
                 NotExpression e             => _booleanHelper.NotBoolean(e, parameters),
                 AndExpression e             => _booleanHelper.AndBoolean(e, parameters),
                 OrExpression e              => _booleanHelper.OrBoolean(e, parameters),
-                IdentifierExpression e      => _booleanHelper.IdentifierBoolean(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<bool>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<bool>(e, parameters),
                 InExpression e              => _booleanHelper.InBoolean(e, parameters),
                 SubsetExpression e          => _booleanHelper.SubsetBoolean(e, parameters),

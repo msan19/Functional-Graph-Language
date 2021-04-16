@@ -87,11 +87,6 @@ namespace InterpreterLib.Helpers
             else
                 throw new InvalidAbsoluteIntegerException(node);
         }
-        
-        public int IdentifierInteger(IdentifierExpression node, List<Object> parameters)
-        {
-            return (int)parameters[node.Reference];
-        }
 
         public int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters)
         {
