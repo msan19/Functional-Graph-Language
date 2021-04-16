@@ -121,12 +121,8 @@ namespace TypeCheckerLib.Helpers
             if (!IsNumber(left.Type) || !IsNumber(right.Type))
                 throw new UnmatchableTypesException((Node) node, left.Type, right.Type, "number");
 
-            if (left.Type != right.Type)
-            {
-                CastToReal(node, left, 0);
-                CastToReal(node, right, 1);
-                return new TypeNode(TypeEnum.Boolean, 0, 0);
-            }
+            CastToReal(node, left, 0);
+            CastToReal(node, right, 1);
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 

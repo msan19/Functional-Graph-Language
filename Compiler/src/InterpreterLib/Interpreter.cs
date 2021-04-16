@@ -70,6 +70,7 @@ namespace InterpreterLib
                 UnionExpression e           => _setHelper.UnionSet(e, parameters),
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
