@@ -88,7 +88,50 @@ namespace InterpreterLib.Helpers
         
         public Set UnionSet(UnionExpression node, List<object> parameters)
         {
-            throw new NotImplementedException();
+            Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
+            Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
+
+            int i = 0;
+            int j = 0;
+            List<Element> union = new List<Element>();
+
+            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
+            {
+                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
+                if (res == 0)
+                {
+                    union.Add(leftSet.Elements[i]);
+                    i++;
+                    j++;
+                }
+                else if (res == -1)
+                {
+                    union.Add(leftSet.Elements[i]);
+                    i++;
+                }
+                else
+                {
+                    union.Add(rightSet.Elements[j]);
+                    j++;
+                }
+            }
+
+            if (ContainsMoreElements(leftSet.Elements, i))
+                AddRemainingElements(union, leftSet.Elements, i);
+            else if (ContainsMoreElements(rightSet.Elements, j)) 
+                AddRemainingElements(union, rightSet.Elements, j);
+            
+            return new Set(union);
+        }
+
+        private void AddRemainingElements(List<Element> union, List<Element> elements, int i)
+        {
+            union.AddRange(elements.GetRange(i, (elements.Count - i)));
+        }
+
+        private bool ContainsMoreElements(List<Element> elements, int i)
+        {
+            return !(i >= elements.Count);
         }
     }
 }
