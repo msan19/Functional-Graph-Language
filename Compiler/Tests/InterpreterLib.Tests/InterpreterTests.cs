@@ -212,7 +212,7 @@ namespace InterpreterLib.Tests
         [TestMethod]
         public void Interpret_Unmocked_ASTWithXtoThePowerOfY_CorrectListReturned(int xValue, double yValue, double expected)
         {
-            Interpreter interpreter = new Interpreter(new GenericHelper(), new FunctionHelper(), new IntegerHelper(), new RealHelper(), new BooleanHelper(), new SetHelper());
+            Interpreter interpreter = Utilities.GetFullyMockedIntepreter(); 
             IdentifierExpression x = new IdentifierExpression("x", 0, 0)
             {
                 IsLocal = true,
