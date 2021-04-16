@@ -1,3 +1,4 @@
+using ASTLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,7 @@ namespace FileGeneratorLib
             _helper = helper;
         }
 
-        public void Export(List<double> output, string file)
+        public void Export(List<Set> output, string file)
         {
             string text = "\nRESULTS:\n";
             for(int i = 0; i < output.Count; i++)

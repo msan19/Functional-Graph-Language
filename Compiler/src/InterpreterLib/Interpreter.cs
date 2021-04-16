@@ -48,12 +48,13 @@ namespace InterpreterLib
             _setHelper.SetInterpreter(this);
         }
 
-        public List<double> Interpret(AST node)
+        public List<Set> Interpret(AST node)
         {
             
             _genericHelper.SetASTRoot(node);
-            List<double> results = new List<double>();
-            foreach (ExportNode n in node.Exports) results.Add(_realHelper.ExportReal(n, new List<Object>()));
+            List<Set> results = new List<Set>();
+            foreach (ExportNode n in node.Exports) 
+                results.Add(_setHelper.ExportSet(n));
             return results;
         }
 

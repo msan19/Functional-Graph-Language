@@ -9,6 +9,9 @@ namespace ASTLib.Exceptions
 {
     public class InvalidSetTypeException : CompilerException
     {
+        public InvalidSetTypeException(ExportNode node) : base(node, "Export should be given a set in this iteration")
+        {
+        }
 
         public InvalidSetTypeException(ExpressionNode node, TypeEnum type, TypeEnum expected) :
             base(node, GetMessage(type, expected))

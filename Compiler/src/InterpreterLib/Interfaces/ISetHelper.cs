@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
+using ASTLib.Nodes;
 
 namespace InterpreterLib.Interfaces
 {
     public interface ISetHelper : IInterpreterHelper
     {
-        public void SetInterpreter(IInterpreterSet interpreter);
+        Set ExportSet(ExportNode node);
+        void SetInterpreter(IInterpreterSet interpreter);
         Set SetExpression(SetExpression node, List<Object> parameters);
         Set UnionSet(UnionExpression node, List<Object> parameters);
         Set IntersectionSet(IntersectionExpression node, List<Object> parameters);
