@@ -6,6 +6,8 @@ using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
+using System.Linq;
 
 namespace InterpreterLib.Helpers
 {
@@ -49,12 +51,12 @@ namespace InterpreterLib.Helpers
             }
             else
             {
-                Element element = new Element(indices);
+                Element element = new Element(indices.ToList());
                 parameters.Add(element);
                 parameters.AddRange(indices.ConvertAll(x => (Object) x));
                 if (_interpreter.DispatchBoolean(condition, parameters))
                     set.Elements.Add(element);
-                parameters.RemoveRange(parameters.Count - indices.Count - 1, parameters.Count);
+                parameters.RemoveRange(parameters.Count - indices.Count - 1, indices.Count + 1);
             }
         }
 
@@ -83,6 +85,16 @@ namespace InterpreterLib.Helpers
             }
 
             return new Set(duplicates);
+        }
+        
+        public Set UnionSet(UnionExpression node, List<object> parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
+        {
+            throw new NotImplementedException();
         }
     }
 }

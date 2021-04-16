@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using FluentAssertions;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
+using System.Linq;
 
 namespace InterpreterLib.Tests
 {
@@ -61,17 +62,36 @@ namespace InterpreterLib.Tests
                                                                new List<object> { 3, 4 } };
 
             //parent.DispatchBoolean(lessExpr, Arg.Any<List<object>>()).Returns(false);
-            List<Element> els = new List<Element>();
+            List<Element> expectedElements = new List<Element>();
             for (int i = 0; i < indexPairs.Count; i++)
             {
-                els.Add(new Element(new List<int> { (int)indexPairs[i][0], (int)indexPairs[i][1] }));
-                parent.DispatchBoolean(lessExpr, indexPairs[i]).Returns(true);
+                expectedElements.Add(new Element(indexPairs[i].ConvertAll(x => (int) x)));
             }
 
+
+            parent.DispatchBoolean(lessExpr, Arg.Any<List<Object>>()).Returns(x => IsContained(indexPairs , (List<Object>)x[1]));
+
             Set result = setHelper.SetExpression(setExpr, new List<object>());
-            Set expected = new Set(els);
+            Set expected = new Set(expectedElements);
 
             result.Should().BeEquivalentTo(expected);
+        }
+
+        private bool IsContained(List<List<Object>> doubleList, List<Object> list)
+        {
+            foreach(List<Object> l in doubleList)
+            {
+                if(l.Count + 1 == list.Count)
+                {
+                    bool isAMatch = true;
+                    for (int i = 0; i < l.Count; i++)
+                        if (!l[i].Equals(list[i + 1]))
+                            isAMatch = false;
+                    if (isAMatch)
+                        return true;
+                }
+            }
+            return false;
         }
 
         #endregion

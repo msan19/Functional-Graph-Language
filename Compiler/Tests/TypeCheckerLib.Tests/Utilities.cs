@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using NSubstitute;
@@ -166,6 +168,86 @@ namespace TypeCheckerLib.Tests
         {
             BooleanLiteralExpression boolLitExpr = new BooleanLiteralExpression(false, 0, 0);
             return new NegativeExpression(new List<ExpressionNode>(){boolLitExpr}, 0, 0);
+        }
+
+        public static TypeNode GetTypeNode(TypeEnum t)
+        {
+            return new TypeNode(t, 0, 0);
+        }
+
+        public static ConditionNode GetConditionNode(ExpressionNode conditionExpr, ExpressionNode returnExpr)
+        {
+            return new ConditionNode(conditionExpr, returnExpr, 0, 0);
+        }
+
+        public static ConditionNode GetConditionNode(List<ElementNode> elements, ExpressionNode conditionExpr, ExpressionNode returnExpr)
+        {
+            return new ConditionNode(elements, conditionExpr, returnExpr, 0, 0);
+        }
+
+        internal static IntegerLiteralExpression GetIntLit()
+        {
+            return new IntegerLiteralExpression(0, 0, 0);
+        }
+
+        internal static BooleanLiteralExpression GetBoolLit(bool v)
+        {
+            return new BooleanLiteralExpression(v, 0, 0);
+        }
+
+        internal static ITypeChecker GetDefaultTypeChecker()
+        {
+            var res = Substitute.For<ITypeChecker>();
+            res.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Integer));
+            res.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Real));
+            res.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Boolean));
+            res.Dispatch(Arg.Any<FunctionCallExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Function));
+            res.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Element));
+            res.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Set));
+            return res;
+        }
+
+        internal static List<ElementNode> GetElement(List<string> indexIds, int refId)
+        {
+            var res = new List<ElementNode>();
+            var elem = new ElementNode("e", indexIds.ToList(), 0, 0);
+            elem.Reference = refId;
+            res.Add(elem);
+            return res;
+        }
+
+        internal static List<string> GetListWithXStrings(int n)
+        {
+            var res = new List<string>();
+            for (int i = 0; i < n; i++)
+                res.Add("");
+            return res;
+        }
+
+        internal static GreaterExpression GetGreaterExpression()
+        {
+            return new GreaterExpression(null, null, 0, 0);
+        }
+
+        internal static List<ElementNode> GetElements(int nElements, int nIndicies)
+        {
+            var res = new List<ElementNode>();
+            for (int i = 0; i < nElements; i++)
+                res.Add(GetElement(GetListWithXStrings(nIndicies), i).First());
+            return res;
+        }
+
+        internal static List<TypeNode> GetTypeNodeList()
+        {
+            return new List<TypeNode>();
+        }
+
+        internal static List<TypeNode> GetTypeNodeListWithXElements(int elementNum)
+        {
+            var res = GetTypeNodeList();
+            for (int i = 0; i < elementNum; i++)
+                res.Add(GetTypeNode(TypeEnum.Element));
+            return res;
         }
     }
 }
