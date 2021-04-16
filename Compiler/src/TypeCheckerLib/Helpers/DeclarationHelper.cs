@@ -50,24 +50,62 @@ namespace TypeCheckerLib.Helpers
                 CheckConditionNode(functionNode.FunctionType.ReturnType, condition, parameterTypes);
             }
         }
-
+        
         public void CheckConditionNode(TypeNode expectedType, ConditionNode condition, List<TypeNode> parameterTypes)
         {
-            TypeNode returnType = _getType(condition.ReturnExpression, parameterTypes);
-            if(!condition.IsDefaultCase)
+            CheckElements(condition.Elements, parameterTypes);
+            var newParams = GetNewParameters(parameterTypes, condition);
+            CheckCondition(condition, newParams);
+            CheckReturnExpr(condition, newParams, expectedType);
+        }
+
+        private void CheckElements(List<ElementNode> elements, List<TypeNode> parameterTypes)
+        {
+            for (int i = 0; i < elements.Count; i++)
             {
-                TypeEnum conditionType = _getType(condition.Condition, parameterTypes).Type;
+                if (parameterTypes[i].Type != TypeEnum.Element)
+                    throw new Exception();
+            }
+        }
+
+        private List<TypeNode> GetNewParameters(List<TypeNode> parameterTypes, ConditionNode condition)
+        {
+            var res = parameterTypes.ToList();
+            foreach (var element in condition.Elements)
+            {
+                for (int i = 0; i < element.IndexIdentifiers.Count; i++)
+                {
+                    res.Add(new TypeNode(TypeEnum.Integer, 0, 0));
+                }
+            }
+            return res;
+        }
+
+        private void CheckCondition(ConditionNode condition, List<TypeNode> newParams)
+        {
+            if (!condition.IsDefaultCase)
+            {
+                TypeEnum conditionType = _getType(condition.Condition, newParams).Type;
                 if (conditionType != TypeEnum.Boolean)
                     throw new InvalidCastException(condition, conditionType, TypeEnum.Boolean);
             }
-                
-            if (!TypesAreEqual(returnType, expectedType))
+        }
+
+        private void CheckReturnExpr(ConditionNode condition, List<TypeNode> newParams, TypeNode expectedType)
+        {
+            TypeNode returnType = _getType(condition.ReturnExpression, newParams);
+            if (!AreTypesEqual(returnType, expectedType))
             {
-                if (returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real)
+                if (CanMakeCast(returnType, expectedType))
                     InsertCastNode(condition);
                 else
                     throw new InvalidCastException(condition, returnType.Type, expectedType.Type);
             }
+        }
+
+        private bool CanMakeCast(TypeNode returnType, TypeNode expectedType)
+        {
+            return returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real;
         }
 
         private void InsertCastNode(ConditionNode conditionNode)
@@ -128,7 +166,7 @@ namespace TypeCheckerLib.Helpers
         {
             for (int i = 0; i < children.Count; i++)
             {
-                if (!TypesAreEqual(children[i], functionTypeParameterTypes[i]))
+                if (!AreTypesEqual(children[i], functionTypeParameterTypes[i]))
                     return false;
             }
             return true;
@@ -144,13 +182,13 @@ namespace TypeCheckerLib.Helpers
             {
                 TypeNode child = _getType(funcCallExpNode.Children[i], parameterTypes);
                 TypeNode expected = funcDeclType.ParameterTypes[i];
-                if (!TypesAreEqual(child, expected))
+                if (!AreTypesEqual(child, expected))
                     return false;
             }
             return true;
         }
         
-        private bool TypesAreEqual(TypeNode a, TypeNode b)
+        private bool AreTypesEqual(TypeNode a, TypeNode b)
         {
             if (a.Type == TypeEnum.Function)
             {
@@ -163,16 +201,21 @@ namespace TypeCheckerLib.Helpers
             return a.Type == b.Type;
         }
 
+        private bool AreTypesEqual(TypeEnum a, TypeEnum b)
+        {
+            return a == b;
+        }
+
         private bool IsFunctionTypesEqual(FunctionTypeNode a, FunctionTypeNode b)
         {
-            if (!TypesAreEqual(a.ReturnType, b.ReturnType))
+            if (!AreTypesEqual(a.ReturnType, b.ReturnType))
                 return false;
             if (a.ParameterTypes.Count != b.ParameterTypes.Count)
                 return false;
 
             for (int i = 0; i < a.ParameterTypes.Count; i++)
             {
-                if (!TypesAreEqual(a.ParameterTypes[i], b.ParameterTypes[i]))
+                if (!AreTypesEqual(a.ParameterTypes[i], b.ParameterTypes[i]))
                     return false;
             }
             return true;

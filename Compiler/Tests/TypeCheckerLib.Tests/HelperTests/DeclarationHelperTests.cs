@@ -833,7 +833,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(10, 7)]
         [TestMethod]
         [ExpectedException(typeof(Exception))]
-        public void CheckConditionNode_xElementsWithOneNotElement_Exception(int elementNum, int indexOfNonElement)
+        public void CheckConditionNode_xElementsWithOneParameterNotElement_Exception(int elementNum, int indexOfNonElement)
         {
             var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
             parameters[indexOfNonElement] = Utilities.GetTypeNode(TypeEnum.Boolean);
