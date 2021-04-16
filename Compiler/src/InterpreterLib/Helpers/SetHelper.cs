@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
 namespace InterpreterLib.Helpers
 {
@@ -57,6 +58,35 @@ namespace InterpreterLib.Helpers
                     set.Elements.Add(element);
                 parameters.RemoveRange(parameters.Count - indices.Count - 1, indices.Count + 1);
             }
+        }
+
+        public Set SubtractionSet(SubtractionExpression node, List<Object> parameters)
+        {
+            Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
+            Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
+
+            int i = 0;
+            int j = 0;
+            List<Element> onlyInLeftSet = new List<Element>();
+
+            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
+            {
+                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
+                if (res == 0)
+                {
+                    i++; j++;
+                }
+                else if (res == -1)
+                {
+                    onlyInLeftSet.Add(leftSet.Elements[i]);
+                    i++;
+                }
+                else
+                {
+                    j++;
+                }
+            }
+            return new Set(onlyInLeftSet);
         }
 
         public Set IntersectionSet(IntersectionExpression node, List<object> parameters)

@@ -13,6 +13,7 @@ using FluentAssertions;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
 namespace InterpreterLib.Tests
 {
@@ -379,6 +380,50 @@ namespace InterpreterLib.Tests
             return new Set(elements);
         }
 
+        #endregion
+
+        #region SubtractionSet
+        [DataTestMethod]
+        [DynamicData(nameof(SubtractionSet_TestDataMethod), DynamicDataSourceType.Method)]
+        public void SubtractionSet_f_f(int[,] left, int[,] right, int[,] expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression lhsExpr = new SetExpression(null, null, null, 1, 1);
+            SetExpression rhsExpr = new SetExpression(null, null, null, 1, 1);
+            SubtractionExpression expr = new SubtractionExpression(lhsExpr, rhsExpr, 0, 0);
+            parent.DispatchSet(lhsExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(left));
+            parent.DispatchSet(rhsExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(right));
+
+            Set res = setHelper.SubtractionSet(expr, new List<object>());
+
+            res.Should().BeEquivalentTo(getSetFrom2dArray(expected));
+        }
+
+        static IEnumerable<object[]> SubtractionSet_TestDataMethod()
+        {
+            return new[]
+            {
+                new[]
+                {
+                    new int[4, 1] { { 1 }, { 2 }, { 3 }, { 4 } },
+                    new int[4, 1] { { 1 }, { 2 }, { 4 }, { 5 } },
+                    new int[1, 1] { { 3 } }
+                },
+                new[]
+                {
+                    new int[4, 2] { { 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 } },
+                    new int[4, 2] { { 0, 1 }, { 3, 2 }, { 5, 4 }, { 6, 7 } },
+                    new int[2, 2] { { 2, 3 }, { 4, 5 } }
+                },
+                new[]
+                {
+                    new int[3, 1] { { 3 }, { 4 }, { 5 } },
+                    new int[4, 1] { { 3 }, { 4 }, { 5 }, { 6 } },
+                    new int[0, 0] {}
+                }
+            };
+        }
         #endregion
     }
 }

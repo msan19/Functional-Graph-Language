@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
@@ -167,6 +168,39 @@ namespace InterpreterLib.Helpers
             Set rhsValue       = _interpreter.DispatchSet(rhs, parameters);
 
             return rhsValue.Elements.Contains(lhsValue);
+        }
+
+        public bool SubsetBoolean(SubsetExpression node, List<object> parameters)
+        {
+            ExpressionNode lhs = node.Children[0];
+            ExpressionNode rhs = node.Children[1];
+            Set subset = _interpreter.DispatchSet(lhs, parameters);
+            Set superset = _interpreter.DispatchSet(rhs, parameters);
+
+            List<Element> intersection = new List<Element>();
+            int i = 0;
+            int j = 0;
+            
+            while (i < subset.Elements.Count && j < superset.Elements.Count)
+            {
+                int res = subset.Elements[i].CompareTo(superset.Elements[j]);
+                if (res == 0)
+                {
+                    intersection.Add(subset.Elements[i]);
+                    i++;
+                    j++;
+                }
+                else if(res == -1)
+                {
+                    i++;
+                }
+                else
+                {
+                    j++;
+                }
+            }
+
+            return intersection.SequenceEqual(subset.Elements);
         }
     }
 }
