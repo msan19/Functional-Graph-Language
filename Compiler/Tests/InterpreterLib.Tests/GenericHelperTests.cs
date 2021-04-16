@@ -148,6 +148,114 @@ namespace InterpreterLib.Tests
             return functionHelper;
         }
 
+        #region Condition
+        [DataRow(1, new int[] { 2 }, new int[] { 2 }, 2, true)]
+        [DataRow(1, new int[] { 1 }, new int[] { 2 }, 2, false)]
+        [DataRow(1, new int[] { 2 }, new int[] { 1 }, 2, false)]
+        [TestMethod]
+        public void Condition_Elements_CheckElementCondition(int elemCount, int[] elemDims, int[] paramDims, int ps, bool expected)
+        {
+            List<ElementNode> elements = new List<ElementNode>();
+            for (int i = 0; i < elemCount; i++)
+                elements.AddRange(Utilities.GetElementNodess(elemCount, elemDims[i], ps));
+            ExpressionNode conditionExpr = Utilities.GetBoolLitExpression(true);
+            ExpressionNode returnExpr = Utilities.GetIntLitExpression();
+            var node = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parameters = Utilities.GetParameterList(ps);
+            for (int i = 0; i < elemCount; i++)
+                parameters.AddRange(Utilities.GetElements(elemCount, paramDims[i]));
+
+            var parent = Utilities.GetGenericInterpreter();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Boolean).Returns(true);
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
+            var helper = Utilities.GetGenericHelper(parent);
+
+            var res = helper.Condition<int>(node, parameters).IsCalculated;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow(2, 2, 2)]
+        [DataRow(2, 4, 3)]
+        [DataRow(4, 1, 1)]
+        [TestMethod]
+        public void Condition_Elements_AddIdsToParametersBeforeCondition(int elemCount, int dims, int ps)
+        {
+            List<ElementNode> elements = Utilities.GetElementNodess(elemCount, dims, ps);
+            ExpressionNode conditionExpr = Utilities.GetBoolLitExpression(true);
+            ExpressionNode returnExpr = Utilities.GetIntLitExpression();
+            var node = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parameters = Utilities.GetParameterList(ps);
+            parameters.AddRange(Utilities.GetElements(elemCount, dims));
+            var expected = parameters.ToList();
+            expected.AddRange(Utilities.ConvertElementNodesToInts(elements));
+
+            var res = new List<object>();
+            var parent = Utilities.GetGenericInterpreter();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Do<List<object>>(x => res = x), TypeEnum.Boolean).Returns(true);
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
+            var helper = Utilities.GetGenericHelper(parent);
+
+            helper.Condition<int>(node, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(2, 2, 2)]
+        [DataRow(2, 4, 3)]
+        [DataRow(4, 1, 1)]
+        [TestMethod]
+        public void Condition_Elements_AddIdsToParametersBeforeReturnExpr(int elemCount, int dims, int ps)
+        {
+            List<ElementNode> elements = Utilities.GetElementNodess(elemCount, dims, ps);
+            ExpressionNode conditionExpr = Utilities.GetBoolLitExpression(true);
+            ExpressionNode returnExpr = Utilities.GetIntLitExpression();
+            var node = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parameters = Utilities.GetParameterList(ps);
+            parameters.AddRange(Utilities.GetElements(elemCount, dims));
+            var expected = parameters.ToList();
+            expected.AddRange(Utilities.ConvertElementNodesToInts(elements));
+
+            var res = new List<object>();
+            var parent = Utilities.GetGenericInterpreter();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Boolean).Returns(true);
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<object>>(x => res = x), TypeEnum.Integer).Returns(1);
+            var helper = Utilities.GetGenericHelper(parent);
+
+            helper.Condition<int>(node, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(2, 2, 2)]
+        [DataRow(2, 4, 3)]
+        [DataRow(4, 1, 1)]
+        [TestMethod]
+        public void Condition_Elements_RemovedIdsFromParameters(int elemCount, int dims, int ps)
+        {
+            List<ElementNode> elements = Utilities.GetElementNodess(elemCount, dims, ps);
+            ExpressionNode conditionExpr = Utilities.GetBoolLitExpression(true);
+            ExpressionNode returnExpr = Utilities.GetIntLitExpression();
+            var node = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parameters = Utilities.GetParameterList(ps);
+            parameters.AddRange(Utilities.GetElements(elemCount, dims));
+            var expected = parameters.ToList();
+
+            var parent = Utilities.GetGenericInterpreter();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Boolean).Returns(true);
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
+            var helper = Utilities.GetGenericHelper(parent);
+
+            helper.Condition<int>(node, parameters);
+
+            parameters.Should().BeEquivalentTo(expected);
+        }
+        #endregion
+
         #region ConditionFunction
 
         [TestMethod]

@@ -27,12 +27,16 @@ namespace TypeCheckerLib.Helpers
         public void VisitExport(ExportNode exportNode)
         {
             TypeEnum type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;
+            if (type != TypeEnum.Set)
+                throw new InvalidSetTypeException(exportNode);
+            /*
             if (type == TypeEnum.Real)
                 return;
             else if (type == TypeEnum.Integer)
                 InsertCastNode(exportNode);
             else
                 throw new InvalidCastException(exportNode, type, TypeEnum.Real);
+            */
         }
 
         private void InsertCastNode(ExportNode node)

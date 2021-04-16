@@ -4,11 +4,14 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Interfaces
 {
-    public interface IInterpreter: IInterpreterGeneric, IInterpreterInteger, IInterpreterFunction, IInterpreterReal, IInterpreterBoolean, IInterpreterSet
+    public interface IInterpreter: 
+        IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
+        , IInterpreterFunction, IInterpreterSet, IInterpreterElement
     {
-        List<double> Interpret(AST node);
+        List<Set> Interpret(AST node);
     }
 }

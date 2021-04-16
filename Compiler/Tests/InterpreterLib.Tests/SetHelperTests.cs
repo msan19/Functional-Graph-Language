@@ -13,6 +13,8 @@ using FluentAssertions;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using System.Linq;
 using FluentAssertions.Common;
+using System.Runtime.CompilerServices;
+using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
 namespace InterpreterLib.Tests
 {
@@ -167,6 +169,269 @@ namespace InterpreterLib.Tests
             };
         }
 
+        #endregion
+        
+        
+        #region UnionSet
+        /*
+            Cases:
+            * One set is empty
+            * Both sets have same 
+                - Disjoint
+                - Equal
+                - Some common elements
+            * One set is longer than the other
+                - Disjoint
+                    - rhs is longer
+                    - lhs is longer
+                - Some common elements
+                    - rhs is longer
+                    - lhs is longer                    
+            * Test that it can handle Set with elements that differ in number of indices  
+        */
+        
+        [DataTestMethod]
+        [DynamicData(nameof(SetWithDifferentLength_Disjoint_TestDataMethod), DynamicDataSourceType.Method)]
+        [DynamicData(nameof(SetWithDifferentLength_SomeCommonElements_TestDataMethod), DynamicDataSourceType.Method)]
+        public void UnionSet_NotSameLength_(Set left, Set right, Set expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
+            SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
+            UnionExpression intersectionExpr = new UnionExpression(leftExpr, rightExpr, 0, 0);
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(left);
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(right);
+
+            Set result = setHelper.UnionSet(intersectionExpr, new List<object>());
+
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        static IEnumerable<object[]> SetWithDifferentLength_Disjoint_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(1) } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(3), new Element(4) } ),
+                },
+                new[] 
+                {
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(3), new Element(4) } ),
+                },
+            };
+        }
+        
+        static IEnumerable<object[]> SetWithDifferentLength_SomeCommonElements_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(1) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(4) } ),
+                },
+                new[] 
+                {
+                    CreateSet(new List<Element>{ new Element(1), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(4) } ),
+                },
+            };
+        }
+        
+        [DataTestMethod]
+        [DynamicData(nameof(SetWithSameLength_Disjoint_TestDataMethod), DynamicDataSourceType.Method)]
+        [DynamicData(nameof(SetWithSameLength_SomeCommonElements_TestDataMethod), DynamicDataSourceType.Method)]
+        [DynamicData(nameof(SetWithSameLength_Equal_TestDataMethod), DynamicDataSourceType.Method)]
+        public void UnionSet_SameLength_(Set left, Set right, Set expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
+            SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
+            UnionExpression intersectionExpr = new UnionExpression(leftExpr, rightExpr, 0, 0);
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(left);
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(right);
+
+            Set result = setHelper.UnionSet(intersectionExpr, new List<object>());
+
+            result.Should().BeEquivalentTo(expected);
+        }
+        
+        static IEnumerable<object[]> SetWithSameLength_Disjoint_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(1), new Element(2) } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(2), new Element(3), new Element(4) } ),
+                },
+                new[] 
+                {
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(2) } ),
+                    CreateSet(new List<Element>{ new Element(1),  new Element(2), new Element(3), new Element(4) } ),
+                },
+            };
+        }
+        
+        static IEnumerable<object[]> SetWithSameLength_SomeCommonElements_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(1), new Element(3) } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(3), new Element(4) }),
+                },
+                new[] 
+                {
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(3) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(3), new Element(4) } ),
+                },
+            };
+        }
+        
+        static IEnumerable<object[]> SetWithSameLength_Equal_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(1), new Element(2), new Element(3) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(2), new Element(3) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(2), new Element(3) } ),
+                }
+            };
+        }
+        
+        [DataTestMethod]
+        [DynamicData(nameof(SetWhereOneIsEmpty_TestDataMethod), DynamicDataSourceType.Method)]
+        public void UnionSet_OneIsEmpty_(Set left, Set right, Set expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
+            SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
+            UnionExpression intersectionExpr = new UnionExpression(leftExpr, rightExpr, 0, 0);
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(left);
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(right);
+
+            Set result = setHelper.UnionSet(intersectionExpr, new List<object>());
+
+            result.Should().BeEquivalentTo(expected);
+        }
+        
+        static IEnumerable<object[]> SetWhereOneIsEmpty_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{  } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                },
+                new[] 
+                {
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                    CreateSet(new List<Element>{  } ),
+                    CreateSet(new List<Element>{ new Element(3), new Element(4) } ),
+                },
+            };
+        }
+        
+        [DataTestMethod]
+        [DynamicData(nameof(SetsWithVaryingNumberOfElementIndices_TestDataMethod), DynamicDataSourceType.Method)]
+        public void UnionSet_SetsWithVaryingNumberOfElementIndices_(Set left, Set right, Set expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
+            SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
+            UnionExpression intersectionExpr = new UnionExpression(leftExpr, rightExpr, 0, 0);
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(left);
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(right);
+
+            Set result = setHelper.UnionSet(intersectionExpr, new List<object>());
+
+            result.Should().BeEquivalentTo(expected);
+        }
+        
+        static IEnumerable<object[]> SetsWithVaryingNumberOfElementIndices_TestDataMethod()
+        {
+            return new[] {
+                new[] 
+                { 
+                    CreateSet(new List<Element>{ new Element(2), new Element(new List<int>(){1, 2}), 
+                                                         new Element(new List<int>(){1, 4}) } ),
+                    CreateSet(new List<Element>{ new Element(1), new Element(new List<int>(){1, 2}), 
+                                                         new Element(new List<int>(){1, 2, 3}), new Element(new List<int>(){4, 2, 3})  } ),
+                    CreateSet(new List<Element>
+                    { 
+                         new Element(1), new Element(2), 
+                         new Element(new List<int>(){1, 2}), new Element(new List<int>(){1, 4}),
+                         new Element(new List<int>(){1, 2, 3}), new Element(new List<int>(){4, 2, 3}) 
+                    } ),
+                    
+                }
+            };
+        }
+        
+        private static Set CreateSet(List<Element> elements)
+        {
+            return new Set(elements);
+        }
+
+        #endregion
+
+        #region SubtractionSet
+        [DataTestMethod]
+        [DynamicData(nameof(SubtractionSet_TestDataMethod), DynamicDataSourceType.Method)]
+        public void SubtractionSet_f_f(int[,] left, int[,] right, int[,] expected)
+        {
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            SetHelper setHelper = SetUpHelper(parent);
+            SetExpression lhsExpr = new SetExpression(null, null, null, 1, 1);
+            SetExpression rhsExpr = new SetExpression(null, null, null, 1, 1);
+            SubtractionExpression expr = new SubtractionExpression(lhsExpr, rhsExpr, 0, 0);
+            parent.DispatchSet(lhsExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(left));
+            parent.DispatchSet(rhsExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(right));
+
+            Set res = setHelper.SubtractionSet(expr, new List<object>());
+
+            res.Should().BeEquivalentTo(getSetFrom2dArray(expected));
+        }
+
+        static IEnumerable<object[]> SubtractionSet_TestDataMethod()
+        {
+            return new[]
+            {
+                new[]
+                {
+                    new int[4, 1] { { 1 }, { 2 }, { 3 }, { 4 } },
+                    new int[4, 1] { { 1 }, { 2 }, { 4 }, { 5 } },
+                    new int[1, 1] { { 3 } }
+                },
+                new[]
+                {
+                    new int[4, 2] { { 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 } },
+                    new int[4, 2] { { 0, 1 }, { 3, 2 }, { 5, 4 }, { 6, 7 } },
+                    new int[2, 2] { { 2, 3 }, { 4, 5 } }
+                },
+                new[]
+                {
+                    new int[3, 1] { { 3 }, { 4 }, { 5 } },
+                    new int[4, 1] { { 3 }, { 4 }, { 5 }, { 6 } },
+                    new int[0, 0] {}
+                }
+            };
+        }
         #endregion
     }
 }
