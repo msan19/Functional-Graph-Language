@@ -905,21 +905,66 @@ namespace InterpreterLib.Tests
         public void InBoolean_GivenElementAndSet_CorrectValueReturned(int[] a, int[] b, bool expected)
         {
             Element lhsValue = new Element(a.ToList());
-            Set rhsValue = new Set(new List<Element>() { new Element(b.ToList()) });
+            Set rhsValue = GetSetWith1DElements(b);
             ElementExpression lhs = new ElementExpression(null, 0, 0);
-            SetExpression rhs = new SetExpression(null, null, null, 1, 1);
+            SetExpression rhs = GetSetInit();
             InExpression expression = new InExpression(lhs, rhs, 0, 0);
 
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-            parent.DispatchElement(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
-            parent.DispatchSet(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+            DispatchElementForParent(lhsValue, lhs, parent);
+            DispatchSetForParent(rhsValue, rhs, parent);
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
             bool res = booleanHelper.InBoolean(expression, new List<object>());
 
             Assert.AreEqual(expected, res);
         }
+
+        private static void DispatchElementForParent(Element elementValue, ElementExpression elementExpression, IInterpreterBoolean parent)
+        {
+            parent.DispatchElement(elementExpression, Arg.Any<List<object>>()).Returns(elementValue);
+        }
         #endregion
 
+        #region
+        [DataRow(new int[] { 1 }, new int[] { 1 }, true)]
+        [DataRow(new int[] { 2, 6 }, new int[] { 1 }, false)]
+        [DataRow(new int[] { 1, 2, 3 }, new int[] { 1, 2, 3, 4, 5 }, true)]
+        [DataRow(new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 8, 9 }, false)]
+        [DataRow(new int[] { 3, 5, 3, 7, 2 }, new int[] { 3, 5, 3, 7, 2 }, true)]
+        [TestMethod]
+        public void SubsetBoolean_GivenSetAndSet_CorrectValueReturned(int[] a, int[] b, bool expected)
+        {
+            Set lhsValue = GetSetWith1DElements(a);
+            Set rhsValue = GetSetWith1DElements(b);
+            SetExpression lhs = GetSetInit();
+            SetExpression rhs = GetSetInit();
+            SubsetExpression expression = new SubsetExpression(lhs, rhs, 0, 0);
+
+            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
+            DispatchSetForParent(lhsValue, lhs, parent);
+            DispatchSetForParent(rhsValue, rhs, parent);
+            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
+
+            bool res = booleanHelper.SubsetBoolean(expression, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private static void DispatchSetForParent(Set setValue, SetExpression setExpression, IInterpreterBoolean parent)
+        {
+            parent.DispatchSet(setExpression, Arg.Any<List<object>>()).Returns(setValue);
+        }
+
+        private static SetExpression GetSetInit()
+        {
+            return new SetExpression(null, null, null, 0, 0);
+        }
+
+        private static Set GetSetWith1DElements(int[] a)
+        {
+            return new Set(a.ToList().ConvertAll(x => new Element(x)));
+        }
+        #endregion
     }
 }
