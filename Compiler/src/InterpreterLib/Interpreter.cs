@@ -78,7 +78,7 @@ namespace InterpreterLib
         {
             return node switch
             {
-                ElementExpression e => _elementHelper.DispatchElement(e, parameters),
+                ElementExpression e => _elementHelper.Element(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
