@@ -166,7 +166,7 @@ namespace LexParserLib
 
         private ExpressionNode VisitExponent(ASTNode himeNode)
         {
-            return himeNode.Children[0].Value switch
+            return himeNode.Children[0].Symbol.Name switch
             {
                 "(" when himeNode.Children.Count == PARENTHESES 
                     => DispatchExpression(himeNode.Children[1]),

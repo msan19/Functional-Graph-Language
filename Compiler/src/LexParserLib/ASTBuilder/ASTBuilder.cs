@@ -75,10 +75,10 @@ namespace LexParserLib
         private ExportNode CreateExportNode(ASTNode himeNode)
         {
             ExpressionNode expressionNode   = _expressionHelper.DispatchExpression(himeNode.Children[1]);
-            ExpressionNode fileName         = _expressionHelper.DispatchExpression(himeNode.Children[3]);
+            ExpressionNode fileName = _expressionHelper.DispatchExpression(himeNode.Children[3]);
             List<ExpressionNode> vertexLabels   = new List<ExpressionNode>();
             List<ExpressionNode> edgeLabels     = new List<ExpressionNode>();
-
+            
             if(himeNode.Children.Count == EXPORT_VERTEX_LABELS ||
                himeNode.Children.Count == EXPORT_BOTH_LABELS)
                 _expressionHelper.VisitExpressions(himeNode.Children[6], vertexLabels);
