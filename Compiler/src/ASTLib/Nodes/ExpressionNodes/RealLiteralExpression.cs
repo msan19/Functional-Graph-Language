@@ -10,10 +10,10 @@ namespace ASTLib.Nodes.ExpressionNodes
     {
         public double Value { get; }
 
-        public RealLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
+        public RealLiteralExpression(string token, int line, int letter) :
+            base(new List<ExpressionNode>(), line, letter) 
         {
             Value = ConvertToDouble(token);
-            Children = new List<ExpressionNode>();
         }
         
         public RealLiteralExpression(double value, int line, int letter) : base(null, line, letter) 

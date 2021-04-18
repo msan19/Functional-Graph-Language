@@ -9,12 +9,11 @@ namespace ASTLib.Nodes.ExpressionNodes
     public class IntegerLiteralExpression : ExpressionNode, INonIdentifierExpression
     {
         public int Value { get; }
-        public FunctionTypeNode Type { get; set; }
 
-        public IntegerLiteralExpression(string token, int line, int letter) : base(null, line, letter) 
+        public IntegerLiteralExpression(string token, int line, int letter) : 
+            base(new List<ExpressionNode>(), line, letter) 
         {
             Value = ConvertToInt(token);
-            Children = new List<ExpressionNode>();
         }
 
         public IntegerLiteralExpression(int value, int line, int letter) : base(null, line, letter)

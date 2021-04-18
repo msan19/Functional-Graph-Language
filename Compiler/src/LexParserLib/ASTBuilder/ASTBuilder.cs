@@ -17,7 +17,9 @@ namespace LexParserLib
     {
         private const int PARAMETER_IDs_POS = 5, FUNCTIONTYPE_POS = 2, 
                           RETURNTYPE_POS = 4, CONSTANT_FUNCTION_DECLARATION = 6,
-                          CONDITION_BOTH_ELEMENTS_AND_PREDICATE = 6;
+                          CONDITION_BOTH_ELEMENTS_AND_PREDICATE = 6,
+                          EXPORT_NO_LABELS = 5, EXPORT_BOTH_LABELS = 11, 
+                          EXPORT_EDGE_LABELS = 10, EXPORT_VERTEX_LABELS = 8;
         private readonly IExpressionHelper _expressionHelper;
         
         public ASTBuilder(IExpressionHelper expressionHelper)
@@ -37,7 +39,7 @@ namespace LexParserLib
             int declarationIndex;
             if (himeNode.Children.Count == 1)
             {
-                ast = GetNewAst(himeNode);
+                ast = GetNewAst();
                 declarationIndex = 0;
             }
             else
@@ -49,7 +51,7 @@ namespace LexParserLib
             return ast;
         }
 
-        private AST GetNewAst(ASTNode himeNode)
+        private AST GetNewAst()
         {
             List<FunctionNode> functionNodes = new List<FunctionNode>();
             List<ExportNode> exportNodes = new List<ExportNode>();
@@ -72,9 +74,22 @@ namespace LexParserLib
         
         private ExportNode CreateExportNode(ASTNode himeNode)
         {
-            ExpressionNode expressionNode = _expressionHelper.DispatchExpression(himeNode.Children[1]);
+            ExpressionNode expressionNode   = _expressionHelper.DispatchExpression(himeNode.Children[1]);
+            ExpressionNode fileName         = _expressionHelper.DispatchExpression(himeNode.Children[3]);
+            List<ExpressionNode> vertexLabels   = new List<ExpressionNode>();
+            List<ExpressionNode> edgeLabels     = new List<ExpressionNode>();
+
+            if(himeNode.Children.Count == EXPORT_VERTEX_LABELS ||
+               himeNode.Children.Count == EXPORT_BOTH_LABELS)
+                _expressionHelper.VisitExpressions(himeNode.Children[6], vertexLabels);
+            if(himeNode.Children.Count == EXPORT_EDGE_LABELS)
+                _expressionHelper.VisitExpressions(himeNode.Children[8], edgeLabels);
+            if(himeNode.Children.Count == EXPORT_BOTH_LABELS)
+                _expressionHelper.VisitExpressions(himeNode.Children[10], edgeLabels);
+
             TextPosition position = himeNode.Children[0].Position;
-            return new ExportNode(expressionNode, position.Line, position.Column);
+            return new ExportNode(expressionNode, fileName, vertexLabels, edgeLabels, 
+                                  position.Line, position.Column);
         }
         
         private FunctionNode CreateFunctionNode(ASTNode himeDeclNode)
@@ -235,15 +250,16 @@ namespace LexParserLib
 
         public TypeNode CreateTypeNode(ASTNode himeNode)
         {
-
             TextPosition position = himeNode.Children[0].Position;
             return himeNode.Children[0].Symbol.Name switch
             {
                 "integer"       => new TypeNode(TypeEnum.Integer, position.Line, position.Column),
                 "real"          => new TypeNode(TypeEnum.Real,    position.Line, position.Column),
                 "boolean"       => new TypeNode(TypeEnum.Boolean, position.Line, position.Column),
+                "string"        => new TypeNode(TypeEnum.String,  position.Line, position.Column),
                 "set"           => new TypeNode(TypeEnum.Set,     position.Line, position.Column),
                 "element"       => new TypeNode(TypeEnum.Element, position.Line, position.Column),
+                "graph"         => new TypeNode(TypeEnum.Graph,   position.Line, position.Column),
                 "FuncTypeDecl"  => CreateFunctionTypeNode(himeNode.Children[0]),
                 _ => throw new UnimplementedASTException(himeNode.Children[0].Symbol.Name, "type"),
             };

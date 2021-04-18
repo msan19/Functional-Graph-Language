@@ -122,9 +122,9 @@ namespace InterpreterLib.Helpers
             }
             else if (type == TypeEnum.Function)
             {
-                int lhsValue = _interpreter.DispatchFunction(lhs, parameters);
-                int rhsValue = _interpreter.DispatchFunction(rhs, parameters);
-                res = lhsValue == rhsValue;
+                Function lhsValue = _interpreter.DispatchFunction(lhs, parameters);
+                Function rhsValue = _interpreter.DispatchFunction(rhs, parameters);
+                res = lhsValue.Reference == rhsValue.Reference;
             }
             else if (type == TypeEnum.Set)
             {
@@ -169,33 +169,28 @@ namespace InterpreterLib.Helpers
         {
             ExpressionNode lhs = node.Children[0];
             ExpressionNode rhs = node.Children[1];
-            Set subset = _interpreter.DispatchSet(lhs, parameters);
-            Set superset = _interpreter.DispatchSet(rhs, parameters);
-
-            List<Element> intersection = new List<Element>();
+            Set subset      = _interpreter.DispatchSet(lhs, parameters);
+            Set superset    = _interpreter.DispatchSet(rhs, parameters);
             int i = 0;
             int j = 0;
             
-            while (i < subset.Elements.Count && j < superset.Elements.Count)
+            while (i < subset.Elements.Count)
             {
+                if (j >= superset.Elements.Count)
+                    return false;
                 int res = subset.Elements[i].CompareTo(superset.Elements[j]);
                 if (res == 0)
                 {
-                    intersection.Add(subset.Elements[i]);
                     i++;
                     j++;
                 }
                 else if(res == -1)
-                {
-                    i++;
-                }
+                    return false;
                 else
-                {
                     j++;
-                }
             }
 
-            return intersection.SequenceEqual(subset.Elements);
+            return true;
         }
     }
 }

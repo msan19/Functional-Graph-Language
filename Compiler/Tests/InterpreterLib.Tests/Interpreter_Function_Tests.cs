@@ -1,6 +1,7 @@
 ﻿using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Objects;
 using FluentAssertions;
 using InterpreterLib.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -57,11 +58,12 @@ namespace InterpreterLib.Tests
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
-            fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
+            fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).
+                Returns(new Function(expected));
 
-            int res = interpreter.DispatchFunction(input1, input2);
+            Function res = interpreter.DispatchFunction(input1, input2);
 
-            Assert.AreEqual(expected, res);
+            Assert.AreEqual(expected, res.Reference);
         }
         #endregion
 

@@ -15,7 +15,7 @@ namespace LexParserLib.Tests
         [TestMethod]
         public void Export_2Doubles_lastNode_LetterNum()
         {
-            string input = "export 5.5 + 33.3";
+            string input = "export 5.5 + 33.3 {\"\"}";
 
             AST ast = new LexParser(new ASTBuilder(new ExpressionHelper())).Run(input, false);
 
@@ -25,7 +25,7 @@ namespace LexParserLib.Tests
         [TestMethod]
         public void Export_2Doubles_lastNode_Value()
         {
-            string input = "export 5.5 + 33.3";
+            string input = "export 5.5 + 33.3 {\"\"}";
 
             AST ast = new LexParser(new ASTBuilder(new ExpressionHelper())).Run(input, false);
 
@@ -38,7 +38,7 @@ namespace LexParserLib.Tests
         [TestMethod]
         public void Export_2Doubles2Ints_2ndLastNode_LetterNum()
         {
-            string input = "export 5.5 + 33.3 + 2 + 1";
+            string input = "export 5.5 + 33.3 + 2 + 1 {\"\"}";
 
             AST ast = new LexParser(new ASTBuilder(new ExpressionHelper())).Run(input, false);
 
@@ -48,7 +48,7 @@ namespace LexParserLib.Tests
         [TestMethod]
         public void Export_2Doubles2Ints_2ndLastNode_Value()
         {
-            string input = "export 5.5 + 33.3 + 2 + 1";
+            string input = "export 5.5 + 33.3 + 2 + 1 {\"\"}";
 
             AST ast = new LexParser(new ASTBuilder(new ExpressionHelper())).Run(input, false);
 

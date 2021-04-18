@@ -10,8 +10,10 @@ namespace ASTLib.Nodes.TypeNodes
         Real,
         Integer,
         Boolean,
+        String,
         Set,
         Element,
+        Graph,
         Function
     }
     

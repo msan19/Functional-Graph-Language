@@ -5,14 +5,15 @@ using System;
 using System.Collections.Generic;
 using InterpreterLib.Interfaces;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Helpers
 {
     public class FunctionHelper : IFunctionHelper
     {
-        public int IdentifierFunction(IdentifierExpression node, List<Object> parameters)
+        public Function IdentifierFunction(IdentifierExpression node, List<Object> parameters)
         {
-            return node.IsLocal ? (int) parameters[node.Reference] : node.Reference;
+            return node.IsLocal ? (Function) parameters[node.Reference] : new Function(node.Reference);
         }
 
     }

@@ -4,12 +4,13 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Interfaces
 {
     public interface IInterpreterFunction
     {
-        int DispatchFunction(ExpressionNode node, List<object> parameters);
+        Function DispatchFunction(ExpressionNode node, List<object> parameters);
 
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 

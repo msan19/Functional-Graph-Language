@@ -185,6 +185,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         #endregion
 
         #region VisitPower
+        /*
         [TestMethod]
         public void VisitPower_CorrectParameterPassDown()
         {
@@ -318,7 +319,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitPower(input, null));
         }
-
+        */
         #endregion
 
 

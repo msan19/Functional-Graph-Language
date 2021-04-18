@@ -9,7 +9,5 @@ namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationN
         public GreaterEqualExpression(ExpressionNode leftExpression, ExpressionNode rightExpression, int line, int letter) 
             : base(new List<ExpressionNode> { leftExpression, rightExpression }, line, letter) {}
 
-        public TypeEnum Type { get; set; }
-
     }
 }

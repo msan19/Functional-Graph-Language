@@ -123,12 +123,12 @@ namespace InterpreterLib
             };
         }
 
-        public int DispatchFunction(ExpressionNode node, List<Object> parameters)
+        public Function DispatchFunction(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
                 IdentifierExpression e      => _functionHelper.IdentifierFunction(e, parameters),
-                FunctionCallExpression e    => (int) _genericHelper.FunctionCall<long>(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Function>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
+using ASTLib.Objects;
 
 namespace InterpreterLib.Tests
 {
@@ -196,9 +197,10 @@ namespace InterpreterLib.Tests
             List<Object> input2 = new List<Object>() { 23, 2.334, null };
             IFunctionHelper fhelper = Substitute.For<IFunctionHelper>();
             Interpreter interpreter = Utilities.GetIntepreterOnlyWith(fhelper);
-            fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
+            fhelper.IdentifierFunction(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).
+                Returns(new Function(expected));
 
-            int res = (int)interpreter.Dispatch(input1, input2, TypeEnum.Function);
+            int res = ((Function) interpreter.Dispatch(input1, input2, TypeEnum.Function)).Reference;
 
             Assert.AreEqual(expected, res);
         }

@@ -1,8 +1,14 @@
-export getSet(4)
-export getSmallSet(7)
+//Exports
+export getSet(4) { "" }
+export getSmallSet(7) { "" }
+export getSmallestSet() { "" }
 
+//Functions
 getSet:(integer) -> set
 getSet(n) = {e[i,j] | 0 < [i] < n, 0 <= [j] <= n * n, i < j}
 
 getSmallSet:(integer) -> set
 getSmallSet(n) = {e[i] | 0 < [i] < n, i mod 2 == 0}
+
+getSmallestSet:() -> set
+getSmallestSet() = {e[i] | [i] == |getSet(4)|}
