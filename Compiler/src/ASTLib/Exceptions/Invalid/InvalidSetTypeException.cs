@@ -1,11 +1,8 @@
 ﻿using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.Invalid
 {
     public class InvalidSetTypeException : CompilerException
     {

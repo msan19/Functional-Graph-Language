@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using ASTLib.Exceptions.NotMatching;
 
 namespace ReferenceHandlerLib
 {
@@ -67,17 +68,24 @@ namespace ReferenceHandlerLib
 
         public void VisitFunction(FunctionNode node)
         {
-            if (HasUniqueParameters(node.ParameterIdentifiers))
+            if (!HasUniqueParameters(node.ParameterIdentifiers))
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
+            if (!FormalParamCountMatchTypeParamCount(node))
+                throw new UnmatchableParametersException(node);
             foreach (ConditionNode conditionNode in node.Conditions)
                 VisitCondition(conditionNode, node.ParameterIdentifiers);
         }
 
         private bool HasUniqueParameters(List<string> parameters)
         {
-            return (parameters.Count != parameters.Distinct().ToList().Count);
+            return parameters.Count == parameters.Distinct().ToList().Count;
         }
 
+        private bool FormalParamCountMatchTypeParamCount(FunctionNode node)
+        {
+            return node.ParameterIdentifiers.Count == node.FunctionType.ParameterTypes.Count;
+        }
+        
         public void VisitCondition(ConditionNode node, List<string> identifiers)
         {
             if (node.IsDefaultCase)
@@ -202,7 +210,7 @@ namespace ReferenceHandlerLib
             GetSet:(integer) -> set
             GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, i < j}
             GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, e in {v[a, b] | 0 <= [a] < n, 0 < [b] < n * n, a < b}}
-         */
+        */
         public void VisitSet(SetExpression node, List<string> parameters)
         {
             ThrowExceptionIfIdentifiersAreInParameters(node.Element.IndexIdentifiers, parameters);

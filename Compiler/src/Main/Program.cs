@@ -21,7 +21,7 @@ namespace Main
     {
         public List<string> Lines { get; }
 
-        private readonly string _fileName = "setTest.fgl";
+        private readonly string _fileName = "test.fgl";
         private readonly string _input;
 
         private readonly LexParser _lexParse;

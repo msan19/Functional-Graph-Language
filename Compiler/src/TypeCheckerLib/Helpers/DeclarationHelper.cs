@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ASTLib;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.Invalid;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
@@ -248,6 +250,10 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
-        
+        public TypeNode VisitStringLiteral()
+        {
+            return new TypeNode(TypeEnum.String, 0, 0);
+        }
+
     }
 }

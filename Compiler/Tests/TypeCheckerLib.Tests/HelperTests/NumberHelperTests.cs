@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
@@ -152,7 +153,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         
         // Int Func -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void BinaryNumOp_MultiplicationExpressionWithIntAndFunc_ThrowsException()
         {
             
