@@ -39,21 +39,25 @@ namespace LexParserLib
 			/// </summary>
 			public const int TerminalIntegerNumber = 0x0005;
 			/// <summary>
+			/// The unique identifier for terminal stringLiteral
+			/// </summary>
+			public const int TerminalStringLiteral = 0x0006;
+			/// <summary>
 			/// The unique identifier for terminal NEW_LINE
 			/// </summary>
-			public const int TerminalNewLine = 0x0006;
+			public const int TerminalNewLine = 0x0007;
 			/// <summary>
 			/// The unique identifier for terminal WHITE_SPACE
 			/// </summary>
-			public const int TerminalWhiteSpace = 0x0007;
+			public const int TerminalWhiteSpace = 0x0008;
 			/// <summary>
 			/// The unique identifier for terminal COMMENT_LINE
 			/// </summary>
-			public const int TerminalCommentLine = 0x0008;
+			public const int TerminalCommentLine = 0x0009;
 			/// <summary>
 			/// The unique identifier for terminal SEPARATOR
 			/// </summary>
-			public const int TerminalSeparator = 0x0009;
+			public const int TerminalSeparator = 0x000A;
 		}
 		/// <summary>
 		/// Contains the constant IDs for the contexts for this lexer
@@ -79,58 +83,65 @@ namespace LexParserLib
 			new Symbol(0x0003, "id"),
 			new Symbol(0x0004, "realNumber"),
 			new Symbol(0x0005, "integerNumber"),
-			new Symbol(0x0006, "NEW_LINE"),
-			new Symbol(0x0007, "WHITE_SPACE"),
-			new Symbol(0x0008, "COMMENT_LINE"),
-			new Symbol(0x0009, "SEPARATOR"),
-			new Symbol(0x0026, "export"),
-			new Symbol(0x0027, "="),
-			new Symbol(0x0028, "|"),
-			new Symbol(0x0029, ","),
-			new Symbol(0x002A, "_"),
-			new Symbol(0x002B, "["),
-			new Symbol(0x002C, "]"),
-			new Symbol(0x002D, ":"),
-			new Symbol(0x002E, "("),
-			new Symbol(0x002F, ")"),
-			new Symbol(0x0030, "->"),
-			new Symbol(0x0031, "integer"),
-			new Symbol(0x0032, "real"),
-			new Symbol(0x0033, "boolean"),
-			new Symbol(0x0034, "set"),
-			new Symbol(0x0035, "element"),
-			new Symbol(0x0036, "=="),
-			new Symbol(0x0037, "!="),
-			new Symbol(0x0038, "or"),
-			new Symbol(0x0039, "and"),
-			new Symbol(0x003A, "not"),
-			new Symbol(0x003B, "in"),
-			new Symbol(0x003C, "subset"),
-			new Symbol(0x003D, ">="),
-			new Symbol(0x003E, ">"),
-			new Symbol(0x003F, "<"),
-			new Symbol(0x0040, "<="),
-			new Symbol(0x0041, "+"),
-			new Symbol(0x0042, "-"),
-			new Symbol(0x0043, "*"),
-			new Symbol(0x0044, "/"),
-			new Symbol(0x0045, "mod"),
-			new Symbol(0x0046, "^"),
-			new Symbol(0x0047, "union"),
-			new Symbol(0x0048, "intersection"),
-			new Symbol(0x0049, "{"),
-			new Symbol(0x004A, "}"),
-			new Symbol(0x004B, "true"),
-			new Symbol(0x004C, "false") };
+			new Symbol(0x0006, "stringLiteral"),
+			new Symbol(0x0007, "NEW_LINE"),
+			new Symbol(0x0008, "WHITE_SPACE"),
+			new Symbol(0x0009, "COMMENT_LINE"),
+			new Symbol(0x000A, "SEPARATOR"),
+			new Symbol(0x0027, "export"),
+			new Symbol(0x0028, "{"),
+			new Symbol(0x0029, "}"),
+			new Symbol(0x002A, "="),
+			new Symbol(0x002B, "|"),
+			new Symbol(0x002C, ","),
+			new Symbol(0x002D, "_"),
+			new Symbol(0x002E, "["),
+			new Symbol(0x002F, "]"),
+			new Symbol(0x0030, ":"),
+			new Symbol(0x0031, "("),
+			new Symbol(0x0032, ")"),
+			new Symbol(0x0033, "->"),
+			new Symbol(0x0034, "integer"),
+			new Symbol(0x0035, "real"),
+			new Symbol(0x0036, "boolean"),
+			new Symbol(0x0037, "set"),
+			new Symbol(0x0038, "element"),
+			new Symbol(0x0039, "graph"),
+			new Symbol(0x003A, "string"),
+			new Symbol(0x003B, "=="),
+			new Symbol(0x003C, "!="),
+			new Symbol(0x003D, "or"),
+			new Symbol(0x003E, "and"),
+			new Symbol(0x003F, "not"),
+			new Symbol(0x0040, "in"),
+			new Symbol(0x0041, "subset"),
+			new Symbol(0x0042, ">="),
+			new Symbol(0x0043, ">"),
+			new Symbol(0x0044, "<"),
+			new Symbol(0x0045, "<="),
+			new Symbol(0x0046, "+"),
+			new Symbol(0x0047, "-"),
+			new Symbol(0x0048, "*"),
+			new Symbol(0x0049, "/"),
+			new Symbol(0x004A, "mod"),
+			new Symbol(0x004B, "^"),
+			new Symbol(0x004C, "union"),
+			new Symbol(0x004D, "intersection"),
+			new Symbol(0x004E, ".V"),
+			new Symbol(0x004F, ".E"),
+			new Symbol(0x0050, ".src"),
+			new Symbol(0x0051, ".dst"),
+			new Symbol(0x0052, "true"),
+			new Symbol(0x0053, "false") };
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public GrammarLexer(string input) : base(commonAutomaton, terminals, 0x0009, input) {}
+		public GrammarLexer(string input) : base(commonAutomaton, terminals, 0x000A, input) {}
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public GrammarLexer(TextReader input) : base(commonAutomaton, terminals, 0x0009, input) {}
+		public GrammarLexer(TextReader input) : base(commonAutomaton, terminals, 0x000A, input) {}
 	}
 }
