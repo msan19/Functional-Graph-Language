@@ -88,6 +88,14 @@ namespace InterpreterLib.Helpers
                 throw new InvalidAbsoluteIntegerException(node);
         }
 
+        public int PowerInteger(PowerExpression node, List<Object> parameters)
+        {
+            int leftOperand = _interpreter.DispatchInt(node.Children[0], parameters);
+            int rightOperand = _interpreter.DispatchInt(node.Children[1], parameters);
+
+            return (rightOperand >= 0) ? (int)Math.Pow(leftOperand, rightOperand) : throw new NegativeExponentException(node);
+        }
+
         public int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters)
         {
             return node.Value;

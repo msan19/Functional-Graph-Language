@@ -45,6 +45,25 @@ namespace InterpreterLib.Tests
             return bounds;
         }
 
+        private Set getSetFrom2dArray(int[,] arr)
+        {
+            List<Element> elements = new List<Element>();
+
+            for (int i = 0; i < arr.GetLength(0); i++)
+            {
+                List<int> indices = new List<int>();
+
+                for (int j = 0; j < arr.GetLength(1); j++)
+                {
+                    indices.Add(arr[i, j]);
+                }
+
+                elements.Add(new Element(indices));
+            }
+
+            return new Set(elements);
+        }
+
         #region SetExpression
 
         [DataTestMethod]
