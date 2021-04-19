@@ -11,18 +11,12 @@ namespace ASTLib.Objects
         public Function Src { get; }
         public Function Dst { get; }
 
-        public List<int> SrcList { get; }
-        public List<int> DstList { get; }
-
-        public Graph(Set vertices, Set edges, Function src, Function dst, 
-                     List<int> srcList, List<int> dstList)
+        public Graph(Set vertices, Set edges, Function src, Function dst)
         {
             Vertices = vertices;
             Edges = edges;
             Src = src;
             Dst = dst;
-            SrcList = srcList;
-            DstList = dstList;
         }
 
     }

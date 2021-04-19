@@ -8,6 +8,7 @@ using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using FluentAssertions;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
@@ -437,7 +438,7 @@ namespace InterpreterLib.Tests
             GenericHelper functionHelper = SetUpHelper(parent);
             bool expected = false;
 
-            bool res = functionHelper.Condition<long>(conditionNode, new List<Object>()).IsCalculated;
+            bool res = functionHelper.Condition<Function>(conditionNode, new List<Object>()).IsCalculated;
 
             Assert.AreEqual(expected, res);
         }
@@ -446,15 +447,15 @@ namespace InterpreterLib.Tests
         [DataRow(3, 3)]
         [DataRow(4, 4)]
         [TestMethod]
-        public void ConditionFunction_ConditionNodeAndObjectList_ReturnsCorrectResult(long input, int expected)
+        public void ConditionFunction_ConditionNodeAndObjectList_ReturnsCorrectResult(int input, int expected)
         {
             IdentifierExpression id = new IdentifierExpression("", 1, 1);
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
             IInterpreterGeneric parent = Substitute.For<IInterpreterGeneric>();
-            parent.Dispatch(id, Arg.Any<List<Object>>(), Arg.Any<TypeEnum>()).Returns(input);
+            parent.Dispatch(id, Arg.Any<List<Object>>(), Arg.Any<TypeEnum>()).Returns(new Function(input));
             GenericHelper functionHelper = SetUpHelper(parent);
 
-            int res = (int) functionHelper.Condition<long>(conditionNode, new List<Object>()).Element;
+            int res = functionHelper.Condition<Function>(conditionNode, new List<Object>()).Element.Reference;
 
             Assert.AreEqual(expected, res);
         }
@@ -466,11 +467,11 @@ namespace InterpreterLib.Tests
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
             IInterpreterGeneric parent = Substitute.For<IInterpreterGeneric>();
             List<Object> res = null;
-            parent.Dispatch(id, Arg.Do<List<Object>>(x => res = x), Arg.Any<TypeEnum>()).Returns(0L);
+            parent.Dispatch(id, Arg.Do<List<Object>>(x => res = x), Arg.Any<TypeEnum>()).Returns(new Function(0));
             List<Object> expected = new List<Object> { 1, 1.3, "" };
             GenericHelper functionHelper = SetUpHelper(parent);
 
-            functionHelper.Condition<long>(conditionNode, expected);
+            functionHelper.Condition<Function>(conditionNode, expected);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -483,11 +484,12 @@ namespace InterpreterLib.Tests
             ConditionNode conditionNode = new ConditionNode(id, 1, 1);
             IInterpreterGeneric parent = Substitute.For<IInterpreterGeneric>();
             ExpressionNode res = null;
-            parent.Dispatch(Arg.Do<ExpressionNode>(x => res = x), Arg.Any<List<Object>>(), Arg.Any<TypeEnum>()).Returns(0L);
+            parent.Dispatch(Arg.Do<ExpressionNode>(x => res = x), Arg.Any<List<Object>>(), Arg.Any<TypeEnum>())
+                .Returns(new Function(0));
             List<Object> input2 = new List<Object> { 1, 1.3, "" };
             GenericHelper functionHelper = SetUpHelper(parent);
 
-            functionHelper.Condition<long>(conditionNode, input2);
+            functionHelper.Condition<Function>(conditionNode, input2);
 
             res.Should().BeEquivalentTo(expected);
         }
@@ -511,9 +513,9 @@ namespace InterpreterLib.Tests
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetASTRoot(ast);
             FunctionNode res = null;
-            parent.Function<long>(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+            parent.Function<Function>(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
-            functionHelper.FunctionCall<long>(funcCallExpr, new List<Object>());
+            functionHelper.FunctionCall<Function>(funcCallExpr, new List<Object>());
 
             res.Should().BeEquivalentTo(funcNode);
         }
@@ -535,9 +537,9 @@ namespace InterpreterLib.Tests
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetASTRoot(ast);
             FunctionNode res = null;
-            parent.Function<long>(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
+            parent.Function<Function>(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
-            functionHelper.FunctionCall<long>(funcCallExpr, new List<object> { 0 });
+            functionHelper.FunctionCall<Function>(funcCallExpr, new List<object> { 0 });
 
             res.Should().BeEquivalentTo(funcNode);
         }
@@ -583,9 +585,9 @@ namespace InterpreterLib.Tests
             AST ast = new AST(new List<FunctionNode> { funcNode }, null, 1, 1);
             functionHelper.SetASTRoot(ast);
             List<object> res = new List<object>();
-            parent.Function<long>(Arg.Any<FunctionNode>(), Arg.Do<List<object>>(x => res = x));
+            parent.Function<Function>(Arg.Any<FunctionNode>(), Arg.Do<List<object>>(x => res = x));
 
-            functionHelper.FunctionCall<long>(funcCallExpr, new List<Object>());
+            functionHelper.FunctionCall<Function>(funcCallExpr, new List<Object>());
 
             res.Should().BeEquivalentTo(expected);
         }
