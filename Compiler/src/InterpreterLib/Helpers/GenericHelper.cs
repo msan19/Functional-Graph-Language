@@ -117,7 +117,7 @@ namespace InterpreterLib.Helpers
                 return TypeEnum.Real;
             else if (t == typeof(bool))
                 return TypeEnum.Boolean;
-            else if (t == typeof(long))
+            else if (t == typeof(Function))
                 return TypeEnum.Function;
             else if (t == typeof(Set))
                 return TypeEnum.Set;

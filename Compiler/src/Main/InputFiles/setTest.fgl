@@ -1,7 +1,7 @@
 //Exports
-export getSet(4) { "" }
-export getSmallSet(7) { "" }
-export getSmallestSet() { "" }
+export getSet(4) { "Set" }
+export getSmallSet(7) { "SmallSet" }
+export getSmallestSet() { "SmallestSet" }
 
 //Functions
 getSet:(integer) -> set
