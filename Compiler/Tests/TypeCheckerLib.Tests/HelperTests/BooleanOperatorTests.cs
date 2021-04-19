@@ -6,6 +6,8 @@ using ASTLib.Interfaces;
 using System;
 using TypeCheckerLib.Helpers;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.NotMatching;
+using UnmatchableTypesException = ASTLib.Exceptions.NotMatching.UnmatchableTypesException;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {

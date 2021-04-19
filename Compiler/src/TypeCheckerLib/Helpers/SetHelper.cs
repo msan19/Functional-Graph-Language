@@ -10,6 +10,8 @@ using TypeCheckerLib.Interfaces;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using System.Linq;
+using ASTLib.Exceptions.Invalid;
+using ASTLib.Exceptions.NotMatching;
 
 namespace TypeCheckerLib.Helpers
 {

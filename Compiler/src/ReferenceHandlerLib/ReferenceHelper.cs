@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using ASTLib.Exceptions.NotMatching;
 
 namespace ReferenceHandlerLib
 {
@@ -69,6 +70,8 @@ namespace ReferenceHandlerLib
         {
             if (!HasUniqueParameters(node.ParameterIdentifiers))
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
+            if (!FormalParamCountMatchTypeParamCount(node))
+                throw new UnmatchableParametersException(node);
             foreach (ConditionNode conditionNode in node.Conditions)
                 VisitCondition(conditionNode, node.ParameterIdentifiers);
         }
@@ -78,6 +81,11 @@ namespace ReferenceHandlerLib
             return parameters.Count == parameters.Distinct().ToList().Count;
         }
 
+        private bool FormalParamCountMatchTypeParamCount(FunctionNode node)
+        {
+            return node.ParameterIdentifiers.Count == node.FunctionType.ParameterTypes.Count;
+        }
+        
         public void VisitCondition(ConditionNode node, List<string> identifiers)
         {
             if (node.IsDefaultCase)

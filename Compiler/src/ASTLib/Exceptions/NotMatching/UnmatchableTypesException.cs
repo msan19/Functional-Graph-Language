@@ -1,7 +1,7 @@
 ﻿using ASTLib.Nodes;
 using ASTLib.Nodes.TypeNodes;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.NotMatching
 {
     public class UnmatchableTypesException : CompilerException
     {

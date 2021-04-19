@@ -1,4 +1,7 @@
-export f1(1)
+export getSet(1, 2) {""}
+
+getSet:(integer) -> set
+getSet(n, b) = {e[i,j] | 0 < [i] < n, 0 <= [j] <= n * n, i < j}
 
 f1: (integer) -> integer
 f1(a) = 

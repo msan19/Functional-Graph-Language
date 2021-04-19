@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.Invalid;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
