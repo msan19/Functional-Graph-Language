@@ -2,6 +2,7 @@ using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
+using ASTLib.Objects;
 using FluentAssertions;
 using InterpreterLib.Helpers;
 using InterpreterLib.Interfaces;
@@ -19,12 +20,12 @@ namespace InterpreterLib.Tests
         
 
         #region IdentifierFunction
-        [DataRow(false, 1, new Object[] { 0, 18, "" })]
-        [DataRow(false, 10, new Object[] { 0, 18, "" })]
-        [DataRow(true, 0, new Object[] { 0, 18, "" })]
-        [DataRow(true, 4, new Object[] { 0, 18, "", 104, 17})]
+        [DataRow(false, 1, 0)]
+        [DataRow(false, 10, 0)]
+        [DataRow(true, 0, 0)]
+        [DataRow(true, 4, 1)]
         [TestMethod]
-        public void IdentifierFunction_IdentifierExpressionAndObjectList_ReturnsCorrectResult(bool isLocal, int reference, Object[] array)
+        public void IdentifierFunction_IdentifierExpressionAndObjectList_ReturnsCorrectResult(bool isLocal, int reference, int parameters)
         {
             IdentifierExpression identifier = new IdentifierExpression("", 0, 0)
             {
@@ -32,11 +33,19 @@ namespace InterpreterLib.Tests
                 Reference = reference
             };
             FunctionHelper fhelper = new FunctionHelper();
-            int expected = isLocal ? (int) array[reference] : reference;
+            List<Object> array = GetData(parameters);
+            int expected = isLocal ? ((Function) array[reference]).Reference : reference;
 
-            int res = fhelper.IdentifierFunction(identifier, array.ToList());
+            Function res = fhelper.IdentifierFunction(identifier, array);
 
-            Assert.AreEqual(res, expected);
+            Assert.AreEqual(res.Reference, expected);
+        }
+
+        public List<Object> GetData(int i)
+        {
+            List<List<Object>> data = new List<List<Object>> { new List<Object>{ new Function(0), 18, "" }, 
+                                                               new List<Object>{ 0, 18, "", 104, new Function(17) } };
+            return data[i];
         }
         #endregion
 

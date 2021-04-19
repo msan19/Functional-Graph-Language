@@ -4,22 +4,34 @@ grammar Grammar
     {
         Axiom = "Prog";
         Separator = "SEPARATOR";
+        OutputPath = "../Compiler/src/LexParserLib/";
+        Namespace = "LexParserLib";
     }
     terminals
     {
         id            -> [a-zA-Z] [a-zA-Z0-9]* ;
         realNumber    -> [0-9]+ '.' [0-9]+ ;
         integerNumber -> [0-9]+ ;
+        stringLiteral -> '"'.* '"'; //Maybe " should be escaped? (\")
 
-        WHITE_SPACE   -> U+0020 | U+0009 | U+000A | U+000B | U+000C | U+000D | '//'.*'\n';
-        SEPARATOR     -> WHITE_SPACE+ ;
+        NEW_LINE      -> U+000D /* CR */
+                      | U+000A /* LF */
+                      | U+000D U+000A /* CR LF */
+                      | U+2028 /* LS */
+                      | U+2029 /* PS */ ;
+        WHITE_SPACE   -> U+0020 | U+0009 | U+000B | U+000C ;
+        COMMENT_LINE  -> '//' (.* - (.* NEW_LINE .*)) ;
+        SEPARATOR     -> (NEW_LINE | WHITE_SPACE | COMMENT_LINE)+ ;
     }
     rules
     {
         Prog          -> Declarations ;
         Declarations  -> Declarations Declaration
                       |  Declaration ;
-        Declaration   -> 'export' Expression
+        Declaration   -> 'export' Expression '{' Expression '}'
+                      |  'export' Expression '{' Expression '}' '{' Expressions '}'
+                      |  'export' Expression '{' Expression '}' '{' Expressions '}' '{' Expressions '}'
+                      |  'export' Expression '{' Expression '}' '{' '}' '{' Expressions '}'
                       |  Func '=' Expression
                       |  Func '=' Conditions ;
         Conditions    -> Conditions Condition
@@ -42,6 +54,8 @@ grammar Grammar
                       |  'boolean'
                       |  'set'
                       |  'element'
+                      |  'graph'
+                      |  'string'
                       |  FuncTypeDecl ;
         Ids           -> Ids ',' id
                       |  id ;
@@ -88,11 +102,17 @@ grammar Grammar
                       |  id '(' ')' 
                       |  '{' Element '|' Bounds '}'
                       |  '{' Element '|' Bounds ',' Expression '}'
-                      |  'element' '[' Expressions ']' ;
+                      |  'element' '[' Expressions ']'
+                      |  '(' Expression ',' Expression ',' Expression ',' Expression ')'
+                      |  Exponent '.V'
+                      |  Exponent '.E'
+                      |  Exponent '.src'
+                      |  Exponent '.dst' ;
         Expressions   -> Expression ',' Expressions
                       |  Expression ;
         Literal	      -> realNumber
                       |  integerNumber
+                      |  stringLiteral
                       |  'true'
                       |  'false' ;
     }

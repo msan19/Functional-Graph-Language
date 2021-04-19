@@ -24,19 +24,6 @@ namespace TypeCheckerLib.Helpers
             _getType = dispatcher;
         }
 
-        public TypeNode VisitPower(PowerExpression binaryNode, List<TypeNode> parameterTypes)
-        {
-            TypeNode left = _getType(binaryNode.Children[0], parameterTypes);
-            TypeNode right = _getType(binaryNode.Children[1], parameterTypes);
-
-            if (!IsNumberType(left.Type) || !IsNumberType(right.Type))
-                throw new UnmatchableTypesException((Node)binaryNode, left.Type, right.Type, "number");
-
-            CastToReal(binaryNode, left, 0);
-            CastToReal(binaryNode, right, 1);
-            return new TypeNode(TypeEnum.Real, 0, 0);
-        }
-
         public TypeNode VisitBinaryNumOp(IBinaryNumberOperator binaryNode, List<TypeNode> parameterTypes)
         {
             TypeNode left = _getType(binaryNode.Children[0], parameterTypes);

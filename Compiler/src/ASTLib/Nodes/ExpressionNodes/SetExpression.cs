@@ -13,8 +13,8 @@ namespace ASTLib.Nodes.ExpressionNodes
         public List<BoundNode> Bounds { get; set; }
 
         public SetExpression(ElementNode element, List<BoundNode> bounds,
-                             ExpressionNode predicate, int line, int letter) : 
-                             base(new List<ExpressionNode>() { predicate }, line, letter) 
+                             ExpressionNode predicate, int line, int letter) :
+                             base(new List<ExpressionNode>() { predicate }, line, letter)
         {
             Element = element;
             Bounds = bounds;

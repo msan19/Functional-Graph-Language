@@ -53,7 +53,6 @@ namespace TypeCheckerLib
                 SubsetExpression n          => _setHelper.VisitSubset(n, parameterTypes),
                 SetExpression n             => _setHelper.VisitSet(n, parameterTypes),
                 NotExpression n             => _booleanHelper.VisitNot(n, parameterTypes),
-                PowerExpression n           => _numberHelper.VisitPower(n, parameterTypes),
                 FunctionCallExpression n    => _declarationHelper.VisitFunctionCall(n, parameterTypes),
                 IdentifierExpression n      => _declarationHelper.VisitIdentifier(n, parameterTypes),
                 IntegerLiteralExpression n  => _declarationHelper.VisitIntegerLiteral(),

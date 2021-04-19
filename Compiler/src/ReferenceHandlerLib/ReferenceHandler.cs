@@ -11,6 +11,14 @@ namespace ReferenceHandlerLib
     public class ReferenceHandler : IReferenceHandler
     {
         private readonly IReferenceHelper _helper;
+        private bool _catchExceptions;
+        private ComponentException _exceptions;
+
+        public ReferenceHandler(IReferenceHelper helper, bool catchExceptions) : this(helper)
+        {
+            _catchExceptions = catchExceptions;
+            _exceptions = new ComponentException();
+        }
 
         public ReferenceHandler(IReferenceHelper helper)
         {
@@ -21,26 +29,48 @@ namespace ReferenceHandlerLib
         public void InsertReferences(AST root)
         {
             _helper.BuildTables(root.Functions);
-            foreach (FunctionNode f in root.Functions) 
-                _helper.VisitFunction(f);
+            foreach (FunctionNode f in root.Functions)
+                Try(() => _helper.VisitFunction(f));
 
             foreach (ExportNode e in root.Exports)
-                _helper.VisitExport(e);
+                Try(() => _helper.VisitExport(e));
+
+            if (_catchExceptions && !_exceptions.IsEmpty)
+                throw _exceptions;
         }
 
         public void Dispatch(ExpressionNode node, List<string> parameters)
         {
-            switch(node)
+            Try(() =>
             {
-                case IdentifierExpression       e: _helper.VisitIdentifier(e, parameters);      break;
-                case INonIdentifierExpression   e: _helper.VisitNonIdentifier(e, parameters);   break;
-                case FunctionCallExpression     e: _helper.VisitFunctionCall(e, parameters);    break;
-                case SetExpression              e: _helper.VisitSet(e, parameters);             break;
+                switch (node)
+                {
+                    case IdentifierExpression e: _helper.VisitIdentifier(e, parameters); break;
+                    case INonIdentifierExpression e: _helper.VisitNonIdentifier(e, parameters); break;
+                    case FunctionCallExpression e: _helper.VisitFunctionCall(e, parameters); break;
+                    case SetExpression e: _helper.VisitSet(e, parameters); break;
 
-                default: throw new UnimplementedReferenceHandlerException(node);
-            }
+                    default: throw new UnimplementedReferenceHandlerException(node);
+                }
+            });
         }
 
+        private void Try(Action action)
+        {
+            if (_catchExceptions)
+            {
+                try
+                {
+                    action();
+                }
+                catch (CompilerException e)
+                {
+                    _exceptions.Add(e);
+                }
+            }
+            else
+                action();
+        }
 
     }
 }

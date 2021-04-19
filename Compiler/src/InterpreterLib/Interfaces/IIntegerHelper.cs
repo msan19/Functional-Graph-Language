@@ -25,8 +25,6 @@ namespace InterpreterLib.Interfaces
         int ModuloInteger(ModuloExpression node, List<Object> parameters);
 
         int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters);
-        
-        int IdentifierInteger(IdentifierExpression node, List<Object> parameters);
 
         int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters);
         

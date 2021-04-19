@@ -159,11 +159,13 @@ namespace InterpreterLib.Tests
         public void DispatchBool_ReturnsCorrect_Indentifier(bool expected)
         {
             var node = GetIdentifierExp();
-            IBooleanHelper boolHelper = GetBooleanHelper();
-            boolHelper.IdentifierBoolean(Arg.Any<IdentifierExpression>(), Arg.Any<List<object>>())
+            IGenericHelper boolHelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
+            boolHelper.Identifier<bool>(Arg.Any<IdentifierExpression>(), Arg.Any<List<object>>())
                 .Returns(expected);
 
-            DispatchBool_ReturnsCorrect(node, boolHelper, expected);
+            bool res = interpreter.DispatchBoolean(node, new List<Object>());
+            Assert.AreEqual(res, expected);
         }
         
         private void DispatchBool_ReturnsCorrect(ExpressionNode node, IBooleanHelper boolHelper, bool expected)
@@ -364,12 +366,11 @@ namespace InterpreterLib.Tests
             var node = GetIdentifierExp();
             var expected = node;
 
-            var boolHelper = GetBooleanHelper();
+            IGenericHelper boolHelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             Node res = null;
-            boolHelper.IdentifierBoolean(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<object>>())
+            boolHelper.Identifier<bool>(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<object>>())
                 .Returns(true);
-
-            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters);
 
             Assert.AreEqual(expected, res);
@@ -555,12 +556,12 @@ namespace InterpreterLib.Tests
             var parameters = GetParameterList();
             var node = GetIdentifierExp();
 
-            IBooleanHelper boolHelper = GetBooleanHelper();
+            IGenericHelper boolHelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             List<object> res = null;
-            boolHelper.IdentifierBoolean(Arg.Any<IdentifierExpression>(), Arg.Do<List<object>>(x => res = x))
+            boolHelper.Identifier<bool>(Arg.Any<IdentifierExpression>(), Arg.Do<List<object>>(x => res = x))
                 .Returns(true);
 
-            var interpreter = Utilities.GetIntepreterOnlyWith(boolHelper);
             interpreter.DispatchBoolean(node, parameters.ToList());
 
             res.Should().BeEquivalentTo(parameters);

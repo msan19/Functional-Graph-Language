@@ -30,6 +30,11 @@ namespace InterpreterLib.Helpers
             _root = root;
         }
 
+        public T Identifier<T>(IdentifierExpression node, List<object> parameters)
+        {
+            return (T) parameters[node.Reference];
+        }
+
         public T FunctionCall<T>(FunctionCallExpression node, List<object> parameters)
         {
             FunctionNode funcNode = GetFuncNode(node, parameters);

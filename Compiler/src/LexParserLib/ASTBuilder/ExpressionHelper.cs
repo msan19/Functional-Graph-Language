@@ -19,7 +19,8 @@ namespace LexParserLib
     public class ExpressionHelper : IExpressionHelper
     {
         private const int CONSTANT_FUNCTION_CALL = 3, EXPRESSIONS_POS = 2,
-                          SET_WITH_PREDICATE = 7, DOUBLE_BOUNDS = 7;
+                          SET_WITH_PREDICATE = 7, DOUBLE_BOUNDS = 7,
+                          PARENTHESES = 3, GRAPH = 9;
 
         public ExpressionNode DispatchExpression(ASTNode himeNode)
         {
@@ -165,16 +166,46 @@ namespace LexParserLib
 
         private ExpressionNode VisitExponent(ASTNode himeNode)
         {
-            return himeNode.Children[0].Value switch
+            return himeNode.Children[0].Symbol.Name switch
             {
-                "(" => DispatchExpression(himeNode.Children[1]),
+                "(" when himeNode.Children.Count == PARENTHESES 
+                    => DispatchExpression(himeNode.Children[1]),
+                "(" when himeNode.Children.Count == GRAPH
+                    => GetGraph(himeNode),
                 "|" => new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
                                                   himeNode.Children[0].Position.Line,
                                                   himeNode.Children[0].Position.Column),
                 "{" => GetSet(himeNode),
                 "element" => GetElementExpression(himeNode),
-                _ => GetFunctionCall(himeNode)
+                "exponent" => GetField(himeNode),
+                "id" => GetFunctionCall(himeNode),
+                _ => throw new UnimplementedASTException(himeNode.Children[0].Value, "exponent")
             };
+        }
+
+        private ExpressionNode GetField(ASTNode himeNode)
+        {
+            ExpressionNode graph = DispatchExpression(himeNode.Children[0]);
+            TextPosition position = himeNode.Children[1].Position;
+            return himeNode.Children[1].Value switch
+            {
+                ".V" => new VerticesGraphField(graph, position.Line, position.Column),
+                ".E" => new EdgesGraphField(graph, position.Line, position.Column),
+                ".src" => new SrcGraphField(graph, position.Line, position.Column),
+                ".dst" => new DstGraphField(graph, position.Line, position.Column),
+                _ => throw new UnimplementedASTException(himeNode.Children[1].Value, "Graph Field")
+            };
+        }
+
+        private ExpressionNode GetGraph(ASTNode himeNode)
+        {
+            ExpressionNode vertices = DispatchExpression(himeNode.Children[1]);
+            ExpressionNode edges = DispatchExpression(himeNode.Children[3]);
+            ExpressionNode src = DispatchExpression(himeNode.Children[5]);
+            ExpressionNode dst = DispatchExpression(himeNode.Children[7]);
+
+            TextPosition position = himeNode.Children[0].Position;
+            return new GraphExpression(vertices, edges, src, dst, position.Line, position.Column);
         }
 
         private ExpressionNode GetElementExpression(ASTNode himeNode)
@@ -270,7 +301,7 @@ namespace LexParserLib
                                               himeNode.Children[0].Position.Column);
         }
 
-        private void VisitExpressions(ASTNode himeNode, List<ExpressionNode> expressions)
+        public void VisitExpressions(ASTNode himeNode, List<ExpressionNode> expressions)
         {
             if (himeNode.Children.Count == 1)
                 expressions.Add(DispatchExpression(himeNode.Children[0]));
@@ -289,6 +320,9 @@ namespace LexParserLib
                                                           himeNode.Position.Line,
                                                           himeNode.Position.Column),
                 "integerNumber" => new IntegerLiteralExpression(himeNode.Value,
+                                                                himeNode.Position.Line,
+                                                                himeNode.Position.Column),
+                "stringLiteral" => new StringLiteralExpression(himeNode.Value,
                                                                 himeNode.Position.Line,
                                                                 himeNode.Position.Column),
                 "true" => new BooleanLiteralExpression(true,

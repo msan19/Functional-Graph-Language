@@ -85,11 +85,6 @@ namespace InterpreterLib.Helpers
             return Math.Pow(leftOperand, rightOperand);
         }
 
-        public double IdentifierReal(IdentifierExpression node, List<object> parameters)
-        {
-            return (double) parameters[node.Reference];
-        }
-
         public double LiteralReal(RealLiteralExpression node, List<object> parameters)
         {
             return node.Value;

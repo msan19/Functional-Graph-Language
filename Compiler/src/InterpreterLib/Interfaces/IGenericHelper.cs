@@ -10,6 +10,9 @@ namespace InterpreterLib.Interfaces
 {
     public interface IGenericHelper : IInterpreterHelper
     {
+
+        T Identifier<T>(IdentifierExpression node, List<object> parameters);
+
         void SetInterpreter(IInterpreterGeneric interpreter);
 
         void SetASTRoot(AST root);

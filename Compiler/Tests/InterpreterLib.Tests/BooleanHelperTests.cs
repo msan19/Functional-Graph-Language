@@ -21,44 +21,6 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class BooleanHelperTests
     {
-        #region IdentifierBoolean
-        [DataRow("true", true)]
-        [DataRow("false", false)]
-        [TestMethod]
-        public void Identifier_Index0_CorrectValuesReturned(string input, bool expected)
-        {
-            var expression = GetIdentifier(0);
-            var parameters = new List<object>() { input };
-            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-
-            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
-
-            bool res = booleanHelper.IdentifierBoolean(expression, parameters);
-
-            Assert.AreEqual(expected, res);
-        }
-
-        [DataRow("true", true)]
-        [DataRow("false", false)]
-        [TestMethod]
-        public void Identifier_Index1_CorrectValuesReturned(string input, bool expected)
-        {
-            var expression = GetIdentifier(1);
-            var parameters = new List<object>() { "testing", input };
-            IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-
-            BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
-
-            bool res = booleanHelper.IdentifierBoolean(expression, parameters);
-
-            Assert.AreEqual(expected, res);
-        }
-
-        private IdentifierExpression GetIdentifier(int reference)
-        {
-            return new IdentifierExpression("", 0, 0) { Reference = reference };
-        }
-        #endregion
 
         #region NotBoolean
         [DataRow(false, true)]
@@ -245,8 +207,8 @@ namespace InterpreterLib.Tests
             EqualExpression expression = new EqualExpression(lhs, rhs, 0, 0);
             expression.Type = TypeEnum.Function;
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
-            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(new Function(lhsValue));
+            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(new Function(rhsValue));
 
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
@@ -405,8 +367,8 @@ namespace InterpreterLib.Tests
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
             List<object> lhsParams = new List<object>();
             List<object> rhsParams = new List<object>();
-            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x));
-            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x)).Returns(new Function(0));
+            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x)).Returns(new Function(0));
 
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
@@ -550,8 +512,8 @@ namespace InterpreterLib.Tests
             var expression = new NotEqualExpression(lhs, rhs, 0, 0);
             expression.Type = TypeEnum.Function;
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
-            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(lhsValue);
-            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(rhsValue);
+            parent.DispatchFunction(lhs, Arg.Any<List<object>>()).Returns(new Function(lhsValue));
+            parent.DispatchFunction(rhs, Arg.Any<List<object>>()).Returns(new Function(rhsValue));
 
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 
@@ -642,8 +604,8 @@ namespace InterpreterLib.Tests
             IInterpreterBoolean parent = Substitute.For<IInterpreterBoolean>();
             List<object> lhsParams = new List<object>();
             List<object> rhsParams = new List<object>();
-            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x));
-            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x));
+            parent.DispatchFunction(lhs, Arg.Do<List<object>>(x => lhsParams = x)).Returns(new Function(0));
+            parent.DispatchFunction(rhs, Arg.Do<List<object>>(x => rhsParams = x)).Returns(new Function(0));
 
             BooleanHelper booleanHelper = Utilities.GetBooleanHelper(parent);
 

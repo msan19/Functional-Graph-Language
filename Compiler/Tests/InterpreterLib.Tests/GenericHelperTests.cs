@@ -20,6 +20,158 @@ namespace InterpreterLib.Tests
     [TestClass]
     public class GenericHelperTests
     {
+
+        #region DispatchReal_IdentifierExpr
+        [TestMethod]
+        public void DispatchReal_IdentifierAndObjectList_CorrectListPassed()
+        {
+            List<Object> expected = new List<Object>() { 23, 2.334, null };
+            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
+            IGenericHelper rhelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
+            List<Object> res = null;
+            rhelper.Identifier<double>(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
+
+            interpreter.DispatchReal(input1, expected);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void DispatchReal_IdentifierAndObjectList_CorrectIdentifierExprPassed()
+        {
+            IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
+            IdentifierExpression input1 = expected;
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IGenericHelper rhelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
+            IdentifierExpression res = null;
+            rhelper.Identifier<double>(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
+
+            interpreter.DispatchReal(input1, input2);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void DispatchReal_IdentifierAndObjectList_CorrectValueReturned()
+        {
+            double expected = 17;
+            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IGenericHelper rhelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(rhelper);
+            rhelper.Identifier<double>(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
+
+            double res = interpreter.DispatchReal(input1, input2);
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
+        #region DispatchInt_IdentifierExpr
+        [TestMethod]
+        public void DispatchInteger_IdentifierAndObjectList_CorrectListPassed()
+        {
+            List<Object> expected = new List<Object>() { 23, 2.334, null };
+            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
+            IGenericHelper ihelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
+            List<Object> res = null;
+            ihelper.Identifier<int>(Arg.Any<IdentifierExpression>(), Arg.Do<List<Object>>(x => res = x));
+
+            interpreter.DispatchInt(input1, expected);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void DispatchInteger_IdentifierAndObjectList_CorrectIdentifierExprPassed()
+        {
+            IdentifierExpression expected = new IdentifierExpression(null, 0, 0);
+            IdentifierExpression input1 = expected;
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IGenericHelper ihelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
+            IdentifierExpression res = null;
+            ihelper.Identifier<int>(Arg.Do<IdentifierExpression>(x => res = x), Arg.Any<List<Object>>());
+
+            interpreter.DispatchInt(input1, input2);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void DispatchInteger_IdentifierAndObjectList_CorrectValueReturned()
+        {
+            int expected = 17;
+            IdentifierExpression input1 = new IdentifierExpression(null, 0, 0);
+            List<Object> input2 = new List<Object>() { 23, 2.334, null };
+            IGenericHelper ihelper = Substitute.For<IGenericHelper>();
+            Interpreter interpreter = Utilities.GetIntepreterOnlyWith(ihelper);
+            ihelper.Identifier<int>(Arg.Any<IdentifierExpression>(), Arg.Any<List<Object>>()).Returns(expected);
+
+            int res = interpreter.DispatchInt(input1, input2);
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
+        #region IdentifierInteger
+        [TestMethod]
+        public void IdentifierInteger_IdentifierNode_ReturnsCorrectResult()
+        {
+            IdentifierExpression identifierExpr = new IdentifierExpression("This is a test", 1, 1);
+            identifierExpr.Reference = 0;
+            List<object> parameters = new List<object> { 0 };
+            int expected = (int)parameters[0];
+            GenericHelper integerHelper = new GenericHelper();
+
+            int res = integerHelper.Identifier<int>(identifierExpr, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+        #endregion
+
+        #region IdentifierBoolean
+        [DataRow(true, true)]
+        [DataRow(false, false)]
+        [TestMethod]
+        public void Identifier_Index0_CorrectValuesReturned(bool input, bool expected)
+        {
+            var expression = GetIdentifier(0);
+            var parameters = new List<object>() { input };
+            IInterpreterGeneric parent = Substitute.For<IInterpreterGeneric>();
+
+            GenericHelper booleanHelper = Utilities.GetGenericHelper(parent);
+
+            bool res = booleanHelper.Identifier<bool>(expression, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [DataRow(true, true)]
+        [DataRow(false, false)]
+        [TestMethod]
+        public void Identifier_Index1_CorrectValuesReturned(bool input, bool expected)
+        {
+            var expression = GetIdentifier(1);
+            var parameters = new List<object>() { "testing", input };
+            IInterpreterGeneric parent = Substitute.For<IInterpreterGeneric>();
+
+            GenericHelper booleanHelper = Utilities.GetGenericHelper(parent);
+
+            bool res = booleanHelper.Identifier<bool>(expression, parameters);
+
+            Assert.AreEqual(expected, res);
+        }
+
+        private IdentifierExpression GetIdentifier(int reference)
+        {
+            return new IdentifierExpression("", 0, 0) { Reference = reference };
+        }
+        #endregion
+
         #region ConditionBoolean
         #endregion
 
@@ -138,6 +290,23 @@ namespace InterpreterLib.Tests
 
             foreach (var elem in res)
                 Assert.IsNotNull(elem);
+        }
+        #endregion
+
+        #region IdentifierReal
+        [DataRow(0, new object[] { 5.1 }, 5.1)]
+        [DataRow(1, new object[] { 5.1, 3.0, 1.1 }, 3.0)]
+        [TestMethod]
+        public void IdentifierReal_ValidIdentifierExprAndParameters_ReturnsCorrectResult(int reference, object[] parameterArray, double expected)
+        {
+            IdentifierExpression identifierExpr = new IdentifierExpression("test", 1, 1);
+            identifierExpr.Reference = reference;
+            List<object> parameters = parameterArray.ToList();
+            GenericHelper realHelper = new GenericHelper();
+
+            double res = realHelper.Identifier<double>(identifierExpr, parameters);
+
+            Assert.AreEqual(expected, res);
         }
         #endregion
 

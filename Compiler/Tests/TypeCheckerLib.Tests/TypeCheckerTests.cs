@@ -132,6 +132,7 @@ namespace TypeCheckerLib.Tests
         #endregion
 
             #region PowerExpression
+        /*
         [TestMethod]
         public void Dispatch_PowerExpression_CorrectVisitMethodCalled()
         {
@@ -179,6 +180,7 @@ namespace TypeCheckerLib.Tests
 
             Assert.AreEqual(expectedTypeNode, actualTypeNode);
         }
+        */
         #endregion
 
             #region AdditionExpression

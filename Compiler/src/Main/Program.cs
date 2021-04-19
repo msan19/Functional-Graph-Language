@@ -51,12 +51,17 @@ namespace Main
             try
             {
                 program.Run();
+            } 
+            catch(ComponentException e)
+            {
+                foreach (CompilerException ce in e.Exceptions)
+                    exceptionPrinter.Print(ce);
             }
-            catch (CompilerException e)
+            catch(CompilerException e)
             {
                 exceptionPrinter.Print(e);
             }
-            catch (ParserException e)
+            catch(ParserException e)
             {
                 exceptionPrinter.Print(e);
             }
@@ -71,7 +76,7 @@ namespace Main
         public Program(string[] args)
         {
             _lexParse = new LexParser(new ASTBuilder(new ExpressionHelper()));
-            _referenceHandler = new ReferenceHandler(new ReferenceHelper());
+            _referenceHandler = new ReferenceHandler(new ReferenceHelper(), !ShouldThrowExceptions(args));
             _typeChecker = new TypeChecker(new DeclarationHelper(), 
                                            new NumberHelper(), 
                                            new CommonOperatorHelper(), 
