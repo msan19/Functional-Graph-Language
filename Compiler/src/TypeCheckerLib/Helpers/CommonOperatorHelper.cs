@@ -214,6 +214,37 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
+        public TypeNode VisitGraph(GraphExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode child0 = GetType(node.Children[0], parameterTypes);
+            TypeNode child1 = GetType(node.Children[1], parameterTypes);
+            FunctionTypeNode child2 = (FunctionTypeNode)GetType(node.Children[2], parameterTypes);
+            FunctionTypeNode child3 = (FunctionTypeNode)GetType(node.Children[3], parameterTypes);
+
+            if (child0.Type != TypeEnum.Set || child1.Type != TypeEnum.Set)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child0.Type != TypeEnum.Set ? child0.Type : child1.Type,
+                                                                 TypeEnum.Set);
+
+            else if (child2.Type != TypeEnum.Function || child3.Type != TypeEnum.Function)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.Type != TypeEnum.Function ? child2.Type : child3.Type,
+                                                                 TypeEnum.Function);
+
+            else if (child2.ParameterTypes[0].Type != TypeEnum.Element || child3.ParameterTypes[0].Type != TypeEnum.Element)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.ParameterTypes[0].Type != TypeEnum.Element ?
+                                                                 child2.ParameterTypes[0].Type : child3.ParameterTypes[0].Type,
+                                                                 TypeEnum.Element);
+
+            else if (child2.ReturnType.Type != TypeEnum.Element || child3.ReturnType.Type != TypeEnum.Element)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.ReturnType.Type != TypeEnum.Element ?
+                                                                 child2.ReturnType.Type : child3.ReturnType.Type, TypeEnum.Element);
+
+            else
+                return new TypeNode(TypeEnum.Graph, 0, 0);
+        }
         public TypeNode VisitElement(ElementExpression n, List<TypeNode> parameterTypes)
         {
             foreach (var c in n.Children)

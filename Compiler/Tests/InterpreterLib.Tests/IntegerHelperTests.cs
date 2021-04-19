@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib;
+using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
@@ -173,6 +174,44 @@ namespace InterpreterLib.Tests
             int res = integerHelper.AbsoluteInteger(absExpr, new List<object>());
 
             Assert.AreEqual(0, res);
+        }
+        #endregion
+
+        #region
+        [TestMethod]
+        [DataRow(2, 3, 8)]
+        [DataRow(3, 5, 243)]
+        [DataRow(1, 0, 1)]
+        [DataRow(1, 1, 1)]
+        public void PowerInteger_TwoInts_ReturnsCorrectResult(int input1, int input2, int expected)
+        {
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1, 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2, 2, 2);
+            PowerExpression powExpr = new PowerExpression(realLit1, realLit2, 1, 1);
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchInt(realLit1, Arg.Any<List<object>>()).Returns(input1);
+            parent.DispatchInt(realLit2, Arg.Any<List<object>>()).Returns(input2);
+            IntegerHelper realHelper = SetUpHelper(parent);
+
+            int res = realHelper.PowerInteger(powExpr, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NegativeExponentException))]
+        [DataRow(2, -3)]
+        public void PowerInteger_TwoIntsButNegativeExponent_ThrowsException(int input1, int input2)
+        {
+            IntegerLiteralExpression realLit1 = new IntegerLiteralExpression(input1, 1, 1);
+            IntegerLiteralExpression realLit2 = new IntegerLiteralExpression(input2, 2, 2);
+            PowerExpression powExpr = new PowerExpression(realLit1, realLit2, 1, 1);
+            IInterpreterInteger parent = Substitute.For<IInterpreterInteger>();
+            parent.DispatchInt(realLit1, Arg.Any<List<object>>()).Returns(input1);
+            parent.DispatchInt(realLit2, Arg.Any<List<object>>()).Returns(input2);
+            IntegerHelper realHelper = SetUpHelper(parent);
+
+            int res = realHelper.PowerInteger(powExpr, new List<object>());
         }
         #endregion
 

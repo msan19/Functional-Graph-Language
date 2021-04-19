@@ -88,7 +88,8 @@ namespace Main
                                            new RealHelper(), 
                                            new InterpBooleanHelper(),
                                            new InterpreterSetHelper(),
-                                           new ElementHelper());
+                                           new ElementHelper(),
+                                           new StringHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);
