@@ -26,6 +26,8 @@ namespace InterpreterLib.Interfaces
 
         int AbsoluteInteger(AbsoluteValueExpression node, List<Object> parameters);
 
+        int PowerInteger(PowerExpression node, List<Object> parameters);
+
         int LiteralInteger(IntegerLiteralExpression node, List<Object> parameters);
         
         int NegativeInteger(NegativeExpression node, List<Object> parameters);
