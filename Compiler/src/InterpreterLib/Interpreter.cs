@@ -175,6 +175,14 @@ namespace InterpreterLib
             };
         }
 
+        public Graph DispatchGraph(ExpressionNode node, List<object> parameters)
+        {
+            return node switch
+            {
+                _ => throw new UnimplementedInterpreterException(node, "DispatchGraph")
+            };
+        }
+
 
         public Object Dispatch(ExpressionNode node, List<Object> parameters, TypeEnum type)
         {
@@ -187,6 +195,8 @@ namespace InterpreterLib
                 TypeEnum.Set        => (Object) DispatchSet(node, parameters),
                 TypeEnum.Element    => (Object) DispatchElement(node, parameters),
                 TypeEnum.String     => (Object) DispatchString(node, parameters),
+                TypeEnum.Graph      => (Object) DispatchGraph(node, parameters),
+
                 _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }
