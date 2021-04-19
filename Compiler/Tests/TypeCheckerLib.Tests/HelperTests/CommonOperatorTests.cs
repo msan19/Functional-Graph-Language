@@ -101,6 +101,7 @@ namespace TypeCheckerLib.Tests.HelperTests
                 TypeEnum.Real => new RealLiteralExpression("2.2", 0, 0),
                 TypeEnum.Boolean => new BooleanLiteralExpression(true, 0, 0),
                 TypeEnum.Integer => new IntegerLiteralExpression("1", 1, 1),
+                TypeEnum.String => new StringLiteralExpression("Hej", 0, 0),
                 TypeEnum.Function => throw new Exception("Functions is not supported in GetBinaryOperator"),
                 _ => throw new NotImplementedException()
             };
@@ -241,6 +242,42 @@ namespace TypeCheckerLib.Tests.HelperTests
             CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
 
             Assert.ThrowsException<UnmatchableTypesException>(() => helper.VisitAddition(input, null));
+        }
+
+        [TestMethod]
+        public void VisitAddition_AdditionExpressionWithStringAndReal_ReturnsStringTypeNode()
+        {
+            var expected = TypeEnum.String;
+            AdditionExpression input1 = GetAdditionExpression(TypeEnum.String, TypeEnum.Real);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitAddition(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitAddition_AdditionExpressionWithIntAndString_ReturnsStringTypeNode()
+        {
+            var expected = TypeEnum.String;
+            AdditionExpression input1 = GetAdditionExpression(TypeEnum.Integer, TypeEnum.String);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitAddition(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitAddition_AdditionExpressionWithStringAndBool_ReturnsStringTypeNode()
+        {
+            var expected = TypeEnum.String;
+            AdditionExpression input1 = GetAdditionExpression(TypeEnum.String, TypeEnum.Boolean);
+
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            var res = helper.VisitAddition(input1, null).Type;
+
+            Assert.AreEqual(expected, res);
         }
 
         #endregion

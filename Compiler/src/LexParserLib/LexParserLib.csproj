@@ -11,6 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Hime\GrammarLexer.bin" />
+      <EmbeddedResource Include="Hime\GrammarParser.bin" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Hime.Redist" Version="3.5.1" />
     </ItemGroup>
 

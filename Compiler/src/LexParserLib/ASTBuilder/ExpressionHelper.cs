@@ -322,7 +322,7 @@ namespace LexParserLib
                 "integerNumber" => new IntegerLiteralExpression(himeNode.Value,
                                                                 himeNode.Position.Line,
                                                                 himeNode.Position.Column),
-                "stringLiteral" => new StringLiteralExpression(himeNode.Value,
+                "stringLiteral" => new StringLiteralExpression(himeNode.Value[1..^1],
                                                                 himeNode.Position.Line,
                                                                 himeNode.Position.Column),
                 "true" => new BooleanLiteralExpression(true,

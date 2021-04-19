@@ -250,6 +250,10 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
-        
+        public TypeNode VisitStringLiteral()
+        {
+            return new TypeNode(TypeEnum.String, 0, 0);
+        }
+
     }
 }
