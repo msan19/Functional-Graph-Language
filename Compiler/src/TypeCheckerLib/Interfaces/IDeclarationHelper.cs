@@ -16,5 +16,6 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitIntegerLiteral();
         TypeNode VisitRealLiteral();
         TypeNode VisitBooleanLiteral();
+        TypeNode VisitStringLiteral();
     }
 }

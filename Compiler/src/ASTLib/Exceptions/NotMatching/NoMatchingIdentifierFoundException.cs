@@ -1,6 +1,6 @@
 using ASTLib.Nodes;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.NotMatching
 {
     public class NoMatchingIdentifierFoundException : CompilerException
     {

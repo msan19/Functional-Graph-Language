@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -29,21 +31,28 @@ namespace TypeCheckerLib.Helpers
             TypeNode left = GetType(n.Children[0], parameterTypes);
             TypeNode right = GetType(n.Children[1], parameterTypes);
 
-            if (!IsAddableType(left.Type) || !IsAddableType(right.Type))
-                throw new UnmatchableTypesException(n, left.Type, right.Type, "number");
-
-            if (left.Type != right.Type)
+            if ( (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Real) || (left.Type == TypeEnum.Real && right.Type == TypeEnum.Integer) )
             {
                 CastToReal(n, left, 0);
                 CastToReal(n, right, 1);
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
-            return new TypeNode(left.Type, 0, 0);
+            else if (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Integer)
+            {
+                return new TypeNode(TypeEnum.Integer, 0, 0);
+            }
+            else if ( (left.Type == TypeEnum.String && IsAddableType(right.Type)) || IsAddableType(left.Type) && right.Type == TypeEnum.String )
+            {
+                CastToString(n, left, 0);
+                CastToString(n, right, 1);
+                return new TypeNode(TypeEnum.String, 0, 0);
+            }
+            throw new UnmatchableTypesException(n, left.Type, right.Type, "number or string");
         }
 
         private bool IsAddableType(TypeEnum t)
         {
-            return t == TypeEnum.Integer || t == TypeEnum.Real;
+            return t == TypeEnum.Integer || t == TypeEnum.Real || t == TypeEnum.String || t == TypeEnum.Boolean;
         }
 
         public TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes)
@@ -103,14 +112,48 @@ namespace TypeCheckerLib.Helpers
         {
             if (nodeType.Type != TypeEnum.Real)
             {
-                InsertCastNode(binaryNode, child);
+                InsertCastNode(binaryNode, child, TypeEnum.Integer);
+            }
+        }
+
+        private void CastToString(IExpressionNode binaryNode, TypeNode nodeType, int child)
+        {
+            if (nodeType.Type != TypeEnum.String)
+            {
+                if (nodeType.Type == TypeEnum.Integer)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Integer);
+                }
+                else if (nodeType.Type == TypeEnum.Real)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Real);
+                }
+                else if (nodeType.Type == TypeEnum.Boolean)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Boolean);
+                }
             }
         }
         
-        private void InsertCastNode(IExpressionNode binaryNode, int child)
+        private void InsertCastNode(IExpressionNode binaryNode, int child, TypeEnum castFrom)
         {
-            CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
-            binaryNode.Children[child] = cast;
+            switch (castFrom)
+            {
+                case TypeEnum.Integer:
+                    CastFromIntegerExpression cast1 = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast1;
+                    break;
+                case TypeEnum.Real:
+                    CastFromRealExpression cast2 = new CastFromRealExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast2;
+                    break;
+                case TypeEnum.Boolean:
+                    CastFromBooleanExpression cast3 = new CastFromBooleanExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast3;
+                    break;
+                default:
+                    throw new Exception("Invalid castFrom");
+            }
         }
 
         public TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes)

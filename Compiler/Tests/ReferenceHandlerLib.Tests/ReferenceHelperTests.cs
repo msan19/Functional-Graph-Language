@@ -8,6 +8,7 @@ using NSubstitute;
 using FluentAssertions;
 using ASTLib.Exceptions;
 using System.Linq;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 
 namespace ReferenceHandlerLib.Tests
@@ -137,6 +138,43 @@ namespace ReferenceHandlerLib.Tests
             Assert.AreEqual(expected, result);
         }
 
+        [ExpectedException(typeof(UnmatchableParametersException))]
+        [TestMethod]
+        public void VisitFunction_FunctionWithMoreParameterIDsThanTypeParameters_CausesUnmatchableParametersException()
+        {
+            TypeNode setType = new TypeNode(TypeEnum.Set, 1, 1);
+            TypeNode integerType = new TypeNode(TypeEnum.Integer, 1, 1);
+            
+            List<string> parameterIdentifiers = new List<string> { "a", "b" };
+            List<TypeNode> parameterTypes = new List<TypeNode>() { integerType };
+            FunctionNode input = Utilities.GetFunctionNodeWith(parameterIdentifiers, setType, parameterTypes);
+            
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitFunction(input);
+        }
+        
+        [ExpectedException(typeof(UnmatchableParametersException))]
+        [TestMethod]
+        public void VisitFunction_FunctionWithLessParameterIDsThanTypeParameters_CausesUnmatchableParametersException()
+        {
+            TypeNode setType = new TypeNode(TypeEnum.Set, 1, 1);
+            TypeNode integerType = new TypeNode(TypeEnum.Integer, 1, 1);
+            TypeNode realType = new TypeNode(TypeEnum.Real, 1, 1);
+            
+            List<string> parameterIdentifiers = new List<string> { "a" };
+            List<TypeNode> parameterTypes = new List<TypeNode>() { integerType, realType };
+            FunctionNode input = Utilities.GetFunctionNodeWith(parameterIdentifiers, setType, parameterTypes);
+            
+            IReferenceHandler parent = Substitute.For<IReferenceHandler>();
+            ReferenceHelper referenceHelper = BuildHelper(parent);
+
+            referenceHelper.VisitFunction(input);
+        }
+        
+
+        
         #endregion
 
         #region VisitFunctionCall
