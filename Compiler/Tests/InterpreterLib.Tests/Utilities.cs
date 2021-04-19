@@ -19,10 +19,35 @@ namespace InterpreterLib.Tests
             booleanHelper.SetInterpreter(interpreter);
             return booleanHelper;
         }
+
         public static BooleanHelper GetBooleanHelper(IInterpreterBoolean interpreter, AST ast)
         {
             BooleanHelper booleanHelper = GetBooleanHelper(interpreter);
             return booleanHelper;
+        }
+
+        internal static IInterpreterElement GetIntepreterElement(List<IntegerLiteralExpression> childs, int[] ids)
+        {
+            var res = Substitute.For<IInterpreterElement>();
+            for (int i = 0; i < childs.Count; i++)
+            {
+                res.DispatchInt(childs[i], Arg.Any<List<object>>()).Returns(ids[i]);
+            }
+            return res;
+        }
+
+        internal static IInterpreterElement GetIntepreterElementWithParamsOut(IntegerLiteralExpression child, int id, Action<List<object>> action)
+        {
+            var res = Substitute.For<IInterpreterElement>();
+            res.DispatchInt(child, Arg.Do<List<object>>(x => action(x))).Returns(id);
+            return res;
+        }
+
+        internal static ElementHelper GetElementHelper(IInterpreterElement parent)
+        {
+            var res = new ElementHelper();
+            res.SetInterpreter(parent);
+            return res;
         }
 
         public static GenericHelper GetGenericHelper(IInterpreterGeneric interpreter)
@@ -238,7 +263,15 @@ namespace InterpreterLib.Tests
         {
             return new IntegerLiteralExpression("", 0, 0);
         }
-        
+
+        internal static List<IntegerLiteralExpression> GetIntLitExpressions(int n)
+        {
+            var res = new List<IntegerLiteralExpression>();
+            for (int i = 0; i < n; i++)
+                res.Add(GetIntLitExpression());
+            return res;
+        }
+
         public static RealLiteralExpression GetRealLitExpression()
         {
             return new RealLiteralExpression("1.0", 0, 0);
@@ -259,9 +292,19 @@ namespace InterpreterLib.Tests
             return new FunctionCallExpression("", new List<ExpressionNode>(), 0, 0);
         }
 
-        public static ElementExpression GetElementExpresssion()
+        public static ElementExpression GetElementExpression()
         {
             return new ElementExpression(new List<ExpressionNode>(), 0, 0);
+        }
+
+        public static ElementExpression GetElementExpression(IntegerLiteralExpression child)
+        {
+            return new ElementExpression(new List<ExpressionNode>() { child }, 0, 0);
+        }
+
+        internal static ElementExpression GetElementExpression(List<IntegerLiteralExpression> childs)
+        {
+            return new ElementExpression(childs.ConvertAll<ExpressionNode>(x => x), 0, 0);
         }
 
         public static SetExpression GetSetExpresssion()

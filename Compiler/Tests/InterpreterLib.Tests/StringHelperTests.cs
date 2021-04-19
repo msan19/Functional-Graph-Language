@@ -19,6 +19,7 @@ namespace InterpreterLib.Tests
             return stringHelper;
         }
 
+        #region AdditionString
         [DataRow("a", "b", "ab")]
         [DataRow("Label", "1", "Label1")]
         [TestMethod]
@@ -36,5 +37,6 @@ namespace InterpreterLib.Tests
 
             Assert.AreEqual(expected, res);
         }
+        #endregion
     }
 }

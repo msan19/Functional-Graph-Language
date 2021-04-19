@@ -214,6 +214,7 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
+<<<<<<< HEAD
         public TypeNode VisitGraph(GraphExpression node, List<TypeNode> parameterTypes)
         {
             TypeNode child0 = GetType(node.Children[0], parameterTypes);
@@ -244,6 +245,11 @@ namespace TypeCheckerLib.Helpers
 
             else
                 return new TypeNode(TypeEnum.Graph, 0, 0);
+=======
+        public TypeNode Element(ElementExpression n, List<TypeNode> parameterTypes)
+        {
+            throw new NotImplementedException();
+>>>>>>> 5b82fa31507a1046b7ad4e29f0ecab7411eda834
         }
     }
 }
