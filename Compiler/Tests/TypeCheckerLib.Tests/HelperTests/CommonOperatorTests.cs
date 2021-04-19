@@ -13,6 +13,7 @@ using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
@@ -211,7 +212,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Int Func -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitAddition_AdditionExpressionWithIntAndFunc_ThrowsException()
         {
 
@@ -371,7 +372,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Set Int -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitSubtraction_SubtractionExpressionWithSetAndInt_ThrowsException()
         {
 
@@ -388,7 +389,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Func Set -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitSubtraction_SubtractionExpressionWithFuncAndSet_ThrowsException()
         {
             IdentifierExpression leftNode = new IdentifierExpression("f", 0, 0);
@@ -404,7 +405,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Int Func -> Throw Error 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitSubtraction_SubtractionExpressionWithIntAndFunc_ThrowsException()
         {
 
@@ -818,7 +819,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitEquivalenceOperator_EqualExpressionWithSetAndElement_ThrowsException()
         {
             ExpressionNode leftNode = new SetExpression(null, null, null, 0, 0);
@@ -910,7 +911,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Int Set -> Throw Exception
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitIn_GivenIntegerAndSet_ThrowException()
         {
             IntegerLiteralExpression leftNode = new IntegerLiteralExpression("1", 1, 1);
@@ -928,7 +929,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         // Int Real -> Throw Exception
         [TestMethod]
-        [ExpectedException(typeof(ASTLib.Exceptions.UnmatchableTypesException))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitIn_GivenIntegerAndReal_ThrowException()
         {
             IntegerLiteralExpression leftNode = new IntegerLiteralExpression("1", 1, 1);

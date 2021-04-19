@@ -1,11 +1,6 @@
-﻿using ASTLib.Nodes;
-using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.TypeNodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ASTLib.Nodes.ExpressionNodes;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.NotMatching
 {
     public class NoMatchingFunctionFoundException : CompilerException
     {
