@@ -3,6 +3,7 @@ using ASTLib.Objects;
 using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InterpreterLib.Helpers
@@ -18,7 +19,10 @@ namespace InterpreterLib.Helpers
 
         public Element Element(ElementExpression node, List<object> parameters)
         {
-            return default;
+            var ids = new List<int>();
+            foreach (var n in node.Children)
+                ids.Add(_interpreter.DispatchInt(n, parameters));
+            return new Element(ids);
         }
     }
 }
