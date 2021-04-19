@@ -213,5 +213,10 @@ namespace TypeCheckerLib.Helpers
 
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
+
+        public TypeNode Element(ElementExpression n, List<TypeNode> parameterTypes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

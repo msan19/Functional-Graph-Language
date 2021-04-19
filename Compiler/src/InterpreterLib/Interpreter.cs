@@ -81,6 +81,7 @@ namespace InterpreterLib
             {
                 ElementExpression e         => _elementHelper.Element(e, parameters),
                 IdentifierExpression e      => _genericHelper.Identifier<Element>(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Element>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
