@@ -11,5 +11,10 @@ namespace ASTLib.Exceptions.NotMatching
         {
         }
 
+        public UnmatchableTypesException(Node node, TypeEnum actual, TypeEnum expected) :
+            base(node, $"Got '{actual}' and expected '{expected}'")
+        {
+        }
+
     }
 }

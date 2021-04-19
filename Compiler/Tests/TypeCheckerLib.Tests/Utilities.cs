@@ -10,6 +10,7 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using NSubstitute;
+using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
 
 namespace TypeCheckerLib.Tests
@@ -97,7 +98,109 @@ namespace TypeCheckerLib.Tests
             ISetHelper setHelper = Substitute.For<ISetHelper>();
             return new TypeChecker(declarationHelper, numberHelper, commonOperatorHelper, booleanHelper, setHelper);
         }
-        
+
+        internal static ITypeChecker GetCommonParent(List<ExpressionNode> childs, TypeEnum[] typeEnums)
+        {
+            var res = Substitute.For<ITypeChecker>();
+            for (int i = 0; i < childs.Count; i++)
+            {
+                res.Dispatch(childs[i], Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(typeEnums[i]));
+            }
+            return res;
+        }
+
+        internal static ITypeChecker GetCommonParent(List<ExpressionNode> childs, TypeEnum[] typeEnums, Action<List<TypeNode>> action)
+        {
+            var res = Substitute.For<ITypeChecker>();
+            for (int i = 0; i < childs.Count; i++)
+            {
+                res.Dispatch(childs[i], Arg.Do<List<TypeNode>>(x => action(x))).Returns(GetTypeNode(typeEnums[i]));
+            }
+            return res;
+        }
+
+        internal static CommonOperatorHelper GetCommonHelper(ITypeChecker parent)
+        {
+            var res = new CommonOperatorHelper();
+            res.Initialize(GetAst(), parent.Dispatch);
+            return res;
+        }
+
+        internal static List<TypeNode> GetParameterList()
+        {
+            return new List<TypeNode>();
+        }
+
+        internal static List<TypeNode> GetParameterList(TypeEnum[] types)
+        {
+            var res = GetParameterList();
+            foreach (var t in types)
+                res.Add(GetTypeNode(t));
+            return res;
+        }
+
+        internal static ElementExpression GetElementExpression(List<ExpressionNode> childs)
+        {
+            return new ElementExpression(childs, 0, 0);
+        }
+
+        internal static List<ExpressionNode> GetExpressionNodes(TypeEnum[] typeEnums)
+        {
+            var res = new List<ExpressionNode>();
+            foreach (var t in typeEnums)
+            {
+                res.Add(GetTypeExpression(t));
+            }
+            return res;
+        }
+
+        private static ExpressionNode GetTypeExpression(TypeEnum t)
+        {
+            return t switch
+            {
+                TypeEnum.Integer => GetIntLit(),
+                TypeEnum.Real => GetRealLit(),
+                TypeEnum.Boolean => GetBoolLit(true),
+                TypeEnum.String => GetStringLit(),
+                TypeEnum.Function => GetFunction(),
+                TypeEnum.Element => GetElement(),
+                TypeEnum.Set => GetSet(),
+                TypeEnum.Graph => GetGraph(),
+                TypeEnum.InvalidType => throw new NotImplementedException(),
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        internal static GraphExpression GetGraph()
+        {
+            return new GraphExpression(null, null, null, null, 0, 0);
+        }
+
+        internal static SetExpression GetSet()
+        {
+            return new SetExpression(null, null, null, 0, 0);
+        }
+
+        internal static FunctionCallExpression GetFunction()
+        {
+            return new FunctionCallExpression("", null, 0, 0);
+        }
+
+        internal static StringLiteralExpression GetStringLit()
+        {
+            return new StringLiteralExpression("", 0, 0);
+        }
+
+        internal static ElementExpression GetElement()
+        {
+            return new ElementExpression(null, 0, 0);
+        }
+
+        internal static RealLiteralExpression GetRealLit()
+        {
+            return new RealLiteralExpression(0, 0, 0);
+        }
+
         public static ITypeChecker GetTypeCheckerOnlyWith(ISetHelper setHelper)
         {
             IDeclarationHelper declarationHelper = Substitute.For<IDeclarationHelper>();

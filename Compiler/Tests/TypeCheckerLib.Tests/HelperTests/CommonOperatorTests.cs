@@ -107,6 +107,83 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
         }
 
+        #region VisitElement
+        [DataRow(new TypeEnum[] { TypeEnum.Boolean })]
+        [DataRow(new TypeEnum[] { TypeEnum.Integer, TypeEnum.Boolean })]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        [TestMethod]
+        public void VisitElement_XChilds_Exception(TypeEnum[] typeEnums)
+        {
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+            var parameters = Utilities.GetParameterList();
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, parameters);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [DataRow(new TypeEnum[] { TypeEnum.Integer, TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XChilds_CorrectReturnValue(TypeEnum[] typeEnums)
+        {
+            var expected = TypeEnum.Element;
+
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+            var parameters = Utilities.GetParameterList();
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            var res = helper.VisitElement(node, parameters);
+
+            Assert.AreEqual(expected, res.Type);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XParams_CorrectParamsPassedOn(TypeEnum[] ps)
+        {
+            var parameters = Utilities.GetParameterList(ps);
+            var inputParams = parameters.ToList();
+
+            var typeEnums = new TypeEnum[] { TypeEnum.Integer };
+
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+
+            var res = new List<TypeNode>();
+            var parent = Utilities.GetCommonParent(childs, typeEnums, x => res = x);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, inputParams);
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XParams_DoNotChagneParams(TypeEnum[] ps)
+        {
+            var parameters = Utilities.GetParameterList(ps);
+            var inputParams = parameters.ToList();
+
+            var typeEnums = new TypeEnum[] { TypeEnum.Integer };
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, inputParams);
+
+            inputParams.Should().BeEquivalentTo(parameters);
+        }
+        #endregion
+
         #region VisitAddition
         [TestMethod]
         public void VisitAddition__CorrectParameterPassDown()

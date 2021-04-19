@@ -214,9 +214,15 @@ namespace TypeCheckerLib.Helpers
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
 
-        public TypeNode Element(ElementExpression n, List<TypeNode> parameterTypes)
+        public TypeNode VisitElement(ElementExpression n, List<TypeNode> parameterTypes)
         {
-            throw new NotImplementedException();
+            foreach (var c in n.Children)
+            {
+                var type = _getType(c, parameterTypes).Type;
+                if (type != TypeEnum.Integer)
+                    throw new UnmatchableTypesException(n, TypeEnum.Integer, type);
+            }
+            return new TypeNode(TypeEnum.Element, 0, 0);
         }
     }
 }
