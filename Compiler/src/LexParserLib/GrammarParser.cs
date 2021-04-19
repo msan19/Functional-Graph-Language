@@ -28,115 +28,115 @@ namespace LexParserLib
 			/// <summary>
 			/// The unique identifier for variable Prog
 			/// </summary>
-			public const int VariableProg = 0x000A;
+			public const int VariableProg = 0x000B;
 			/// <summary>
 			/// The unique identifier for variable Declarations
 			/// </summary>
-			public const int VariableDeclarations = 0x000B;
+			public const int VariableDeclarations = 0x000C;
 			/// <summary>
 			/// The unique identifier for variable Declaration
 			/// </summary>
-			public const int VariableDeclaration = 0x000C;
+			public const int VariableDeclaration = 0x000D;
 			/// <summary>
 			/// The unique identifier for variable Conditions
 			/// </summary>
-			public const int VariableConditions = 0x000D;
+			public const int VariableConditions = 0x000E;
 			/// <summary>
 			/// The unique identifier for variable Condition
 			/// </summary>
-			public const int VariableCondition = 0x000E;
+			public const int VariableCondition = 0x000F;
 			/// <summary>
 			/// The unique identifier for variable Elements
 			/// </summary>
-			public const int VariableElements = 0x000F;
+			public const int VariableElements = 0x0010;
 			/// <summary>
 			/// The unique identifier for variable Element
 			/// </summary>
-			public const int VariableElement = 0x0010;
+			public const int VariableElement = 0x0011;
 			/// <summary>
 			/// The unique identifier for variable Func
 			/// </summary>
-			public const int VariableFunc = 0x0011;
+			public const int VariableFunc = 0x0012;
 			/// <summary>
 			/// The unique identifier for variable FuncTypeDecl
 			/// </summary>
-			public const int VariableFuncTypeDecl = 0x0012;
+			public const int VariableFuncTypeDecl = 0x0013;
 			/// <summary>
 			/// The unique identifier for variable Types
 			/// </summary>
-			public const int VariableTypes = 0x0013;
+			public const int VariableTypes = 0x0014;
 			/// <summary>
 			/// The unique identifier for variable Type
 			/// </summary>
-			public const int VariableType = 0x0014;
+			public const int VariableType = 0x0015;
 			/// <summary>
 			/// The unique identifier for variable Ids
 			/// </summary>
-			public const int VariableIds = 0x0015;
+			public const int VariableIds = 0x0016;
 			/// <summary>
 			/// The unique identifier for variable Bounds
 			/// </summary>
-			public const int VariableBounds = 0x0016;
+			public const int VariableBounds = 0x0017;
 			/// <summary>
 			/// The unique identifier for variable Bound
 			/// </summary>
-			public const int VariableBound = 0x0017;
+			public const int VariableBound = 0x0018;
 			/// <summary>
 			/// The unique identifier for variable Expression
 			/// </summary>
-			public const int VariableExpression = 0x0018;
+			public const int VariableExpression = 0x0019;
 			/// <summary>
 			/// The unique identifier for variable MaxTerm
 			/// </summary>
-			public const int VariableMaxTerm = 0x0019;
+			public const int VariableMaxTerm = 0x001A;
 			/// <summary>
 			/// The unique identifier for variable MinTerm
 			/// </summary>
-			public const int VariableMinTerm = 0x001A;
+			public const int VariableMinTerm = 0x001B;
 			/// <summary>
 			/// The unique identifier for variable LogicTerm
 			/// </summary>
-			public const int VariableLogicTerm = 0x001B;
+			public const int VariableLogicTerm = 0x001C;
 			/// <summary>
 			/// The unique identifier for variable Compare
 			/// </summary>
-			public const int VariableCompare = 0x001C;
+			public const int VariableCompare = 0x001D;
 			/// <summary>
 			/// The unique identifier for variable BoundComp
 			/// </summary>
-			public const int VariableBoundComp = 0x001D;
+			public const int VariableBoundComp = 0x001E;
 			/// <summary>
 			/// The unique identifier for variable NumExpression
 			/// </summary>
-			public const int VariableNumExpression = 0x001E;
+			public const int VariableNumExpression = 0x001F;
 			/// <summary>
 			/// The unique identifier for variable Term
 			/// </summary>
-			public const int VariableTerm = 0x001F;
+			public const int VariableTerm = 0x0020;
 			/// <summary>
 			/// The unique identifier for variable Factor
 			/// </summary>
-			public const int VariableFactor = 0x0020;
+			public const int VariableFactor = 0x0021;
 			/// <summary>
 			/// The unique identifier for variable SetExpression
 			/// </summary>
-			public const int VariableSetExpression = 0x0021;
+			public const int VariableSetExpression = 0x0022;
 			/// <summary>
 			/// The unique identifier for variable SetTerm
 			/// </summary>
-			public const int VariableSetTerm = 0x0022;
+			public const int VariableSetTerm = 0x0023;
 			/// <summary>
 			/// The unique identifier for variable Exponent
 			/// </summary>
-			public const int VariableExponent = 0x0023;
+			public const int VariableExponent = 0x0024;
 			/// <summary>
 			/// The unique identifier for variable Expressions
 			/// </summary>
-			public const int VariableExpressions = 0x0024;
+			public const int VariableExpressions = 0x0025;
 			/// <summary>
 			/// The unique identifier for variable Literal
 			/// </summary>
-			public const int VariableLiteral = 0x0025;
+			public const int VariableLiteral = 0x0026;
 		}
 		/// <summary>
 		/// The collection of variables matched by this parser
@@ -146,35 +146,35 @@ namespace LexParserLib
 		/// so that variable indices in the automaton can be used to retrieve the variables in this table
 		/// </remarks>
 		private static readonly Symbol[] variables = {
-			new Symbol(0x000A, "Prog"), 
-			new Symbol(0x000B, "Declarations"), 
-			new Symbol(0x000C, "Declaration"), 
-			new Symbol(0x000D, "Conditions"), 
-			new Symbol(0x000E, "Condition"), 
-			new Symbol(0x000F, "Elements"), 
-			new Symbol(0x0010, "Element"), 
-			new Symbol(0x0011, "Func"), 
-			new Symbol(0x0012, "FuncTypeDecl"), 
-			new Symbol(0x0013, "Types"), 
-			new Symbol(0x0014, "Type"), 
-			new Symbol(0x0015, "Ids"), 
-			new Symbol(0x0016, "Bounds"), 
-			new Symbol(0x0017, "Bound"), 
-			new Symbol(0x0018, "Expression"), 
-			new Symbol(0x0019, "MaxTerm"), 
-			new Symbol(0x001A, "MinTerm"), 
-			new Symbol(0x001B, "LogicTerm"), 
-			new Symbol(0x001C, "Compare"), 
-			new Symbol(0x001D, "BoundComp"), 
-			new Symbol(0x001E, "NumExpression"), 
-			new Symbol(0x001F, "Term"), 
-			new Symbol(0x0020, "Factor"), 
-			new Symbol(0x0021, "SetExpression"), 
-			new Symbol(0x0022, "SetTerm"), 
-			new Symbol(0x0023, "Exponent"), 
-			new Symbol(0x0024, "Expressions"), 
-			new Symbol(0x0025, "Literal"), 
-			new Symbol(0x004D, "__VAxiom") };
+			new Symbol(0x000B, "Prog"), 
+			new Symbol(0x000C, "Declarations"), 
+			new Symbol(0x000D, "Declaration"), 
+			new Symbol(0x000E, "Conditions"), 
+			new Symbol(0x000F, "Condition"), 
+			new Symbol(0x0010, "Elements"), 
+			new Symbol(0x0011, "Element"), 
+			new Symbol(0x0012, "Func"), 
+			new Symbol(0x0013, "FuncTypeDecl"), 
+			new Symbol(0x0014, "Types"), 
+			new Symbol(0x0015, "Type"), 
+			new Symbol(0x0016, "Ids"), 
+			new Symbol(0x0017, "Bounds"), 
+			new Symbol(0x0018, "Bound"), 
+			new Symbol(0x0019, "Expression"), 
+			new Symbol(0x001A, "MaxTerm"), 
+			new Symbol(0x001B, "MinTerm"), 
+			new Symbol(0x001C, "LogicTerm"), 
+			new Symbol(0x001D, "Compare"), 
+			new Symbol(0x001E, "BoundComp"), 
+			new Symbol(0x001F, "NumExpression"), 
+			new Symbol(0x0020, "Term"), 
+			new Symbol(0x0021, "Factor"), 
+			new Symbol(0x0022, "SetExpression"), 
+			new Symbol(0x0023, "SetTerm"), 
+			new Symbol(0x0024, "Exponent"), 
+			new Symbol(0x0025, "Expressions"), 
+			new Symbol(0x0026, "Literal"), 
+			new Symbol(0x0054, "__VAxiom") };
 		/// <summary>
 		/// The collection of virtuals matched by this parser
 		/// </summary>
@@ -199,6 +199,7 @@ namespace LexParserLib
 			public virtual void OnTerminalId(ASTNode node) {}
 			public virtual void OnTerminalRealNumber(ASTNode node) {}
 			public virtual void OnTerminalIntegerNumber(ASTNode node) {}
+			public virtual void OnTerminalStringLiteral(ASTNode node) {}
 			public virtual void OnTerminalNewLine(ASTNode node) {}
 			public virtual void OnTerminalWhiteSpace(ASTNode node) {}
 			public virtual void OnTerminalCommentLine(ASTNode node) {}
@@ -257,38 +258,39 @@ namespace LexParserLib
 				case 0x0003: visitor.OnTerminalId(node); break;
 				case 0x0004: visitor.OnTerminalRealNumber(node); break;
 				case 0x0005: visitor.OnTerminalIntegerNumber(node); break;
-				case 0x0006: visitor.OnTerminalNewLine(node); break;
-				case 0x0007: visitor.OnTerminalWhiteSpace(node); break;
-				case 0x0008: visitor.OnTerminalCommentLine(node); break;
-				case 0x0009: visitor.OnTerminalSeparator(node); break;
-				case 0x000A: visitor.OnVariableProg(node); break;
-				case 0x000B: visitor.OnVariableDeclarations(node); break;
-				case 0x000C: visitor.OnVariableDeclaration(node); break;
-				case 0x000D: visitor.OnVariableConditions(node); break;
-				case 0x000E: visitor.OnVariableCondition(node); break;
-				case 0x000F: visitor.OnVariableElements(node); break;
-				case 0x0010: visitor.OnVariableElement(node); break;
-				case 0x0011: visitor.OnVariableFunc(node); break;
-				case 0x0012: visitor.OnVariableFuncTypeDecl(node); break;
-				case 0x0013: visitor.OnVariableTypes(node); break;
-				case 0x0014: visitor.OnVariableType(node); break;
-				case 0x0015: visitor.OnVariableIds(node); break;
-				case 0x0016: visitor.OnVariableBounds(node); break;
-				case 0x0017: visitor.OnVariableBound(node); break;
-				case 0x0018: visitor.OnVariableExpression(node); break;
-				case 0x0019: visitor.OnVariableMaxTerm(node); break;
-				case 0x001A: visitor.OnVariableMinTerm(node); break;
-				case 0x001B: visitor.OnVariableLogicTerm(node); break;
-				case 0x001C: visitor.OnVariableCompare(node); break;
-				case 0x001D: visitor.OnVariableBoundComp(node); break;
-				case 0x001E: visitor.OnVariableNumExpression(node); break;
-				case 0x001F: visitor.OnVariableTerm(node); break;
-				case 0x0020: visitor.OnVariableFactor(node); break;
-				case 0x0021: visitor.OnVariableSetExpression(node); break;
-				case 0x0022: visitor.OnVariableSetTerm(node); break;
-				case 0x0023: visitor.OnVariableExponent(node); break;
-				case 0x0024: visitor.OnVariableExpressions(node); break;
-				case 0x0025: visitor.OnVariableLiteral(node); break;
+				case 0x0006: visitor.OnTerminalStringLiteral(node); break;
+				case 0x0007: visitor.OnTerminalNewLine(node); break;
+				case 0x0008: visitor.OnTerminalWhiteSpace(node); break;
+				case 0x0009: visitor.OnTerminalCommentLine(node); break;
+				case 0x000A: visitor.OnTerminalSeparator(node); break;
+				case 0x000B: visitor.OnVariableProg(node); break;
+				case 0x000C: visitor.OnVariableDeclarations(node); break;
+				case 0x000D: visitor.OnVariableDeclaration(node); break;
+				case 0x000E: visitor.OnVariableConditions(node); break;
+				case 0x000F: visitor.OnVariableCondition(node); break;
+				case 0x0010: visitor.OnVariableElements(node); break;
+				case 0x0011: visitor.OnVariableElement(node); break;
+				case 0x0012: visitor.OnVariableFunc(node); break;
+				case 0x0013: visitor.OnVariableFuncTypeDecl(node); break;
+				case 0x0014: visitor.OnVariableTypes(node); break;
+				case 0x0015: visitor.OnVariableType(node); break;
+				case 0x0016: visitor.OnVariableIds(node); break;
+				case 0x0017: visitor.OnVariableBounds(node); break;
+				case 0x0018: visitor.OnVariableBound(node); break;
+				case 0x0019: visitor.OnVariableExpression(node); break;
+				case 0x001A: visitor.OnVariableMaxTerm(node); break;
+				case 0x001B: visitor.OnVariableMinTerm(node); break;
+				case 0x001C: visitor.OnVariableLogicTerm(node); break;
+				case 0x001D: visitor.OnVariableCompare(node); break;
+				case 0x001E: visitor.OnVariableBoundComp(node); break;
+				case 0x001F: visitor.OnVariableNumExpression(node); break;
+				case 0x0020: visitor.OnVariableTerm(node); break;
+				case 0x0021: visitor.OnVariableFactor(node); break;
+				case 0x0022: visitor.OnVariableSetExpression(node); break;
+				case 0x0023: visitor.OnVariableSetTerm(node); break;
+				case 0x0024: visitor.OnVariableExponent(node); break;
+				case 0x0025: visitor.OnVariableExpressions(node); break;
+				case 0x0026: visitor.OnVariableLiteral(node); break;
 			}
 		}
 	}
