@@ -28,8 +28,10 @@ namespace InterpreterLib
         private readonly IGenericHelper _genericHelper;
         private readonly ISetHelper _setHelper;
         private readonly IElementHelper _elementHelper;
+        private readonly IStringHelper _stringHelper;
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper)
+
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper)
         {
             _functionHelper = functionHelper;
 
@@ -50,6 +52,9 @@ namespace InterpreterLib
 
             _elementHelper = elementHelper;
             _elementHelper.SetInterpreter(this);
+
+            _stringHelper = stringHelper;
+            _stringHelper.SetInterpreter(this);
         }
 
         public List<Set> Interpret(AST node)
@@ -156,7 +161,22 @@ namespace InterpreterLib
                 _ => throw new UnimplementedInterpreterException(node, "DispatchBoolean")
             };
         }
-        
+
+        /*
+         * AdditionExpression
+         * StringLiteralExpression
+         * FunctionCallExpression
+         * IdentifierExpression*/
+        public string DispatchString(ExpressionNode node, List<Object> parameters)
+        {
+            return node switch
+            {
+                AdditionExpression      e => _stringHelper.AdditionString(e, parameters),           
+                _ => throw new UnimplementedInterpreterException(node, "DispatchString")
+            };
+        }
+
+
         public Object Dispatch(ExpressionNode node, List<Object> parameters, TypeEnum type)
         {
             return type switch
@@ -167,6 +187,7 @@ namespace InterpreterLib
                 TypeEnum.Boolean    => (Object) DispatchBoolean(node, parameters),
                 TypeEnum.Set        => (Object) DispatchSet(node, parameters),
                 TypeEnum.Element    => (Object) DispatchElement(node, parameters),
+                TypeEnum.String     => (Object) DispatchString(node, parameters),
                 _ => throw new UnimplementedASTException(type.ToString(), "type")
             };
         }

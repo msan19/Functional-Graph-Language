@@ -4,6 +4,7 @@ using ASTLib;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -17,6 +18,10 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitSubtraction(SubtractionExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes);
         TypeNode VisitEquivalenceOperator(IEquivalenceOperator node, List<TypeNode> parameterTypes);
+<<<<<<< HEAD
+        TypeNode VisitIn(InExpression node, List<TypeNode> parameterTypes);
+=======
         TypeNode Element(ElementExpression n, List<TypeNode> parameterTypes);
+>>>>>>> 5b82fa31507a1046b7ad4e29f0ecab7411eda834
     }
 }
