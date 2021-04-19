@@ -944,5 +944,73 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitIn(input, null);
         }
         #endregion
+
+        #region VisitGraph
+        [TestMethod]
+        public void VisitGraph_GivenSetAndSetAndFuncAndFunc_ReturnsTypeGraph()
+        {
+            var expected = TypeEnum.Graph;
+
+            ExpressionNode child0 = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode child1 = new SetExpression(null, null, null, 1, 1);
+            ExpressionNode child2 = new IdentifierExpression("f", 2, 2);
+            ExpressionNode child3 = new IdentifierExpression("f", 2, 2);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new FunctionTypeNode(new TypeNode(TypeEnum.Element, 0, 0), new List<TypeNode>() { new TypeNode(TypeEnum.Element, 0, 0)}, 0, 0));
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new FunctionTypeNode(new TypeNode(TypeEnum.Element, 1, 1), new List<TypeNode>() { new TypeNode(TypeEnum.Element, 1, 1) }, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+
+            var res = helper.VisitGraph(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitGraph_GivenSetAndSetAndElementAndElement_ThrowsException()
+        {
+            ExpressionNode child0 = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode child1 = new SetExpression(null, null, null, 1, 1);
+            ExpressionNode child2 = new ElementExpression(null, 2, 2);
+            ExpressionNode child3 = new ElementExpression(null, 3, 3);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 0, 0));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<System.InvalidCastException>(() => helper.VisitGraph(input, null));
+        }
+
+        [TestMethod]
+        public void VisitGraph_GivenIntAndIntAndSetAndInt_ThrowsException()
+        {
+            ExpressionNode child0 = new IntegerLiteralExpression("0", 0, 0);
+            ExpressionNode child1 = new IntegerLiteralExpression("1", 1, 1);
+            ExpressionNode child2 = new SetExpression(null, null, null, 2, 2);
+            ExpressionNode child3 = new IntegerLiteralExpression("3", 3, 3);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<System.InvalidCastException>(() => helper.VisitGraph(input, null));
+        }
+
+        #endregion
     }
 }
