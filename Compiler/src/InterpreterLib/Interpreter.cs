@@ -90,6 +90,7 @@ namespace InterpreterLib
         {
             return node switch
             {
+                PowerExpression e           => _integerHelper.PowerInteger(e, parameters),
                 IntegerLiteralExpression e  => _integerHelper.LiteralInteger(e, parameters),
                 IdentifierExpression e      => _genericHelper.Identifier<int>(e, parameters),
                 SubtractionExpression e     => _integerHelper.SubtractionInteger(e, parameters),
