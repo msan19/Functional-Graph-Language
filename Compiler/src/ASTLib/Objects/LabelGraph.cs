@@ -6,6 +6,7 @@ namespace ASTLib.Objects
 {
     public class LabelGraph
     {
+        public string FileName { get; }
         public List<int> SrcList { get; }
         public List<int> DstList { get; }
         public string[][] VertexLabels { get; }

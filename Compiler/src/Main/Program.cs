@@ -90,7 +90,8 @@ namespace Main
                                            new InterpBooleanHelper(),
                                            new InterpreterSetHelper(),
                                            new ElementHelper(),
-                                           new StringHelper());
+                                           new StringHelper(),
+                                           new GraphHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);

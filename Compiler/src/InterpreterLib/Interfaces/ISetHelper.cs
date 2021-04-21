@@ -11,7 +11,6 @@ namespace InterpreterLib.Interfaces
 {
     public interface ISetHelper : IInterpreterHelper
     {
-        Set ExportSet(ExportNode node);
         void SetInterpreter(IInterpreterSet interpreter);
         Set SetExpression(SetExpression node, List<Object> parameters);
         Set UnionSet(UnionExpression node, List<Object> parameters);
