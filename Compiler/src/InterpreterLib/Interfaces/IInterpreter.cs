@@ -10,7 +10,7 @@ namespace InterpreterLib.Interfaces
 {
     public interface IInterpreter: 
         IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
-        , IInterpreterFunction, IInterpreterSet, IInterpreterElement, IInterpreterString
+        , IInterpreterFunction, IInterpreterSet, IInterpreterElement, IInterpreterString, IInterpreterGraph
     {
         List<Set> Interpret(AST node);
     }

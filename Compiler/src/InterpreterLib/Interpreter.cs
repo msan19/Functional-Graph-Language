@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
@@ -29,9 +30,10 @@ namespace InterpreterLib
         private readonly ISetHelper _setHelper;
         private readonly IElementHelper _elementHelper;
         private readonly IStringHelper _stringHelper;
+        private readonly IGraphHelper _graphHelper;
 
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper, IGraphHelper graphHelper)
         {
             _functionHelper = functionHelper;
 
@@ -55,6 +57,9 @@ namespace InterpreterLib
 
             _stringHelper = stringHelper;
             _stringHelper.SetInterpreter(this);
+
+            _graphHelper = graphHelper;
+            _graphHelper.SetInterpreter(this);
         }
 
         public List<Set> Interpret(AST node)
@@ -180,6 +185,7 @@ namespace InterpreterLib
         {
             return node switch
             {
+                GraphExpression e => _graphHelper.GraphExpression(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchGraph")
             };
         }
