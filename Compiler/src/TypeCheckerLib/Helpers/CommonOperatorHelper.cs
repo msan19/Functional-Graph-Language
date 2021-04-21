@@ -6,6 +6,7 @@ using ASTLib.Exceptions.NotMatching;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -42,7 +43,8 @@ namespace TypeCheckerLib.Helpers
             }
             else if ( (left.Type == TypeEnum.String && IsAddableType(right.Type)) || IsAddableType(left.Type) && right.Type == TypeEnum.String )
             {
-                // TODO: Cast to string
+                CastToString(n, left, 0);
+                CastToString(n, right, 1);
                 return new TypeNode(TypeEnum.String, 0, 0);
             }
             throw new UnmatchableTypesException(n, left.Type, right.Type, "number or string");
@@ -110,14 +112,48 @@ namespace TypeCheckerLib.Helpers
         {
             if (nodeType.Type != TypeEnum.Real)
             {
-                InsertCastNode(binaryNode, child);
+                InsertCastNode(binaryNode, child, TypeEnum.Integer);
+            }
+        }
+
+        private void CastToString(IExpressionNode binaryNode, TypeNode nodeType, int child)
+        {
+            if (nodeType.Type != TypeEnum.String)
+            {
+                if (nodeType.Type == TypeEnum.Integer)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Integer);
+                }
+                else if (nodeType.Type == TypeEnum.Real)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Real);
+                }
+                else if (nodeType.Type == TypeEnum.Boolean)
+                {
+                    InsertCastNode(binaryNode, child, TypeEnum.Boolean);
+                }
             }
         }
         
-        private void InsertCastNode(IExpressionNode binaryNode, int child)
+        private void InsertCastNode(IExpressionNode binaryNode, int child, TypeEnum castFrom)
         {
-            CastFromIntegerExpression cast = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
-            binaryNode.Children[child] = cast;
+            switch (castFrom)
+            {
+                case TypeEnum.Integer:
+                    CastFromIntegerExpression cast1 = new CastFromIntegerExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast1;
+                    break;
+                case TypeEnum.Real:
+                    CastFromRealExpression cast2 = new CastFromRealExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast2;
+                    break;
+                case TypeEnum.Boolean:
+                    CastFromBooleanExpression cast3 = new CastFromBooleanExpression(binaryNode.Children[child], 0, 0);
+                    binaryNode.Children[child] = cast3;
+                    break;
+                default:
+                    throw new Exception("Invalid castFrom");
+            }
         }
 
         public TypeNode VisitRelationalOperator(IRelationOperator node, List<TypeNode> parameterTypes)
@@ -176,6 +212,48 @@ namespace TypeCheckerLib.Helpers
                 throw new UnmatchableTypesException(node, left.Type, right.Type, "Lhs and rhs must be of type 'Element' and 'Set' respectivly");
 
             return new TypeNode(TypeEnum.Boolean, 0, 0);
+        }
+
+        public TypeNode VisitGraph(GraphExpression node, List<TypeNode> parameterTypes)
+        {
+            TypeNode child0 = GetType(node.Children[0], parameterTypes);
+            TypeNode child1 = GetType(node.Children[1], parameterTypes);
+            FunctionTypeNode child2 = (FunctionTypeNode)GetType(node.Children[2], parameterTypes);
+            FunctionTypeNode child3 = (FunctionTypeNode)GetType(node.Children[3], parameterTypes);
+
+            if (child0.Type != TypeEnum.Set || child1.Type != TypeEnum.Set)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child0.Type != TypeEnum.Set ? child0.Type : child1.Type,
+                                                                 TypeEnum.Set);
+
+            else if (child2.Type != TypeEnum.Function || child3.Type != TypeEnum.Function)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.Type != TypeEnum.Function ? child2.Type : child3.Type,
+                                                                 TypeEnum.Function);
+
+            else if (child2.ParameterTypes[0].Type != TypeEnum.Element || child3.ParameterTypes[0].Type != TypeEnum.Element)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.ParameterTypes[0].Type != TypeEnum.Element ?
+                                                                 child2.ParameterTypes[0].Type : child3.ParameterTypes[0].Type,
+                                                                 TypeEnum.Element);
+
+            else if (child2.ReturnType.Type != TypeEnum.Element || child3.ReturnType.Type != TypeEnum.Element)
+                throw new ASTLib.Exceptions.InvalidCastException(node,
+                                                                 child2.ReturnType.Type != TypeEnum.Element ?
+                                                                 child2.ReturnType.Type : child3.ReturnType.Type, TypeEnum.Element);
+
+            else
+                return new TypeNode(TypeEnum.Graph, 0, 0);
+        }
+        public TypeNode VisitElement(ElementExpression n, List<TypeNode> parameterTypes)
+        {
+            foreach (var c in n.Children)
+            {
+                var type = _getType(c, parameterTypes).Type;
+                if (type != TypeEnum.Integer)
+                    throw new UnmatchableTypesException(n, TypeEnum.Integer, type);
+            }
+            return new TypeNode(TypeEnum.Element, 0, 0);
         }
     }
 }

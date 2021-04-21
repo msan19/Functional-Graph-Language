@@ -12,6 +12,7 @@ using NSubstitute;
 using FluentAssertions;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using System.Linq;
+using FluentAssertions.Common;
 using System.Runtime.CompilerServices;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 
@@ -44,39 +45,76 @@ namespace InterpreterLib.Tests
             return bounds;
         }
 
+        private Set getSetFrom2dArray(int[,] arr)
+        {
+            List<Element> elements = new List<Element>();
+
+            for (int i = 0; i < arr.GetLength(0); i++)
+            {
+                List<int> indices = new List<int>();
+
+                for (int j = 0; j < arr.GetLength(1); j++)
+                {
+                    indices.Add(arr[i, j]);
+                }
+
+                elements.Add(new Element(indices));
+            }
+
+            return new Set(elements);
+        }
+
         #region SetExpression
 
-        [TestMethod]
-        public void SetExpression_f_f()
+        [DataTestMethod]
+        [DynamicData(nameof(SetExpression_TestDataMethod), DynamicDataSourceType.Method)]
+        public void SetExpression_f_f(List<int> min, List<int> max, List<List<object>> indexPairs)
         {
-            // {e[i, j] | 0 <= [i] < 5, 0 < [j] < 5, i < j}
-
             IInterpreterSet parent = Substitute.For<IInterpreterSet>();
             SetHelper setHelper = SetUpHelper(parent);
-
-            List<BoundNode> bounds = GetBounds(parent, new List<int> { 0, 1 }, new List<int> { 4, 4 });
-            LessExpression lessExpr = new LessExpression(new IdentifierExpression("i", 0, 0), new IdentifierExpression("j", 0, 0), 0, 0);
-            SetExpression setExpr = new SetExpression(null, bounds, lessExpr, 0, 0);
-
-            List<List<object>> indexPairs = new List<List<object>> { new List<object> { 0, 1 }, new List<object> { 0, 2 }, new List<object> { 0, 3 },
-                                                               new List<object> { 0, 4 }, new List<object> { 1, 2 }, new List<object> { 1, 3 },
-                                                               new List<object> { 1, 4 }, new List<object> { 2, 3 }, new List<object> { 2, 4 },
-                                                               new List<object> { 3, 4 } };
-
-            //parent.DispatchBoolean(lessExpr, Arg.Any<List<object>>()).Returns(false);
+            List<BoundNode> bounds = GetBounds(parent, min, max);
+            LessExpression expr = new LessExpression(null, null, 0, 0);
+            SetExpression setExpr = new SetExpression(null, bounds, expr, 0, 0);
             List<Element> expectedElements = new List<Element>();
             for (int i = 0; i < indexPairs.Count; i++)
             {
                 expectedElements.Add(new Element(indexPairs[i].ConvertAll(x => (int) x)));
             }
-
-
-            parent.DispatchBoolean(lessExpr, Arg.Any<List<Object>>()).Returns(x => IsContained(indexPairs , (List<Object>)x[1]));
+            Set expected = new Set(expectedElements);
+            parent.DispatchBoolean(expr, Arg.Any<List<Object>>()).Returns(x => IsContained(indexPairs, (List<Object>)x[1]));
 
             Set result = setHelper.SetExpression(setExpr, new List<object>());
-            Set expected = new Set(expectedElements);
 
             result.Should().BeEquivalentTo(expected);
+        }
+
+        static IEnumerable<object[]> SetExpression_TestDataMethod()
+        {
+            return new[]
+            {
+                new Object[]
+                {
+                    // {e[i, j] | 0 <= [i] < 5, 0 < [j] < 5, i < j}
+                    new List<int> { 0, 1 },
+                    new List<int> { 4, 4 },
+                    new List<List<Object>>
+                    {
+                        new List<Object> { 0, 1 }, new List<Object> { 0, 2 }, new List<Object> { 0, 3 }, new List<Object> { 0, 4 },
+                        new List<Object> { 1, 2 }, new List<Object> { 1, 3 }, new List<Object> { 1, 4 }, new List<Object> { 2, 3 },
+                        new List<Object> { 2, 4 }, new List<Object> { 3, 4 }
+                    }
+                },
+                new Object[]
+                {
+                    // {e[i] | 0 < [i] < 5, i == 2}
+                    new List<int> { 1 },
+                    new List<int> { 4 },
+                    new List<List<Object>>
+                    {
+                        new List<Object> { 2 }
+                    }
+                }
+            };
         }
 
         private bool IsContained(List<List<Object>> doubleList, List<Object> list)
@@ -100,63 +138,52 @@ namespace InterpreterLib.Tests
 
         #region IntersectionSet
 
-        private Set getSetFrom2dArray(int[,] arr)
-        {
-            List<Element> elements = new List<Element>();
-
-            for (int i = 0; i < arr.GetLength(0); i++)
-            {
-                List<int> indices = new List<int>();
-
-                for (int j = 0; j < arr.GetLength(1); j++)
-                {
-                    indices.Add(arr[i, j]);
-                }
-
-                elements.Add(new Element(indices));
-            }
-
-            return new Set(elements);
-        }
-
         [DataTestMethod]
         [DynamicData(nameof(IntersectionSet_TestDataMethod), DynamicDataSourceType.Method)]
-        public void IntersectionSet_f_f(int[,] left, int[,] right, int[,] exp)
+        public void IntersectionSet_ValidInput_ReturnsCorrectSet(Set left, Set right, Set exp)
         {
             IInterpreterSet parent = Substitute.For<IInterpreterSet>();
             SetHelper setHelper = SetUpHelper(parent);
             SetExpression leftExpr = new SetExpression(null, null, null, 0, 0);
             SetExpression rightExpr = new SetExpression(null, null, null, 0, 0);
             IntersectionExpression intersectionExpr = new IntersectionExpression(leftExpr, rightExpr, 0, 0);
-            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(left));
-            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(getSetFrom2dArray(right));
+            parent.DispatchSet(leftExpr, Arg.Any<List<object>>()).Returns(left);
+            parent.DispatchSet(rightExpr, Arg.Any<List<object>>()).Returns(right);
 
             Set result = setHelper.IntersectionSet(intersectionExpr, new List<object>());
 
-            result.Should().BeEquivalentTo(getSetFrom2dArray(exp));
+            result.Should().BeEquivalentTo(exp);
         }
 
         static IEnumerable<object[]> IntersectionSet_TestDataMethod()
         {
             return new[]
             {
-                new[] 
+                new[]
                 {
-                    new int[4, 1] { { 0 }, { 1 }, { 2 }, { 3 } },
-                    new int[4, 1] { { 2 }, { 3 }, { 4 }, { 5 } },
-                    new int[2, 1] { { 2 }, { 3 } }
+                    new Set(new List<Element> { new Element(0), new Element(1), new Element(2), new Element(3) }),
+                    new Set(new List<Element> { new Element(2), new Element(3), new Element(4), new Element(5) }),
+                    new Set(new List<Element> { new Element(2), new Element(3) })
                 },
                 new[]
                 {
-                    new int[4, 2] { { 0, 1 }, { 2, 3 }, { 4, 5 }, { 6, 7 } },
-                    new int[4, 2] { { 0, 1 }, { 3, 2 }, { 5, 4 }, { 6, 7 } },
-                    new int[2, 2] { { 0, 1 }, { 6, 7 } }
+                    new Set(new List<Element> { new Element(new List<int> { 0, 1 }), new Element(new List<int> { 2, 3 }),
+                                                new Element(new List<int> { 4, 5 }), new Element(new List<int> { 6, 7 }) }),
+                    new Set(new List<Element> { new Element(new List<int> { 0, 1 }), new Element(new List<int> { 3, 2 }),
+                                                new Element(new List<int> { 5, 4 }), new Element(new List<int> { 6, 7 }) }),
+                    new Set(new List<Element> { new Element(new List<int> { 0, 1 }), new Element(new List<int> { 6, 7 }) })
                 },
                 new[]
                 {
-                    new int[3, 1] { { 0 }, { 1 }, { 2 } },
-                    new int[5, 1] { { 3 }, { 4 }, { 5 }, { 6 }, { 7 } },
-                    new int[0, 0]
+                    new Set(new List<Element> { new Element(0), new Element(1), new Element(2) }),
+                    new Set(new List<Element> { new Element(3), new Element(4), new Element(5), new Element(6), new Element(7) }),
+                    new Set()
+                },
+                new[]
+                {
+                    new Set(new List<Element> { new Element(1), new Element(new List<int> { 1, 2 }), new Element(new List<int> { 1, 2, 3 }) }),
+                    new Set(new List<Element> { new Element(0), new Element(new List<int> { 1, 2 }), new Element(new List<int> { 1, 2, 3 }) }),
+                    new Set(new List<Element> { new Element(new List<int> { 1, 2 }), new Element(new List<int> { 1, 2, 3 }) }),
                 }
             };
         }

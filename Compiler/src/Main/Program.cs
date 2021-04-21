@@ -22,7 +22,7 @@ namespace Main
     {
         public List<string> Lines { get; }
 
-        private readonly string _fileName = "test.fgl";
+        private readonly string _fileName = "setTest.fgl";
         private readonly string _input;
 
         private readonly LexParser _lexParse;
@@ -89,7 +89,8 @@ namespace Main
                                            new RealHelper(), 
                                            new InterpBooleanHelper(),
                                            new InterpreterSetHelper(),
-                                           new ElementHelper());
+                                           new ElementHelper(),
+                                           new StringHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);

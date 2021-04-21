@@ -107,6 +107,83 @@ namespace TypeCheckerLib.Tests.HelperTests
             };
         }
 
+        #region VisitElement
+        [DataRow(new TypeEnum[] { TypeEnum.Boolean })]
+        [DataRow(new TypeEnum[] { TypeEnum.Integer, TypeEnum.Boolean })]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        [TestMethod]
+        public void VisitElement_XChilds_Exception(TypeEnum[] typeEnums)
+        {
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+            var parameters = Utilities.GetParameterList();
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, parameters);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [DataRow(new TypeEnum[] { TypeEnum.Integer, TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XChilds_CorrectReturnValue(TypeEnum[] typeEnums)
+        {
+            var expected = TypeEnum.Element;
+
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+            var parameters = Utilities.GetParameterList();
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            var res = helper.VisitElement(node, parameters);
+
+            Assert.AreEqual(expected, res.Type);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XParams_CorrectParamsPassedOn(TypeEnum[] ps)
+        {
+            var parameters = Utilities.GetParameterList(ps);
+            var inputParams = parameters.ToList();
+
+            var typeEnums = new TypeEnum[] { TypeEnum.Integer };
+
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+
+            var res = new List<TypeNode>();
+            var parent = Utilities.GetCommonParent(childs, typeEnums, x => res = x);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, inputParams);
+
+            res.Should().BeEquivalentTo(parameters);
+        }
+
+        [DataRow(new TypeEnum[] { TypeEnum.Integer })]
+        [TestMethod]
+        public void VisitElement_XParams_DoNotChagneParams(TypeEnum[] ps)
+        {
+            var parameters = Utilities.GetParameterList(ps);
+            var inputParams = parameters.ToList();
+
+            var typeEnums = new TypeEnum[] { TypeEnum.Integer };
+            var childs = Utilities.GetExpressionNodes(typeEnums);
+            var node = Utilities.GetElementExpression(childs);
+
+            var parent = Utilities.GetCommonParent(childs, typeEnums);
+            var helper = Utilities.GetCommonHelper(parent);
+
+            helper.VisitElement(node, inputParams);
+
+            inputParams.Should().BeEquivalentTo(parameters);
+        }
+        #endregion
+
         #region VisitAddition
         [TestMethod]
         public void VisitAddition__CorrectParameterPassDown()
@@ -981,6 +1058,74 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             helper.VisitIn(input, null);
         }
+        #endregion
+
+        #region VisitGraph
+        [TestMethod]
+        public void VisitGraph_GivenSetAndSetAndFuncAndFunc_ReturnsTypeGraph()
+        {
+            var expected = TypeEnum.Graph;
+
+            ExpressionNode child0 = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode child1 = new SetExpression(null, null, null, 1, 1);
+            ExpressionNode child2 = new IdentifierExpression("f", 2, 2);
+            ExpressionNode child3 = new IdentifierExpression("f", 2, 2);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new FunctionTypeNode(new TypeNode(TypeEnum.Element, 0, 0), new List<TypeNode>() { new TypeNode(TypeEnum.Element, 0, 0)}, 0, 0));
+            parent.Dispatch(Arg.Any<IdentifierExpression>(), Arg.Any<List<TypeNode>>()).Returns(new FunctionTypeNode(new TypeNode(TypeEnum.Element, 1, 1), new List<TypeNode>() { new TypeNode(TypeEnum.Element, 1, 1) }, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+
+            var res = helper.VisitGraph(input, null).Type;
+
+            Assert.AreEqual(expected, res);
+        }
+
+        [TestMethod]
+        public void VisitGraph_GivenSetAndSetAndElementAndElement_ThrowsException()
+        {
+            ExpressionNode child0 = new SetExpression(null, null, null, 0, 0);
+            ExpressionNode child1 = new SetExpression(null, null, null, 1, 1);
+            ExpressionNode child2 = new ElementExpression(null, 2, 2);
+            ExpressionNode child3 = new ElementExpression(null, 3, 3);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 0, 0));
+            parent.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Element, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<System.InvalidCastException>(() => helper.VisitGraph(input, null));
+        }
+
+        [TestMethod]
+        public void VisitGraph_GivenIntAndIntAndSetAndInt_ThrowsException()
+        {
+            ExpressionNode child0 = new IntegerLiteralExpression("0", 0, 0);
+            ExpressionNode child1 = new IntegerLiteralExpression("1", 1, 1);
+            ExpressionNode child2 = new SetExpression(null, null, null, 2, 2);
+            ExpressionNode child3 = new IntegerLiteralExpression("3", 3, 3);
+
+            GraphExpression input = new GraphExpression(child0, child1, child2, child3, 2, 2);
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            Assert.ThrowsException<System.InvalidCastException>(() => helper.VisitGraph(input, null));
+        }
+
         #endregion
     }
 }
