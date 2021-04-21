@@ -59,12 +59,14 @@ namespace InterpreterLib
 
         public List<Set> Interpret(AST node)
         {
-            
+            /*
             _genericHelper.SetASTRoot(node);
             List<Set> results = new List<Set>();
             foreach (ExportNode n in node.Exports) 
                 results.Add(_setHelper.ExportSet(n));
             return results;
+            */
+            return null;
         }
 
         public Set DispatchSet(ExpressionNode node, List<Object> parameters)
