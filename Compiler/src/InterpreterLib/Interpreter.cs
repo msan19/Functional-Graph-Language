@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.Component;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
@@ -174,7 +175,7 @@ namespace InterpreterLib
             T result = default;
             int returnedValues = 0;
             ConditionNode defaultCase = null;
-            ConditionNode exceptionNode = null;
+            List<ConditionNodeException> exceptionNodes = new List<ConditionNodeException>();
             foreach (ConditionNode child in node.Conditions)
             {
                 if (child.IsDefaultCase)
@@ -186,8 +187,8 @@ namespace InterpreterLib
                     {
                         result = value.Element;
                         returnedValues++;
-                        if (returnedValues > 0)
-                            exceptionNode = child;
+                        
+                        exceptionNodes.Add(new ConditionNodeException(child));
                     }
                 }
             }
@@ -199,7 +200,13 @@ namespace InterpreterLib
                 return a;
             }
             else if (returnedValues != 1)
-                throw new UnacceptedConditionsException(exceptionNode, returnedValues);
+            {
+                ComponentException exceptions = new ComponentException();
+                exceptions.Exceptions.Add(new UnacceptedConditionsException(returnedValues));
+                exceptions.Exceptions.AddRange(exceptionNodes);
+                throw exceptions;
+            }
+                
             return result;
         }
     }

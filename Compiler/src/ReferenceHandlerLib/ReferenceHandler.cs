@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ASTLib;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.Component;
 using ASTLib.Interfaces;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;

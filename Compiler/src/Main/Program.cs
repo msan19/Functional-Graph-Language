@@ -12,6 +12,7 @@ using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using ASTLib.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions.Component;
 using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 
