@@ -26,6 +26,12 @@ namespace TypeCheckerLib.Helpers
             _getType = dispatcher;
         }
 
+        // Export G(1) {"test"}
+        // Export G(1) {"test"} {V()}
+        // Export G(1) {"test"} {   } {E()}
+        // Export G(1) {"test"} {V()} {E()}
+        // Export G(1) {"test"} {V1(), V2()} {E1(), E2()}
+
         public void VisitExport(ExportNode exportNode)
         {
             TypeEnum type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;

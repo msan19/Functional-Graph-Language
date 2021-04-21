@@ -32,6 +32,88 @@ namespace TypeCheckerLib.Tests.HelperTests
         // Valid input Graph, String                    -> No exception
         // Valid input Graph, String, Emply func lists  -> No exception
         // Valid input Graph, String, x and y func lists-> No exception
+        
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidGraph_Exception()
+        {
+            var intLit = Utilities.GetIntLit();
+            var input1 = Utilities.GetExportNode(intLit);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidString_Exception()
+        {
+            var intLit = Utilities.GetIntLit();
+            var graph = Utilities.GetGraph();
+            var input1 = Utilities.GetExportNode(graph, intLit);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(4, 2)]
+        [DataRow(1, 0)]
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidVertexFunc_Exception(int funcs, int wrongIndex)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(funcs);
+            var edgeFuncs = Utilities.GetAttributeFuncs(0);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            parent.Dispatch(vertexFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(4, 2)]
+        [DataRow(1, 0)]
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidEdgeFunc_Exception(int funcs, int wrongIndex)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(0);
+            var edgeFuncs = Utilities.GetAttributeFuncs(funcs);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            parent.Dispatch(edgeFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(0, 0)]
+        [DataRow(2, 4)]
+        [TestMethod]
+        public void Export_Valid_NoException(int vertexNum, int edgeNum)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(vertexNum);
+            var edgeFuncs = Utilities.GetAttributeFuncs(edgeNum);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+
+        /*
+         * --------------------------------
+         */
 
         [TestMethod]
         public void Export__CorrectParameterPassDown()
