@@ -93,7 +93,7 @@ namespace InterpreterLib.Helpers
             int leftOperand     = _interpreter.DispatchInt(node.Children[0], parameters);
             int rightOperand    = _interpreter.DispatchInt(node.Children[1], parameters);
 
-            if (rightOperand >= 0 || leftOperand >= 0)
+            if (rightOperand >= 0)
                 throw new NegativeExponentException(node);
 
             return Pow(leftOperand, rightOperand);
