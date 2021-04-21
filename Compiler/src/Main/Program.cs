@@ -12,6 +12,7 @@ using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using ASTLib.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions.Component;
 using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 
@@ -21,7 +22,7 @@ namespace Main
     {
         public List<string> Lines { get; }
 
-        private readonly string _fileName = "test.fgl";
+        private readonly string _fileName = "setTest.fgl";
         private readonly string _input;
 
         private readonly LexParser _lexParse;

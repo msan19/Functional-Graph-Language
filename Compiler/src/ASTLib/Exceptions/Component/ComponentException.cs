@@ -1,9 +1,7 @@
-﻿using ASTLib.Nodes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.Component
 {
     public class ComponentException : Exception
     {

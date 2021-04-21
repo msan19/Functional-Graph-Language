@@ -12,5 +12,8 @@ namespace ASTLib.Exceptions
             Node = node;
         }
 
+        protected CompilerException(string message) : base(message)
+        {
+        }
     }
 }
