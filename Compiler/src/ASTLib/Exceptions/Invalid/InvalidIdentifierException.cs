@@ -1,10 +1,7 @@
-﻿using ASTLib.Nodes;
+﻿using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ASTLib.Exceptions
+namespace ASTLib.Exceptions.Invalid
 {
     public class InvalidIdentifierException : CompilerException
     {

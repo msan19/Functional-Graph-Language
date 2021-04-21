@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using ASTLib.Exceptions.Component;
 
 namespace InterpreterLib.Tests
 {
@@ -98,7 +99,8 @@ namespace InterpreterLib.Tests
             fhelper.Condition<int>(cn1, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(true, 17));
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).Returns(new MatchPair<int>(true, 18));
 
-            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.Function<int>(input1, input2));
+            
+            Assert.ThrowsException<ComponentException>(() => interpreter.Function<int>(input1, input2));
         }
 
         [TestMethod]
@@ -115,7 +117,7 @@ namespace InterpreterLib.Tests
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).
                                    Returns(new MatchPair<int>(false, 1));
 
-            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.Function<int>(input1, input2));
+            Assert.ThrowsException<ComponentException>(() => interpreter.Function<int>(input1, input2));
         }
 
         #endregion
@@ -525,5 +527,13 @@ namespace InterpreterLib.Tests
         */
         #endregion
 
+        #region ExceptionHandlingSeveralTrueConditions
+        [TestMethod]
+        public void Function__()
+        {
+            
+        }
+        
+        #endregion
     }
 }

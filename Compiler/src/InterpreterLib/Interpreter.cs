@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ASTLib;
 using ASTLib.Exceptions;
+using ASTLib.Exceptions.Component;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
@@ -29,9 +31,10 @@ namespace InterpreterLib
         private readonly ISetHelper _setHelper;
         private readonly IElementHelper _elementHelper;
         private readonly IStringHelper _stringHelper;
+        private readonly IGraphHelper _graphHelper;
 
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper, IGraphHelper graphHelper)
         {
             _functionHelper = functionHelper;
 
@@ -55,6 +58,9 @@ namespace InterpreterLib
 
             _stringHelper = stringHelper;
             _stringHelper.SetInterpreter(this);
+
+            _graphHelper = graphHelper;
+            _graphHelper.SetInterpreter(this);
         }
 
         public List<Set> Interpret(AST node)
@@ -182,6 +188,7 @@ namespace InterpreterLib
         {
             return node switch
             {
+                GraphExpression e => _graphHelper.GraphExpression(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchGraph")
             };
         }
@@ -209,7 +216,7 @@ namespace InterpreterLib
             T result = default;
             int returnedValues = 0;
             ConditionNode defaultCase = null;
-            ConditionNode exceptionNode = null;
+            List<ConditionNodeException> exceptionNodes = new List<ConditionNodeException>();
             foreach (ConditionNode child in node.Conditions)
             {
                 if (child.IsDefaultCase)
@@ -221,8 +228,8 @@ namespace InterpreterLib
                     {
                         result = value.Element;
                         returnedValues++;
-                        if (returnedValues > 0)
-                            exceptionNode = child;
+                        
+                        exceptionNodes.Add(new ConditionNodeException(child));
                     }
                 }
             }
@@ -234,7 +241,13 @@ namespace InterpreterLib
                 return a;
             }
             else if (returnedValues != 1)
-                throw new UnacceptedConditionsException(exceptionNode, returnedValues);
+            {
+                ComponentException exceptions = new ComponentException();
+                exceptions.Exceptions.Add(new UnacceptedConditionsException(returnedValues));
+                exceptions.Exceptions.AddRange(exceptionNodes);
+                throw exceptions;
+            }
+                
             return result;
         }
     }

@@ -12,6 +12,7 @@ using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using ASTLib.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using ASTLib.Exceptions.Component;
 using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 
@@ -89,7 +90,8 @@ namespace Main
                                            new InterpBooleanHelper(),
                                            new InterpreterSetHelper(),
                                            new ElementHelper(),
-                                           new StringHelper());
+                                           new StringHelper(),
+                                           new GraphHelper());
             _fileGenerator = new FileGenerator(new FileHelper());
 
             _input = FileReader.Read(_fileName);
