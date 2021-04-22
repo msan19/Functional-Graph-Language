@@ -106,7 +106,7 @@ namespace Main
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, "");
+            _fileGenerator.Export(output, false);
         }
     }
 }
