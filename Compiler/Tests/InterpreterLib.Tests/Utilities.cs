@@ -1,6 +1,8 @@
 using ASTLib;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Objects;
 using InterpreterLib.Helpers;
@@ -61,6 +63,26 @@ namespace InterpreterLib.Tests
             GenericHelper helper = GetGenericHelper(interpreter);
             helper.SetASTRoot(ast);
             return helper;
+        }
+
+        internal static CastFromIntegerExpression GetCastNode(IntegerLiteralExpression inputNode)
+        {
+            return new CastFromIntegerExpression(inputNode, 0, 0);
+        }
+
+        internal static CastFromRealExpression GetCastNode(RealLiteralExpression inputNode)
+        {
+            return new CastFromRealExpression(inputNode, 0, 0);
+        }
+
+        internal static CastFromBooleanExpression GetCastNode(BooleanLiteralExpression inputNode)
+        {
+            return new CastFromBooleanExpression(inputNode, 0, 0);
+        }
+
+        internal static IInterpreterString GetStringInterpreter()
+        {
+            return Substitute.For<IInterpreterString>();
         }
 
         public static IInterpreterGeneric GetGenericInterpreter()
