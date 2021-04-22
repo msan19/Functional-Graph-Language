@@ -24,6 +24,7 @@ namespace TypeCheckerLib.Tests
             typeChecker.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
             typeChecker.Dispatch(Arg.Any<StringLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.String, 1, 1));
             typeChecker.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            typeChecker.Dispatch(Arg.Any<GraphExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Graph, 1, 1));
         }
 
         public static T GetHelper<T>() where T : ITypeHelper, new()
@@ -35,16 +36,32 @@ namespace TypeCheckerLib.Tests
             helper.Initialize(GetAst(), parent.Dispatch);
             return helper;
         }
+
+        internal static ExportNode GetExportNode(ExpressionNode graph)
+        {
+            return new ExportNode(graph, 0, 0);
+        }
+
+        internal static ExportNode GetExportNode(GraphExpression graph, ExpressionNode name)
+        {
+            return new ExportNode(graph, name, GetExpressionNodes(), GetExpressionNodes(), 0, 0);
+        }
+
+        internal static ExportNode GetExportNode(GraphExpression graph, StringLiteralExpression name, List<ExpressionNode> vertexFuncs, List<ExpressionNode> edgeFuncs)
+        {
+            return new ExportNode(graph, name, vertexFuncs, edgeFuncs, 0, 0);
+        }
+
+        private static List<ExpressionNode> GetExpressionNodes()
+        {
+            return new List<ExpressionNode>();
+        }
+
         public static T GetHelper<T>(ITypeChecker parent) where T : ITypeHelper, new()
         {
             var helper = new T();
             helper.Initialize(GetAst(), parent.Dispatch);
             return helper;
-        }
-
-        internal static object GetIntepretorOnlyWith(IBooleanHelper boolHelper)
-        {
-            throw new NotImplementedException();
         }
 
         public static T GetHelper<T>(AST root) where T : ITypeHelper, new()
@@ -56,6 +73,20 @@ namespace TypeCheckerLib.Tests
             helper.Initialize(root, parent.Dispatch);
             return helper;
         }
+
+        internal static List<ExpressionNode> GetAttributeFuncs(int funcs)
+        {
+            var res = new List<ExpressionNode>();
+            for (int i = 0; i < funcs; i++)
+                res.Add(GetFunctionCallExpr());
+            return res;
+        }
+
+        private static FunctionCallExpression GetFunctionCallExpr()
+        {
+            return new FunctionCallExpression("", null, 0, 0);
+        }
+
         public static T GetHelper<T>(AST root, ITypeChecker parent) where T : ITypeHelper, new()
         {
             var helper = new T();
@@ -305,10 +336,31 @@ namespace TypeCheckerLib.Tests
             res.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Integer));
             res.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Real));
             res.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Boolean));
+            res.Dispatch(Arg.Any<StringLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.String));
             res.Dispatch(Arg.Any<FunctionCallExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Function));
             res.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Element));
             res.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Set));
+            res.Dispatch(Arg.Any<GraphExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Graph));
             return res;
+        }
+
+        internal static ITypeChecker GetDefaultTypeCheckerWithAttributeFunction()
+        {
+            var res = Substitute.For<ITypeChecker>();
+            res.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Integer));
+            res.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Real));
+            res.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Boolean));
+            res.Dispatch(Arg.Any<StringLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.String));
+            res.Dispatch(Arg.Any<ElementExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Element));
+            res.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Set));
+            res.Dispatch(Arg.Any<GraphExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetTypeNode(TypeEnum.Graph));
+            res.Dispatch(Arg.Any<FunctionCallExpression>(), Arg.Any<List<TypeNode>>()).Returns(GetFuncTypeNode(TypeEnum.Element, TypeEnum.String));
+            return res;
+        }
+
+        internal static FunctionTypeNode GetFuncTypeNode(TypeEnum input, TypeEnum output)
+        {
+            return new FunctionTypeNode(GetTypeNode(output), new List<TypeNode>(){ GetTypeNode(input) }, 0, 0);
         }
 
         internal static List<ElementNode> GetElement(List<string> indexIds, int refId)
@@ -352,6 +404,15 @@ namespace TypeCheckerLib.Tests
             for (int i = 0; i < elementNum; i++)
                 res.Add(GetTypeNode(TypeEnum.Element));
             return res;
+        }
+
+        internal static GraphExpression GetGraphExpression()
+        {
+            SetExpression verticesExpr = new SetExpression(null, null, null, 1, 1);
+            SetExpression edgesExpr = new SetExpression(null, null, null, 1, 1);
+            IdentifierExpression srcExpr = new IdentifierExpression(null, 1, 1);
+            IdentifierExpression dstExpr = new IdentifierExpression(null, 1, 1);
+            return new GraphExpression(verticesExpr, edgesExpr, srcExpr, dstExpr, 1, 1);
         }
     }
 }

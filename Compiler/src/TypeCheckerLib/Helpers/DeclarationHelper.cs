@@ -7,6 +7,7 @@ using ASTLib.Exceptions.Invalid;
 using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -28,23 +29,48 @@ namespace TypeCheckerLib.Helpers
 
         public void VisitExport(ExportNode exportNode)
         {
-            TypeEnum type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;
-            if (type != TypeEnum.Set)
-                throw new InvalidSetTypeException(exportNode);
-            /*
-            if (type == TypeEnum.Real)
-                return;
-            else if (type == TypeEnum.Integer)
-                InsertCastNode(exportNode);
-            else
-                throw new InvalidCastException(exportNode, type, TypeEnum.Real);
-            */
+            CheckForGraph(exportNode.ExportValue);
+            CheckForString(exportNode.FileName);
+            CheckForAttributeFunctions(exportNode.VertexLabels);
+            CheckForAttributeFunctions(exportNode.EdgeLabels);
         }
 
-        private void InsertCastNode(ExportNode node)
+        private void CheckForGraph(ExpressionNode node)
         {
-            CastFromIntegerExpression cast = new CastFromIntegerExpression(node.ExportValue, 0, 0);
-            node.ExportValue = cast;
+            var parameters = new List<TypeNode>();
+            var type = _getType(node, parameters).Type;
+            if (type != TypeEnum.Graph)
+                throw new UnmatchableTypesException(node, type, TypeEnum.Graph);
+        }
+
+        private void CheckForString(ExpressionNode node)
+        {
+            var parameters = new List<TypeNode>();
+            var type = _getType(node, parameters).Type;
+            if (type != TypeEnum.String)
+                throw new UnmatchableTypesException(node, type, TypeEnum.String);
+        }
+
+        private void CheckForAttributeFunctions(List<ExpressionNode> nodes)
+        {
+            foreach (var node in nodes)
+                CheckForAttributeFunction(node);
+        }
+
+        private void CheckForAttributeFunction(ExpressionNode node)
+        {
+            var parameters = new List<TypeNode>();
+            var typeNode = _getType(node, parameters);
+            if (typeNode.Type != TypeEnum.Function)
+                throw new UnmatchableTypesException(node, typeNode.Type, TypeEnum.Function);
+
+            var funcType = (FunctionTypeNode)typeNode;
+            if (funcType.ReturnType.Type != TypeEnum.String)
+                throw new UnmatchableTypesException(node, funcType.ReturnType.Type, TypeEnum.String);
+            if (funcType.ParameterTypes.Count != 1)
+                throw new UnmatchableTypesException(node, funcType.ParameterTypes.ConvertAll(x => x.Type), TypeEnum.Element);
+            if (funcType.ParameterTypes[0].Type != TypeEnum.Element)
+                throw new UnmatchableTypesException(node, funcType.ParameterTypes.ConvertAll(x => x.Type), TypeEnum.Element);
         }
 
         public void VisitFunction(FunctionNode functionNode)
@@ -103,7 +129,7 @@ namespace TypeCheckerLib.Helpers
             if (!AreTypesEqual(returnType, expectedType))
             {
                 if (CanMakeCast(returnType, expectedType))
-                    InsertCastNode(condition);
+                    InsertCastNode(condition, expectedType);
                 else
                     throw new InvalidCastException(condition, returnType.Type, expectedType.Type);
             }
@@ -111,15 +137,54 @@ namespace TypeCheckerLib.Helpers
 
         private bool CanMakeCast(TypeNode returnType, TypeNode expectedType)
         {
-            return returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real;
+            return returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real ||
+                   returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.String ||
+                   returnType.Type == TypeEnum.Real && expectedType.Type == TypeEnum.String ||
+                   returnType.Type == TypeEnum.Boolean && expectedType.Type == TypeEnum.String;
         }
 
-        private void InsertCastNode(ConditionNode conditionNode)
+        private void InsertCastNode(ConditionNode conditionNode, TypeNode expectedType)
         {
+            switch (expectedType.Type)
+            {
+                case TypeEnum.Real:
+                    CastToReal(conditionNode);
+                    break;
+                case TypeEnum.String:
+                    CastToString(conditionNode, expectedType);
+                    break;
+                default:
+                    throw new Exception("Invalid castFrom");
+            }
             CastFromIntegerExpression cast = new CastFromIntegerExpression(conditionNode.ReturnExpression, 0, 0);
             conditionNode.ReturnExpression = cast;
         }
-        
+
+        private void CastToString(ConditionNode node, TypeNode expectedType)
+        {
+            if (expectedType.Type == TypeEnum.Integer)
+            {
+                CastFromIntegerExpression cast1 = new CastFromIntegerExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast1;
+            }
+            else if (expectedType.Type == TypeEnum.Real)
+            {
+                CastFromRealExpression cast2 = new CastFromRealExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast2;
+            }
+            else if (expectedType.Type == TypeEnum.Boolean)
+            {
+                CastFromBooleanExpression cast3 = new CastFromBooleanExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast3;
+            }
+        }
+
+        private void CastToReal(ConditionNode node)
+        {
+            CastFromIntegerExpression cast1 = new CastFromIntegerExpression(node.ReturnExpression, 0, 0);
+            node.ReturnExpression = cast1;
+        }
+
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
             TypeNode res;

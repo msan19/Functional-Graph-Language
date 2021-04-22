@@ -7,6 +7,7 @@ using ASTLib.Exceptions.Component;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
@@ -63,13 +64,13 @@ namespace InterpreterLib
             _graphHelper.SetInterpreter(this);
         }
 
-        public List<Set> Interpret(AST node)
+        public List<LabelGraph> Interpret(AST node)
         {
-            
             _genericHelper.SetASTRoot(node);
-            List<Set> results = new List<Set>();
+            _graphHelper.SetASTRoot(node);
+            List<LabelGraph> results = new List<LabelGraph>();
             foreach (ExportNode n in node.Exports) 
-                results.Add(_setHelper.ExportSet(n));
+                results.Add(_graphHelper.ExportGraph(n));
             return results;
         }
 
@@ -172,16 +173,17 @@ namespace InterpreterLib
             };
         }
 
-        /*
-         * AdditionExpression
-         * StringLiteralExpression
-         * FunctionCallExpression
-         * IdentifierExpression*/
         public string DispatchString(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
-                AdditionExpression      e => _stringHelper.AdditionString(e, parameters),           
+                AdditionExpression        e => _stringHelper.AdditionString(e, parameters),
+                StringLiteralExpression   e => _stringHelper.LiteralString(e, parameters),
+                FunctionCallExpression    e => _genericHelper.FunctionCall<string>(e, parameters),
+                IdentifierExpression      e => _genericHelper.Identifier<string>(e, parameters),
+                CastFromIntegerExpression e => _stringHelper.CastIntegerToString(e, parameters),
+                CastFromBooleanExpression e => _stringHelper.CastBooleanToString(e, parameters),
+                CastFromRealExpression    e => _stringHelper.CastRealToString(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchString")
             };
         }
@@ -190,7 +192,9 @@ namespace InterpreterLib
         {
             return node switch
             {
-                GraphExpression e => _graphHelper.GraphExpression(e, parameters),
+                GraphExpression e           => _graphHelper.GraphExpression(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Graph>(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<Graph>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchGraph")
             };
         }

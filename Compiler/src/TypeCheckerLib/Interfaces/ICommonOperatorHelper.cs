@@ -20,5 +20,7 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitEquivalenceOperator(IEquivalenceOperator node, List<TypeNode> parameterTypes);
         TypeNode VisitElement(ElementExpression n, List<TypeNode> parameterTypes);
         TypeNode VisitIn(InExpression node, List<TypeNode> parameterTypes);
+        TypeNode VisitISetGraphField(ISetGraphField node, List<TypeNode> parameterTypes);
+        TypeNode VisitIFunctionGraphField(IFunctionGraphField node, List<TypeNode> parameterTypes);
     }
 }

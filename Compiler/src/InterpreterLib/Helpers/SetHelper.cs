@@ -20,11 +20,6 @@ namespace InterpreterLib.Helpers
             _interpreter = interpreter;
         }
 
-        public Set ExportSet(ExportNode node)
-        {
-            return _interpreter.DispatchSet(node.ExportValue, new List<Object>());
-        }
-
         public Set SetExpression(SetExpression node, List<Object> parameters)
         {
             Set set = new Set();

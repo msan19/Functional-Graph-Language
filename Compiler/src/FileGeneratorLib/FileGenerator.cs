@@ -14,12 +14,12 @@ namespace FileGeneratorLib
             _helper = helper;
         }
 
-        public void Export(List<Set> output, string file)
+        public void Export(List<LabelGraph> output, string file)
         {
             string text = "\nRESULTS:\n";
             
-            for(int i = 0; i < output.Count; i++)
-                text += $"\tOutput {i} =\n\n {GetGraphString(output[i])} \n";
+            //for(int i = 0; i < output.Count; i++)
+            //    text += $"\tOutput {i} =\n\n {GetGraphString(output[i])} \n";
             try
             {
                 Console.WriteLine(text);

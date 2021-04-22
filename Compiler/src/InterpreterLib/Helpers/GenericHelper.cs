@@ -123,6 +123,8 @@ namespace InterpreterLib.Helpers
                 return TypeEnum.Set;
             else if (t == typeof(Element))
                 return TypeEnum.Element;
+            else if (t == typeof(Graph))
+                return TypeEnum.Graph;
             else
                 throw new Exception($"Unimplemented type {t}");
         }
