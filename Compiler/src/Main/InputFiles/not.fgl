@@ -1,5 +1,0 @@
-export f1(1)
-
-f1: (integer) -> integer
-f1(a) = 
-    | not a < 1    = 50

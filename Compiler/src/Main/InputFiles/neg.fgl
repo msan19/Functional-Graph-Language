@@ -1,7 +1,0 @@
-export f1(1)
-
-f1: (integer) -> integer
-f1(a) = - f2(a)
-
-f2: (integer) -> integer
-f2(b) = b * 2
