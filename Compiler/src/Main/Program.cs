@@ -102,7 +102,7 @@ namespace Main
 
         public void Run()
         {
-            AST ast = _lexParse.Run(_input, true);
+            AST ast = _lexParse.Run(_input, false);
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
