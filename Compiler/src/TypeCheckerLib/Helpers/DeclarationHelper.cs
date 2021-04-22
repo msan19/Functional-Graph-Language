@@ -28,23 +28,48 @@ namespace TypeCheckerLib.Helpers
 
         public void VisitExport(ExportNode exportNode)
         {
-            TypeEnum type = _getType(exportNode.ExportValue, new List<TypeNode>()).Type;
-            if (type != TypeEnum.Set)
-                throw new InvalidSetTypeException(exportNode);
-            /*
-            if (type == TypeEnum.Real)
-                return;
-            else if (type == TypeEnum.Integer)
-                InsertCastNode(exportNode);
-            else
-                throw new InvalidCastException(exportNode, type, TypeEnum.Real);
-            */
+            CheckForGraph(exportNode.ExportValue);
+            CheckForString(exportNode.FileName);
+            CheckForAttributeFunctions(exportNode.VertexLabels);
+            CheckForAttributeFunctions(exportNode.EdgeLabels);
         }
 
-        private void InsertCastNode(ExportNode node)
+        private void CheckForGraph(ExpressionNode node)
         {
-            CastFromIntegerExpression cast = new CastFromIntegerExpression(node.ExportValue, 0, 0);
-            node.ExportValue = cast;
+            var parameters = new List<TypeNode>();
+            var type = _getType(node, parameters).Type;
+            if (type != TypeEnum.Graph)
+                throw new UnmatchableTypesException(node, type, TypeEnum.Graph);
+        }
+
+        private void CheckForString(ExpressionNode node)
+        {
+            var parameters = new List<TypeNode>();
+            var type = _getType(node, parameters).Type;
+            if (type != TypeEnum.String)
+                throw new UnmatchableTypesException(node, type, TypeEnum.String);
+        }
+
+        private void CheckForAttributeFunctions(List<ExpressionNode> nodes)
+        {
+            foreach (var node in nodes)
+                CheckForAttributeFunction(node);
+        }
+
+        private void CheckForAttributeFunction(ExpressionNode node)
+        {
+            var parameters = new List<TypeNode>();
+            var typeNode = _getType(node, parameters);
+            if (typeNode.Type != TypeEnum.Function)
+                throw new UnmatchableTypesException(node, typeNode.Type, TypeEnum.Function);
+
+            var funcType = (FunctionTypeNode)typeNode;
+            if (funcType.ReturnType.Type != TypeEnum.String)
+                throw new UnmatchableTypesException(node, funcType.ReturnType.Type, TypeEnum.String);
+            if (funcType.ParameterTypes.Count != 1)
+                throw new UnmatchableTypesException(node, funcType.ParameterTypes.ConvertAll(x => x.Type), TypeEnum.Element);
+            if (funcType.ParameterTypes[0].Type != TypeEnum.Element)
+                throw new UnmatchableTypesException(node, funcType.ParameterTypes.ConvertAll(x => x.Type), TypeEnum.Element);
         }
 
         public void VisitFunction(FunctionNode functionNode)
