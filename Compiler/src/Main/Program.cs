@@ -92,7 +92,7 @@ namespace Main
                                            new ElementHelper(),
                                            new StringHelper(),
                                            new GraphHelper());
-            _fileGenerator = new FileGenerator(new FileHelper());
+            _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
 
             _input = FileReader.Read(_fileName);
             _input = _input.Replace('\t', ' ');
