@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
-using InvalidCastException = ASTLib.Exceptions.InvalidCastException;
+using InvalidCastException = ASTLib.Exceptions.Invalid.InvalidCastException;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {
