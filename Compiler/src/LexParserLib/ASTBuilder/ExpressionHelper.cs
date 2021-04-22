@@ -283,7 +283,7 @@ namespace LexParserLib
 
         private ExpressionNode GetLimit(ASTNode himeNode, string comp, int adjustment)
         {
-            ExpressionNode value = DispatchExpression(himeNode.Children[0]);
+            ExpressionNode value = DispatchExpression(himeNode);
             int line = value.LineNumber;
             int letter = value.LetterNumber;
             if (comp == "<")
