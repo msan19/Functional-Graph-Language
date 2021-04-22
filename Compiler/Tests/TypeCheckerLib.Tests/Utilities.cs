@@ -24,6 +24,7 @@ namespace TypeCheckerLib.Tests
             typeChecker.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
             typeChecker.Dispatch(Arg.Any<StringLiteralExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.String, 1, 1));
             typeChecker.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            typeChecker.Dispatch(Arg.Any<GraphExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Graph, 1, 1));
         }
 
         public static T GetHelper<T>() where T : ITypeHelper, new()
@@ -352,6 +353,15 @@ namespace TypeCheckerLib.Tests
             for (int i = 0; i < elementNum; i++)
                 res.Add(GetTypeNode(TypeEnum.Element));
             return res;
+        }
+
+        internal static GraphExpression GetGraphExpression()
+        {
+            SetExpression verticesExpr = new SetExpression(null, null, null, 1, 1);
+            SetExpression edgesExpr = new SetExpression(null, null, null, 1, 1);
+            IdentifierExpression srcExpr = new IdentifierExpression(null, 1, 1);
+            IdentifierExpression dstExpr = new IdentifierExpression(null, 1, 1);
+            return new GraphExpression(verticesExpr, edgesExpr, srcExpr, dstExpr, 1, 1);
         }
     }
 }
