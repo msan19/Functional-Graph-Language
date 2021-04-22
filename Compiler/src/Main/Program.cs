@@ -22,7 +22,7 @@ namespace Main
 {
     public class Program
     {
-        public List<string> Lines { get; }
+        private List<string> _lines;
 
         private List<string> _fileNames;
         private bool _shouldThrowExceptions;
@@ -31,8 +31,6 @@ namespace Main
         private bool _printOutput;
         private bool _saveOutput;
         private bool _projectFolder;
-
-        private readonly string _input;
 
         private readonly ILexParser _lexParse;
         private readonly IReferenceHandler _referenceHandler;
@@ -64,13 +62,10 @@ namespace Main
                                            new InterpreterSetHelper(),
                                            new ElementHelper(),
                                            new StringHelper(),
-                                           new GraphHelper());
+                                           new GraphHelper(),
+                                           !_shouldThrowExceptions);
             _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
 
-            _input = _fileGenerator.Read(_fileNames, _projectFolder);
-            _input = _input.Replace('\t', ' ');
-            Lines = _input.Split("\n").ToList();
-            if(_printCode) Console.WriteLine(_input);
         }
 
         private void Compile()
@@ -83,7 +78,7 @@ namespace Main
 
         private void RunWithExceptionPrinting()
         {
-            IExceptionPrinter exceptionPrinter = new ExceptionPrinter(Lines);
+            IExceptionPrinter exceptionPrinter = new ExceptionPrinter(_lines);
 
             try
             {
@@ -101,21 +96,40 @@ namespace Main
             catch (ParserException e)
             {
                 exceptionPrinter.Print(e);
+            } catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
         public void Run()
         {
-            AST ast = _lexParse.Run(_input, _printParseTree);
-            _referenceHandler.InsertReferences(ast);
-            _typeChecker.CheckTypes(ast);
-            var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, _printOutput, _saveOutput, _projectFolder);
+            string input = GetInput();
+
+            if (input == "")
+                Console.WriteLine("No input files have been given!");
+            else
+            {
+                AST ast = _lexParse.Run(input, _printParseTree);
+                _referenceHandler.InsertReferences(ast);
+                _typeChecker.CheckTypes(ast);
+                var output = _interpreter.Interpret(ast);
+                _fileGenerator.Export(output, _printOutput, _saveOutput, _projectFolder);
+            }
+        }
+
+        private string GetInput()
+        {
+            string input = _fileGenerator.Read(_fileNames, _projectFolder);
+            input = input.Replace('\t', ' ');
+            _lines = input.Split("\n").ToList();
+            if (_printCode) Console.WriteLine(input);
+            return input;
         }
 
         private bool ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Cycle.fgl", "bTree.fgl" };
+            _fileNames = new List<string>();
             _saveOutput = true;
             foreach (string s in args)
             {

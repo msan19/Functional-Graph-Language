@@ -35,9 +35,17 @@ namespace InterpreterLib
         private readonly IStringHelper _stringHelper;
         private readonly IGraphHelper _graphHelper;
 
+        private readonly bool _catchExceptions;
+        private readonly ComponentException _exceptions;
 
-        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, IIntegerHelper integerHelper, IRealHelper realHelper, IBooleanHelper booleanHelper, ISetHelper setHelper, IElementHelper elementHelper, IStringHelper stringHelper, IGraphHelper graphHelper)
+        public Interpreter(IGenericHelper genericHelper, IFunctionHelper functionHelper, 
+                           IIntegerHelper integerHelper, IRealHelper realHelper, 
+                           IBooleanHelper booleanHelper, ISetHelper setHelper, 
+                           IElementHelper elementHelper, IStringHelper stringHelper, 
+                           IGraphHelper graphHelper, bool catchExceptions)
         {
+            _catchExceptions = catchExceptions;
+            _exceptions = new ComponentException();
             _functionHelper = functionHelper;
 
             _integerHelper = integerHelper;
@@ -70,9 +78,31 @@ namespace InterpreterLib
             _genericHelper.SetASTRoot(node);
             _graphHelper.SetASTRoot(node);
             List<LabelGraph> results = new List<LabelGraph>();
-            foreach (ExportNode n in node.Exports) 
-                results.Add(_graphHelper.ExportGraph(n));
+            foreach (ExportNode n in node.Exports)
+                results.Add(HandleExceptions(n));
+
+            if (!_exceptions.IsEmpty)
+                throw _exceptions;
+
             return results;
+        }
+
+        private LabelGraph HandleExceptions(ExportNode n)
+        {
+            if (_catchExceptions)
+            {
+                try
+                {
+                    return _graphHelper.ExportGraph(n);
+                }
+                catch (CompilerException e)
+                {
+                    _exceptions.Add(e);
+                    return null;
+                }
+            }
+            else
+                return _graphHelper.ExportGraph(n);
         }
 
         public Set DispatchSet(ExpressionNode node, List<Object> parameters)
