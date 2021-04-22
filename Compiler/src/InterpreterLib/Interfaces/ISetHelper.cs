@@ -6,6 +6,7 @@ using System.Text;
 using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 
 namespace InterpreterLib.Interfaces
 {

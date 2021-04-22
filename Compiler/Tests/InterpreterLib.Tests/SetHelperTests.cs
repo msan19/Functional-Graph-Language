@@ -15,7 +15,6 @@ using System.Linq;
 using FluentAssertions.Common;
 using System.Runtime.CompilerServices;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFIelds;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 
 namespace InterpreterLib.Tests

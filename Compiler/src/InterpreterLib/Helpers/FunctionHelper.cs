@@ -7,6 +7,7 @@ using InterpreterLib.Interfaces;
 using ASTLib.Nodes.TypeNodes;
 using ASTLib.Objects;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 
 namespace InterpreterLib.Helpers
 {

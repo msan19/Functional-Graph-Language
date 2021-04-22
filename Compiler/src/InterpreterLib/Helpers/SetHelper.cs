@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
+
 
 namespace InterpreterLib.Helpers
 {
@@ -176,6 +178,11 @@ namespace InterpreterLib.Helpers
         private bool ContainsMoreElements(List<Element> elements, int i)
         {
             return !(i >= elements.Count);
+        }
+
+        public Set ExportSet(ExportNode node)
+        {
+            throw new NotImplementedException();
         }
     }
 }
