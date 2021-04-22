@@ -55,12 +55,24 @@ namespace Main
                     _printCode = true;
                 else if (s == "output")
                     _printOutput = true;
+                else if (s == "help")
+                    PrintHelp();
                 else
                     _fileNames.Add(s);
             }
             
             return args.Length >= 1 && args.Contains("throw");
         }
+
+        private void PrintHelp()
+        {
+            Console.WriteLine("Compiler options:");
+            Console.WriteLine("\t'help'\t"      + "\tThe list of compiler option is shown");
+            Console.WriteLine("\t'throw'\t"     + "\tExceptions are unhandled");
+            Console.WriteLine("\t'parseTree'" + "\tThe parse tree is shown");
+            Console.WriteLine("\t'code'\t"      + "\tThe source code is shown");
+            Console.WriteLine("\t'output'"    + "\tThe output is shown");
+        } 
 
         private void Compile()
         {
