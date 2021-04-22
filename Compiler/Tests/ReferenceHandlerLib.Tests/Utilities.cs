@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using ASTLib.Nodes;
@@ -32,6 +33,11 @@ namespace ReferenceHandlerLib.Tests
         public static FunctionTypeNode GetFunctionTypeNodeWith(TypeNode returnType, List<TypeNode> paramTypes)
         {
             return new FunctionTypeNode(returnType, paramTypes, 0, 0);
+        }
+
+        internal static StringLiteralExpression GetStringLit()
+        {
+            return new StringLiteralExpression("hej", 0, 0);
         }
     }
 }

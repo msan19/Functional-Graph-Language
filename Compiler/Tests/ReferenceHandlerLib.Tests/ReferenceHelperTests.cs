@@ -29,7 +29,7 @@ namespace ReferenceHandlerLib.Tests
         {
             System.Type expected = typeof(IntegerLiteralExpression);
             IntegerLiteralExpression integerLiteralExpression = new IntegerLiteralExpression("2", 1, 1);
-            ExportNode input = new ExportNode(integerLiteralExpression, 3, 3);
+            ExportNode input = new ExportNode(integerLiteralExpression, Utilities.GetStringLit(), new List<ExpressionNode>(), new List<ExpressionNode>(), 3, 3);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = BuildHelper(parent);
 
@@ -44,7 +44,7 @@ namespace ReferenceHandlerLib.Tests
         {
             System.Type expected = typeof(RealLiteralExpression);
             RealLiteralExpression realLiteralExpression = new RealLiteralExpression("2", 1, 1);
-            ExportNode input = new ExportNode(realLiteralExpression, 3, 3);
+            ExportNode input = new ExportNode(realLiteralExpression, Utilities.GetStringLit(), new List<ExpressionNode>(), new List<ExpressionNode>(), 3, 3);
             IReferenceHandler parent = Substitute.For<IReferenceHandler>();
             ReferenceHelper referenceHelper = BuildHelper(parent);
 
