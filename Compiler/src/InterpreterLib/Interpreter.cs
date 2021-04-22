@@ -7,6 +7,7 @@ using ASTLib.Exceptions.Component;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
@@ -169,15 +170,23 @@ namespace InterpreterLib
         }
 
         /*
-         * AdditionExpression
          * StringLiteralExpression
          * FunctionCallExpression
-         * IdentifierExpression*/
+         * IdentifierExpression
+         * CastFromIntegerExpression
+         * CastFromBooleanExpression
+         * CastFromRealExpression*/
         public string DispatchString(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
-                AdditionExpression      e => _stringHelper.AdditionString(e, parameters),           
+                AdditionExpression        e => _stringHelper.AdditionString(e, parameters),
+                StringLiteralExpression   e => _stringHelper.LiteralString(e, parameters),
+                FunctionCallExpression    e => _stringHelper.FunctionCallString(e, parameters),
+                IdentifierExpression      e => _stringHelper.IdentifierString(e, parameters),
+                CastFromIntegerExpression e => _stringHelper.CastIntegerToString(e, parameters),
+                CastFromBooleanExpression e => _stringHelper.CastBooleanToString(e, parameters),
+                CastFromRealExpression    e => _stringHelper.CastRealToString(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchString")
             };
         }
