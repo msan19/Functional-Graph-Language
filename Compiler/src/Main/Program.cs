@@ -139,7 +139,7 @@ namespace Main
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, false);
+            _fileGenerator.Export(output, true, true);
         }
     }
 }
