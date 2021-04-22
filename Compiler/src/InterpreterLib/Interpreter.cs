@@ -169,21 +169,14 @@ namespace InterpreterLib
             };
         }
 
-        /*
-         * StringLiteralExpression
-         * FunctionCallExpression
-         * IdentifierExpression
-         * CastFromIntegerExpression
-         * CastFromBooleanExpression
-         * CastFromRealExpression*/
         public string DispatchString(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
                 AdditionExpression        e => _stringHelper.AdditionString(e, parameters),
                 StringLiteralExpression   e => _stringHelper.LiteralString(e, parameters),
-                FunctionCallExpression    e => _stringHelper.FunctionCallString(e, parameters),
-                IdentifierExpression      e => _stringHelper.IdentifierString(e, parameters),
+                FunctionCallExpression    e => _genericHelper.FunctionCall<string>(e, parameters),
+                IdentifierExpression      e => _genericHelper.Identifier<string>(e, parameters),
                 CastFromIntegerExpression e => _stringHelper.CastIntegerToString(e, parameters),
                 CastFromBooleanExpression e => _stringHelper.CastBooleanToString(e, parameters),
                 CastFromRealExpression    e => _stringHelper.CastRealToString(e, parameters),

@@ -13,8 +13,6 @@ namespace InterpreterLib.Interfaces
 
         string AdditionString(AdditionExpression node, List<Object> parameters);
         string LiteralString(StringLiteralExpression node, List<Object> parameters);
-        string FunctionCallString(FunctionCallExpression node, List<Object> parameters);
-        string IdentifierString(IdentifierExpression node, List<Object> parameters);
         string CastIntegerToString(CastFromIntegerExpression node, List<Object> parameters);
         string CastBooleanToString(CastFromBooleanExpression node, List<Object> parameters);
         string CastRealToString(CastFromRealExpression node, List<Object> parameters);
