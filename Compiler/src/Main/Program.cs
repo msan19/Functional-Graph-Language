@@ -27,6 +27,7 @@ namespace Main
         private bool _printCode;
         private bool _printParseTree;
         private bool _printOutput;
+        private bool _saveOutput;
 
         private readonly string _input;
 
@@ -44,7 +45,8 @@ namespace Main
 
         private bool ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Star.fgl"};
+            _fileNames = new List<string>() { "Cycle.fgl"};
+            _saveOutput = true;
             foreach(string s in args)
             {
                 if (s == "throw")
@@ -55,6 +57,8 @@ namespace Main
                     _printCode = true;
                 else if (s == "output")
                     _printOutput = true;
+                else if (s == "noWrite")
+                    _saveOutput = false;
                 else if (s == "help")
                     PrintHelp();
                 else
@@ -69,9 +73,10 @@ namespace Main
             Console.WriteLine("Compiler options:");
             Console.WriteLine("\t'help'\t"      + "\tThe list of compiler option is shown");
             Console.WriteLine("\t'throw'\t"     + "\tExceptions are unhandled");
-            Console.WriteLine("\t'parseTree'" + "\tThe parse tree is shown");
+            Console.WriteLine("\t'parseTree'"   + "\tThe parse tree is shown");
             Console.WriteLine("\t'code'\t"      + "\tThe source code is shown");
-            Console.WriteLine("\t'output'"    + "\tThe output is shown");
+            Console.WriteLine("\t'output'"      + "\tThe output is shown");
+            Console.WriteLine("\t'noWrite'"     + "\tThe output is no longer saved");
         } 
 
         private void Compile()
@@ -139,7 +144,7 @@ namespace Main
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, true, true);
+            _fileGenerator.Export(output, _printOutput, _saveOutput);
         }
     }
 }

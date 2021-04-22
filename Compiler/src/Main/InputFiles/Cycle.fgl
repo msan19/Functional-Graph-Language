@@ -9,7 +9,9 @@ Cycle(n) = ({v[i] | 0<=[i]<n}, {e[i] | 0<=[i]<n}, src, dst)
 
 src: (element) -> element
 src(e) =
-	| e[i] = e
+	| e[i], i < 0 = e
+	| e[i], i == 0 = e
+	| e[i], i > 0 = e
 
 dst: (element) -> element
 dst(e) =
