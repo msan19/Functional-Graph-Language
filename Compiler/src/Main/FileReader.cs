@@ -14,17 +14,14 @@ namespace Main
         {
             string s = "";
             foreach (string f in fileNames)
-                s += "//File: " + f + "\n" + Read(f) + "\n";
+                s += "\n//File: " + f + "\n" + Read(f) + "\n\n";
             return s;
         }
 
         public string Read(string fileName)
         {
             string path = "";
-            Console.WriteLine($"OS: {Environment.OSVersion}");
-            
             string projectDirectory = GetProjectDirectory();
-            Console.WriteLine(projectDirectory);
 
             if (IsUnix)
                 path = $"{projectDirectory}/{INPUT_FOLDER_NAME}/{fileName}";
