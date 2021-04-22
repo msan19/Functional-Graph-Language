@@ -46,6 +46,7 @@ namespace Main
         private bool ParseArgs(string[] args)
         {
             _fileNames = new List<string>() { "Star.fgl"};
+            _saveOutput = true;
             foreach(string s in args)
             {
                 if (s == "throw")
@@ -57,7 +58,7 @@ namespace Main
                 else if (s == "output")
                     _printOutput = true;
                 else if (s == "noWrite")
-                    _printOutput = true;
+                    _saveOutput = false;
                 else if (s == "help")
                     PrintHelp();
                 else
@@ -143,7 +144,7 @@ namespace Main
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, true, true);
+            _fileGenerator.Export(output, _printOutput, _saveOutput);
         }
     }
 }
