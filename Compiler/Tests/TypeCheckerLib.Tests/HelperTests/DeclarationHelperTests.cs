@@ -22,33 +22,122 @@ namespace TypeCheckerLib.Tests.HelperTests
     public class DeclarationHelperTests
     {
         #region Export
+        // GetType is called with an empty list of TypeNode (Check that length == 0)
+        // Param 1 not Graph    -> Throw Exception
+        // Param 2 not String   -> Throw Exception
+
+        // One of Param 3 not empty or (elem->string) func  -> Throw Exception
+        // One of Param 4 not empty or (elem->string) func  -> Throw Exception
+
+        // Valid input Graph, String                    -> No exception
+        // Valid input Graph, String, Emply func lists  -> No exception
+        // Valid input Graph, String, x and y func lists-> No exception
+        
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidGraph_Exception()
+        {
+            var intLit = Utilities.GetIntLit();
+            var input1 = Utilities.GetExportNode(intLit);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidString_Exception()
+        {
+            var intLit = Utilities.GetIntLit();
+            var graph = Utilities.GetGraph();
+            var input1 = Utilities.GetExportNode(graph, intLit);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(4, 2)]
+        [DataRow(1, 0)]
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidVertexFunc_Exception(int funcs, int wrongIndex)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(funcs);
+            var edgeFuncs = Utilities.GetAttributeFuncs(0);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            parent.Dispatch(vertexFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(4, 2)]
+        [DataRow(1, 0)]
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void Export_InvalidEdgeFunc_Exception(int funcs, int wrongIndex)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(0);
+            var edgeFuncs = Utilities.GetAttributeFuncs(funcs);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            parent.Dispatch(edgeFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+        [DataRow(0, 0)]
+        [DataRow(2, 4)]
+        [TestMethod]
+        public void Export_Valid_NoException(int vertexNum, int edgeNum)
+        {
+            var graph = Utilities.GetGraph();
+            var name = Utilities.GetStringLit();
+            var vertexFuncs = Utilities.GetAttributeFuncs(vertexNum);
+            var edgeFuncs = Utilities.GetAttributeFuncs(edgeNum);
+            var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
+
+            var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
+            var helper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            helper.VisitExport(input1);
+        }
+
+        /*
+         * --------------------------------
+         */
+
         [TestMethod]
         public void Export__CorrectParameterPassDown()
         {
             var expected = new List<TypeNode>();
-            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             List<TypeNode> res = null;
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Set, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
             
             declarationHelper.VisitExport(input1);
 
             res.Should().BeEquivalentTo(expected);
         }
 
-        // Real     -> 
-        // Integer  ->  
-        // Integer  -> Insert Cast Node
-        // Func     -> Throw Exception
         [TestMethod]
         [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Real_Nothing()
         {
-            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitExport(input1);
         }
@@ -57,10 +146,10 @@ namespace TypeCheckerLib.Tests.HelperTests
         [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Integer_Nothing()
         {
-            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitExport(input1);
         }
@@ -68,10 +157,10 @@ namespace TypeCheckerLib.Tests.HelperTests
         [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Integer_InsertCastNode()
         {
-            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitExport(input1);
         }
@@ -79,10 +168,10 @@ namespace TypeCheckerLib.Tests.HelperTests
         [ExpectedException(typeof(InvalidSetTypeException))]
         public void Export_Func_ThrowException()
         {
-            ExportNode input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             declarationHelper.VisitExport(input1);
         }
@@ -90,10 +179,10 @@ namespace TypeCheckerLib.Tests.HelperTests
         [TestMethod]
         public void Export_Boolean_ThrowsException()
         {
-            ExportNode input = new ExportNode(new BooleanLiteralExpression(true, 0, 0), 0, 0);
-            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            var input = new ExportNode(new BooleanLiteralExpression(true, 0, 0), 0, 0);
+            var parent = Substitute.For<ITypeChecker>();
             parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
-            IDeclarationHelper declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             Assert.ThrowsException<InvalidSetTypeException>(() => declarationHelper.VisitExport(input));
         }
