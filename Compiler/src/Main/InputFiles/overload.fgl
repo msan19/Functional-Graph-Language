@@ -1,7 +1,0 @@
-export f(1)
-
-f: (integer) -> integer
-f(a) = - a
-
-f: (real) -> real
-f(b) = b * 2
