@@ -124,7 +124,7 @@ namespace Main
                                            new ElementHelper(),
                                            new StringHelper(),
                                            new GraphHelper());
-            _fileGenerator = new FileGenerator(new FileHelper());
+            _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
             FileReader fileReader = new FileReader();
 
             _input = fileReader.Read(_fileNames);

@@ -8,7 +8,7 @@ using ASTLib.Objects;
 namespace FileGeneratorLib.Tests
 {
     [TestClass]
-    public class FileGeneratorTests
+    public class GmlGeneratorTests
     {
         [TestMethod]
         public void HandleLabelGraph_WithoutAdditionalLabels_DstSrcEvenNumber_()
@@ -18,13 +18,11 @@ namespace FileGeneratorLib.Tests
             string[,] vertexLabels = new string[,] { };
             string[,] edgeLabels = new string[,] { };
             LabelGraph labelGraph = new LabelGraph("test1", srcList, dstList, vertexLabels, edgeLabels, 4);
-            List<LabelGraph> labelGraphs = new List<LabelGraph>() { labelGraph };
-            FileGenerator fileGenerator = new FileGenerator(new FileHelper());
+
+            GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = ReadFile("expected1.gml");
 
-            fileGenerator.Export(labelGraphs, true);
-            
-            string actual = ReadFile("test1.gml");
+            string actual = gmlGenerator.Generate(labelGraph);
             Assert.AreEqual(expected, actual);
         }
 
@@ -42,12 +40,14 @@ namespace FileGeneratorLib.Tests
             {
                 { "someLabelE: 1", "someLabelE: 2" }
             };
-            LabelGraph labelGraph = new LabelGraph("test", srcList, dstList, vertexLabels, edgeLabels, 4);
+            LabelGraph labelGraph = new LabelGraph("test2", srcList, dstList, vertexLabels, edgeLabels, 4);
+            
+            GmlGenerator gmlGenerator = new GmlGenerator();
+            string expected = ReadFile("expected2.gml");
 
-            FileGenerator fileGenerator = new FileGenerator(new FileHelper());
-
-            List<LabelGraph> labelGraphs = new List<LabelGraph>() { labelGraph };
-            fileGenerator.Export(labelGraphs, false);
+            string actual = gmlGenerator.Generate(labelGraph);
+            
+            Assert.AreEqual(expected, actual);
         }
 
         private string ReadFile(string fileName)

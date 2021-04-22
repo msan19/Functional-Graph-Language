@@ -128,6 +128,8 @@ namespace InterpreterLib.Helpers
                 return TypeEnum.Element;
             else if (t == typeof(Graph))
                 return TypeEnum.Graph;
+            else if (t == typeof(string))
+                return TypeEnum.String;
             else
                 throw new Exception($"Unimplemented type {t}");
         }

@@ -21,10 +21,7 @@ namespace Main
         public string Read(string fileName)
         {
             string path = "";
-            Console.WriteLine($"OS: {Environment.OSVersion}");
-            
             string projectDirectory = GetProjectDirectory();
-            Console.WriteLine(projectDirectory);
 
             if (IsUnix)
                 path = $"{projectDirectory}/{INPUT_FOLDER_NAME}/{fileName}";
