@@ -63,16 +63,14 @@ namespace InterpreterLib
             _graphHelper.SetInterpreter(this);
         }
 
-        public List<Set> Interpret(AST node)
+        public List<LabelGraph> Interpret(AST node)
         {
-            /*
             _genericHelper.SetASTRoot(node);
-            List<Set> results = new List<Set>();
+            _graphHelper.SetASTRoot(node);
+            List<LabelGraph> results = new List<LabelGraph>();
             foreach (ExportNode n in node.Exports) 
-                results.Add(_setHelper.ExportSet(n));
+                results.Add(_graphHelper.ExportGraph(n));
             return results;
-            */
-            return null;
         }
 
         public Set DispatchSet(ExpressionNode node, List<Object> parameters)
@@ -188,7 +186,9 @@ namespace InterpreterLib
         {
             return node switch
             {
-                GraphExpression e => _graphHelper.GraphExpression(e, parameters),
+                GraphExpression e           => _graphHelper.GraphExpression(e, parameters),
+                FunctionCallExpression e    => _genericHelper.FunctionCall<Graph>(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<Graph>(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchGraph")
             };
         }

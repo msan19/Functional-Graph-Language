@@ -15,6 +15,8 @@ namespace ASTLib.Nodes
         public ExportNode(ExpressionNode exportValue, int line, int letter) : base(line, letter)
         {
             ExportValue = exportValue;
+            VertexLabels = new List<ExpressionNode>();
+            EdgeLabels = new List<ExpressionNode>();
         }
 
         public ExportNode(ExpressionNode exportValue, ExpressionNode fileName,

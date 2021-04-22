@@ -12,6 +12,6 @@ namespace InterpreterLib.Interfaces
         IInterpreterGeneric, IInterpreterInteger, IInterpreterReal, IInterpreterBoolean
         , IInterpreterFunction, IInterpreterSet, IInterpreterElement, IInterpreterString, IInterpreterGraph
     {
-        List<Set> Interpret(AST node);
+        List<LabelGraph> Interpret(AST node);
     }
 }
