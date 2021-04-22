@@ -33,17 +33,7 @@ namespace InterpreterLib.Helpers
 
         public string LiteralString(StringLiteralExpression node, List<Object> parameters)
         {
-            throw new NotImplementedException();
-        }
-
-        public string FunctionCallString(FunctionCallExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string IdentifierString(IdentifierExpression node, List<Object> parameters)
-        {
-            throw new NotImplementedException();
+            return node.Value;
         }
 
         public string CastIntegerToString(CastFromIntegerExpression node, List<Object> parameters)
