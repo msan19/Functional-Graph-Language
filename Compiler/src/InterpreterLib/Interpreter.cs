@@ -10,6 +10,7 @@ using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -83,6 +84,8 @@ namespace InterpreterLib
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
+                VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
+                EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -143,6 +146,8 @@ namespace InterpreterLib
             {
                 IdentifierExpression e      => _functionHelper.IdentifierFunction(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Function>(e, parameters),
+                SrcGraphField e             => _functionHelper.SrcField(e, parameters),
+                DstGraphField e             => _functionHelper.DstField(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
