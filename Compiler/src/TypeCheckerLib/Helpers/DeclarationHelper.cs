@@ -7,6 +7,7 @@ using ASTLib.Exceptions.Invalid;
 using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
@@ -114,7 +115,7 @@ namespace TypeCheckerLib.Helpers
 
         private void CheckCondition(ConditionNode condition, List<TypeNode> newParams)
         {
-            if (!condition.IsDefaultCase)
+            if (!condition.IsDefaultCase && condition.Condition != null)
             {
                 TypeEnum conditionType = _getType(condition.Condition, newParams).Type;
                 if (conditionType != TypeEnum.Boolean)
@@ -128,7 +129,7 @@ namespace TypeCheckerLib.Helpers
             if (!AreTypesEqual(returnType, expectedType))
             {
                 if (CanMakeCast(returnType, expectedType))
-                    InsertCastNode(condition);
+                    InsertCastNode(condition, expectedType);
                 else
                     throw new InvalidCastException(condition, returnType.Type, expectedType.Type);
             }
@@ -136,15 +137,54 @@ namespace TypeCheckerLib.Helpers
 
         private bool CanMakeCast(TypeNode returnType, TypeNode expectedType)
         {
-            return returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real;
+            return returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.Real ||
+                   returnType.Type == TypeEnum.Integer && expectedType.Type == TypeEnum.String ||
+                   returnType.Type == TypeEnum.Real && expectedType.Type == TypeEnum.String ||
+                   returnType.Type == TypeEnum.Boolean && expectedType.Type == TypeEnum.String;
         }
 
-        private void InsertCastNode(ConditionNode conditionNode)
+        private void InsertCastNode(ConditionNode conditionNode, TypeNode expectedType)
         {
+            switch (expectedType.Type)
+            {
+                case TypeEnum.Real:
+                    CastToReal(conditionNode);
+                    break;
+                case TypeEnum.String:
+                    CastToString(conditionNode, expectedType);
+                    break;
+                default:
+                    throw new Exception("Invalid castFrom");
+            }
             CastFromIntegerExpression cast = new CastFromIntegerExpression(conditionNode.ReturnExpression, 0, 0);
             conditionNode.ReturnExpression = cast;
         }
-        
+
+        private void CastToString(ConditionNode node, TypeNode expectedType)
+        {
+            if (expectedType.Type == TypeEnum.Integer)
+            {
+                CastFromIntegerExpression cast1 = new CastFromIntegerExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast1;
+            }
+            else if (expectedType.Type == TypeEnum.Real)
+            {
+                CastFromRealExpression cast2 = new CastFromRealExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast2;
+            }
+            else if (expectedType.Type == TypeEnum.Boolean)
+            {
+                CastFromBooleanExpression cast3 = new CastFromBooleanExpression(node.ReturnExpression, 0, 0);
+                node.ReturnExpression = cast3;
+            }
+        }
+
+        private void CastToReal(ConditionNode node)
+        {
+            CastFromIntegerExpression cast1 = new CastFromIntegerExpression(node.ReturnExpression, 0, 0);
+            node.ReturnExpression = cast1;
+        }
+
         public TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes)
         {
             TypeNode res;

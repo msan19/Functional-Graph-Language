@@ -11,6 +11,10 @@ namespace InterpreterLib.Interfaces
 
         string DispatchString(ExpressionNode node, List<object> parameters);
 
+        bool DispatchBoolean(ExpressionNode node, List<Object> parameters);
+        double DispatchReal(ExpressionNode node, List<Object> parameters);
+        int DispatchInt(ExpressionNode node, List<Object> parameters);
+
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
     }
 }

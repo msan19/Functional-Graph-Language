@@ -22,5 +22,6 @@ namespace TypeCheckerLib.Interfaces
         TypeNode VisitIn(InExpression node, List<TypeNode> parameterTypes);
         TypeNode VisitISetGraphField(ISetGraphField node, List<TypeNode> parameterTypes);
         TypeNode VisitIFunctionGraphField(IFunctionGraphField node, List<TypeNode> parameterTypes);
+        TypeNode VisitGraph(GraphExpression node, List<TypeNode> parameterTypes);
     }
 }

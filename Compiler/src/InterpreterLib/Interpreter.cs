@@ -7,8 +7,10 @@ using ASTLib.Exceptions.Component;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -82,6 +84,8 @@ namespace InterpreterLib
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
+                VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
+                EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -142,6 +146,8 @@ namespace InterpreterLib
             {
                 IdentifierExpression e      => _functionHelper.IdentifierFunction(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Function>(e, parameters),
+                SrcGraphField e             => _functionHelper.SrcField(e, parameters),
+                DstGraphField e             => _functionHelper.DstField(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
@@ -168,16 +174,17 @@ namespace InterpreterLib
             };
         }
 
-        /*
-         * AdditionExpression
-         * StringLiteralExpression
-         * FunctionCallExpression
-         * IdentifierExpression*/
         public string DispatchString(ExpressionNode node, List<Object> parameters)
         {
             return node switch
             {
-                AdditionExpression      e => _stringHelper.AdditionString(e, parameters),           
+                AdditionExpression        e => _stringHelper.AdditionString(e, parameters),
+                StringLiteralExpression   e => _stringHelper.LiteralString(e, parameters),
+                FunctionCallExpression    e => _genericHelper.FunctionCall<string>(e, parameters),
+                IdentifierExpression      e => _genericHelper.Identifier<string>(e, parameters),
+                CastFromIntegerExpression e => _stringHelper.CastIntegerToString(e, parameters),
+                CastFromBooleanExpression e => _stringHelper.CastBooleanToString(e, parameters),
+                CastFromRealExpression    e => _stringHelper.CastRealToString(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchString")
             };
         }

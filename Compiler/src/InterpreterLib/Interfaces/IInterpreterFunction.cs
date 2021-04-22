@@ -15,5 +15,8 @@ namespace InterpreterLib.Interfaces
         object Dispatch(ExpressionNode node, List<object> parameters, TypeEnum type);
 
         bool DispatchBoolean(ExpressionNode node, List<object> parameters);
+
+        Graph DispatchGraph(ExpressionNode node, List<Object> parameters);
+
     }
 }

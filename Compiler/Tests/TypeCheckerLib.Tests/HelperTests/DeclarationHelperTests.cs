@@ -903,6 +903,60 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(1)]
         [DataRow(3)]
         [TestMethod]
+        public void CheckConditionNode_xElementsWithOneIndexWhereExpectedTypeStringReturnExprBool_AddToParameters(int elementNum)
+        {
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.String);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetBoolLit(true);
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
+        public void CheckConditionNode_xElementsWithOneIndexWhereExpectedTypeStringReturnExprReal_AddToParameters(int elementNum)
+        {
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.String);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetRealLit();
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
         public void CheckConditionNode_ElementWithXIndicies_AddToParameters(int indexNum)
         {
             var indicies = Utilities.GetListWithXStrings(indexNum);
@@ -958,6 +1012,22 @@ namespace TypeCheckerLib.Tests.HelperTests
             var returnExpr = Utilities.GetIntLit();
             var conditionExpr = Utilities.GetBoolLit(true);
             var conditionNode = Utilities.GetConditionNode(conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+
+        [TestMethod]
+        public void CheckConditionNode_NoCondition_NoException()
+        {
+            var parameters = Utilities.GetTypeNodeListWithXElements(1);
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElement(Utilities.GetListWithXStrings(1), 0);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionNode = Utilities.GetConditionNode(elements, null, returnExpr);
 
             var parent = Utilities.GetDefaultTypeChecker();
             var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
