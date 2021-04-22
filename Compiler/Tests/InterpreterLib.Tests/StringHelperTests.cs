@@ -22,6 +22,7 @@ namespace InterpreterLib.Tests
         #region AdditionString
         [DataRow("a", "b", "ab")]
         [DataRow("Label", "1", "Label1")]
+        [DataRow("test", "", "test")]
         [TestMethod]
         public void AdditionString_StringAndString_ReturnsConcatenatedString(string input1, string input2, string expected)
         {
@@ -38,5 +39,32 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
+
+        #region LiteralString
+
+        [DataRow("test", "test")]
+        [DataRow("", "")]
+        [TestMethod]
+        public void LiteralString_String_ReturnsCorrectResult(string input, string expected)
+        {
+            StringLiteralExpression stringLit = new StringLiteralExpression(input, 1, 1);
+            StringHelper stringHelper = new StringHelper();
+
+            string res = stringHelper.LiteralString(stringLit, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
+
+        #endregion
+
+        #region CastIntegerToString
+        #endregion
+
+        #region CastBooleanToString
+        #endregion
+
+        #region CastRealToString
+        #endregion
+
     }
 }
