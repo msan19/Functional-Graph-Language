@@ -3,14 +3,14 @@ using ASTLib.Objects;
 
 namespace FileGeneratorLib
 {
-    public class GmlGenerator
+    public class GmlGenerator : IGmlGenerator
     {
         public string Generate(LabelGraph graph)
         {
             string s = "";
             s += GetVerticesAsString(graph);
             s += GetEdgesAsString(graph);
-            return "graph [ \n\tdirected 1\n" + s + "]\n"; 
+            return "graph [ \n\tdirected 1\n" + s + "]\n";
         }
 
         private string GetVerticesAsString(LabelGraph graph)
@@ -27,7 +27,7 @@ namespace FileGeneratorLib
             sb.AppendLine($"\n\t    id {i + 1}");
             AddAdditionalVertexLabels(sb, graph, i);
             sb.Append("\t]\n");
-            return sb.ToString(); 
+            return sb.ToString();
         }
 
         private void AddAdditionalVertexLabels(StringBuilder sb, LabelGraph graph, int i)
@@ -57,7 +57,7 @@ namespace FileGeneratorLib
             sb.AppendLine($"\t    target {graph.DstList[i]}");
             AddAdditionalEdgeLabels(sb, graph, i);
             sb.Append("\t]\n");
-            return sb.ToString(); 
+            return sb.ToString();
         }
 
         private void AddAdditionalEdgeLabels(StringBuilder sb, LabelGraph graph, int i)

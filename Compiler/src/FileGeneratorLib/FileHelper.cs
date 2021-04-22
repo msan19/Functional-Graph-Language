@@ -1,30 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FileGeneratorLib
 {
-    public class FileHelper
+    public class FileHelper : IFileHelper
     {
         private const string UNIX_PREFIX = "Unix";
         private const string WINDOWS_PREFIX = "Microsoft Windows";
-        
-        public string GetPathWith(string fileName)
+        protected bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
+        protected bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
+
+        public string GetPathWith(string folder, string fileName)
         {
             string path = "";
-            Console.WriteLine($"OS: {Environment.OSVersion}");
-            
             string projectDirectory = GetProjectDirectory();
-            Console.WriteLine(projectDirectory);
+            //Console.WriteLine($"OS: {Environment.OSVersion}");
+            //Console.WriteLine(projectDirectory);
 
             if (IsUnix)
-                path = $"{projectDirectory}/{fileName}";
+                path = $"{projectDirectory}/{folder}/{fileName}";
             else if (IsWindows)
-                path = $"{projectDirectory}\\{fileName}";
+                path = $"{projectDirectory}\\{folder}/{fileName}";
 
             return path;
         }
-        
-        public string GetProjectDirectory()
+
+        protected string GetProjectDirectory()
         {
             string separator = null;
             string projectDirectory = Directory.GetCurrentDirectory();
@@ -38,17 +40,5 @@ namespace FileGeneratorLib
             return projectDirectory;
         }
 
-        public string AppendStr(string path, string str)
-        {
-            string separator = null;
-            if (IsUnix)
-                separator = "/";
-            else if (IsWindows)
-                separator = "\\";
-            return path + separator + str;
-        }
-        
-        private bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
-        private bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
     }
 }

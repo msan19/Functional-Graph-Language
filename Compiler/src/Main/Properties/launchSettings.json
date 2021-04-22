@@ -2,11 +2,11 @@
   "profiles": {
     "Main": {
       "commandName": "Project",
-      "commandLineArgs": "throw library.fgl"
+      "commandLineArgs": "throw project"
     },
     "Exception Catched": {
       "commandName": "Project",
-      "commandLineArgs": "help code "
+      "commandLineArgs": "help code project"
     }
   }
 }

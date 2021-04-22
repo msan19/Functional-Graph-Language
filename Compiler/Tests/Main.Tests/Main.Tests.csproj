@@ -19,4 +19,8 @@
     <ProjectReference Include="..\..\src\Main\Main.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="OutputFiles\" />
+  </ItemGroup>
+
 </Project>

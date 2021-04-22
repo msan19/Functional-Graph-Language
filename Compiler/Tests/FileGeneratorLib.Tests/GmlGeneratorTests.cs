@@ -52,10 +52,13 @@ namespace FileGeneratorLib.Tests
 
         private string ReadFile(string fileName)
         {
+            /*
             FileHelper fileHelper = new FileHelper();
             string currentPath = fileHelper.GetProjectDirectory();
             string fullPath = fileHelper.AppendStr(currentPath, fileName);
             return File.ReadAllText(fullPath);
+            */
+            return null;
         }
     }
 }
