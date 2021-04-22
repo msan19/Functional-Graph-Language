@@ -7,9 +7,9 @@ namespace Main
 {
     public class ExceptionPrinter : IExceptionPrinter
     {
-        private readonly List<string> _lines;
+        private List<string> _lines;
 
-        public ExceptionPrinter(List<string> lines)
+        public void SetLines(List<string> lines)
         {
             _lines = lines;
         }

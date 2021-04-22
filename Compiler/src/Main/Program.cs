@@ -22,8 +22,6 @@ namespace Main
 {
     public class Program
     {
-        private List<string> _lines;
-
         private List<string> _fileNames;
         private bool _shouldThrowExceptions;
         private bool _printCode;
@@ -37,6 +35,7 @@ namespace Main
         private readonly ITypeChecker _typeChecker;
         private readonly IInterpreter _interpreter;
         private readonly IFileGenerator _fileGenerator;
+        private readonly IExceptionPrinter _exceptionPrinter;
 
         static void Main(string[] args)
         {
@@ -65,6 +64,7 @@ namespace Main
                                            new GraphHelper(),
                                            !_shouldThrowExceptions);
             _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
+            _exceptionPrinter = new ExceptionPrinter();
 
         }
 
@@ -78,7 +78,6 @@ namespace Main
 
         private void RunWithExceptionPrinting()
         {
-            IExceptionPrinter exceptionPrinter = new ExceptionPrinter(_lines);
 
             try
             {
@@ -87,15 +86,15 @@ namespace Main
             catch (ComponentException e)
             {
                 foreach (CompilerException ce in e.Exceptions)
-                    exceptionPrinter.Print(ce);
+                    _exceptionPrinter.Print(ce);
             }
             catch (CompilerException e)
             {
-                exceptionPrinter.Print(e);
+                _exceptionPrinter.Print(e);
             }
             catch (ParserException e)
             {
-                exceptionPrinter.Print(e);
+                _exceptionPrinter.Print(e);
             } catch(Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -122,14 +121,14 @@ namespace Main
         {
             string input = _fileGenerator.Read(_fileNames, _projectFolder);
             input = input.Replace('\t', ' ');
-            _lines = input.Split("\n").ToList();
+            _exceptionPrinter.SetLines(input.Split("\n").ToList());
             if (_printCode) Console.WriteLine(input);
             return input;
         }
 
-        private bool ParseArgs(string[] args)
+        private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>();
+            _fileNames = new List<string>() /*{ "bTree.fgl" }*/;
             _saveOutput = true;
             foreach (string s in args)
             {
@@ -150,8 +149,6 @@ namespace Main
                 else
                     _fileNames.Add(s);
             }
-
-            return args.Length >= 1 && args.Contains("throw");
         }
 
         private void PrintHelp()
