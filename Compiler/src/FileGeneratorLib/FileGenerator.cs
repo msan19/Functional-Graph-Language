@@ -8,9 +8,6 @@ namespace FileGeneratorLib
 {
     public class FileGenerator
     {
-        private const string UNIX_PREFIX = "Unix";
-        private const string WINDOWS_PREFIX = "Microsoft Windows";
-        
         private readonly FileHelper _helper;
 
         public FileGenerator(FileHelper helper)
@@ -28,7 +25,7 @@ namespace FileGeneratorLib
                     gmlStr = GetGraphString(output[i]);
                     if (writeToFiles)
                     {
-                        string path = GetPathWith(output[i].FileName);
+                        string path = _helper.GetPathWith(output[i].FileName);
                         File.WriteAllText(path , gmlStr);
                     }
                     else
@@ -57,19 +54,29 @@ namespace FileGeneratorLib
         {
             string s = "";
             for (int i = 0; i < graph.VertexCount; i++)
-                s += GetVertexString(i);
+                s += GetVertexString(graph, i);
             return s;
         }
 
-        private string GetVertexString(int i)
+        private string GetVertexString(LabelGraph graph, int i)
         {
             StringBuilder sb = new StringBuilder("\tnode [ ");
             sb.AppendLine($"\n\t    id {i + 1}");
-            // Add additional vertex labels here
+            AddAdditionalVertexLabels(sb, graph, i);
             sb.Append("\t]\n");
             return sb.ToString(); 
         }
-        
+
+        private void AddAdditionalVertexLabels(StringBuilder sb, LabelGraph graph, int i)
+        {
+            for (int row = 0; row < graph.VertexLabels.GetLength(0); row++)
+            {
+                string label = graph.VertexLabels[row, i];
+                if (label != "")
+                    sb.AppendLine($"\t    {label}");
+            }
+        }
+
         private string GetEdgesAsString(LabelGraph graph)
         {
             string s = "";
@@ -85,44 +92,19 @@ namespace FileGeneratorLib
             StringBuilder sb = new StringBuilder("\tedge [ ");
             sb.AppendLine($"\n\t    source {graph.SrcList[i]}");
             sb.AppendLine($"\t    target {graph.DstList[i]}");
-            // Add additional edge labels here
+            AddAdditionalEdgeLabels(sb, graph, i);
             sb.Append("\t]\n");
             return sb.ToString(); 
         }
-        
 
-        private string GetPathWith(string fileName)
+        private void AddAdditionalEdgeLabels(StringBuilder sb, LabelGraph graph, int i)
         {
-            string path = "";
-            Console.WriteLine($"OS: {Environment.OSVersion}");
-            
-            string projectDirectory = GetProjectDirectory();
-            Console.WriteLine(projectDirectory);
-
-            if (IsUnix)
-                path = $"{projectDirectory}/{fileName}";
-            else if (IsWindows)
-                path = $"{projectDirectory}\\{fileName}";
-
-            return path;
+            for (int row = 0; row < graph.EdgeLabels.GetLength(0); row++)
+            {
+                string label = graph.EdgeLabels[row, i];
+                if (label != "")
+                    sb.AppendLine($"\t    {label}");
+            }
         }
-        
-        private static string GetProjectDirectory()
-        {
-            string separator = null;
-            string projectDirectory = Directory.GetCurrentDirectory();
-            if (IsUnix)
-                separator = "/";
-            else if (IsWindows)
-                separator = "\\";
-            string[] dirNames = projectDirectory.Split(separator);
-            if (dirNames.Length >= 3 && dirNames[dirNames.Length - 3].Equals("bin"))
-                projectDirectory = (Directory.GetParent(projectDirectory).Parent).Parent.FullName;
-            return projectDirectory;
-        }
-        
-        private static bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
-        private static bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
-
     }
 }
