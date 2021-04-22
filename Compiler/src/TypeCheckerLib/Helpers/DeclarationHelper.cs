@@ -12,7 +12,7 @@ using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
-using InvalidCastException = ASTLib.Exceptions.InvalidCastException;
+using InvalidCastException = ASTLib.Exceptions.Invalid.InvalidCastException;
 
 namespace TypeCheckerLib.Helpers
 {

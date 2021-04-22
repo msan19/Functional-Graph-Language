@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using ASTLib.Objects;
 
@@ -16,12 +17,15 @@ namespace FileGeneratorLib.Tests
             List<int> dstList = new List<int>() { 3, 4 };
             string[,] vertexLabels = new string[,] { };
             string[,] edgeLabels = new string[,] { };
-            LabelGraph labelGraph = new LabelGraph("test", srcList, dstList, vertexLabels, edgeLabels, 4);
-
-            FileGenerator fileGenerator = new FileGenerator(new FileHelper());
-
+            LabelGraph labelGraph = new LabelGraph("test1", srcList, dstList, vertexLabels, edgeLabels, 4);
             List<LabelGraph> labelGraphs = new List<LabelGraph>() { labelGraph };
-            fileGenerator.Export(labelGraphs, false);
+            FileGenerator fileGenerator = new FileGenerator(new FileHelper());
+            string expected = ReadFile("expected1.gml");
+
+            fileGenerator.Export(labelGraphs, true);
+            
+            string actual = ReadFile("test1.gml");
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -44,6 +48,14 @@ namespace FileGeneratorLib.Tests
 
             List<LabelGraph> labelGraphs = new List<LabelGraph>() { labelGraph };
             fileGenerator.Export(labelGraphs, false);
+        }
+
+        private string ReadFile(string fileName)
+        {
+            FileHelper fileHelper = new FileHelper();
+            string currentPath = fileHelper.GetProjectDirectory();
+            string fullPath = fileHelper.AppendStr(currentPath, fileName);
+            return File.ReadAllText(fullPath);
         }
     }
 }

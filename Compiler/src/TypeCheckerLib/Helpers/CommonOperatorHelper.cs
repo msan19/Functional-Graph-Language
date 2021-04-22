@@ -12,6 +12,7 @@ using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using TypeCheckerLib.Interfaces;
+using InvalidCastException = ASTLib.Exceptions.Invalid.InvalidCastException;
 
 namespace TypeCheckerLib.Helpers
 {
@@ -216,23 +217,23 @@ namespace TypeCheckerLib.Helpers
             FunctionTypeNode child3 = (FunctionTypeNode)GetType(node.Children[3], parameterTypes);
 
             if (child0.Type != TypeEnum.Set || child1.Type != TypeEnum.Set)
-                throw new ASTLib.Exceptions.InvalidCastException(node,
+                throw new InvalidCastException(node,
                                                                  child0.Type != TypeEnum.Set ? child0.Type : child1.Type,
                                                                  TypeEnum.Set);
 
             else if (child2.Type != TypeEnum.Function || child3.Type != TypeEnum.Function)
-                throw new ASTLib.Exceptions.InvalidCastException(node,
+                throw new InvalidCastException(node,
                                                                  child2.Type != TypeEnum.Function ? child2.Type : child3.Type,
                                                                  TypeEnum.Function);
 
             else if (child2.ParameterTypes[0].Type != TypeEnum.Element || child3.ParameterTypes[0].Type != TypeEnum.Element)
-                throw new ASTLib.Exceptions.InvalidCastException(node,
+                throw new InvalidCastException(node,
                                                                  child2.ParameterTypes[0].Type != TypeEnum.Element ?
                                                                  child2.ParameterTypes[0].Type : child3.ParameterTypes[0].Type,
                                                                  TypeEnum.Element);
 
             else if (child2.ReturnType.Type != TypeEnum.Element || child3.ReturnType.Type != TypeEnum.Element)
-                throw new ASTLib.Exceptions.InvalidCastException(node,
+                throw new InvalidCastException(node,
                                                                  child2.ReturnType.Type != TypeEnum.Element ?
                                                                  child2.ReturnType.Type : child3.ReturnType.Type, TypeEnum.Element);
 

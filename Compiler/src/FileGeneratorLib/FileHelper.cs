@@ -37,6 +37,16 @@ namespace FileGeneratorLib
                 projectDirectory = (Directory.GetParent(projectDirectory).Parent).Parent.FullName;
             return projectDirectory;
         }
+
+        public string AppendStr(string path, string str)
+        {
+            string separator = null;
+            if (IsUnix)
+                separator = "/";
+            else if (IsWindows)
+                separator = "\\";
+            return path + separator + str;
+        }
         
         private bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
         private bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);

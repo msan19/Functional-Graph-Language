@@ -25,7 +25,7 @@ namespace FileGeneratorLib
                     gmlStr = GetGraphString(output[i]);
                     if (writeToFiles)
                     {
-                        string path = _helper.GetPathWith(output[i].FileName);
+                        string path = _helper.GetPathWith(output[i].FileName + ".gml");
                         File.WriteAllText(path , gmlStr);
                     }
                     else
