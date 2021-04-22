@@ -38,5 +38,24 @@ namespace InterpreterLib.Tests
             Assert.AreEqual(expected, res);
         }
         #endregion
+
+        #region LiteralString
+        #endregion
+
+        #region FunctionCallString
+        #endregion
+
+        #region IdentifierString
+        #endregion
+
+        #region CastIntegerToString
+        #endregion
+
+        #region CastBooleanToString
+        #endregion
+
+        #region CastRealToString
+        #endregion
+
     }
 }
