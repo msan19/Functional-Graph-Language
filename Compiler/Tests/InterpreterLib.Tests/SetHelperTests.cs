@@ -452,5 +452,45 @@ namespace InterpreterLib.Tests
             };
         }
         #endregion
+
+        #region VerticiesField
+        [TestMethod]
+        public void VerticiesField_VerticesGraphFieldAndListOfObjects_ReturnsCorrectResult()
+        {
+            IdentifierExpression identifier = new IdentifierExpression("test", 0, 0);
+            VerticesGraphField input1 = new VerticesGraphField(identifier, 0, 0);
+            List<Object> list = new List<Object>();
+            Set expected = new Set(new Element(1));
+            Graph graph = new Graph(expected, null, null, null);
+
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            parent.DispatchGraph(identifier, Arg.Any<List<object>>()).Returns(graph);
+            SetHelper setHelper = SetUpHelper(parent);
+
+            Set res = setHelper.VerticesField(input1, list);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+        #endregion
+
+        #region EdgesField
+        [TestMethod]
+        public void EdgesField_EdgesGraphFieldAndListOfObjects_ReturnsCorrectResult()
+        {
+            IdentifierExpression identifier = new IdentifierExpression("test", 0, 0);
+            EdgesGraphField input1 = new EdgesGraphField(identifier, 0, 0);
+            List<Object> list = new List<Object>();
+            Set expected = new Set(new Element(1));
+            Graph graph = new Graph(null, expected, null, null);
+
+            IInterpreterSet parent = Substitute.For<IInterpreterSet>();
+            parent.DispatchGraph(identifier, Arg.Any<List<object>>()).Returns(graph);
+            SetHelper setHelper = SetUpHelper(parent);
+
+            Set res = setHelper.EdgesField(input1, list);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+        #endregion
     }
 }

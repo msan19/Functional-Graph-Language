@@ -159,6 +159,20 @@ namespace InterpreterLib.Helpers
             return new Set(union);
         }
 
+        public Set VerticesField(VerticesGraphField node, List<Object> parameters)
+        {
+            Graph graph = _interpreter.DispatchGraph(node.Children[0], parameters);
+
+            return graph.Vertices;
+        }
+
+        public Set EdgesField(EdgesGraphField node, List<Object> parameters)
+        {
+            Graph graph = _interpreter.DispatchGraph(node.Children[0], parameters);
+
+            return graph.Edges;
+        }
+
         private void AddRemainingElements(List<Element> union, List<Element> elements, int i)
         {
             union.AddRange(elements.GetRange(i, (elements.Count - i)));

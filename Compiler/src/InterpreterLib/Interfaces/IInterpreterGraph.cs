@@ -10,5 +10,7 @@ namespace InterpreterLib.Interfaces
     {
         Set DispatchSet(ExpressionNode node, List<Object> parameters);
         Function DispatchFunction(ExpressionNode node, List<object> parameters);
+        Graph DispatchGraph(ExpressionNode node, List<object> parameters);
+
     }
 }
