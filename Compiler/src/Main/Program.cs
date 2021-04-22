@@ -77,9 +77,9 @@ namespace Main
         private void Compile()
         {
             if (_shouldThrowExceptions)
-                RunWithExceptionPrinting();
-            else
                 Run();
+            else
+                RunWithExceptionPrinting();
         }
 
         private void RunWithExceptionPrinting()
