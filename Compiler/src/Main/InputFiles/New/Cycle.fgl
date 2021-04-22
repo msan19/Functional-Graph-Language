@@ -1,3 +1,16 @@
 ﻿// Cycle
+N: () -> integer
+N() = 5
+
+export Cycle(N()) {"Cycle"}
+
 Cycle: (integer) -> graph
-Cycle(n) = ({i | })
+Cycle(n) = ({v[i] | 0<[i]<n}, {e[i] | 0<[i]<n}, src, dst)
+
+src: (element) -> element
+src(e) =
+	| e[i] = e
+
+dst: (element) -> element
+dst(e) =
+	| e[i] = element[(i+1) mod N()]

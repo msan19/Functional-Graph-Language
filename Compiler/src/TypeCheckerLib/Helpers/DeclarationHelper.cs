@@ -115,7 +115,7 @@ namespace TypeCheckerLib.Helpers
 
         private void CheckCondition(ConditionNode condition, List<TypeNode> newParams)
         {
-            if (!condition.IsDefaultCase)
+            if (!condition.IsDefaultCase && condition.Condition != null)
             {
                 TypeEnum conditionType = _getType(condition.Condition, newParams).Type;
                 if (conditionType != TypeEnum.Boolean)

@@ -67,6 +67,7 @@ namespace TypeCheckerLib
                 ElementExpression n         => _commonOperatorHelper.VisitElement(n, parameterTypes),
                 ISetGraphField n            => _commonOperatorHelper.VisitISetGraphField(n, parameterTypes),
                 IFunctionGraphField n       => _commonOperatorHelper.VisitIFunctionGraphField(n, parameterTypes),
+                GraphExpression n           => _commonOperatorHelper.VisitGraph(n, parameterTypes),
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }

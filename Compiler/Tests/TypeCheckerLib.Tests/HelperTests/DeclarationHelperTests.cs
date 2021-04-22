@@ -1020,6 +1020,22 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
+        public void CheckConditionNode_NoCondition_NoException()
+        {
+            var parameters = Utilities.GetTypeNodeListWithXElements(1);
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElement(Utilities.GetListWithXStrings(1), 0);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionNode = Utilities.GetConditionNode(elements, null, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(InvalidCastException))]
         public void CheckConditionNode_ConditionIsNotBoolean_Exception()
         {
