@@ -22,7 +22,7 @@ namespace Main
     {
         public List<string> Lines { get; }
 
-        private readonly string _fileName = "New\\Cycle.fgl";
+        private readonly string _fileName = "Cycle.fgl";
         private readonly string _input;
 
         private readonly LexParser _lexParse;
@@ -106,7 +106,7 @@ namespace Main
             _referenceHandler.InsertReferences(ast);
             _typeChecker.CheckTypes(ast);
             var output = _interpreter.Interpret(ast);
-            _fileGenerator.Export(output, "");
+            _fileGenerator.Export(output, false);
         }
     }
 }

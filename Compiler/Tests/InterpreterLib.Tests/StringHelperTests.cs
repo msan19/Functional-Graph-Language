@@ -68,7 +68,7 @@ namespace InterpreterLib.Tests
             var inputNode = Utilities.GetIntLitExpression();
             var castNode = Utilities.GetCastNode(inputNode);
             var parent = Utilities.GetStringInterpreter();
-            parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), Arg.Is<TypeEnum>(x => x == TypeEnum.Integer)).Returns(input);
+            parent.DispatchInt(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>()).Returns(input);
             var stringHelper = SetUpHelper(parent);
 
             string res = stringHelper.CastIntegerToString(castNode, new List<object>());
@@ -86,7 +86,7 @@ namespace InterpreterLib.Tests
             var inputNode = Utilities.GetBoolLitExpression();
             var castNode = Utilities.GetCastNode(inputNode);
             var parent = Utilities.GetStringInterpreter();
-            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), Arg.Is<TypeEnum>(x => x == TypeEnum.Boolean)).Returns(input);
+            parent.DispatchBoolean(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>()).Returns(input);
             var stringHelper = SetUpHelper(parent);
 
             string res = stringHelper.CastBooleanToString(castNode, new List<object>());
@@ -105,7 +105,7 @@ namespace InterpreterLib.Tests
             var inputNode = Utilities.GetRealLitExpression();
             var castNode = Utilities.GetCastNode(inputNode);
             var parent = Utilities.GetStringInterpreter();
-            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<object>>(), Arg.Is<TypeEnum>(x => x == TypeEnum.Real)).Returns(input);
+            parent.DispatchReal(Arg.Any<RealLiteralExpression>(), Arg.Any<List<object>>()).Returns(input);
             var stringHelper = SetUpHelper(parent);
 
             string res = stringHelper.CastRealToString(castNode, new List<object>());

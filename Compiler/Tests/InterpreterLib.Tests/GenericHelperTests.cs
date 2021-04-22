@@ -328,7 +328,7 @@ namespace InterpreterLib.Tests
             List<ElementNode> elements = new List<ElementNode>();
             for (int i = 0; i < elemCount; i++)
                 elements.AddRange(Utilities.GetElementNodess(elemCount, elemDims[i], ps));
-            ExpressionNode conditionExpr = Utilities.GetBoolLitExpression(true);
+            ExpressionNode conditionExpr = null;
             ExpressionNode returnExpr = Utilities.GetIntLitExpression();
             var node = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
 
@@ -337,7 +337,6 @@ namespace InterpreterLib.Tests
                 parameters.AddRange(Utilities.GetElements(elemCount, paramDims[i]));
 
             var parent = Utilities.GetGenericInterpreter();
-            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Boolean).Returns(true);
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
             var helper = Utilities.GetGenericHelper(parent);
 
@@ -364,7 +363,7 @@ namespace InterpreterLib.Tests
 
             var res = new List<object>();
             var parent = Utilities.GetGenericInterpreter();
-            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Do<List<object>>(x => res = x), TypeEnum.Boolean).Returns(true);
+            parent.DispatchBoolean(Arg.Any<BooleanLiteralExpression>(), Arg.Do<List<object>>(x => res = x)).Returns(true);
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Integer).Returns(1);
             var helper = Utilities.GetGenericHelper(parent);
 
@@ -391,7 +390,7 @@ namespace InterpreterLib.Tests
 
             var res = new List<object>();
             var parent = Utilities.GetGenericInterpreter();
-            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), TypeEnum.Boolean).Returns(true);
+            parent.DispatchBoolean(Arg.Any<BooleanLiteralExpression>(), Arg.Do<List<object>>(x => res = x)).Returns(true);
             parent.Dispatch(Arg.Any<IntegerLiteralExpression>(), Arg.Do<List<object>>(x => res = x), TypeEnum.Integer).Returns(1);
             var helper = Utilities.GetGenericHelper(parent);
 

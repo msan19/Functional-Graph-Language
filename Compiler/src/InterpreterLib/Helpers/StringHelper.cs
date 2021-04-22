@@ -39,17 +39,17 @@ namespace InterpreterLib.Helpers
 
         public string CastIntegerToString(CastFromIntegerExpression node, List<Object> parameters)
         {
-            return _interpreter.Dispatch(node.Child, parameters, TypeEnum.Integer).ToString();
+            return _interpreter.DispatchInt(node.Child, parameters).ToString();
         }
 
         public string CastBooleanToString(CastFromBooleanExpression node, List<Object> parameters)
         {
-            return _interpreter.Dispatch(node.Child, parameters, TypeEnum.Boolean).ToString();
+            return _interpreter.DispatchBoolean(node.Child, parameters).ToString();
         }
 
         public string CastRealToString(CastFromRealExpression node, List<Object> parameters)
         {
-            var val = (double)_interpreter.Dispatch(node.Child, parameters, TypeEnum.Real);
+            double val = _interpreter.DispatchReal(node.Child, parameters);
             return val.ToString("G", CultureInfo.InvariantCulture);
         }
     }
