@@ -1,0 +1,66 @@
+﻿//set operations
+bigUnion:((integer) -> set , integer) -> set
+bigUnion(f, n) = bigSetOperator(f, unionOperator, n)
+
+bigUnion:((integer) -> set, integer) -> set
+bigUnion(f, n) = bigSetOperator(f, intersectionOperator, n)
+
+unionOperator:(set, set) -> set
+unionOperator(a, b) = a union b
+
+intersectionOperator:(set, set) -> set
+intersectionOperator(a, b) = a intersection b
+
+bigSetOperator:((integer) -> set, (set, set) -> set, integer) -> set
+bigSetOperator(f, o, n) =
+    | n > 0 = o(f(n), bigSetOperator(f, o, n - 1))
+    | _ = f(0)
+
+//Integer operations
+bigIntAddition:((integer) -> integer, integer) -> integer
+bigIntAddition(f, n) = bigIntOperator(f, additionIntOperator, n)
+
+bigIntMultiplication:((integer) -> integer, integer) -> integer
+bigIntMultiplication(f, n) = bigIntOperator(f, multiplicationIntOperator, n)
+
+additionIntOperator:(integer, integer) -> integer
+additionIntOperator(a, b) = a + b
+
+multiplicationIntOperator:(integer, integer) -> integer
+multiplicationIntOperator(a, b) = a * b
+
+bigIntOperator:((integer) -> integer, (integer, integer) -> integer, integer) -> integer
+bigIntOperator(f, o, n) =
+    | n > 0 = o(f(n), bigIntOperator(f, o, n - 1))
+    | _ = f(0)
+
+//Real operations
+bigRealAddition:((integer) -> real, integer) -> real
+bigRealAddition(f, n) = bigRealOperator(f, additionRealOperator, n)
+
+bigRealMultiplication:((integer) -> real, integer) -> real
+bigRealMultiplication(f, n) = bigRealOperator(f, multiplicationRealOperator, n)
+
+additionRealOperator:(real, real) -> real
+additionRealOperator(a, b) = a + b
+
+multiplicationRealOperator:(real, real) -> real
+multiplicationRealOperator(a, b) = a * b
+
+bigRealOperator:((integer) -> real, (real, real) -> real, integer) -> real
+bigRealOperator(f, o, n) =
+    | n > 0 = o(f(n), bigRealOperator(f, o, n - 1))
+    | _ = f(0)
+
+//Element operations
+elementToSet:(element) -> set
+elementToSet(e) = 
+    | e[i]     = { a[x]     | [x] == i }
+    | e[i,j]   = { a[x,y]   | [x] == i, [y] == j }
+    | e[i,j,k] = { a[x,y,z] | [x] == i, [y] == j, [z] == k }
+    | _        = { a[x]     | [x] == -1 }
+
+joinElements:((integer) -> element, integer) -> set
+joinElements(f, n) = 
+    | n > 0 = elementToSet(f(n)) union joinElements(f, n - 1)
+    | _ = elementToSet(f(0))

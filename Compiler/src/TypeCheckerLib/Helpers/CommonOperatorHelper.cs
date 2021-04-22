@@ -42,6 +42,10 @@ namespace TypeCheckerLib.Helpers
             {
                 return new TypeNode(TypeEnum.Integer, 0, 0);
             }
+            else if (left.Type == TypeEnum.Real && right.Type == TypeEnum.Real)
+            {
+                return new TypeNode(TypeEnum.Real, 0, 0);
+            }
             else if ( (left.Type == TypeEnum.String && IsAddableType(right.Type)) || IsAddableType(left.Type) && right.Type == TypeEnum.String )
             {
                 CastToString(n, left, 0);
