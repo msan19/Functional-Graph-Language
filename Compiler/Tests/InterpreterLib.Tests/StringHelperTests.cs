@@ -60,6 +60,8 @@ namespace InterpreterLib.Tests
 
         #region CastIntegerToString
         [DataRow(1, "1")]
+        [DataRow(123, "123")]
+        [DataRow(-123, "-123")]
         [TestMethod]
         public void CastIntegerToString__Correct(int input, string expected)
         {
@@ -76,9 +78,40 @@ namespace InterpreterLib.Tests
         #endregion
 
         #region CastBooleanToString
+        [DataRow(true, "True")]
+        [DataRow(false, "False")]
+        [TestMethod]
+        public void CastBooleanToString__Correct(bool input, string expected)
+        {
+            var inputNode = Utilities.GetBoolLitExpression();
+            var castNode = Utilities.GetCastNode(inputNode);
+            var parent = Utilities.GetStringInterpreter();
+            parent.Dispatch(Arg.Any<BooleanLiteralExpression>(), Arg.Any<List<object>>(), Arg.Is<TypeEnum>(x => x == TypeEnum.Boolean)).Returns(input);
+            var stringHelper = SetUpHelper(parent);
+
+            string res = stringHelper.CastBooleanToString(castNode, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
 
         #region CastRealToString
+        [DataRow(2.12, "2.12")]
+        [DataRow(0.12, "0.12")]
+        [DataRow(-0.12, "-0.12")]
+        [TestMethod]
+        public void CastRealToString__Correct(double input, string expected)
+        {
+            var inputNode = Utilities.GetRealLitExpression();
+            var castNode = Utilities.GetCastNode(inputNode);
+            var parent = Utilities.GetStringInterpreter();
+            parent.Dispatch(Arg.Any<RealLiteralExpression>(), Arg.Any<List<object>>(), Arg.Is<TypeEnum>(x => x == TypeEnum.Real)).Returns(input);
+            var stringHelper = SetUpHelper(parent);
+
+            string res = stringHelper.CastRealToString(castNode, new List<object>());
+
+            Assert.AreEqual(expected, res);
+        }
         #endregion
 
     }
