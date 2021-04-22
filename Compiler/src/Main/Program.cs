@@ -44,7 +44,7 @@ namespace Main
 
         private bool ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Star.fgl"};
+            _fileNames = new List<string>() { "Star.fgl", "Cycle.fgl"};
             foreach(string s in args)
             {
                 if (s == "throw")
@@ -77,9 +77,9 @@ namespace Main
         private void Compile()
         {
             if (_shouldThrowExceptions)
-                RunWithExceptionPrinting();
-            else
                 Run();
+            else
+                RunWithExceptionPrinting();
         }
 
         private void RunWithExceptionPrinting()

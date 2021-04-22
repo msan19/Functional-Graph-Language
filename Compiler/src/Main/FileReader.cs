@@ -14,7 +14,7 @@ namespace Main
         {
             string s = "";
             foreach (string f in fileNames)
-                s += "//File: " + f + "\n" + Read(f) + "\n";
+                s += "\n//File: " + f + "\n" + Read(f) + "\n\n";
             return s;
         }
 

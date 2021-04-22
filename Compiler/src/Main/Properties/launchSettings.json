@@ -6,7 +6,7 @@
     },
     "Exception Catched": {
       "commandName": "Project",
-      "commandLineArgs": "help"
+      "commandLineArgs": "help code"
     }
   }
 }
