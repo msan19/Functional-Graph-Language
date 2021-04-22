@@ -50,14 +50,34 @@ namespace FileGeneratorLib
             string s = "";
 
             for (int i = 0; i < graph.VertexCount; i++)
-            {
-                s += GetVertexString(graph, i);
-            }
+                s += GetVertexString(i);
+
+            s += GetEdgesAsString(graph);
             
             return "graph [ \n\tdirected 1\n" + s + "]\n"; 
         }
-        
-        private string GetVertexString(LabelGraph graph, int i)
+
+        private string GetEdgesAsString(LabelGraph graph)
+        {
+            string s = "";
+            for (int i = 0; i < graph.SrcList.Count; i++)
+            {
+                s += GetEdgeAsString(graph, i);
+            }
+            return s;
+        }
+
+        private string GetEdgeAsString(LabelGraph graph, int i)
+        {
+            StringBuilder sb = new StringBuilder("\tedge [ ");
+            sb.AppendLine($"\n\t    source {graph.SrcList[i]}");
+            sb.AppendLine($"\t    target {graph.DstList[i]}");
+            // Add additional vertex labels here
+            sb.Append("\t]\n");
+            return sb.ToString(); 
+        }
+
+        private string GetVertexString(int i)
         {
             StringBuilder sb = new StringBuilder("\tnode [ ");
             sb.AppendLine($"\n\t    id {i + 1}");
@@ -66,33 +86,6 @@ namespace FileGeneratorLib
             return sb.ToString(); 
         }
         
-        private string GetGraphString(Set set)
-        {
-            string s = "";
-            for (int i = 0; i < set.Elements.Count; i++)
-                s += GetVertexString(set.Elements[i], i);
-            return "graph [ \n\tdirected 1\n" + s + "]\n"; 
-        }
-
-        private string GetVertexString(LabelGraph graph, int i, int nodeValue)
-        {
-            StringBuilder sb = new StringBuilder("\tnode [ ");
-            sb.AppendLine($"\n\t    id {i + 1}");
-            //AddLine(sb, $"label \"nodeValue: {nodeValue}\"");
-            // Add additional vertex labels here
-            sb.Append("\t]\n");
-            return sb.ToString();
-        }
-
-        private void AddLine(StringBuilder sb, string s)
-        {
-            sb.AppendLine("\t    " + s);
-        }
-
-        private string GetVertexString(Element element, int i)
-        {
-            return "\tnode [ \n\t\tid " + i + "\n\t\tlabel \"" + GetIndicesString(element.Indices) + "\"\n\t]\n";
-        }
 
         private string GetIndicesString(List<int> indices)
         {
