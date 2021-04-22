@@ -65,6 +65,9 @@ namespace ReferenceHandlerLib
         public void VisitExport(ExportNode node)
         {
             _dispatch(node.ExportValue, new List<string>() { });
+            _dispatch(node.FileName, new List<string>() { });
+            node.VertexLabels.ForEach(x => _dispatch(x, new List<string>()));
+            node.EdgeLabels.ForEach(x => _dispatch(x, new List<string>()));
         }
 
         public void VisitFunction(FunctionNode node)

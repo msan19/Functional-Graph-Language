@@ -5,7 +5,8 @@
       "commandLineArgs": "throw"
     },
     "Exception Catched": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "help"
     }
   }
 }

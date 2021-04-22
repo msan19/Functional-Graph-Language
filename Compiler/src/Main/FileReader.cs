@@ -1,15 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Main
 {
-    public static class FileReader
+    public class FileReader
     {
         private const string INPUT_FOLDER_NAME = "InputFiles";
         private const string UNIX_PREFIX = "Unix";
         private const string WINDOWS_PREFIX = "Microsoft Windows";
-        
-        public static string Read(string fileName)
+
+        public string Read(List<string> fileNames)
+        {
+            string s = "";
+            foreach (string f in fileNames)
+                s += "//File: " + f + "\n" + Read(f) + "\n";
+            return s;
+        }
+
+        public string Read(string fileName)
         {
             string path = "";
             string projectDirectory = GetProjectDirectory();
@@ -25,7 +34,7 @@ namespace Main
             return File.ReadAllText(path);
         }
 
-        private static string GetProjectDirectory()
+        private string GetProjectDirectory()
         {
             string separator = null;
             string projectDirectory = Directory.GetCurrentDirectory();
@@ -39,8 +48,8 @@ namespace Main
             return projectDirectory;
         }
         
-        private static bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
-        private static bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
+        private bool IsUnix => Environment.OSVersion.ToString().StartsWith(UNIX_PREFIX);
+        private bool IsWindows => Environment.OSVersion.ToString().StartsWith(WINDOWS_PREFIX);
 
     }
 }

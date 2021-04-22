@@ -42,6 +42,9 @@ namespace ReferenceHandlerLib
 
         public void Dispatch(ExpressionNode node, List<string> parameters)
         {
+            if (node.GetType() == typeof(IdentifierExpression))
+                Console.WriteLine();
+
             Try(() =>
             {
                 switch (node)
