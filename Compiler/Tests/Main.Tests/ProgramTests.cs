@@ -11,7 +11,7 @@ namespace Main.Tests
         [TestMethod]
         public void Run_SmokeTest_DoNotCrash()
         {
-            string[] args = new string[] { "test.test" };
+            string[] args = new string[0];
 
             try
             {
