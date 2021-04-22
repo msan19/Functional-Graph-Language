@@ -1,4 +1,5 @@
 ﻿using ASTLib;
+using ASTLib.Exceptions.Invalid;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Objects;
@@ -64,7 +65,7 @@ namespace InterpreterLib.Tests
             string[,] vertexLabels = new string[0,3];
             string[,] edgeLabels = new string[0,3];
 
-            LabelGraph expected = new LabelGraph("File", src, dst, vertexLabels, edgeLabels);
+            LabelGraph expected = new LabelGraph("File", src, dst, vertexLabels, edgeLabels, 3);
 
             LabelGraph result = graphHelper.ExportGraph(new ExportNode(new IdentifierExpression("", 0, 0), 0, 0));
 
@@ -82,7 +83,7 @@ namespace InterpreterLib.Tests
             parent.DispatchGraph(Arg.Any<ExpressionNode>(), Arg.Any<List<Object>>()).Returns(GetGraph());
 
 
-            Assert.ThrowsException<Exception>(() => graphHelper.ExportGraph(new ExportNode(new IdentifierExpression("", 0, 0), 0, 0)));
+            Assert.ThrowsException<InvalidElementException>(() => graphHelper.ExportGraph(new ExportNode(new IdentifierExpression("", 0, 0), 0, 0)));
         }
 
         [TestMethod]
@@ -103,7 +104,7 @@ namespace InterpreterLib.Tests
             List<int> dst = new List<int> { 0, 0, 0 };
             string[,] vertexLabels = new string[,] { { "a", "a", "a" }, { "b", "b", "b" } };
             string[,] edgeLabels = new string[,] { { "a", "a", "a" } };
-            LabelGraph expected = new LabelGraph("File", src, dst, vertexLabels, edgeLabels);
+            LabelGraph expected = new LabelGraph("File", src, dst, vertexLabels, edgeLabels, 3);
             IdentifierExpression identifier = new IdentifierExpression("", 0, 0);
             FunctionCallExpression functionCall = new FunctionCallExpression("", null, 0, 0);
             ExportNode node = new ExportNode(identifier, 

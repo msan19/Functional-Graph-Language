@@ -43,7 +43,7 @@ namespace InterpreterLib.Helpers
             string[,] edgeLabels = GetLabels(node.EdgeLabels, graph.Edges);
             string[,] vertexLabels  = GetLabels(node.VertexLabels, graph.Vertices);
 
-            return new LabelGraph(fileName, src, dst, vertexLabels, edgeLabels);
+            return new LabelGraph(fileName, src, dst, vertexLabels, edgeLabels, graph.Vertices.Elements.Count);
         }
 
         private string[,] GetLabels(List<ExpressionNode> functions, Set set)
