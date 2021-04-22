@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ASTLib.Nodes.ExpressionNodes
 {
-    public class GraphExpression : ExpressionNode
+    public class GraphExpression : ExpressionNode, INonIdentifierExpression
     {
         private const int VERTICES_INDEX = 0, EDGES_INDEX = 1, SRC_INDEX = 2, DST_INDEX = 3;
 
