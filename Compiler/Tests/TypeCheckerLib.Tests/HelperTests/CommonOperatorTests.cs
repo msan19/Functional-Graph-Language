@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib.Exceptions.NotMatching;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
@@ -1127,5 +1128,86 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         #endregion
+        
+        # region VisitISetGraphField
+        [TestMethod]
+        public void VisitISetGraphField_EdgesGraphFieldWithGraphExpr_ExpectSuccess()
+        {
+            GraphExpression graphExpr = Utilities.GetGraphExpression();
+            EdgesGraphField edgesGraphField = new EdgesGraphField(graphExpr, 1, 1);
+            TypeEnum expectedType = TypeEnum.Set;
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            
+            TypeNode actualTypeNode = helper.VisitISetGraphField(edgesGraphField, new List<TypeNode>());
+            
+            Assert.AreEqual(expectedType, actualTypeNode.Type);
+        }
+        
+        [TestMethod]
+        public void VisitISetGraphField_VerticesGraphFieldWithGraphExpr_ExpectSuccess()
+        {
+            GraphExpression graphExpr = Utilities.GetGraphExpression();
+            VerticesGraphField verticesGraphField = new VerticesGraphField(graphExpr, 1, 1);
+            TypeEnum expectedType = TypeEnum.Set;
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            
+            TypeNode actualTypeNode = helper.VisitISetGraphField(verticesGraphField, new List<TypeNode>());
+            
+            Assert.AreEqual(expectedType, actualTypeNode.Type);
+        }
+        
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        [TestMethod]
+        public void VisitISetGraphField_VerticesGraphFieldWithBoolLitExpr_CausesUnmatchableTypesException()
+        {
+            BooleanLiteralExpression boolLitExpr = Utilities.GetBoolLit(true);
+            VerticesGraphField verticesGraphField = new VerticesGraphField(boolLitExpr, 1, 1);
+            
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+
+            helper.VisitISetGraphField(verticesGraphField, new List<TypeNode>());
+        }
+        # endregion
+        
+        
+        # region VisitIFunctionGraphField
+        [TestMethod]
+        public void VisitIFunctionGraphField_SrcGraphFieldWithGraphExpr_ExpectSuccess()
+        {
+            GraphExpression graphExpr = Utilities.GetGraphExpression();
+            SrcGraphField srcGraphField = new SrcGraphField(graphExpr, 1, 1);
+            TypeEnum expectedType = TypeEnum.Function;
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            
+            TypeNode actualTypeNode = helper.VisitIFunctionGraphField(srcGraphField, new List<TypeNode>());
+            
+            Assert.AreEqual(expectedType, actualTypeNode.Type);
+        }
+        
+        [TestMethod]
+        public void VisitIFunctionGraphField_DstGraphFieldWithGraphExpr_ExpectSuccess()
+        {
+            GraphExpression graphExpr = Utilities.GetGraphExpression();
+            DstGraphField dstGraphField = new DstGraphField(graphExpr, 1, 1);
+            TypeEnum expectedType = TypeEnum.Function;
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+            
+            TypeNode actualTypeNode = helper.VisitIFunctionGraphField(dstGraphField, new List<TypeNode>());
+            
+            Assert.AreEqual(expectedType, actualTypeNode.Type);
+        }
+        
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        [TestMethod]
+        public void VisitIFunctionGraphField_DstGraphFieldWithBoolLitExpr_CausesUnmatchableTypesException()
+        {
+            BooleanLiteralExpression boolLitExpr = Utilities.GetBoolLit(true);
+            DstGraphField dstGraphField = new DstGraphField(boolLitExpr, 1, 1);
+            
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>();
+
+            helper.VisitIFunctionGraphField(dstGraphField, new List<TypeNode>());
+        }
+        # endregion
     }
 }

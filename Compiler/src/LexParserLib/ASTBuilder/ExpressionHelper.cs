@@ -7,6 +7,7 @@ using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
+using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -211,7 +212,7 @@ namespace LexParserLib
         private ExpressionNode GetElementExpression(ASTNode himeNode)
         {
             List<ExpressionNode> children = new List<ExpressionNode>();
-            VisitExpressions(himeNode, children);
+            VisitExpressions(himeNode.Children[2], children);
             return new ElementExpression(children,
                                          himeNode.Children[0].Position.Line,
                                          himeNode.Children[0].Position.Column);

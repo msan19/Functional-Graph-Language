@@ -67,18 +67,12 @@ namespace TypeCheckerLib.Helpers
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
             else if (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Integer)
-            {
                 return new TypeNode(left.Type, 0, 0);
-            }
             else if (left.Type == TypeEnum.Set && right.Type == TypeEnum.Set)
-            {
                 return new TypeNode(TypeEnum.Set, 0, 0);
-            }
             else
-            {
                 throw new UnmatchableTypesException(n, left.Type, right.Type, "Unmatchable types for subtraction");
             }
-        }
 
         public TypeNode VisitAbsoluteValue(AbsoluteValueExpression n, List<TypeNode> parameterTypes)
         {
@@ -245,6 +239,7 @@ namespace TypeCheckerLib.Helpers
             else
                 return new TypeNode(TypeEnum.Graph, 0, 0);
         }
+        
         public TypeNode VisitElement(ElementExpression n, List<TypeNode> parameterTypes)
         {
             foreach (var c in n.Children)
@@ -254,6 +249,24 @@ namespace TypeCheckerLib.Helpers
                     throw new UnmatchableTypesException(n, TypeEnum.Integer, type);
             }
             return new TypeNode(TypeEnum.Element, 0, 0);
+        }
+        
+        public TypeNode VisitISetGraphField(ISetGraphField node, List<TypeNode> parameterTypes)
+        {
+            TypeNode typeNode = GetType(node.Children[0], parameterTypes);
+            if (typeNode.Type != TypeEnum.Graph)
+                throw new UnmatchableTypesException(node.Children[0], typeNode.Type, TypeEnum.Graph);
+            
+            return new TypeNode(TypeEnum.Set, 0, 0);
+        }
+        
+        public TypeNode VisitIFunctionGraphField(IFunctionGraphField node, List<TypeNode> parameterTypes)
+        {
+            TypeNode typeNode = GetType(node.Children[0], parameterTypes);
+            if (typeNode.Type != TypeEnum.Graph)
+                throw new UnmatchableTypesException(node.Children[0], typeNode.Type, TypeEnum.Graph);
+            
+            return new TypeNode(TypeEnum.Function, 0, 0);
         }
     }
 }

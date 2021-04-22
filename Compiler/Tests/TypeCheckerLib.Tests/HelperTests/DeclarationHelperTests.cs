@@ -71,7 +71,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
 
             var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
-            parent.Dispatch(vertexFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            parent.Dispatch(vertexFuncs[wrongIndex], Arg.Is<List<TypeNode>>(x => x.Count == 0)).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
             var helper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             helper.VisitExport(input1);
@@ -89,13 +89,15 @@ namespace TypeCheckerLib.Tests.HelperTests
             var input1 = Utilities.GetExportNode(graph, name, vertexFuncs, edgeFuncs);
 
             var parent = Utilities.GetDefaultTypeCheckerWithAttributeFunction();
-            parent.Dispatch(edgeFuncs[wrongIndex], Arg.Any<List<TypeNode>>()).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
+            parent.Dispatch(edgeFuncs[wrongIndex], Arg.Is<List<TypeNode>>(x => x.Count == 0)).Returns(Utilities.GetFuncTypeNode(TypeEnum.Element, TypeEnum.Integer));
             var helper = Utilities.GetHelper<DeclarationHelper>(parent);
 
             helper.VisitExport(input1);
         }
         [DataRow(0, 0)]
-        [DataRow(2, 4)]
+        [DataRow(3, 5)]
+        [DataRow(2, 0)]
+        [DataRow(0, 2)]
         [TestMethod]
         public void Export_Valid_NoException(int vertexNum, int edgeNum)
         {
@@ -110,83 +112,6 @@ namespace TypeCheckerLib.Tests.HelperTests
 
             helper.VisitExport(input1);
         }
-
-        /*
-         * --------------------------------
-         */
-
-        [TestMethod]
-        public void Export__CorrectParameterPassDown()
-        {
-            var expected = new List<TypeNode>();
-            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            List<TypeNode> res = null;
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Do<List<TypeNode>>(x => res = x)).Returns(new TypeNode(TypeEnum.Set, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-            
-            declarationHelper.VisitExport(input1);
-
-            res.Should().BeEquivalentTo(expected);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidSetTypeException))]
-        public void Export_Real_Nothing()
-        {
-            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Real, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            declarationHelper.VisitExport(input1);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidSetTypeException))]
-        public void Export_Integer_Nothing()
-        {
-            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            declarationHelper.VisitExport(input1);
-        }
-        [TestMethod]
-        [ExpectedException(typeof(InvalidSetTypeException))]
-        public void Export_Integer_InsertCastNode()
-        {
-            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Integer, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            declarationHelper.VisitExport(input1);
-        }
-        [TestMethod]
-        [ExpectedException(typeof(InvalidSetTypeException))]
-        public void Export_Func_ThrowException()
-        {
-            var input1 = new ExportNode(new AdditionExpression(null, null, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Function, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            declarationHelper.VisitExport(input1);
-        }
-
-        [TestMethod]
-        public void Export_Boolean_ThrowsException()
-        {
-            var input = new ExportNode(new BooleanLiteralExpression(true, 0, 0), 0, 0);
-            var parent = Substitute.For<ITypeChecker>();
-            parent.Dispatch(Arg.Any<ExpressionNode>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Boolean, 1, 1));
-            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
-
-            Assert.ThrowsException<InvalidSetTypeException>(() => declarationHelper.VisitExport(input));
-        }
-
         #endregion
 
         #region Function
@@ -978,6 +903,60 @@ namespace TypeCheckerLib.Tests.HelperTests
         [DataRow(1)]
         [DataRow(3)]
         [TestMethod]
+        public void CheckConditionNode_xElementsWithOneIndexWhereExpectedTypeStringReturnExprBool_AddToParameters(int elementNum)
+        {
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.String);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetBoolLit(true);
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
+        public void CheckConditionNode_xElementsWithOneIndexWhereExpectedTypeStringReturnExprReal_AddToParameters(int elementNum)
+        {
+            var elementNames = Utilities.GetListWithXStrings(elementNum);
+
+            var parameters = Utilities.GetTypeNodeListWithXElements(elementNum);
+            var expected = parameters.ToList();
+            expected.AddRange(elementNames.ToList().ConvertAll(x => Utilities.GetTypeNode(TypeEnum.Integer)));
+            var expectedType = Utilities.GetTypeNode(TypeEnum.String);
+
+            var elements = Utilities.GetElements(elementNum, 1);
+            var returnExpr = Utilities.GetRealLit();
+            var conditionExpr = Utilities.GetGreaterExpression();
+            var conditionNode = Utilities.GetConditionNode(elements, conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var res = new List<TypeNode>();
+            parent.Dispatch(conditionExpr, Arg.Do<List<TypeNode>>(x => res = x)).Returns(Utilities.GetTypeNode(TypeEnum.Boolean));
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+
+            res.Should().BeEquivalentTo(expected);
+        }
+
+        [DataRow(1)]
+        [DataRow(3)]
+        [TestMethod]
         public void CheckConditionNode_ElementWithXIndicies_AddToParameters(int indexNum)
         {
             var indicies = Utilities.GetListWithXStrings(indexNum);
@@ -1033,6 +1012,22 @@ namespace TypeCheckerLib.Tests.HelperTests
             var returnExpr = Utilities.GetIntLit();
             var conditionExpr = Utilities.GetBoolLit(true);
             var conditionNode = Utilities.GetConditionNode(conditionExpr, returnExpr);
+
+            var parent = Utilities.GetDefaultTypeChecker();
+            var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);
+
+            declarationHelper.CheckConditionNode(expectedType, conditionNode, parameters);
+        }
+
+        [TestMethod]
+        public void CheckConditionNode_NoCondition_NoException()
+        {
+            var parameters = Utilities.GetTypeNodeListWithXElements(1);
+            var expectedType = Utilities.GetTypeNode(TypeEnum.Integer);
+
+            var elements = Utilities.GetElement(Utilities.GetListWithXStrings(1), 0);
+            var returnExpr = Utilities.GetIntLit();
+            var conditionNode = Utilities.GetConditionNode(elements, null, returnExpr);
 
             var parent = Utilities.GetDefaultTypeChecker();
             var declarationHelper = Utilities.GetHelper<DeclarationHelper>(parent);

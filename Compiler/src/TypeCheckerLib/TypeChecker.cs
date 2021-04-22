@@ -5,7 +5,6 @@ using ASTLib.Exceptions;
 using ASTLib.Interfaces;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.ElementAndSetOperations;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
@@ -66,6 +65,9 @@ namespace TypeCheckerLib
                 IEquivalenceOperator n      => _commonOperatorHelper.VisitEquivalenceOperator(n, parameterTypes),
                 NegativeExpression n        => _numberHelper.VisitNegative(n, parameterTypes),
                 ElementExpression n         => _commonOperatorHelper.VisitElement(n, parameterTypes),
+                ISetGraphField n            => _commonOperatorHelper.VisitISetGraphField(n, parameterTypes),
+                IFunctionGraphField n       => _commonOperatorHelper.VisitIFunctionGraphField(n, parameterTypes),
+                GraphExpression n           => _commonOperatorHelper.VisitGraph(n, parameterTypes),
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }
