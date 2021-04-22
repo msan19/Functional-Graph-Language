@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes.OperationNodes
+namespace ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields
 {
     public class VerticesGraphField : ExpressionNode, INonIdentifierExpression, ISetGraphField
     {
