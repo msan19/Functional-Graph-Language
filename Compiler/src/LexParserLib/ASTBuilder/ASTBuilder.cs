@@ -85,7 +85,7 @@ namespace LexParserLib
             if(himeNode.Children.Count == EXPORT_EDGE_LABELS)
                 _expressionHelper.VisitExpressions(himeNode.Children[8], edgeLabels);
             if(himeNode.Children.Count == EXPORT_BOTH_LABELS)
-                _expressionHelper.VisitExpressions(himeNode.Children[10], edgeLabels);
+                _expressionHelper.VisitExpressions(himeNode.Children[9], edgeLabels);
 
             TextPosition position = himeNode.Children[0].Position;
             return new ExportNode(expressionNode, fileName, vertexLabels, edgeLabels, 

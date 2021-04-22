@@ -1,1 +1,21 @@
-﻿
+﻿// Star
+export Star(7) {"Star"} {vertexLabel} {edgeLabel}
+
+Star: (integer) -> graph
+Star(n) = ({v[i] | 0<=[i]<n}, {e[i] | 0<=[i]<n-1}, src, dst)
+
+src: (element) -> element
+src(e) =
+	| e[i] = element[0]
+
+dst: (element) -> element
+dst(e) =
+	| e[i] = element[i+1]
+
+vertexLabel: (element) -> string
+vertexLabel(e) = 
+	| e[i] = "Vertex: "
+
+edgeLabel: (element) -> string
+edgeLabel(e) = 
+	| e[i] = "Hej"
