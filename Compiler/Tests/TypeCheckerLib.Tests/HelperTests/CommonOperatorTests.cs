@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFIelds;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
