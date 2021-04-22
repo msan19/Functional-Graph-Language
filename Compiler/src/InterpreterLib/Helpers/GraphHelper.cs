@@ -39,10 +39,23 @@ namespace InterpreterLib.Helpers
                 dst.Add(GetElementIndex(graph.Dst, e, graph, comparer));
             }
 
-            string[,] edgeLabels    = new string[graph.Edges.Elements.Count, node.EdgeLabels.Count];
-            string[,] vertexLabels  = new string[graph.Edges.Elements.Count, node.EdgeLabels.Count];
+            string[,] edgeLabels = GetLabels(node.EdgeLabels, graph.Edges);
+            string[,] vertexLabels  = GetLabels(node.VertexLabels, graph.Vertices);
 
             return new LabelGraph(fileName, src, dst, vertexLabels, edgeLabels);
+        }
+
+        private string[,] GetLabels(List<ExpressionNode> functions, Set set)
+        {
+            List<Object> parameters = new List<Object>();
+            List<FunctionNode> nodes = functions.ConvertAll(x => _interpreter.DispatchFunction(x, parameters)).
+                                                 ConvertAll(x => _functions[x.Reference]);
+            string[,] labels = new string[functions.Count, set.Elements.Count];
+            for (int i = 0; i < functions.Count; i++)
+                for (int ii = 0; ii < set.Elements.Count; ii++)
+                    labels[i,ii] = _interpreter.Function<string>(nodes[i], new List<Object> { set.Elements[ii] });
+
+            return labels;
         }
 
         private int GetElementIndex(Function function, Element input, Graph graph, ElementComparer comparer)
