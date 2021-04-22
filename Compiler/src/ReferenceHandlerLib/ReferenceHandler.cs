@@ -32,19 +32,14 @@ namespace ReferenceHandlerLib
             _helper.BuildTables(root.Functions);
             foreach (FunctionNode f in root.Functions)
                 Try(() => _helper.VisitFunction(f));
-
             foreach (ExportNode e in root.Exports)
                 Try(() => _helper.VisitExport(e));
-
             if (_catchExceptions && !_exceptions.IsEmpty)
                 throw _exceptions;
         }
 
         public void Dispatch(ExpressionNode node, List<string> parameters)
         {
-            if (node.GetType() == typeof(IdentifierExpression))
-                Console.WriteLine();
-
             Try(() =>
             {
                 switch (node)

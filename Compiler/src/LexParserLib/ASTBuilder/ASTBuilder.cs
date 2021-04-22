@@ -154,13 +154,12 @@ namespace LexParserLib
 
         private ConditionNode CreateConditionNode(ASTNode himeNode)
         {
-            
-            ASTNode expr = himeNode.Children[3];
-            ExpressionNode returnExpression = _expressionHelper.DispatchExpression(expr);
-
+            ExpressionNode returnExpression = null;
             TextPosition position = himeNode.Children[0].Position;
             if (himeNode.Children[1].Value == "_")
             {
+
+                returnExpression = _expressionHelper.DispatchExpression(himeNode.Children[3]);
                 return new ConditionNode(returnExpression,
                                          position.Line, position.Column);
             } 
@@ -169,9 +168,15 @@ namespace LexParserLib
                 bool both = himeNode.Children.Count == CONDITION_BOTH_ELEMENTS_AND_PREDICATE;
                 string symbol = himeNode.Children[1].Symbol.Name;
 
-                ExpressionNode conditionExpr = both ? 
-                    _expressionHelper.DispatchExpression(himeNode.Children[3]) : 
-                    null;
+                ExpressionNode conditionExpr = null;
+                if(both)
+                {
+                    conditionExpr = _expressionHelper.DispatchExpression(himeNode.Children[3]);
+                    returnExpression = _expressionHelper.DispatchExpression(himeNode.Children[5]);
+                } 
+                else
+                    returnExpression = _expressionHelper.DispatchExpression(himeNode.Children[3]);
+                
                 List<ElementNode> elements = new List<ElementNode>();
                 if (symbol == "Elements")
                     elements = VisitElements(himeNode.Children[1]);

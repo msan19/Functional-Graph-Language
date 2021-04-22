@@ -98,7 +98,9 @@ namespace Main
             catch(ComponentException e)
             {
                 foreach (CompilerException ce in e.Exceptions)
+                {
                     exceptionPrinter.Print(ce);
+                }
             }
             catch(CompilerException e)
             {
