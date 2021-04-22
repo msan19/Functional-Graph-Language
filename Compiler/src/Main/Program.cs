@@ -44,7 +44,7 @@ namespace Main
 
         private bool ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Star.fgl"};
+            _fileNames = new List<string>() { "Cycle.fgl"};
             foreach(string s in args)
             {
                 if (s == "throw")
