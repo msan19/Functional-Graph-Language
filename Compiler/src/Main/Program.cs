@@ -27,6 +27,7 @@ namespace Main
         private bool _printCode;
         private bool _printParseTree;
         private bool _printOutput;
+        private bool _saveOutput;
 
         private readonly string _input;
 
@@ -55,6 +56,8 @@ namespace Main
                     _printCode = true;
                 else if (s == "output")
                     _printOutput = true;
+                else if (s == "noWrite")
+                    _printOutput = true;
                 else if (s == "help")
                     PrintHelp();
                 else
@@ -69,9 +72,10 @@ namespace Main
             Console.WriteLine("Compiler options:");
             Console.WriteLine("\t'help'\t"      + "\tThe list of compiler option is shown");
             Console.WriteLine("\t'throw'\t"     + "\tExceptions are unhandled");
-            Console.WriteLine("\t'parseTree'" + "\tThe parse tree is shown");
+            Console.WriteLine("\t'parseTree'"   + "\tThe parse tree is shown");
             Console.WriteLine("\t'code'\t"      + "\tThe source code is shown");
-            Console.WriteLine("\t'output'"    + "\tThe output is shown");
+            Console.WriteLine("\t'output'"      + "\tThe output is shown");
+            Console.WriteLine("\t'noWrite'"     + "\tThe output is no longer saved");
         } 
 
         private void Compile()
