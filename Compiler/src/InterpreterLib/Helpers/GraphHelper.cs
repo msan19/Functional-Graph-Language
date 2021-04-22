@@ -1,4 +1,5 @@
 ﻿using ASTLib;
+using ASTLib.Exceptions.Invalid;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Objects;
@@ -35,8 +36,8 @@ namespace InterpreterLib.Helpers
             ElementComparer comparer = new ElementComparer();
             foreach (Element e in graph.Edges.Elements)
             {
-                src.Add(GetElementIndex(graph.Src, e, graph, comparer));
-                dst.Add(GetElementIndex(graph.Dst, e, graph, comparer));
+                src.Add(GetElementIndex(node, graph.Src, e, graph, comparer));
+                dst.Add(GetElementIndex(node, graph.Dst, e, graph, comparer));
             }
 
             string[,] edgeLabels = GetLabels(node.EdgeLabels, graph.Edges);
@@ -58,14 +59,14 @@ namespace InterpreterLib.Helpers
             return labels;
         }
 
-        private int GetElementIndex(Function function, Element input, Graph graph, ElementComparer comparer)
+        private int GetElementIndex(ExportNode node, Function function, Element input, Graph graph, ElementComparer comparer)
         {
             FunctionNode functionNode = _functions[function.Reference];
             List<Object> parameter = new List<Object> { input };
             Element element = _interpreter.Function<Element>(functionNode, parameter);
             int index = graph.Vertices.Elements.BinarySearch(element, comparer);
             if (index < 0)
-                throw new Exception("The ");
+                throw new InvalidElementException(node, element);
             return index;
         }
 

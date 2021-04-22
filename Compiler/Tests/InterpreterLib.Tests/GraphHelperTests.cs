@@ -63,6 +63,7 @@ namespace InterpreterLib.Tests
             List<int> dst = new List<int> { 2, 1, 0 };
             string[,] vertexLabels = new string[0,3];
             string[,] edgeLabels = new string[0,3];
+
             LabelGraph expected = new LabelGraph("File", src, dst, vertexLabels, edgeLabels);
 
             LabelGraph result = graphHelper.ExportGraph(new ExportNode(new IdentifierExpression("", 0, 0), 0, 0));
