@@ -93,9 +93,12 @@ namespace InterpreterLib.Helpers
 
         private bool IsConditionAPass(ConditionNode node, List<object> parameters)
         {
-            return 
-                node.IsDefaultCase || 
-                (bool)_interpreter.Dispatch(node.Condition, parameters, TypeEnum.Boolean);
+            if (node.IsDefaultCase)
+                return true;
+            if (node.Condition == null)
+                return true;
+            var v = _interpreter.DispatchBoolean(node.Condition, parameters);
+            return (bool)v;
         }
 
         private bool IsElementsAMatch(ConditionNode node, List<object> parameters)
