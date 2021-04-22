@@ -48,15 +48,28 @@ namespace FileGeneratorLib
         private string GetGraphString(LabelGraph graph)
         {
             string s = "";
-
-            for (int i = 0; i < graph.VertexCount; i++)
-                s += GetVertexString(i);
-
+            s += GetVerticesAsString(graph);
             s += GetEdgesAsString(graph);
-            
             return "graph [ \n\tdirected 1\n" + s + "]\n"; 
         }
 
+        private string GetVerticesAsString(LabelGraph graph)
+        {
+            string s = "";
+            for (int i = 0; i < graph.VertexCount; i++)
+                s += GetVertexString(i);
+            return s;
+        }
+
+        private string GetVertexString(int i)
+        {
+            StringBuilder sb = new StringBuilder("\tnode [ ");
+            sb.AppendLine($"\n\t    id {i + 1}");
+            // Add additional vertex labels here
+            sb.Append("\t]\n");
+            return sb.ToString(); 
+        }
+        
         private string GetEdgesAsString(LabelGraph graph)
         {
             string s = "";
@@ -72,29 +85,12 @@ namespace FileGeneratorLib
             StringBuilder sb = new StringBuilder("\tedge [ ");
             sb.AppendLine($"\n\t    source {graph.SrcList[i]}");
             sb.AppendLine($"\t    target {graph.DstList[i]}");
-            // Add additional vertex labels here
-            sb.Append("\t]\n");
-            return sb.ToString(); 
-        }
-
-        private string GetVertexString(int i)
-        {
-            StringBuilder sb = new StringBuilder("\tnode [ ");
-            sb.AppendLine($"\n\t    id {i + 1}");
-            // Add additional vertex labels here
+            // Add additional edge labels here
             sb.Append("\t]\n");
             return sb.ToString(); 
         }
         
 
-        private string GetIndicesString(List<int> indices)
-        {
-            string s = "";
-            foreach (int i in indices)
-                s += i + " ";
-            return s;
-        }
-        
         private string GetPathWith(string fileName)
         {
             string path = "";
