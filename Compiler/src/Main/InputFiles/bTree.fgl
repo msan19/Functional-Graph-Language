@@ -11,7 +11,7 @@ treeElements(n, m) = { e[i,j] | m<=[i]<n, 0<=[j]<2^n, j<2^i}
 
 treeSrc:(element) -> element
 treeSrc(e) =
-	| e[i,j] = element[i-1, j/2+x]
+	| e[i,j] = element[i-1, j/2]
 
 treeDst:(element) -> element
 treeDst(e) = e
