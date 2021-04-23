@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using FileUtilities.Interfaces;
 
-namespace FileGeneratorLib
+namespace FileUtilities
 {
     public class FileHelper : IFileHelper
     {

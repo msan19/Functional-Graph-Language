@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FileUtilities.Interfaces;
 
 namespace FileGeneratorLib
 {
     public class FileGenerator : IFileGenerator
     {
-        private const string INPUT_FOLDER_NAME = "InputFiles";
         private const string OUTPUT_FOLDER_NAME = "OutputFiles";
         private readonly IGmlGenerator _gmlGenerator;
         private readonly IFileHelper _helper;
@@ -42,26 +42,6 @@ namespace FileGeneratorLib
                     Console.WriteLine(gmlStr);
                 }
             }
-        }
-
-        public string Read(List<string> fileNames, bool useProjectFolder)
-        {
-            string s = "";
-            foreach (string f in fileNames)
-                s += "\n//File: " + f + "\n" + Read(f, useProjectFolder) + "\n\n";
-            return s;
-        }
-
-        private string Read(string fileName, bool useProjectFolder)
-        {
-            string path = useProjectFolder ?
-                                  _helper.GetPathWith(INPUT_FOLDER_NAME, fileName) :
-                                  fileName;
-
-            if (path == "")
-                throw new Exception("Could not detect operating system!");
-
-            return File.ReadAllText(path);
         }
     }
 }
