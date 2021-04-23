@@ -117,7 +117,7 @@ namespace InterpreterLib
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
                 EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
-                _ => throw new UnimplementedInterpreterException(node, "DispatchSet")
+                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
 
