@@ -1,0 +1,19 @@
+﻿// Cycle of Cycles
+N: () -> integer
+N() = 6
+
+export Cycle(N()) {"CycleOfCycles"}
+
+Cycle: (integer) -> graph
+Cycle(n) = ({v[i,j] | 0<=[i]<n, 0<=[j]<n}, {e[i,j] | 0<=[i]<n + 1, 0<=[j]<n}, (element e) => src(e, n), dst)
+
+src: (element, integer) -> element
+src(e, n) =
+	| e[i,j], i < n = (element v) => dst(v)
+	| e[i,j], i == n = element[0, j]
+
+dst: (element) -> element
+dst(e) =
+	| e[i,j], i < N() = element[(i+1) mod N(), j]
+	| e[i,j], i == N() = element[N()/2, (j+1) mod N()]
+
