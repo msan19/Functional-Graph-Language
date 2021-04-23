@@ -24,7 +24,7 @@ namespace FileGeneratorLib
         private string GetVertexString(LabelGraph graph, int i)
         {
             StringBuilder sb = new StringBuilder("\tnode [ ");
-            sb.AppendLine($"\n\t    id {i + 1}");
+            sb.AppendLine($"\n\t    id {i}");
             AddAdditionalVertexLabels(sb, graph, i);
             sb.Append("\t]\n");
             return sb.ToString();
