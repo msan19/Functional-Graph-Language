@@ -4,7 +4,7 @@ grammar Grammar
     {
         Axiom = "Prog";
         Separator = "SEPARATOR";
-        OutputPath = "../Compiler/src/LexParserLib/";
+        OutputPath = "../Compiler/src/LexParserLib/Hime";
         Namespace = "LexParserLib";
     }
     terminals
@@ -120,7 +120,7 @@ grammar Grammar
         Literal	      -> realNumber
                       |  integerNumber
                       |  stringLiteral
-                      |  'Ø'
+                      |  'ï¿½'
                       |  'true'
                       |  'false' ;
     }
