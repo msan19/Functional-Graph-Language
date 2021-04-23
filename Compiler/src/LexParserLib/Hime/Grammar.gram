@@ -59,6 +59,9 @@ grammar Grammar
                       |  FuncTypeDecl ;
         Ids           -> Ids ',' id
                       |  id ;
+        Pair          -> Type id;
+        Pairs         -> Pairs ',' Pair
+                      |  Pair ;
         Bounds        -> Bounds ',' Bound
                       |  Bound ;
         Bound         -> NumExpression BoundComp '[' id ']' BoundComp NumExpression
@@ -107,7 +110,8 @@ grammar Grammar
                       |  Exponent '.V'
                       |  Exponent '.E'
                       |  Exponent '.src'
-                      |  Exponent '.dst' ;
+                      |  Exponent '.dst' 
+                      |  '(' Pairs ')' '=>' Expression ;
         Expressions   -> Expression ',' Expressions
                       |  Expression ;
         Literal	      -> realNumber
