@@ -4,7 +4,7 @@ grammar Grammar
     {
         Axiom = "Prog";
         Separator = "SEPARATOR";
-        OutputPath = "../Compiler/src/LexParserLib/";
+        OutputPath = "../Compiler/src/LexParserLib/Hime";
         Namespace = "LexParserLib";
     }
     terminals
@@ -59,13 +59,19 @@ grammar Grammar
                       |  FuncTypeDecl ;
         Ids           -> Ids ',' id
                       |  id ;
+        Pair          -> Type id;
+        Pairs         -> Pairs ',' Pair
+                      |  Pair ;
         Bounds        -> Bounds ',' Bound
                       |  Bound ;
         Bound         -> NumExpression BoundComp '[' id ']' BoundComp NumExpression
                       |  '[' id ']' '==' NumExpression ;
-        Expression    -> Expression '!=' MaxTerm
-                      |  Expression '==' MaxTerm
-                      |  MaxTerm ;
+        Expression    -> '(' ')' '=>' LogicExpression
+                      |  '(' Pairs ')' '=>' LogicExpression
+                      |  LogicExpression ;
+        LogicExpression    -> LogicExpression '!=' MaxTerm
+                           |  LogicExpression '==' MaxTerm
+                           |  MaxTerm ;
         MaxTerm	      -> MaxTerm 'or' MinTerm
                       |  MinTerm ;
         MinTerm	      -> MinTerm 'and' LogicTerm
@@ -100,6 +106,7 @@ grammar Grammar
                       |  Literal
                       |  id '(' Expressions ')'
                       |  id '(' ')' 
+                      |  '{' Expressions '}'
                       |  '{' Element '|' Bounds '}'
                       |  '{' Element '|' Bounds ',' Expression '}'
                       |  'element' '[' Expressions ']'
@@ -113,6 +120,7 @@ grammar Grammar
         Literal	      -> realNumber
                       |  integerNumber
                       |  stringLiteral
+                      |  '�'
                       |  'true'
                       |  'false' ;
     }

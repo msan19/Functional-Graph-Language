@@ -1,6 +1,9 @@
 graph [ 
 	directed 1
 	node [ 
+	    id 0
+	]
+	node [ 
 	    id 1
 	]
 	node [ 
@@ -8,9 +11,6 @@ graph [
 	]
 	node [ 
 	    id 3
-	]
-	node [ 
-	    id 4
 	]
 	edge [ 
 	    source 1
