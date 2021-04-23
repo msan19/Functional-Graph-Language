@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReferenceHandlerLib.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeCheckerLib.Tests", "Tests\TypeCheckerLib.Tests\TypeCheckerLib.Tests.csproj", "{AB713BDB-4D23-44AB-9823-3AA2985A4FD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUtilities", "src\FileUtilities\FileUtilities.csproj", "{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{AB713BDB-4D23-44AB-9823-3AA2985A4FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB713BDB-4D23-44AB-9823-3AA2985A4FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB713BDB-4D23-44AB-9823-3AA2985A4FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{9206787A-905F-4FFD-8911-D8E4B992892D} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
 		{37E1BC0C-25F8-4039-AFE6-9C6E9435F17F} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
 		{AB713BDB-4D23-44AB-9823-3AA2985A4FD4} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
+		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7} = {E8B6A65D-4405-438E-A75E-55B7CE47884A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F8C0B5A-BFD1-46A9-8DB7-16C62192E6D6}
