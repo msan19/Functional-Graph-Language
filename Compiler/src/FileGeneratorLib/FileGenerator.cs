@@ -30,6 +30,8 @@ namespace FileGeneratorLib
                     string path = useProjectFolder ? 
                                   _helper.GetPathWith(OUTPUT_FOLDER_NAME, output[i].FileName + ".gml") : 
                                   output[i].FileName + ".gml";
+                    if (useProjectFolder)
+                        _helper.EnsureOutputDirectoryCreated(OUTPUT_FOLDER_NAME);
                     File.WriteAllText(path, gmlStr);
                 }
                 if (writeToConsole)
