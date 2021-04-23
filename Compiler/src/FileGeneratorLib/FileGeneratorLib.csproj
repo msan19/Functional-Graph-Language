@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ASTLib\ASTLib.csproj" />
+      <ProjectReference Include="..\FileUtilities\FileUtilities.csproj" />
     </ItemGroup>
 
 </Project>

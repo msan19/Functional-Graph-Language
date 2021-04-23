@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using FileUtilities.Interfaces;
 
-namespace FileGeneratorLib
+namespace FileUtilities
 {
     public class FileHelper : IFileHelper
     {
@@ -15,8 +15,6 @@ namespace FileGeneratorLib
         {
             string path = "";
             string projectDirectory = GetProjectDirectory();
-            //Console.WriteLine($"OS: {Environment.OSVersion}");
-            //Console.WriteLine(projectDirectory);
 
             if (IsUnix)
                 path = $"{projectDirectory}/{folder}/{fileName}";
@@ -26,19 +24,34 @@ namespace FileGeneratorLib
             return path;
         }
 
+        public void EnsureOutputDirectoryCreated(string folderName)
+        {
+            string currentPath = GetProjectDirectory();
+            string separator = GetSeparator();
+            string dirPath = currentPath + separator + folderName;
+            bool exists = Directory.Exists(dirPath);
+            if (!exists)
+                Directory.CreateDirectory(dirPath);
+        }
+        
         protected string GetProjectDirectory()
         {
-            string separator = null;
+            string separator = GetSeparator();
             string projectDirectory = Directory.GetCurrentDirectory();
-            if (IsUnix)
-                separator = "/";
-            else if (IsWindows)
-                separator = "\\";
             string[] dirNames = projectDirectory.Split(separator);
             if (dirNames.Length >= 3 && dirNames[dirNames.Length - 3].Equals("bin"))
                 projectDirectory = (Directory.GetParent(projectDirectory).Parent).Parent.FullName;
             return projectDirectory;
         }
 
+        private string GetSeparator()
+        {
+            string separator = null;
+            if (IsUnix)
+                separator = "/";
+            else if (IsWindows)
+                separator = "\\";
+            return separator;
+        }
     }
 }

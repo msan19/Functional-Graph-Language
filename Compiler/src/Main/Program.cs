@@ -13,6 +13,8 @@ using ASTLib.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 using ASTLib.Exceptions.Component;
+using FileUtilities;
+using FileUtilities.Interfaces;
 using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 using TypeCheckerLib.Interfaces;
@@ -36,6 +38,7 @@ namespace Main
         private readonly IInterpreter _interpreter;
         private readonly IFileGenerator _fileGenerator;
         private readonly IExceptionPrinter _exceptionPrinter;
+        private readonly IFileReader _fileReader;
 
         static void Main(string[] args)
         {
@@ -65,7 +68,7 @@ namespace Main
                                            !_shouldThrowExceptions);
             _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
             _exceptionPrinter = new ExceptionPrinter();
-
+            _fileReader = new FileReader(new FileHelper());
         }
 
         private void Compile()
@@ -119,7 +122,7 @@ namespace Main
 
         private string GetInput()
         {
-            string input = _fileGenerator.Read(_fileNames, _projectFolder);
+            string input = _fileReader.Read(_fileNames, _projectFolder);
             input = input.Replace('\t', ' ');
             _exceptionPrinter.SetLines(input.Split("\n").ToList());
             if (_printCode) Console.WriteLine(input);

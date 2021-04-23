@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ASTLib.Objects;
+using FileUtilities;
 
 namespace FileGeneratorLib.Tests
 {
@@ -20,7 +21,8 @@ namespace FileGeneratorLib.Tests
             LabelGraph labelGraph = new LabelGraph("test1", srcList, dstList, vertexLabels, edgeLabels, 4);
 
             GmlGenerator gmlGenerator = new GmlGenerator();
-            string expected = ReadFile("expected1.gml");
+            FileReader fileReader = new FileReader(new FileHelper());
+            string expected = fileReader.Read("expected1.gml", true);
 
             string actual = gmlGenerator.Generate(labelGraph);
             Assert.AreEqual(expected, actual);
@@ -43,22 +45,12 @@ namespace FileGeneratorLib.Tests
             LabelGraph labelGraph = new LabelGraph("test2", srcList, dstList, vertexLabels, edgeLabels, 4);
             
             GmlGenerator gmlGenerator = new GmlGenerator();
-            string expected = ReadFile("expected2.gml");
+            FileReader fileReader = new FileReader(new FileHelper());
+            string expected = fileReader.Read("expected2.gml", true);
 
             string actual = gmlGenerator.Generate(labelGraph);
             
             Assert.AreEqual(expected, actual);
-        }
-
-        private string ReadFile(string fileName)
-        {
-            /*
-            FileHelper fileHelper = new FileHelper();
-            string currentPath = fileHelper.GetProjectDirectory();
-            string fullPath = fileHelper.AppendStr(currentPath, fileName);
-            return File.ReadAllText(fullPath);
-            */
-            return null;
         }
     }
 }
