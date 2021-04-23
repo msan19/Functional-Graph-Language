@@ -116,8 +116,8 @@ namespace InterpreterLib
                 IdentifierExpression e      => _genericHelper.Identifier<Set>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
-                EdgesGraphField e           => _setHelper.EdgesField(e, parameters)
-                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
+                EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
+                _ => throw new UnimplementedInterpreterException(node, "DispatchSet")
             };
         }
 
@@ -128,7 +128,7 @@ namespace InterpreterLib
                 ElementExpression e         => _elementHelper.Element(e, parameters),
                 IdentifierExpression e      => _genericHelper.Identifier<Element>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Element>(e, parameters),
-                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
+                _ => throw new UnimplementedInterpreterException(node, "DispatchElement")
             };
         }
 
