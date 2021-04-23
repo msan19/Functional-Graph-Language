@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FileUtilities.Interfaces;
 
 namespace FileUtilities
 {
-    public class FileReader
+    public class FileReader : IFileReader
     {
         private const string INPUT_FOLDER_NAME = "InputFiles";
 
@@ -23,7 +24,7 @@ namespace FileUtilities
             return s;
         }
 
-        private string Read(string fileName, bool useProjectFolder)
+        public string Read(string fileName, bool useProjectFolder)
         {
             string path = useProjectFolder ?
                 _fileHelper.GetPathWith(INPUT_FOLDER_NAME, fileName) :
