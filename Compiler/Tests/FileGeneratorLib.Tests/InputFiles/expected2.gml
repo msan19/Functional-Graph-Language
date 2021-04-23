@@ -1,21 +1,21 @@
 graph [ 
 	directed 1
 	node [ 
-	    id 1
+	    id 0
 	    nodeValue: 1
 	    someLabelV: 1
 	]
 	node [ 
-	    id 2
+	    id 1
 	    nodeValue: 2
 	    someLabelV: 2
 	]
 	node [ 
-	    id 3
+	    id 2
 	    nodeValue: 3
 	]
 	node [ 
-	    id 4
+	    id 3
 	    nodeValue: 4
 	]
 	edge [ 
