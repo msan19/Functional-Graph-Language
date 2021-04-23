@@ -113,6 +113,7 @@ namespace InterpreterLib
                 UnionExpression e           => _setHelper.UnionSet(e, parameters),
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<Set>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
                 EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
