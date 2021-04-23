@@ -66,9 +66,12 @@ grammar Grammar
                       |  Bound ;
         Bound         -> NumExpression BoundComp '[' id ']' BoundComp NumExpression
                       |  '[' id ']' '==' NumExpression ;
-        Expression    -> Expression '!=' MaxTerm
-                      |  Expression '==' MaxTerm
-                      |  MaxTerm ;
+        Expression    -> '(' ')' '=>' LogicExpression
+                      |  '(' Pairs ')' '=>' LogicExpression
+                      |  LogicExpression ;
+        LogicExpression    -> LogicExpression '!=' MaxTerm
+                           |  LogicExpression '==' MaxTerm
+                           |  MaxTerm ;
         MaxTerm	      -> MaxTerm 'or' MinTerm
                       |  MinTerm ;
         MinTerm	      -> MinTerm 'and' LogicTerm
@@ -103,6 +106,7 @@ grammar Grammar
                       |  Literal
                       |  id '(' Expressions ')'
                       |  id '(' ')' 
+                      |  '{' Expressions '}'
                       |  '{' Element '|' Bounds '}'
                       |  '{' Element '|' Bounds ',' Expression '}'
                       |  'element' '[' Expressions ']'
@@ -110,13 +114,13 @@ grammar Grammar
                       |  Exponent '.V'
                       |  Exponent '.E'
                       |  Exponent '.src'
-                      |  Exponent '.dst' 
-                      |  '(' Pairs ')' '=>' Expression ;
+                      |  Exponent '.dst' ;
         Expressions   -> Expression ',' Expressions
                       |  Expression ;
         Literal	      -> realNumber
                       |  integerNumber
                       |  stringLiteral
+                      |  'Ø'
                       |  'true'
                       |  'false' ;
     }
