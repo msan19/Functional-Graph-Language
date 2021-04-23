@@ -1,4 +1,4 @@
 # P4
-![fgl](/Media/fgl.ico)
+![fgl](Compiler/src/Main/fgl.ico)
 
 Graph construction
