@@ -9,7 +9,7 @@ namespace ASTLib.Nodes.ExpressionNodes
     {
         public List<string> Identifiers { get; }
         public List<TypeNode> Types { get; }
-        public int Reference { get; }
+        public int Reference { get; set; }
 
         public AnonymousFunctionExpression(List<string> identifiers, List<TypeNode> types,
                                            ExpressionNode returnValue, int line, int letter) : 

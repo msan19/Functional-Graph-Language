@@ -272,11 +272,6 @@ namespace TypeCheckerLib.Helpers
             return a.Type == b.Type;
         }
 
-        private bool AreTypesEqual(TypeEnum a, TypeEnum b)
-        {
-            return a == b;
-        }
-
         private bool IsFunctionTypesEqual(FunctionTypeNode a, FunctionTypeNode b)
         {
             if (!AreTypesEqual(a.ReturnType, b.ReturnType))
@@ -300,6 +295,26 @@ namespace TypeCheckerLib.Helpers
                 return _functions[idExpressionNode.Reference].FunctionType;
         }
 
+        public TypeNode VisitAnonymousFunction(AnonymousFunctionExpression node, List<TypeNode> parameterTypes)
+        {
+            List<TypeNode> newScope = new List<TypeNode>();
+            newScope.AddRange(parameterTypes);
+            newScope.AddRange(node.Types);
+
+            TypeNode returnType = _getType(node.ReturnValue, newScope);
+
+            FunctionTypeNode functionType = new FunctionTypeNode(returnType, newScope, 0, 0);
+
+            int line = node.LineNumber;
+            int letter = node.LineNumber;
+            ConditionNode condition = new ConditionNode(node.ReturnValue, line, letter);
+            FunctionNode function = new FunctionNode(functionType.ToString(), condition, 
+                                                     node.Identifiers, functionType, line, letter);
+            node.Reference = _functions.Count;
+            _functions.Add(function);
+            return new FunctionTypeNode(returnType, node.Types, 0,0);
+        }
+
         public TypeNode VisitIntegerLiteral()
         {
             return new TypeNode(TypeEnum.Integer, 0, 0);
@@ -318,6 +333,11 @@ namespace TypeCheckerLib.Helpers
         public TypeNode VisitStringLiteral()
         {
             return new TypeNode(TypeEnum.String, 0, 0);
+        }
+
+        public TypeNode VisitEmptySetLiteral()
+        {
+            return new TypeNode(TypeEnum.Set, 0, 0);
         }
 
     }

@@ -131,7 +131,7 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "CycleOfCycles.fgl" };
+            _fileNames = new List<string>() /*{ "anonymous.fgl" }*/;
             _saveOutput = true;
             foreach (string s in args)
             {

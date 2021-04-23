@@ -38,8 +38,9 @@ namespace TypeCheckerLib
             foreach (var exportNode in root.Exports)
                 _declarationHelper.VisitExport(exportNode);
 
-            foreach (var functionNode in root.Functions)
-                _declarationHelper.VisitFunction(functionNode);
+            //Foreach not posible because anonymous function is added
+            for (int i = 0; i < root.Functions.Count; i++)
+                _declarationHelper.VisitFunction(root.Functions[i]);
         }
 
         public TypeNode Dispatch(ExpressionNode node, List<TypeNode> parameterTypes)
@@ -68,6 +69,7 @@ namespace TypeCheckerLib
                 ISetGraphField n            => _commonOperatorHelper.VisitISetGraphField(n, parameterTypes),
                 IFunctionGraphField n       => _commonOperatorHelper.VisitIFunctionGraphField(n, parameterTypes),
                 GraphExpression n           => _commonOperatorHelper.VisitGraph(n, parameterTypes),
+                AnonymousFunctionExpression n => _declarationHelper.VisitAnonymousFunction(n, parameterTypes),
                 _ => throw new UnimplementedTypeCheckerException(node, "Dispatch"),
             };
         }

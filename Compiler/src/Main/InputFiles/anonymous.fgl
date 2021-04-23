@@ -1,0 +1,10 @@
+﻿export createGraph(17) {"anonymous"}
+
+createGraph:(integer) -> graph
+createGraph(n) = ({element[func(z), n]}, {element[0]}, (element e) => element[0, n], (element e) => element[0, n])
+
+func:(() -> integer) -> integer
+func(f) = f()
+
+z:() -> integer
+z() = 0

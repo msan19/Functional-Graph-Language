@@ -12,6 +12,7 @@ grammar Grammar
         id            -> [a-zA-Z] [a-zA-Z0-9]* ;
         realNumber    -> [0-9]+ '.' [0-9]+ ;
         integerNumber -> [0-9]+ ;
+        emptySet      -> U+2300 | U+00D8 | U+00F8 ;
         stringLiteral -> '"' (.* - (.* '"' .*)) '"'; //Maybe " should be escaped? (\")
 
         NEW_LINE      -> U+000D /* CR */
@@ -68,10 +69,7 @@ grammar Grammar
                       |  '[' id ']' '==' NumExpression ;
         Expression    -> '(' ')' '=>' LogicExpression
                       |  '(' Pairs ')' '=>' LogicExpression
-                      |  LogicExpression ;
-        LogicExpression    -> LogicExpression '!=' MaxTerm
-                           |  LogicExpression '==' MaxTerm
-                           |  MaxTerm ;
+                      |  MaxTerm ;
         MaxTerm	      -> MaxTerm 'or' MinTerm
                       |  MinTerm ;
         MinTerm	      -> MinTerm 'and' LogicTerm
@@ -83,6 +81,8 @@ grammar Grammar
                       |  NumExpression ;
         Compare	      -> '>='
                       |  '>'
+                      |  '=='
+                      |  '!='
                       |  BoundComp ;
         BoundComp     -> '<'
                       |  '<=' ;
@@ -120,7 +120,7 @@ grammar Grammar
         Literal	      -> realNumber
                       |  integerNumber
                       |  stringLiteral
-                      |  '�'
+                      |  emptySet
                       |  'true'
                       |  'false' ;
     }

@@ -78,7 +78,7 @@ namespace LexParserLib
         public void VisitPairs(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
         {
             if (himeNode.Children.Count == 1)
-                VisitPair(himeNode, identifiers, types);
+                VisitPair(himeNode.Children[0], identifiers, types);
             else
             {
                 VisitPairs(himeNode.Children[0], identifiers, types);
@@ -88,8 +88,8 @@ namespace LexParserLib
 
         public void VisitPair(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
         {
-            types.Add(CreateFunctionTypeNode(himeNode.Children[0]));
-            identifiers.Add(himeNode.Children[0].Value);
+            types.Add(CreateTypeNode(himeNode.Children[0]));
+            identifiers.Add(himeNode.Children[1].Value);
         }
 
         public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
@@ -248,6 +248,12 @@ namespace LexParserLib
                     "<=" => new LessEqualExpression(leftOperant, rightOperant,
                                             position.Line,
                                             position.Column),
+                    "==" => new EqualExpression(leftOperant, rightOperant,
+                                                position.Line,
+                                                position.Column),
+                    "!=" => new NotEqualExpression(leftOperant, rightOperant,
+                                                   position.Line,
+                                                   position.Column),
                     _ => throw new UnimplementedASTException(op.Value, "operator")
                 };
             }

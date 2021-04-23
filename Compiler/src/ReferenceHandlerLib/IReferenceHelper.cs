@@ -8,8 +8,8 @@ namespace ReferenceHandlerLib
 {
     public interface IReferenceHelper
     {
+        void VisitAnonymousFunction(AnonymousFunctionExpression node, List<string> parameters);
         void SetDispatch(Action<ExpressionNode, List<string>> dispatch);
-
         void BuildTables(List<FunctionNode> functions);
         void VisitExport(ExportNode node);
         void VisitFunction(FunctionNode node);
