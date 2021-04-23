@@ -39,7 +39,7 @@ namespace LexParserLib
 
             return himeNode.Symbol.Name switch
             {
-                "Expression" => VisitExpression(himeNode),
+                "LogicExpression" => VisitExpression(himeNode),
                 "MaxTerm" => VisitExpression(himeNode),
                 "MinTerm" => VisitExpression(himeNode),
                 "LogicTerm" => VisitLogicTerm(himeNode),

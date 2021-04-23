@@ -1,6 +1,6 @@
 ﻿// Cycle of Cycles
 N: () -> integer
-N() = 10
+N() = 5
 
 export Cycle(N()) {"CycleOfCycles"}
 
@@ -16,4 +16,3 @@ dst: (element) -> element
 dst(e) =
 	| e[i,j], i < N() = element[(i+1) mod N(), j]
 	| e[i,j], i == N() = element[N()/2, (j+1) mod N()]
-
