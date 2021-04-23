@@ -1,3 +1,6 @@
+# Ours
+Compiler/src/Main/OutputFiles
+Compiler/Tests/Main.Tests/OutputFiles
 .vs
 backend/obj/Release/
 backend/obj/Debug/netcoreapp3.1/backend.assets.cache
