@@ -278,6 +278,10 @@ namespace InterpreterLib
                     throw new UnacceptedConditionsException(defaultCase);
                 return a;
             }
+            else if(returnedValues == 0)
+            {
+                throw new UnacceptedConditionsException(node);
+            }
             else if (returnedValues != 1)
             {
                 ComponentException exceptions = new ComponentException();
