@@ -313,8 +313,9 @@ namespace ReferenceHandlerLib
         {
             List<string> newScope = parameters.ToList();
             newScope.AddRange(node.Identifiers);
-            StringsAreUnique(newScope);
-            _dispatch(node.ReturnValue, parameters);
+            if (!StringsAreUnique(newScope))
+                throw new IdenticalParameterIdentifiersException(newScope);
+            _dispatch(node.ReturnValue, newScope);
         }
     }
 }
