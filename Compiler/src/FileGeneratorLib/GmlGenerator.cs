@@ -66,9 +66,9 @@ namespace FileGeneratorLib
 
         private string GetEdgeAsString(LabelGraph graph, int i)
         {
-            StringBuilder sb = new StringBuilder("\tedge [ ");
-            sb.AppendLine($"\n\t    source {graph.SrcList[i]}");
-            sb.AppendLine($"\t    target {graph.DstList[i]}");
+            StringBuilder sb = new StringBuilder("\tedge [ \n");
+            sb.AppendLine($"\t\tsource {graph.SrcList[i]}");
+            sb.AppendLine($"\t\ttarget {graph.DstList[i]}");
             AddAdditionalEdgeLabels(sb, graph, i);
             sb.Append("\t]\n");
             return sb.ToString();
@@ -80,7 +80,7 @@ namespace FileGeneratorLib
             {
                 string label = graph.EdgeLabels[row, i];
                 if (label != "")
-                    sb.AppendLine($"\t    {label}");
+                    sb.AppendLine($"\t\t{label}");
             }
         }
     }
