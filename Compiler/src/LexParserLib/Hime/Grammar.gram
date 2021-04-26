@@ -67,8 +67,8 @@ grammar Grammar
                       |  Bound ;
         Bound         -> NumExpression BoundComp '[' id ']' BoundComp NumExpression
                       |  '[' id ']' '==' NumExpression ;
-        Expression    -> '(' ')' '=>' LogicExpression
-                      |  '(' Pairs ')' '=>' LogicExpression
+        Expression    -> '(' ')' '=>' MaxTerm
+                      |  '(' Pairs ')' '=>' MaxTerm
                       |  MaxTerm ;
         MaxTerm	      -> MaxTerm 'or' MinTerm
                       |  MinTerm ;
