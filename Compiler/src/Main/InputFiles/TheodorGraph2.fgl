@@ -1,4 +1,10 @@
-﻿vertexSet: (integer)->set
+﻿
+export graphFunc(2) { "TheodorGraph2" }
+
+graphFunc: (integer)->graph
+graphFunc(n) = (vertexSet(n), edgeSet(n), src, dst)
+
+vertexSet: (integer)->set
 vertexSet(n) = {
     x[i, j] | 0 < [i] <= n, 
              0 <= [j] < 2 ^ (n + 1), 
@@ -7,22 +13,16 @@ vertexSet(n) = {
 edgeSet: (integer)->set
 edgeSet(n) = {
     x[i, j, k] | 0 < [i] <= n, 
-             0 <= [j] < n ^ (n + 1), 
+             0 <= [j] < 2 ^ (n + 1), 
              0 <= [k] <= 1, 
              j < 2 ^ (i + 1) and i <= n - k}
 
 src: (element)->element
 src(e) =
-       | e[i, j, k], k == 0 = element[i, j]
-         | e[i, j, k], k == 1 = element[i, j]
+       | e[i, j, k] = element[i, j]
 
 
 dst: (element)->element
 dst(e) =
      | e[i, j, k], k == 0 = element[i, (j + 1) mod 2 ^ (i + 1)]
-         | e[i, j, k], k == 1 = element[i + 1, (j * 2) mod 2 ^ (i + 1)]
-
-graphFunc: (integer)->graph
-graphFunc(n) = (vertexSet(n), edgeSet(n), src, dst)
-
-export graphFunc(10) { "TheodorGraph2" }
+         | e[i, j, k], k == 1 = element[i + 1, (j * 2) mod 2 ^ (i + 2)]
