@@ -138,7 +138,11 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
+<<<<<<< HEAD
             _fileNames = new List<string>() /*{ "[inputfile].fgl" }*/;
+=======
+            _fileNames = new List<string>() { "bTree.fgl" };
+>>>>>>> 193302ecb97149d0df01def9b47d84305385fd81
             _saveOutput = true;
             foreach (string s in args)
             {
