@@ -5,12 +5,15 @@ using System.IO;
 using System.Text;
 using ASTLib.Objects;
 using FileUtilities;
+using FluentAssertions;
 
 namespace FileGeneratorLib.Tests
 {
     [TestClass]
     public class GmlGeneratorTests
     {
+        ExpectedGmlStrings expectedGmlStrings = new ExpectedGmlStrings();
+        
         [TestMethod]
         public void HandleLabelGraph_WithoutAdditionalLabels_DstSrcEvenNumber_()
         {
@@ -21,8 +24,7 @@ namespace FileGeneratorLib.Tests
             LabelGraph labelGraph = new LabelGraph("test1", srcList, dstList, vertexLabels, edgeLabels, 4);
 
             GmlGenerator gmlGenerator = new GmlGenerator();
-            FileReader fileReader = new FileReader(new FileHelper());
-            string expected = fileReader.Read("expected1.gml", true);
+            string expected = expectedGmlStrings.Str1;
 
             string actual = gmlGenerator.Generate(labelGraph);
             Assert.AreEqual(expected, actual);
@@ -45,12 +47,11 @@ namespace FileGeneratorLib.Tests
             LabelGraph labelGraph = new LabelGraph("test2", srcList, dstList, vertexLabels, edgeLabels, 4);
             
             GmlGenerator gmlGenerator = new GmlGenerator();
-            FileReader fileReader = new FileReader(new FileHelper());
-            string expected = fileReader.Read("expected2.gml", true);
+            string expected = expectedGmlStrings.Str2;
 
             string actual = gmlGenerator.Generate(labelGraph);
             
-            Assert.AreEqual(expected, actual);
+            expected.Should().BeEquivalentTo(actual);
         }
     }
 }
