@@ -19,7 +19,7 @@ namespace FileUtilities
             if (IsUnix)
                 path = $"{projectDirectory}/{folder}/{fileName}";
             else if (IsWindows)
-                path = $"{projectDirectory}\\{folder}/{fileName}";
+                path = $"{projectDirectory}\\{folder}\\{fileName}";
 
             return path;
         }
