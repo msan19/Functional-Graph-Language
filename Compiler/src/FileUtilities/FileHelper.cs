@@ -13,15 +13,9 @@ namespace FileUtilities
 
         public string GetPathWith(string folder, string fileName)
         {
-            string path = "";
+            string separator = GetSeparator();
             string projectDirectory = GetProjectDirectory();
-
-            if (IsUnix)
-                path = $"{projectDirectory}/{folder}/{fileName}";
-            else if (IsWindows)
-                path = $"{projectDirectory}\\{folder}\\{fileName}";
-
-            return path;
+            return $"{projectDirectory}{separator}{folder}{separator}{fileName}";
         }
 
         public void EnsureOutputDirectoryCreated(string folderName)
@@ -46,12 +40,11 @@ namespace FileUtilities
 
         private string GetSeparator()
         {
-            string separator = null;
             if (IsUnix)
-                separator = "/";
+                return "/";
             else if (IsWindows)
-                separator = "\\";
-            return separator;
+                return "\\";
+            return "/";
         }
     }
 }
