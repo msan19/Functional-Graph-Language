@@ -35,6 +35,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeCheckerLib.Tests", "Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUtilities", "src\FileUtilities\FileUtilities.csproj", "{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{84AD06F4-DBF9-48E4-8F07-E153E482AE99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleCompTypeCheckerLib.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\SingleCompTypeCheckerLib.Tests.csproj", "{3B692A45-8BCD-43C7-97F1-5203DAE7142E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleCompReferenceHandlerLib.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\SingleCompReferenceHandlerLib.Tests\SingleCompReferenceHandlerLib.Tests.csproj", "{348E85B1-0637-4509-B78D-F96C9D6AF01E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleCompIntepreterLib.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\SingleCompIntepreterLib.Tests\SingleCompIntepreterLib.Tests.csproj", "{87C719CF-3961-4B26-9C40-2D345CB4F3D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleCompGmlGeneratorLib.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\SingleCompFileGeneratorLib.Tests\SingleCompGmlGeneratorLib.Tests.csproj", "{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeCheckerAndIntepreter.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\TypeCheckerAndIntepreter.Tests\TypeCheckerAndIntepreter.Tests.csproj", "{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReferenceHandlerAndTypeChecker.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\ReferenceHandlerAndTypeChecker.Tests\ReferenceHandlerAndTypeChecker.Tests.csproj", "{E675A25F-3A50-40E3-BACD-EDDC457D7C88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntepreterAndGmlGenerator.Tests", "SingleCompReferenceHandlerLib.Tests\SingleCompTypeCheckerLib.Tests\IntepreterAndGmlGenerator.Tests\IntepreterAndGmlGenerator.Tests.csproj", "{7A5C97FA-1CD6-4CEF-B480-C16EED05F488}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +110,34 @@ Global
 		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B692A45-8BCD-43C7-97F1-5203DAE7142E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B692A45-8BCD-43C7-97F1-5203DAE7142E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B692A45-8BCD-43C7-97F1-5203DAE7142E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B692A45-8BCD-43C7-97F1-5203DAE7142E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{348E85B1-0637-4509-B78D-F96C9D6AF01E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{348E85B1-0637-4509-B78D-F96C9D6AF01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{348E85B1-0637-4509-B78D-F96C9D6AF01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{348E85B1-0637-4509-B78D-F96C9D6AF01E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E675A25F-3A50-40E3-BACD-EDDC457D7C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E675A25F-3A50-40E3-BACD-EDDC457D7C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E675A25F-3A50-40E3-BACD-EDDC457D7C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E675A25F-3A50-40E3-BACD-EDDC457D7C88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,7 +150,13 @@ Global
 		{9206787A-905F-4FFD-8911-D8E4B992892D} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
 		{37E1BC0C-25F8-4039-AFE6-9C6E9435F17F} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
 		{AB713BDB-4D23-44AB-9823-3AA2985A4FD4} = {E7C70BD1-C46B-409E-894C-83407B9D15CA}
-		{F2A43F26-DC09-4F17-8A0A-3F0630898CD7} = {E8B6A65D-4405-438E-A75E-55B7CE47884A}
+		{3B692A45-8BCD-43C7-97F1-5203DAE7142E} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{348E85B1-0637-4509-B78D-F96C9D6AF01E} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{87C719CF-3961-4B26-9C40-2D345CB4F3D4} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{E675A25F-3A50-40E3-BACD-EDDC457D7C88} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
+		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488} = {84AD06F4-DBF9-48E4-8F07-E153E482AE99}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F8C0B5A-BFD1-46A9-8DB7-16C62192E6D6}
