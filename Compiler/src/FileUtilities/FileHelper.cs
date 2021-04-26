@@ -15,12 +15,8 @@ namespace FileUtilities
         {
             string path = "";
             string projectDirectory = GetProjectDirectory();
-
-            if (IsUnix)
-                path = $"{projectDirectory}/{folder}/{fileName}";
-            else if (IsWindows)
-                path = $"{projectDirectory}\\{folder}\\{fileName}";
-
+            string separator = GetSeparator();
+            path = $"{projectDirectory}{separator}{folder}{separator}{fileName}";
             return path;
         }
 
