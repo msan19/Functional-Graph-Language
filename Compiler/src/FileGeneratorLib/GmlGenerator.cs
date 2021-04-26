@@ -1,10 +1,24 @@
+using System.Collections.Generic;
 using System.Text;
 using ASTLib.Objects;
+using FileGeneratorLib.Interfaces;
 
 namespace FileGeneratorLib
 {
-    public class GmlGenerator : IGmlGenerator
+    public class GmlGenerator : IOutputGenerator
     {
+        public List<ExtensionalGraph> Generate(List<LabelGraph> graphs)
+        {
+            List<ExtensionalGraph> gmlGraphs = new List<ExtensionalGraph>();
+            foreach (var graph in graphs)
+            {
+                string gmlString = Generate(graph);
+                ExtensionalGraph extensionalGraph = new ExtensionalGraph(graph.FileName, gmlString);
+                gmlGraphs.Add(extensionalGraph);
+            }
+            return gmlGraphs;
+        }
+        
         public string Generate(LabelGraph graph)
         {
             string s = "";
@@ -24,7 +38,7 @@ namespace FileGeneratorLib
         private string GetVertexString(LabelGraph graph, int i)
         {
             StringBuilder sb = new StringBuilder("\tnode [ ");
-            sb.AppendLine($"\n\t    id {i}");
+            sb.AppendLine($"\n\t\tid {i}");
             AddAdditionalVertexLabels(sb, graph, i);
             sb.Append("\t]\n");
             return sb.ToString();
@@ -36,7 +50,7 @@ namespace FileGeneratorLib
             {
                 string label = graph.VertexLabels[row, i];
                 if (label != "")
-                    sb.AppendLine($"\t    {label}");
+                    sb.AppendLine($"\t\t{label}");
             }
         }
 

@@ -1,9 +1,10 @@
-﻿using ASTLib.Objects;
+﻿using System.Collections.Generic;
+using ASTLib.Objects;
 
-namespace FileGeneratorLib
+namespace FileGeneratorLib.Interfaces
 {
-    public interface IGmlGenerator
+    public interface IOutputGenerator
     {
-        string Generate(LabelGraph graph);
+        public List<ExtensionalGraph> Generate(List<LabelGraph> graphs);
     }
 }

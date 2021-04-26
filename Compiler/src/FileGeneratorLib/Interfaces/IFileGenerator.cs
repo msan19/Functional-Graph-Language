@@ -1,10 +1,10 @@
-﻿using ASTLib.Objects;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ASTLib.Objects;
 
-namespace FileGeneratorLib
+namespace FileGeneratorLib.Interfaces
 {
     public interface IFileGenerator
     {
-        void Export(List<LabelGraph> output, bool writeToConsole, bool writeToFiles, bool useProjectFolder);
+        void Export(List<ExtensionalGraph> gmlGraphs, bool writeToConsole, bool writeToFiles, bool useProjectFolder);
     }
 }

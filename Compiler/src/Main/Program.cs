@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ASTLib.Exceptions.Component;
+using FileGeneratorLib.Interfaces;
 using FileUtilities;
 using FileUtilities.Interfaces;
 using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
@@ -41,6 +42,7 @@ namespace Main
         private readonly IFileGenerator _fileGenerator;
         private readonly IExceptionPrinter _exceptionPrinter;
         private readonly IFileReader _fileReader;
+        private readonly GmlGenerator _gmlGenerator;
 
         private IConfiguration config;
 
@@ -73,7 +75,8 @@ namespace Main
                                            new StringHelper(),
                                            new GraphHelper(),
                                            !_shouldThrowExceptions);
-            _fileGenerator = new FileGenerator(new GmlGenerator(), new FileHelper());
+            _gmlGenerator = new GmlGenerator();
+            _fileGenerator = new FileGenerator(new FileHelper());
             _exceptionPrinter = new ExceptionPrinter();
             _fileReader = new FileReader(new FileHelper());
         }
@@ -123,7 +126,8 @@ namespace Main
                 _referenceHandler.InsertReferences(ast);
                 _typeChecker.CheckTypes(ast);
                 var output = _interpreter.Interpret(ast);
-                _fileGenerator.Export(output, _printOutput, _saveOutput, _projectFolder);
+                List<ExtensionalGraph> gmlGraphs = _gmlGenerator.Generate(output);
+                _fileGenerator.Export(gmlGraphs, _printOutput, _saveOutput, _projectFolder);
             }
         }
 
@@ -138,7 +142,7 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() /*{ "Cycle.fgl" } */;
+            _fileNames = new List<string>() { "Cycle.fgl" };
             _saveOutput = true;
             foreach (string s in args)
             {

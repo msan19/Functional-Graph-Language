@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FileGeneratorLib.Interfaces;
 using FileUtilities.Interfaces;
 
 namespace FileGeneratorLib
@@ -10,36 +11,33 @@ namespace FileGeneratorLib
     public class FileGenerator : IFileGenerator
     {
         private const string OUTPUT_FOLDER_NAME = "OutputFiles";
-        private readonly IGmlGenerator _gmlGenerator;
         private readonly IFileHelper _helper;
 
-        public FileGenerator(IGmlGenerator gmlGenerator, IFileHelper helper)
+        public FileGenerator(IFileHelper helper)
         {
-            _gmlGenerator = gmlGenerator;
             _helper = helper;
         }
 
-        public void Export(List<LabelGraph> output, bool writeToConsole, bool writeToFiles, bool useProjectFolder)
+        public void Export(List<ExtensionalGraph> gmlGraphs, bool writeToConsole, bool writeToFiles, bool useProjectFolder)
         {
-            for (int i = 0; i < output.Count; i++)
+            for (int i = 0; i < gmlGraphs.Count; i++)
             {
-                string gmlStr = "";
-                gmlStr = _gmlGenerator.Generate(output[i]);
+                ExtensionalGraph extensionalGraph = gmlGraphs[i];
                 if (writeToFiles)
                 {
                     string path = useProjectFolder ? 
-                                  _helper.GetPathWith(OUTPUT_FOLDER_NAME, output[i].FileName + ".gml") : 
-                                  output[i].FileName + ".gml";
+                                  _helper.GetPathWith(OUTPUT_FOLDER_NAME, extensionalGraph.FileName + ".gml") : 
+                                  extensionalGraph.FileName + ".gml";
                     if (useProjectFolder)
                         _helper.EnsureOutputDirectoryCreated(OUTPUT_FOLDER_NAME);
-                    File.WriteAllText(path, gmlStr);
+                    File.WriteAllText(path, extensionalGraph.GraphString);
                 }
                 if (writeToConsole)
                 {
                     if (i == 0)
                         Console.WriteLine("\nRESULTS:\n");
                     Console.WriteLine($"Output GML graph {i}: \n");
-                    Console.WriteLine(gmlStr);
+                    Console.WriteLine(extensionalGraph.GraphString);
                 }
             }
         }
