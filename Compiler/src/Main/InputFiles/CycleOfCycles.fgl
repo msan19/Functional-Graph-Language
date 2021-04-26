@@ -1,6 +1,6 @@
 ﻿// Cycle of Cycles
 N: () -> integer
-N() = 5
+N() = 10
 
 export Cycle(N()) {"CycleOfCycles"}
 
