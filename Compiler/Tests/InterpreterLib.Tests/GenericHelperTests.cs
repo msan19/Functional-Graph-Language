@@ -217,7 +217,7 @@ namespace InterpreterLib.Tests
             bool expected)
         {
             var parameters = Utilities.GetParameterList(paramCount);
-            parameters[paramIndex] = funcIndex;
+            parameters[paramIndex] = new Function(funcIndex);
 
             var children = new List<ExpressionNode>();
             var expr = new FunctionCallExpression("", children, 0, 0);
@@ -538,7 +538,7 @@ namespace InterpreterLib.Tests
             FunctionNode res = null;
             parent.Function<Function>(Arg.Do<FunctionNode>(x => res = x), Arg.Any<List<object>>());
 
-            functionHelper.FunctionCall<Function>(funcCallExpr, new List<object> { 0 });
+            functionHelper.FunctionCall<Function>(funcCallExpr, new List<object> { new Function(0) });
 
             res.Should().BeEquivalentTo(funcNode);
         }

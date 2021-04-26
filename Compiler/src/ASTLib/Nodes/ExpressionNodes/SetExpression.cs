@@ -20,6 +20,13 @@ namespace ASTLib.Nodes.ExpressionNodes
             Bounds = bounds;
         }
 
+        public SetExpression(List<ExpressionNode> elements, int line, int letter) :
+            base(elements, line, letter)
+        {
+        }
+
+        public bool IsSetBuilder => Element != null && Bounds != null;
+
         public ExpressionNode Predicate => Children.First();
     }
 }

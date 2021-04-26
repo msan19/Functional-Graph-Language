@@ -24,6 +24,9 @@ namespace InterpreterLib.Helpers
 
         public Set SetExpression(SetExpression node, List<Object> parameters)
         {
+            if (!node.IsSetBuilder)
+                return GetManualSet(node, parameters);
+
             Set set = new Set();
             List<int> minValues = new List<int>();
             List<int> maxValues = new List<int>();
@@ -39,6 +42,14 @@ namespace InterpreterLib.Helpers
             EvaluateSet(minValues, maxValues, indices, node.Predicate, 0, set, parameters);
 
             return set;
+        }
+
+        private Set GetManualSet(SetExpression node, List<object> parameters)
+        {
+            List<Element> elements = new List<Element>();
+            foreach (ExpressionNode n in node.Children)
+                elements.Add(_interpreter.DispatchElement(n, parameters));
+            return new Set(elements);
         }
 
         private void EvaluateSet(List<int> minValues, List<int> maxValues, List<int> indices, ExpressionNode condition, int recursionDepth, Set set, List<Object> parameters)
@@ -180,9 +191,9 @@ namespace InterpreterLib.Helpers
             return !(i >= elements.Count);
         }
 
-        public Set ExportSet(ExportNode node)
+        public Set EmptySetLiteral(EmptySetLiteralExpression e, List<object> parameters)
         {
-            throw new NotImplementedException();
+            return e.Value;
         }
     }
 }

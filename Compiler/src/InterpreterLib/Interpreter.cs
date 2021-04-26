@@ -113,9 +113,11 @@ namespace InterpreterLib
                 UnionExpression e           => _setHelper.UnionSet(e, parameters),
                 IntersectionExpression e    => _setHelper.IntersectionSet(e, parameters),
                 SubtractionExpression e     => _setHelper.SubtractionSet(e, parameters),
+                IdentifierExpression e      => _genericHelper.Identifier<Set>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Set>(e, parameters),
                 VerticesGraphField e        => _setHelper.VerticesField(e, parameters),
                 EdgesGraphField e           => _setHelper.EdgesField(e, parameters),
+                EmptySetLiteralExpression e => _setHelper.EmptySetLiteral(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
             };
         }
@@ -127,7 +129,7 @@ namespace InterpreterLib
                 ElementExpression e         => _elementHelper.Element(e, parameters),
                 IdentifierExpression e      => _genericHelper.Identifier<Element>(e, parameters),
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Element>(e, parameters),
-                _ => throw new UnimplementedInterpreterException(node, "DispatctSet")
+                _ => throw new UnimplementedInterpreterException(node, "DispatchElement")
             };
         }
 
@@ -178,6 +180,7 @@ namespace InterpreterLib
                 FunctionCallExpression e    => _genericHelper.FunctionCall<Function>(e, parameters),
                 SrcGraphField e             => _functionHelper.SrcField(e, parameters),
                 DstGraphField e             => _functionHelper.DstField(e, parameters),
+                AnonymousFunctionExpression e => _functionHelper.AnonymousFunction(e, parameters),
                 _ => throw new UnimplementedInterpreterException(node, "DispatchFunction")
             };
         }
@@ -276,6 +279,10 @@ namespace InterpreterLib
                 if (a == null)
                     throw new UnacceptedConditionsException(defaultCase);
                 return a;
+            }
+            else if(returnedValues == 0)
+            {
+                throw new UnacceptedConditionsException(node);
             }
             else if (returnedValues != 1)
             {

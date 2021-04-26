@@ -48,7 +48,7 @@ namespace ReferenceHandlerLib
                     case INonIdentifierExpression e: _helper.VisitNonIdentifier(e, parameters); break;
                     case FunctionCallExpression e: _helper.VisitFunctionCall(e, parameters); break;
                     case SetExpression e: _helper.VisitSet(e, parameters); break;
-
+                    case AnonymousFunctionExpression e: _helper.VisitAnonymousFunction(e, parameters); break;
                     default: throw new UnimplementedReferenceHandlerException(node);
                 }
             });

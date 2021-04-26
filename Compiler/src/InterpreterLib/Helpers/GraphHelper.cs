@@ -6,6 +6,7 @@ using ASTLib.Objects;
 using InterpreterLib.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InterpreterLib.Helpers
@@ -62,8 +63,9 @@ namespace InterpreterLib.Helpers
         private int GetElementIndex(ExportNode node, Function function, Element input, Graph graph, ElementComparer comparer)
         {
             FunctionNode functionNode = _functions[function.Reference];
-            List<Object> parameter = new List<Object> { input };
-            Element element = _interpreter.Function<Element>(functionNode, parameter);
+            List<Object> parameters = function.Scope.ToList();
+            parameters.Add(input);
+            Element element = _interpreter.Function<Element>(functionNode, parameters);
             int index = graph.Vertices.Elements.BinarySearch(element, comparer);
             if (index < 0)
                 throw new InvalidElementException(node, element);

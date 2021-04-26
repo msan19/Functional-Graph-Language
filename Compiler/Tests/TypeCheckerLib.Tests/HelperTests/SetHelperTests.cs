@@ -165,7 +165,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new RealLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
-            SetExpression set = new SetExpression(null, 
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0, 0), 
                                    new List<BoundNode> { 
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,
@@ -183,7 +183,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new RealLiteralExpression(0.0, 0, 0);
-            SetExpression set = new SetExpression(null,
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0, 0),
                                    new List<BoundNode> {
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,
@@ -200,7 +200,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
-            SetExpression set = new SetExpression(null,
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0, 0),
                                    new List<BoundNode> {
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,
@@ -219,7 +219,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
-            SetExpression set = new SetExpression(null,
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0, 0),
                                    new List<BoundNode> {
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,
@@ -249,7 +249,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
-            SetExpression set = new SetExpression(null,
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0, 0),
                                    new List<BoundNode> {
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,
@@ -281,7 +281,7 @@ namespace TypeCheckerLib.Tests.HelperTests
             ExpressionNode smallestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode biggestValue = new IntegerLiteralExpression(0, 0, 0);
             ExpressionNode predicate = new BooleanLiteralExpression(false, 0, 0);
-            SetExpression set = new SetExpression(null,
+            SetExpression set = new SetExpression(new ElementNode(null, null, 0,0),
                                    new List<BoundNode> {
                                    new BoundNode("", smallestValue, biggestValue, 0,0) },
                                    predicate,

@@ -57,6 +57,9 @@ namespace TypeCheckerLib.Helpers
 
         public TypeNode VisitSet(SetExpression node, List<TypeNode> parameterTypes)
         {
+            if (!node.IsSetBuilder)
+                return CheckManualSet(node, parameterTypes);
+
             List<TypeNode> indexTypes = new List<TypeNode>();
             foreach(BoundNode n in node.Bounds)
             {
@@ -69,6 +72,18 @@ namespace TypeCheckerLib.Helpers
             parameterTypes.AddRange(indexTypes);
             CheckType(node.Predicate, parameterTypes, TypeEnum.Boolean);
             parameterTypes.RemoveRange(parameterTypes.Count - node.Bounds.Count - 1, node.Bounds.Count + 1);
+            return new TypeNode(TypeEnum.Set, 0, 0);
+        }
+
+        private TypeNode CheckManualSet(SetExpression node, List<TypeNode> parameterTypes)
+        {
+            foreach (ExpressionNode n in node.Children)
+            {
+                TypeEnum type = _getType(n, parameterTypes).Type;
+                if (type != TypeEnum.Element)
+                    throw new UnmatchableTypesException(n, type, TypeEnum.Element);
+            }
+
             return new TypeNode(TypeEnum.Set, 0, 0);
         }
 

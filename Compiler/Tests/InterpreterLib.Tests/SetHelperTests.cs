@@ -75,7 +75,7 @@ namespace InterpreterLib.Tests
             SetHelper setHelper = SetUpHelper(parent);
             List<BoundNode> bounds = GetBounds(parent, min, max);
             LessExpression expr = new LessExpression(null, null, 0, 0);
-            SetExpression setExpr = new SetExpression(null, bounds, expr, 0, 0);
+            SetExpression setExpr = new SetExpression(new ElementNode(null, null, 0,0), bounds, expr, 0, 0);
             List<Element> expectedElements = new List<Element>();
             for (int i = 0; i < indexPairs.Count; i++)
             {

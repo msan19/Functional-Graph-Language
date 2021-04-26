@@ -11,8 +11,13 @@ namespace ASTLib.Exceptions
         {
         }
         
-        public UnacceptedConditionsException(Node node) :
+        public UnacceptedConditionsException(ConditionNode node) :
             base(node, "The default case returned an invalid result")
+        {
+        }
+
+        public UnacceptedConditionsException(FunctionNode node) :
+            base(node, "The function did not have any valid conditions")
         {
         }
 

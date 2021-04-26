@@ -104,7 +104,7 @@ namespace InterpreterLib.Tests
         }
 
         [TestMethod]
-        public void FunctionInteger_FunctionNodeAndTwoConditionsOneDefaultCaseAndObjectList_CorrectExceptionThrown()
+        public void FunctionInteger_FunctionNodeAndTwoConditionsNoDefaultCaseAndObjectList_CorrectExceptionThrown()
         {
             ConditionNode cn1 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
             ConditionNode cn2 = new ConditionNode(new BooleanLiteralExpression(true, 0, 0), null, 0, 0);
@@ -117,7 +117,7 @@ namespace InterpreterLib.Tests
             fhelper.Condition<int>(cn2, Arg.Any<List<Object>>()).
                                    Returns(new MatchPair<int>(false, 1));
 
-            Assert.ThrowsException<ComponentException>(() => interpreter.Function<int>(input1, input2));
+            Assert.ThrowsException<UnacceptedConditionsException>(() => interpreter.Function<int>(input1, input2));
         }
 
         #endregion

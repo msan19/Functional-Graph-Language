@@ -19,9 +19,10 @@ namespace LexParserLib
 {
     public class ExpressionHelper : IExpressionHelper
     {
-        private const int CONSTANT_FUNCTION_CALL = 3, EXPRESSIONS_POS = 2,
+        private const int RETURNTYPE_POS = 4, 
+                          CONSTANT_FUNCTION_CALL = 3, EXPRESSIONS_POS = 2,
                           SET_WITH_PREDICATE = 7, DOUBLE_BOUNDS = 7,
-                          PARENTHESES = 3, GRAPH = 9;
+                          PARENTHESES = 3, GRAPH = 9, CONSTANT_ANONYMOUS_FUNCTION = 4;
 
         public ExpressionNode DispatchExpression(ASTNode himeNode)
         {
@@ -39,7 +40,8 @@ namespace LexParserLib
 
             return himeNode.Symbol.Name switch
             {
-                "Expression" => VisitExpression(himeNode),
+                "Expression" => GetAnonymousFunction(himeNode),
+                "LogicExpression" => VisitExpression(himeNode),
                 "MaxTerm" => VisitExpression(himeNode),
                 "MinTerm" => VisitExpression(himeNode),
                 "LogicTerm" => VisitLogicTerm(himeNode),
@@ -53,7 +55,94 @@ namespace LexParserLib
             };
         }
 
-        private ExpressionNode VisitExpression(ASTNode himeNode)
+        public ExpressionNode GetAnonymousFunction(ASTNode himeNode)
+        {
+
+            List<string> identifiers = new List<string>();
+            List<TypeNode> types = new List<TypeNode>();
+            ExpressionNode returnValue;
+
+            if (himeNode.Children.Count == CONSTANT_ANONYMOUS_FUNCTION)
+                returnValue = DispatchExpression(himeNode.Children[3]);
+            else
+            {
+                VisitPairs(himeNode.Children[1], identifiers, types);
+                returnValue = DispatchExpression(himeNode.Children[4]);
+            }
+
+            TextPosition position = himeNode.Children[0].Position;
+            return new AnonymousFunctionExpression(identifiers, types, returnValue, 
+                                                   position.Line, position.Column);
+        }
+
+        public void VisitPairs(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
+        {
+            if (himeNode.Children.Count == 1)
+                VisitPair(himeNode.Children[0], identifiers, types);
+            else
+            {
+                VisitPairs(himeNode.Children[0], identifiers, types);
+                VisitPair(himeNode.Children[2], identifiers, types);
+            }
+        }
+
+        public void VisitPair(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
+        {
+            types.Add(CreateTypeNode(himeNode.Children[0]));
+            identifiers.Add(himeNode.Children[1].Value);
+        }
+
+        public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
+        {
+            TypeNode returnType;
+            List<TypeNode> parameterTypes;
+            if (himeNode.Children.Count == 5)
+            {
+                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
+                parameterTypes = VisitTypes(himeNode.Children[1]);
+            }
+            else
+            {
+                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS - 1]);
+                parameterTypes = new List<TypeNode>();
+            }
+
+            TextPosition position = himeNode.Children[0].Position;
+            return new FunctionTypeNode(returnType, parameterTypes, position.Line, position.Column);
+        }
+
+        public TypeNode CreateTypeNode(ASTNode himeNode)
+        {
+            TextPosition position = himeNode.Children[0].Position;
+            return himeNode.Children[0].Symbol.Name switch
+            {
+                "integer" => new TypeNode(TypeEnum.Integer, position.Line, position.Column),
+                "real" => new TypeNode(TypeEnum.Real, position.Line, position.Column),
+                "boolean" => new TypeNode(TypeEnum.Boolean, position.Line, position.Column),
+                "string" => new TypeNode(TypeEnum.String, position.Line, position.Column),
+                "set" => new TypeNode(TypeEnum.Set, position.Line, position.Column),
+                "element" => new TypeNode(TypeEnum.Element, position.Line, position.Column),
+                "graph" => new TypeNode(TypeEnum.Graph, position.Line, position.Column),
+                "FuncTypeDecl" => CreateFunctionTypeNode(himeNode.Children[0]),
+                _ => throw new UnimplementedASTException(himeNode.Children[0].Symbol.Name, "type"),
+            };
+        }
+
+        public List<TypeNode> VisitTypes(ASTNode himeNode)
+        {
+            if (himeNode.Children.Count == 1)
+            {
+                return new List<TypeNode> { CreateTypeNode(himeNode.Children[0]) };
+            }
+            else
+            {
+                List<TypeNode> types = VisitTypes(himeNode.Children[0]);
+                types.Add(CreateTypeNode(himeNode.Children[2]));
+                return types;
+            }
+        }
+
+        public ExpressionNode VisitExpression(ASTNode himeNode)
         {
             return himeNode.Children.Count switch
             {
@@ -63,7 +152,7 @@ namespace LexParserLib
             };
         }
 
-        private ExpressionNode VisitExpressionWithTwoChildren(ASTNode himeNode)
+        public ExpressionNode VisitExpressionWithTwoChildren(ASTNode himeNode)
         {
             NegativeExpression negativeExpression = new NegativeExpression(new List<ExpressionNode>(),
                                                                     himeNode.Children[0].Position.Line,
@@ -74,7 +163,7 @@ namespace LexParserLib
             return negativeExpression;
         }
 
-        private ExpressionNode VisitExpressionWithThreeChildren(ASTNode himeNode)
+        public ExpressionNode VisitExpressionWithThreeChildren(ASTNode himeNode)
         {
             ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
             ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
@@ -128,7 +217,7 @@ namespace LexParserLib
             };
         }
 
-        private ExpressionNode VisitLogicTerm(ASTNode himeNode)
+        public ExpressionNode VisitLogicTerm(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 2)
             {
@@ -159,13 +248,19 @@ namespace LexParserLib
                     "<=" => new LessEqualExpression(leftOperant, rightOperant,
                                             position.Line,
                                             position.Column),
+                    "==" => new EqualExpression(leftOperant, rightOperant,
+                                                position.Line,
+                                                position.Column),
+                    "!=" => new NotEqualExpression(leftOperant, rightOperant,
+                                                   position.Line,
+                                                   position.Column),
                     _ => throw new UnimplementedASTException(op.Value, "operator")
                 };
             }
 
         }
 
-        private ExpressionNode VisitExponent(ASTNode himeNode)
+        public ExpressionNode VisitExponent(ASTNode himeNode)
         {
             return himeNode.Children[0].Symbol.Name switch
             {
@@ -176,7 +271,9 @@ namespace LexParserLib
                 "|" => new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
                                                   himeNode.Children[0].Position.Line,
                                                   himeNode.Children[0].Position.Column),
-                "{" => GetSet(himeNode),
+                "{" when himeNode.Children.Count == 3
+                    => GetSet(himeNode),
+                "{" => GetSetBuilder(himeNode),
                 "element" => GetElementExpression(himeNode),
                 "exponent" => GetField(himeNode),
                 "id" => GetFunctionCall(himeNode),
@@ -184,7 +281,15 @@ namespace LexParserLib
             };
         }
 
-        private ExpressionNode GetField(ASTNode himeNode)
+        private ExpressionNode GetSet(ASTNode himeNode)
+        {
+            TextPosition position = himeNode.Children[0].Position;
+            List<ExpressionNode> expressions = new List<ExpressionNode>();
+            VisitExpressions(himeNode.Children[1], expressions);
+            return new SetExpression(expressions, position.Line, position.Column);
+        }
+
+        public ExpressionNode GetField(ASTNode himeNode)
         {
             ExpressionNode graph = DispatchExpression(himeNode.Children[0]);
             TextPosition position = himeNode.Children[1].Position;
@@ -198,7 +303,7 @@ namespace LexParserLib
             };
         }
 
-        private ExpressionNode GetGraph(ASTNode himeNode)
+        public ExpressionNode GetGraph(ASTNode himeNode)
         {
             ExpressionNode vertices = DispatchExpression(himeNode.Children[1]);
             ExpressionNode edges = DispatchExpression(himeNode.Children[3]);
@@ -209,7 +314,7 @@ namespace LexParserLib
             return new GraphExpression(vertices, edges, src, dst, position.Line, position.Column);
         }
 
-        private ExpressionNode GetElementExpression(ASTNode himeNode)
+        public ExpressionNode GetElementExpression(ASTNode himeNode)
         {
             List<ExpressionNode> children = new List<ExpressionNode>();
             VisitExpressions(himeNode.Children[2], children);
@@ -218,7 +323,7 @@ namespace LexParserLib
                                          himeNode.Children[0].Position.Column);
         }
 
-        private SetExpression GetSet(ASTNode himeNode)
+        public SetExpression GetSetBuilder(ASTNode himeNode)
         {
             ExpressionNode predicate = (himeNode.Children.Count == SET_WITH_PREDICATE) ?
                                         DispatchExpression(himeNode.Children[5]) : new BooleanLiteralExpression(true, 0, 0);
@@ -249,7 +354,7 @@ namespace LexParserLib
             }
         }
 
-        private List<BoundNode> VisitBounds(ASTNode himeNode)
+        public List<BoundNode> VisitBounds(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 1)
                 return new List<BoundNode> { CreateBoundNode(himeNode.Children[0]) };
@@ -261,7 +366,7 @@ namespace LexParserLib
             }
         }
 
-        private BoundNode CreateBoundNode(ASTNode himeNode)
+        public BoundNode CreateBoundNode(ASTNode himeNode)
         {
             TextPosition position;
             if (himeNode.Children.Count == DOUBLE_BOUNDS)
@@ -281,7 +386,7 @@ namespace LexParserLib
 
         }
 
-        private ExpressionNode GetLimit(ASTNode himeNode, string comp, int adjustment)
+        public ExpressionNode GetLimit(ASTNode himeNode, string comp, int adjustment)
         {
             ExpressionNode value = DispatchExpression(himeNode);
             int line = value.LineNumber;
@@ -291,7 +396,7 @@ namespace LexParserLib
             return value;
         }
 
-        private ExpressionNode GetFunctionCall(ASTNode himeNode)
+        public ExpressionNode GetFunctionCall(ASTNode himeNode)
         {
             List<ExpressionNode> expressions = new List<ExpressionNode>();
 
@@ -313,7 +418,7 @@ namespace LexParserLib
             }
         }
 
-        private ExpressionNode VisitLiteral(ASTNode himeNode)
+        public ExpressionNode VisitLiteral(ASTNode himeNode)
         {
             return himeNode.Symbol.Name switch
             {
@@ -324,14 +429,16 @@ namespace LexParserLib
                                                                 himeNode.Position.Line,
                                                                 himeNode.Position.Column),
                 "stringLiteral" => new StringLiteralExpression(himeNode.Value[1..^1],
-                                                                himeNode.Position.Line,
-                                                                himeNode.Position.Column),
+                                                               himeNode.Position.Line,
+                                                               himeNode.Position.Column),
                 "true" => new BooleanLiteralExpression(true,
-                                                                himeNode.Position.Line,
-                                                                himeNode.Position.Column),
+                                                       himeNode.Position.Line,
+                                                       himeNode.Position.Column),
                 "false" => new BooleanLiteralExpression(false,
-                                                                himeNode.Position.Line,
-                                                                himeNode.Position.Column),
+                                                        himeNode.Position.Line,
+                                                        himeNode.Position.Column),
+                "Ø" => new EmptySetLiteralExpression(himeNode.Position.Line,
+                                                     himeNode.Position.Column),
                 _ => throw new UnimplementedASTException(himeNode.Symbol.Name, "literal"),
             };
         }
