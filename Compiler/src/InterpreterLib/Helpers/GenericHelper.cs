@@ -37,27 +37,33 @@ namespace InterpreterLib.Helpers
 
         public T FunctionCall<T>(FunctionCallExpression node, List<object> parameters)
         {
-            FunctionNode funcNode = GetFuncNode(node, parameters);
-            return GetResult<T>(node, funcNode, parameters);
+            FunctionNode funcNode;
+            List<object> scope;
+            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
+            {
+                scope = new List<object>();
+                funcNode = _functions[node.GlobalReferences[0]];
+            }
+            else
+            {
+                Function f = (Function) parameters[node.LocalReference];
+                scope = f.Scope.ToList();
+                funcNode = _functions[f.Reference];
+            }
+                
+            return GetResult<T>(node, parameters, funcNode, scope);
         }
 
-        private T GetResult<T>(FunctionCallExpression node, FunctionNode funcNode, List<object> parameters)
+        private T GetResult<T>(FunctionCallExpression node, List<object> parameters, 
+                               FunctionNode funcNode, List<object> scope)
         {
-            List<object> funcParameters = new List<object>();
+            List<object> funcParameters = scope;
             for (int i = 0; i < node.Children.Count; i++)
             {
                 TypeEnum type = funcNode.FunctionType.ParameterTypes[i].Type;
                 funcParameters.Add(_interpreter.Dispatch(node.Children[i], parameters, type));
             }
             return _interpreter.Function<T>(funcNode, funcParameters);
-        }
-
-        private FunctionNode GetFuncNode(FunctionCallExpression node, List<object> parameters)
-        {
-            if (node.LocalReference == FunctionCallExpression.NO_LOCAL_REF)
-                return _functions[node.GlobalReferences[0]];
-            else
-                return _functions[(int)parameters[node.LocalReference]];
         }
 
         public MatchPair<T> Condition<T>(ConditionNode node, List<object> parameters)

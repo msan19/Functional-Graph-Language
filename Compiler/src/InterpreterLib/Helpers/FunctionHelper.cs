@@ -8,6 +8,7 @@ using ASTLib.Nodes.TypeNodes;
 using ASTLib.Objects;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
+using System.Linq;
 
 namespace InterpreterLib.Helpers
 {
@@ -37,6 +38,11 @@ namespace InterpreterLib.Helpers
             Graph graph = _interpreter.DispatchGraph(node.Children[0], parameters);
 
             return graph.Dst;
+        }
+
+        public Function AnonymousFunction(AnonymousFunctionExpression e, List<object> parameters)
+        {
+            return new Function(e.Reference, parameters.ToList());
         }
     }
 }

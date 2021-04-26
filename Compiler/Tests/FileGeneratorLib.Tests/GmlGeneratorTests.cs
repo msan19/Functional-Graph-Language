@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using ASTLib.Objects;
 using FileUtilities;
+using FluentAssertions;
 
 namespace FileGeneratorLib.Tests
 {
@@ -22,10 +23,10 @@ namespace FileGeneratorLib.Tests
 
             GmlGenerator gmlGenerator = new GmlGenerator();
             FileReader fileReader = new FileReader(new FileHelper());
-            string expected = fileReader.Read("expected1.gml", true);
+            string expected = fileReader.Read("expected1.gml", true).Replace("\r", "");
 
-            string actual = gmlGenerator.Generate(labelGraph);
-            Assert.AreEqual(expected, actual);
+            string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [TestMethod]
@@ -46,9 +47,9 @@ namespace FileGeneratorLib.Tests
             
             GmlGenerator gmlGenerator = new GmlGenerator();
             FileReader fileReader = new FileReader(new FileHelper());
-            string expected = fileReader.Read("expected2.gml", true);
+            string expected = fileReader.Read("expected2.gml", true).Replace("\r", "");
 
-            string actual = gmlGenerator.Generate(labelGraph);
+            string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
             
             Assert.AreEqual(expected, actual);
         }

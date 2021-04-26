@@ -9,6 +9,7 @@ namespace TypeCheckerLib.Interfaces
 {
     public interface IDeclarationHelper : ITypeHelper
     {
+        TypeNode VisitAnonymousFunction(AnonymousFunctionExpression node, List<TypeNode> parameterTypes);
         void VisitExport(ExportNode exportNode);
         void VisitFunction(FunctionNode functionNode);
         TypeNode VisitFunctionCall(FunctionCallExpression funcCallExpNode, List<TypeNode> parameterTypes);

@@ -13,5 +13,6 @@ namespace InterpreterLib.Interfaces
         bool DispatchBoolean(ExpressionNode node, List<object> parameters);
         Set DispatchSet(ExpressionNode node, List<Object> parameters);
         Graph DispatchGraph(ExpressionNode node, List<Object> parameters);
+        Element DispatchElement(ExpressionNode node, List<object> parameters);
     }
 }

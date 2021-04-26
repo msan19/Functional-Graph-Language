@@ -16,5 +16,6 @@ namespace InterpreterLib.Interfaces
         Function IdentifierFunction(IdentifierExpression node, List<Object> parameters);
         Function SrcField(SrcGraphField node, List<Object> parameters);
         Function DstField(DstGraphField node, List<Object> parameters);
+        Function AnonymousFunction(AnonymousFunctionExpression e, List<object> parameters);
     }
 }

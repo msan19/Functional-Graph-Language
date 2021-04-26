@@ -11,6 +11,7 @@ using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
 using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using ASTLib.Exceptions;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ASTLib.Exceptions.Component;
 using FileUtilities;
@@ -19,6 +20,7 @@ using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 using TypeCheckerLib.Interfaces;
 using InterpreterLib.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Main
 {
@@ -40,6 +42,8 @@ namespace Main
         private readonly IExceptionPrinter _exceptionPrinter;
         private readonly IFileReader _fileReader;
 
+        private IConfiguration config;
+
         static void Main(string[] args)
         {
             Program program = new Program(args);
@@ -48,6 +52,9 @@ namespace Main
 
         public Program(string[] args)
         {
+            config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
             ParseArgs(args);
             _lexParse = new LexParser(new ASTBuilder(new ExpressionHelper()));
             _referenceHandler = new ReferenceHandler(new ReferenceHelper(), !_shouldThrowExceptions);
@@ -131,7 +138,7 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Grid.fgl" };
+            _fileNames = new List<string>() /*{ "Cycle.fgl" } */;
             _saveOutput = true;
             foreach (string s in args)
             {
@@ -156,14 +163,29 @@ namespace Main
 
         private void PrintHelp()
         {
-            Console.WriteLine("Compiler options:");
-            Console.WriteLine("\t'help'\t" + "\tThe list of compiler option is shown");
-            Console.WriteLine("\t'throw'\t" + "\tExceptions are unhandled");
-            Console.WriteLine("\t'parseTree'" + "\tThe parse tree is shown");
-            Console.WriteLine("\t'code'\t" + "\tThe source code is shown");
-            Console.WriteLine("\t'output'" + "\tThe output is shown");
-            Console.WriteLine("\t'noWrite'" + "\tThe output is no longer saved");
-            Console.WriteLine("\t'project'" + "\tThe input and output uses the project folder");
+            Console.WriteLine( config["Application:HelpTextHeader"] );
+            Console.WriteLine( GetArgStr("help") );
+            Console.WriteLine( GetArgStr("throw") );
+            Console.WriteLine( GetArgStr("parseTree") );
+            Console.WriteLine( GetArgStr("code") );
+            Console.WriteLine( GetArgStr("output") );
+            Console.WriteLine( GetArgStr("noWrite") );
+            Console.WriteLine( GetArgStr("project") );
+        }
+
+        private string GetArgStr(string arg)
+        {
+            return GetArgStrName(arg) + GetArgStrDesc(arg);
+        }
+
+        private string GetArgStrName(string arg)
+        {
+            return config[$"Application:Arguments:{arg}:Name"];
+        }
+        
+        private string GetArgStrDesc(string arg)
+        {
+            return config[$"Application:Arguments:{arg}:Desc"];
         }
     }
 }

@@ -72,17 +72,12 @@ namespace ReferenceHandlerLib
 
         public void VisitFunction(FunctionNode node)
         {
-            if (!HasUniqueParameters(node.ParameterIdentifiers))
+            if (!StringsAreUnique(node.ParameterIdentifiers))
                 throw new IdenticalParameterIdentifiersException(node.ParameterIdentifiers);
             if (!FormalParamCountMatchTypeParamCount(node))
                 throw new UnmatchableParametersException(node);
             foreach (ConditionNode conditionNode in node.Conditions)
                 VisitCondition(conditionNode, node.ParameterIdentifiers);
-        }
-
-        private bool HasUniqueParameters(List<string> parameters)
-        {
-            return parameters.Count == parameters.Distinct().ToList().Count;
         }
 
         private bool FormalParamCountMatchTypeParamCount(FunctionNode node)
@@ -210,22 +205,23 @@ namespace ReferenceHandlerLib
                 _dispatch(n, identifiers);
         }
 
-        /*
-            GetSet:(integer) -> set
-            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, i < j}
-            GetSet(n) = {e[i, j] | 0 <= [i] < n, 0 < [j] < n * n, e in {v[a, b] | 0 <= [a] < n, 0 < [b] < n * n, a < b}}
-        */
         public void VisitSet(SetExpression node, List<string> parameters)
         {
-            ThrowExceptionIfIdentifiersAreInParameters(node.Element.IndexIdentifiers, parameters);
-            ThrowExceptionIfIdentifiersAreNotUnique(node.Element.IndexIdentifiers);
-            ThrowExceptionIfBoundsAndIndentifiersDoNotMatch(node);
-            ThrowExceptionIfBoundsAreInParameters(node.Bounds, parameters, node);
-            ThrowExceptionIfElementAreInParameters(node.Element, parameters);
+            if(node.IsSetBuilder)
+            {
+                ThrowExceptionIfIdentifiersAreInParameters(node.Element.IndexIdentifiers, parameters);
+                ThrowExceptionIfIdentifiersAreNotUnique(node.Element.IndexIdentifiers);
+                ThrowExceptionIfBoundsAndIndentifiersDoNotMatch(node);
+                ThrowExceptionIfBoundsAreInParameters(node.Bounds, parameters, node);
+                ThrowExceptionIfElementAreInParameters(node.Element, parameters);
 
-            node.Bounds = GetSortedBounds(node);
-            DispatchBounds(node, parameters);
-            DispatchPredicate(node, parameters);
+                node.Bounds = GetSortedBounds(node);
+                DispatchBounds(node, parameters);
+                DispatchPredicate(node, parameters);
+            }
+            else
+                foreach (ExpressionNode n in node.Children)
+                    _dispatch(n, parameters);
         }
 
         private void DispatchPredicate(SetExpression node, List<string> parameters)
@@ -290,21 +286,7 @@ namespace ReferenceHandlerLib
 
         private bool StringsAreUnique(List<string> strings)
         {
-            var dic = new Dictionary<string, int>();
-            foreach (var id in strings)
-            {
-                if (dic.ContainsKey(id))
-                    dic[id]++;
-                else
-                    dic.Add(id, 1);
-            }
-
-            foreach (var pair in dic)
-            {
-                if (pair.Value > 1)
-                    return false;
-            }
-            return true;
+            return strings.Count == strings.Distinct().ToList().Count;
         }
 
         private List<BoundNode> GetSortedBounds(SetExpression node)
@@ -325,6 +307,15 @@ namespace ReferenceHandlerLib
                     return bound;
             }
             throw new InvalidIdentifierException(id, set);
+        }
+
+        public void VisitAnonymousFunction(AnonymousFunctionExpression node, List<string> parameters)
+        {
+            List<string> newScope = parameters.ToList();
+            newScope.AddRange(node.Identifiers);
+            if (!StringsAreUnique(newScope))
+                throw new IdenticalParameterIdentifiersException(newScope);
+            _dispatch(node.ReturnValue, newScope);
         }
     }
 }

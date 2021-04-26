@@ -39,25 +39,29 @@ namespace LexParserLib
 			/// </summary>
 			public const int TerminalIntegerNumber = 0x0005;
 			/// <summary>
+			/// The unique identifier for terminal emptySet
+			/// </summary>
+			public const int TerminalEmptySet = 0x0006;
+			/// <summary>
 			/// The unique identifier for terminal stringLiteral
 			/// </summary>
-			public const int TerminalStringLiteral = 0x0006;
+			public const int TerminalStringLiteral = 0x0007;
 			/// <summary>
 			/// The unique identifier for terminal NEW_LINE
 			/// </summary>
-			public const int TerminalNewLine = 0x0007;
+			public const int TerminalNewLine = 0x0008;
 			/// <summary>
 			/// The unique identifier for terminal WHITE_SPACE
 			/// </summary>
-			public const int TerminalWhiteSpace = 0x0008;
+			public const int TerminalWhiteSpace = 0x0009;
 			/// <summary>
 			/// The unique identifier for terminal COMMENT_LINE
 			/// </summary>
-			public const int TerminalCommentLine = 0x0009;
+			public const int TerminalCommentLine = 0x000A;
 			/// <summary>
 			/// The unique identifier for terminal SEPARATOR
 			/// </summary>
-			public const int TerminalSeparator = 0x000A;
+			public const int TerminalSeparator = 0x000B;
 		}
 		/// <summary>
 		/// Contains the constant IDs for the contexts for this lexer
@@ -83,11 +87,12 @@ namespace LexParserLib
 			new Symbol(0x0003, "id"),
 			new Symbol(0x0004, "realNumber"),
 			new Symbol(0x0005, "integerNumber"),
-			new Symbol(0x0006, "stringLiteral"),
-			new Symbol(0x0007, "NEW_LINE"),
-			new Symbol(0x0008, "WHITE_SPACE"),
-			new Symbol(0x0009, "COMMENT_LINE"),
-			new Symbol(0x000A, "SEPARATOR"),
+			new Symbol(0x0006, "emptySet"),
+			new Symbol(0x0007, "stringLiteral"),
+			new Symbol(0x0008, "NEW_LINE"),
+			new Symbol(0x0009, "WHITE_SPACE"),
+			new Symbol(0x000A, "COMMENT_LINE"),
+			new Symbol(0x000B, "SEPARATOR"),
 			new Symbol(0x002A, "export"),
 			new Symbol(0x002B, "{"),
 			new Symbol(0x002C, "}"),
@@ -110,14 +115,14 @@ namespace LexParserLib
 			new Symbol(0x003D, "string"),
 			new Symbol(0x003E, "=="),
 			new Symbol(0x003F, "=>"),
-			new Symbol(0x0040, "!="),
-			new Symbol(0x0041, "or"),
-			new Symbol(0x0042, "and"),
-			new Symbol(0x0043, "not"),
-			new Symbol(0x0044, "in"),
-			new Symbol(0x0045, "subset"),
-			new Symbol(0x0046, ">="),
-			new Symbol(0x0047, ">"),
+			new Symbol(0x0040, "or"),
+			new Symbol(0x0041, "and"),
+			new Symbol(0x0042, "not"),
+			new Symbol(0x0043, "in"),
+			new Symbol(0x0044, "subset"),
+			new Symbol(0x0045, ">="),
+			new Symbol(0x0046, ">"),
+			new Symbol(0x0047, "!="),
 			new Symbol(0x0048, "<"),
 			new Symbol(0x0049, "<="),
 			new Symbol(0x004A, "+"),
@@ -132,18 +137,17 @@ namespace LexParserLib
 			new Symbol(0x0053, ".E"),
 			new Symbol(0x0054, ".src"),
 			new Symbol(0x0055, ".dst"),
-			new Symbol(0x0056, "�"),
-			new Symbol(0x0057, "true"),
-			new Symbol(0x0058, "false") };
+			new Symbol(0x0056, "true"),
+			new Symbol(0x0057, "false") };
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public GrammarLexer(string input) : base(commonAutomaton, terminals, 0x000A, input) {}
+		public GrammarLexer(string input) : base(commonAutomaton, terminals, 0x000B, input) {}
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public GrammarLexer(TextReader input) : base(commonAutomaton, terminals, 0x000A, input) {}
+		public GrammarLexer(TextReader input) : base(commonAutomaton, terminals, 0x000B, input) {}
 	}
 }

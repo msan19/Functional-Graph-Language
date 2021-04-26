@@ -1,8 +1,5 @@
 ﻿export tree() {"tree"}
 
-n:() -> integer
-n() = 7
-
 tree:() -> graph
 tree() = (treeElements(n(), 0), treeElements(n(), 1), treeSrc, treeDst)
 

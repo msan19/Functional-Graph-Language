@@ -15,11 +15,11 @@ namespace LexParserLib
 {
     public class ASTBuilder
     {
-        private const int PARAMETER_IDs_POS = 5, FUNCTIONTYPE_POS = 2, 
-                          RETURNTYPE_POS = 4, CONSTANT_FUNCTION_DECLARATION = 6,
+        private const int PARAMETER_IDs_POS = 5, CONSTANT_FUNCTION_DECLARATION = 6,
                           CONDITION_BOTH_ELEMENTS_AND_PREDICATE = 6,
                           EXPORT_NO_LABELS = 5, EXPORT_BOTH_LABELS = 11, 
-                          EXPORT_EDGE_LABELS = 10, EXPORT_VERTEX_LABELS = 8;
+                          EXPORT_EDGE_LABELS = 10, EXPORT_VERTEX_LABELS = 8,
+                          FUNCTIONTYPE_POS = 2;
         private readonly IExpressionHelper _expressionHelper;
         
         public ASTBuilder(IExpressionHelper expressionHelper)
@@ -95,7 +95,7 @@ namespace LexParserLib
         private FunctionNode CreateFunctionNode(ASTNode himeDeclNode)
         {
             ASTNode himeFuncNode = GetHimeFuncNode(himeDeclNode);
-            FunctionTypeNode type = CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
+            FunctionTypeNode type = _expressionHelper.CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
 
             List<string> parameterIdentifiers = GetParameterIdentifiers(himeFuncNode);
             string typeID = GetTypeID(himeFuncNode);
@@ -232,55 +232,6 @@ namespace LexParserLib
         private bool IsParameterLessFunctionDeclaration(ASTNode himeFuncNode)
         {
             return himeFuncNode.Children.Count == CONSTANT_FUNCTION_DECLARATION;
-        }
-
-        public FunctionTypeNode CreateFunctionTypeNode(ASTNode himeNode)
-        {
-            TypeNode returnType;
-            List<TypeNode> parameterTypes;
-            if (himeNode.Children.Count == 5)
-            {
-                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
-                parameterTypes = VisitTypes(himeNode.Children[1]);
-            }
-            else
-            {
-                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS - 1]);
-                parameterTypes = new List<TypeNode>();
-            }
-
-            TextPosition position = himeNode.Children[0].Position;
-            return new FunctionTypeNode(returnType, parameterTypes, position.Line, position.Column);
-        }
-
-        public TypeNode CreateTypeNode(ASTNode himeNode)
-        {
-            TextPosition position = himeNode.Children[0].Position;
-            return himeNode.Children[0].Symbol.Name switch
-            {
-                "integer"       => new TypeNode(TypeEnum.Integer, position.Line, position.Column),
-                "real"          => new TypeNode(TypeEnum.Real,    position.Line, position.Column),
-                "boolean"       => new TypeNode(TypeEnum.Boolean, position.Line, position.Column),
-                "string"        => new TypeNode(TypeEnum.String,  position.Line, position.Column),
-                "set"           => new TypeNode(TypeEnum.Set,     position.Line, position.Column),
-                "element"       => new TypeNode(TypeEnum.Element, position.Line, position.Column),
-                "graph"         => new TypeNode(TypeEnum.Graph,   position.Line, position.Column),
-                "FuncTypeDecl"  => CreateFunctionTypeNode(himeNode.Children[0]),
-                _ => throw new UnimplementedASTException(himeNode.Children[0].Symbol.Name, "type"),
-            };
-        }
-
-        public List<TypeNode> VisitTypes(ASTNode himeNode)
-        {
-            if (himeNode.Children.Count == 1)
-            {
-                return new List<TypeNode> {CreateTypeNode(himeNode.Children[0])};
-            } else
-            {
-                List<TypeNode> types = VisitTypes(himeNode.Children[0]);
-                types.Add(CreateTypeNode(himeNode.Children[2]));
-                return types;
-            }
         }
     
     }
