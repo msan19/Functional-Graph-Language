@@ -437,7 +437,7 @@ namespace LexParserLib
                 "false" => new BooleanLiteralExpression(false,
                                                         himeNode.Position.Line,
                                                         himeNode.Position.Column),
-                "Ø" => new EmptySetLiteralExpression(himeNode.Position.Line,
+                "emptySet" => new EmptySetLiteralExpression(himeNode.Position.Line,
                                                      himeNode.Position.Column),
                 _ => throw new UnimplementedASTException(himeNode.Symbol.Name, "literal"),
             };
