@@ -1,0 +1,35 @@
+﻿export Grid(n()) {"Grid"}
+
+n: () -> integer
+n() = 1
+
+Grid: (integer) -> graph
+Grid(n) = ({v[i] | 0 <= [i] <= n * (n + 2)}, {e[i] | 0 <= [i] < n * (2 * n + 2)}, src, dst)
+
+src: (element) -> element
+src(e) =
+	| e[i], verticalOrLast(i) = e
+	| e[i], not verticalOrLast(i) = element[recurse(i - (numOfVertical() + 1), 0, 0)]
+
+dst: (element) -> element
+dst(e) =
+	| e[i], verticalOrLast(i) and isLastInRow(i) = element[i + n() + 1]
+	| e[i], verticalOrLast(i) and not isLastInRow(i) = element[i + 1]
+	| e[i], not verticalOrLast(i) = element[recurse(i - (numOfVertical() + 1), 0, 0) + n() + 1]
+
+numOfVertical: () -> integer
+numOfVertical() = n() * (n() + 2) - 1
+
+verticalOrLast: (integer) -> boolean
+verticalOrLast(i) = i <= numOfVertical()
+
+isLastInRow: (integer) -> boolean
+isLastInRow(el) =
+	| ((el + 1) mod (n() + 1)) == 0 = true
+	| _ = false
+
+recurse: (integer, integer, integer) -> integer
+recurse(goal, small, big) =
+	| (small == goal) = big
+	| (small != goal) and ((small + 1) mod n() != 0) = recurse(goal, small + 1, big + 1)
+	| (small != goal) and ((small + 1) mod n() == 0) = recurse(goal, small + 1, big + 2)

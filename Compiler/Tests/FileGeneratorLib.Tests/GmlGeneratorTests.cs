@@ -26,8 +26,8 @@ namespace FileGeneratorLib.Tests
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str1;
 
-            string actual = gmlGenerator.Generate(labelGraph);
-            Assert.AreEqual(expected, actual);
+            string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
+            actual.Should().BeEquivalentTo(expected);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace FileGeneratorLib.Tests
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str2;
 
-            string actual = gmlGenerator.Generate(labelGraph);
+            string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
             
             expected.Should().BeEquivalentTo(actual);
         }

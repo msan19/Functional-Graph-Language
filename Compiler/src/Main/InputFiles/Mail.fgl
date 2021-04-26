@@ -1,0 +1,18 @@
+﻿// Mail
+N: () -> integer
+N() = 5
+
+export Mail(N()) {"Mail"}
+
+Mail: (integer) -> graph
+Mail(n) = ({v[i] | 0<=[i]<n}, {e[i] | 0<=[i]<=n}, src, dst)
+
+src: (element) -> element
+src(e) =
+	| e[i], i < N() = e
+	| e[i], i == N() = element[1]
+
+dst: (element) -> element
+dst(e) =
+	| e[i], i < N() = element[(i+1) mod N()]
+	| e[i], i == N() = element[3]
