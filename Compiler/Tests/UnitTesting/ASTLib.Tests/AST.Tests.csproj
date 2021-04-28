@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ASTLib\ASTLib.csproj" />
+    <ProjectReference Include="..\..\..\src\ASTLib\ASTLib.csproj" />
   </ItemGroup>
 
 </Project>

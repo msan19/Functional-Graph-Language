@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ASTLib\ASTLib.csproj" />
-    <ProjectReference Include="..\..\src\ReferenceHandlerLib\ReferenceHandlerLib.csproj" />
+    <ProjectReference Include="..\..\..\src\ASTLib\ASTLib.csproj" />
+    <ProjectReference Include="..\..\..\src\ReferenceHandlerLib\ReferenceHandlerLib.csproj" />
   </ItemGroup>
   
 </Project>

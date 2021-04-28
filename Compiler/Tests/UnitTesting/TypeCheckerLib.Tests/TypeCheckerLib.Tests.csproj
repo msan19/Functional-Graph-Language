@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ASTLib\ASTLib.csproj" />
-    <ProjectReference Include="..\..\src\TypeCheckerLib\TypeCheckerLib.csproj" />
+    <ProjectReference Include="..\..\..\src\ASTLib\ASTLib.csproj" />
+    <ProjectReference Include="..\..\..\src\TypeCheckerLib\TypeCheckerLib.csproj" />
   </ItemGroup>
 </Project>
