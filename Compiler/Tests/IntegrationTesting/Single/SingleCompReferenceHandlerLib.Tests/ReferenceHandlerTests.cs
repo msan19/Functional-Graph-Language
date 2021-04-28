@@ -85,6 +85,8 @@ namespace SingleCompReferenceHandlerLib.Tests
                     Variable number
                 Both
                     Variable number
+                    Hides a global
+                        (If function call refers to function in parameter list (local), then this function from parameter list (the inner scope) should be used.)  
 
             Function Call
                 Global
@@ -92,26 +94,35 @@ namespace SingleCompReferenceHandlerLib.Tests
                     Same Name
                         Overloading (Multiple functions, Same num params but different types) -> Multiple 
                         (Multiple functions, Not same num params) -> Only one selected
+                         - Given the existence of a glob func which has the given number of parameters.
                 Local
                     Variable number
-                Both
+                Both (a local function with same name as global function(s))
                     Variable number
-                    Hides a global
-                        (If function call refers to function in parameter list (local), then this function from parameter list (the inner scope) should be used.)  
+
 
             Condition
                 Only Element(s)
-                    Check that index-IDs introduced in element is accessible in returnExpr 
-                    Scopes 
+                    Check that index-IDs introduced in element is accessible in returnExpr (can just be identifier expression)
                 Only Predicate
+                    Check that predicate has access to parameters.
                 Both Element(s) and predicate
                     Check that index-IDs introduced in element is accessible in predicate 
             
-            Anonymous Functions
-                Scopes
-
             Set 
-                Scopes 
+                Ensure bounds are sorted
+                Check that identifiers introduced element is accessible in predicate
+                - In this predicate, the element can be accessed through its identifier (ensure this is the case)
+                Check that new identifiers are accessible inside the limits in the bounds.
+                All parts (bounds, predicate, etc.) of the set have access to the identifiers in the scope before going into the scope of the set builder
+
+            Anonymous Functions
+                Ensure we have access to the identifiers in the new scope
+                Ensure we have access to the identifiers in the old scope
+
+              new scope: the parameterIdentifiers declared in the anonymous functions (appended to old scope)
+              old scope: outer scope (the parameterIdentifiers in the function in which the given anonymous functions is declared/defined)
+
          */
         
         [DataRow(new string[]{"f"}, "f", 0)]
