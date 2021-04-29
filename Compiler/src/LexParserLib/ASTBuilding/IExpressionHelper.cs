@@ -1,10 +1,10 @@
-﻿using ASTLib.Nodes;
+﻿using System.Collections.Generic;
+using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.TypeNodes;
 using Hime.Redist;
-using System.Collections.Generic;
 
-namespace LexParserLib
+namespace LexParserLib.ASTBuilding
 {
     public interface IExpressionHelper
     {

@@ -4,22 +4,14 @@ using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
-using ASTLib.Nodes.ExpressionNodes.BooleanOperationNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
-using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.RelationalOperationNodes;
-using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Hime.Redist;
 
-namespace LexParserLib
+namespace LexParserLib.ASTBuilding
 {
     public class ASTBuilder
     {
-        private const int PARAMETER_IDs_POS = 5, CONSTANT_FUNCTION_DECLARATION = 6,
-                          CONDITION_BOTH_ELEMENTS_AND_PREDICATE = 6,
-                          EXPORT_NO_LABELS = 5, EXPORT_BOTH_LABELS = 11, 
-                          EXPORT_EDGE_LABELS = 10, EXPORT_VERTEX_LABELS = 8,
-                          FUNCTIONTYPE_POS = 2;
+        private readonly AstBuilderSettings _conf = new AstBuilderSettings();
         private readonly IExpressionHelper _expressionHelper;
         
         public ASTBuilder(IExpressionHelper expressionHelper)
@@ -79,12 +71,12 @@ namespace LexParserLib
             List<ExpressionNode> vertexLabels   = new List<ExpressionNode>();
             List<ExpressionNode> edgeLabels     = new List<ExpressionNode>();
             
-            if(himeNode.Children.Count == EXPORT_VERTEX_LABELS ||
-               himeNode.Children.Count == EXPORT_BOTH_LABELS)
+            if(himeNode.Children.Count == _conf.EXPORT_VERTEX_LABELS ||
+               himeNode.Children.Count == _conf.EXPORT_BOTH_LABELS)
                 _expressionHelper.VisitExpressions(himeNode.Children[6], vertexLabels);
-            if(himeNode.Children.Count == EXPORT_EDGE_LABELS)
+            if(himeNode.Children.Count == _conf.EXPORT_EDGE_LABELS)
                 _expressionHelper.VisitExpressions(himeNode.Children[8], edgeLabels);
-            if(himeNode.Children.Count == EXPORT_BOTH_LABELS)
+            if(himeNode.Children.Count == _conf.EXPORT_BOTH_LABELS)
                 _expressionHelper.VisitExpressions(himeNode.Children[9], edgeLabels);
 
             TextPosition position = himeNode.Children[0].Position;
@@ -95,7 +87,7 @@ namespace LexParserLib
         private FunctionNode CreateFunctionNode(ASTNode himeDeclNode)
         {
             ASTNode himeFuncNode = GetHimeFuncNode(himeDeclNode);
-            FunctionTypeNode type = _expressionHelper.CreateFunctionTypeNode(himeFuncNode.Children[FUNCTIONTYPE_POS]);
+            FunctionTypeNode type = _expressionHelper.CreateFunctionTypeNode(himeFuncNode.Children[_conf.FUNCTIONTYPE_POS]);
 
             List<string> parameterIdentifiers = GetParameterIdentifiers(himeFuncNode);
             string typeID = GetTypeID(himeFuncNode);
@@ -165,7 +157,7 @@ namespace LexParserLib
             } 
             else
             {
-                bool both = himeNode.Children.Count == CONDITION_BOTH_ELEMENTS_AND_PREDICATE;
+                bool both = himeNode.Children.Count == _conf.CONDITION_BOTH_ELEMENTS_AND_PREDICATE;
                 string symbol = himeNode.Children[1].Symbol.Name;
 
                 ExpressionNode conditionExpr = null;
@@ -226,12 +218,12 @@ namespace LexParserLib
             if (IsParameterLessFunctionDeclaration(himeFuncNode))
                 return new List<string>();
             else
-                return _expressionHelper.VisitIdentifiers(himeFuncNode.Children[PARAMETER_IDs_POS]);
+                return _expressionHelper.VisitIdentifiers(himeFuncNode.Children[_conf.PARAMETER_IDs_POS]);
         }
 
         private bool IsParameterLessFunctionDeclaration(ASTNode himeFuncNode)
         {
-            return himeFuncNode.Children.Count == CONSTANT_FUNCTION_DECLARATION;
+            return himeFuncNode.Children.Count == _conf.CONSTANT_FUNCTION_DECLARATION;
         }
     
     }

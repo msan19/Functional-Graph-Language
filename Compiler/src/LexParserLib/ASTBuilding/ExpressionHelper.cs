@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
@@ -15,14 +13,11 @@ using ASTLib.Nodes.ExpressionNodes.SetOperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Hime.Redist;
 
-namespace LexParserLib
+namespace LexParserLib.ASTBuilding
 {
     public class ExpressionHelper : IExpressionHelper
     {
-        private const int RETURNTYPE_POS = 4, 
-                          CONSTANT_FUNCTION_CALL = 3, EXPRESSIONS_POS = 2,
-                          SET_WITH_PREDICATE = 7, DOUBLE_BOUNDS = 7,
-                          PARENTHESES = 3, GRAPH = 9, CONSTANT_ANONYMOUS_FUNCTION = 4;
+        private readonly ExpressionHelperSettings _conf = new ExpressionHelperSettings();
 
         public ExpressionNode DispatchExpression(ASTNode himeNode)
         {
@@ -62,7 +57,7 @@ namespace LexParserLib
             List<TypeNode> types = new List<TypeNode>();
             ExpressionNode returnValue;
 
-            if (himeNode.Children.Count == CONSTANT_ANONYMOUS_FUNCTION)
+            if (himeNode.Children.Count == _conf.CONSTANT_ANONYMOUS_FUNCTION)
                 returnValue = DispatchExpression(himeNode.Children[3]);
             else
             {
@@ -98,12 +93,12 @@ namespace LexParserLib
             List<TypeNode> parameterTypes;
             if (himeNode.Children.Count == 5)
             {
-                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS]);
+                returnType = CreateTypeNode(himeNode.Children[_conf.RETURNTYPE_POS]);
                 parameterTypes = VisitTypes(himeNode.Children[1]);
             }
             else
             {
-                returnType = CreateTypeNode(himeNode.Children[RETURNTYPE_POS - 1]);
+                returnType = CreateTypeNode(himeNode.Children[_conf.RETURNTYPE_POS - 1]);
                 parameterTypes = new List<TypeNode>();
             }
 
@@ -264,9 +259,9 @@ namespace LexParserLib
         {
             return himeNode.Children[0].Symbol.Name switch
             {
-                "(" when himeNode.Children.Count == PARENTHESES 
+                "(" when himeNode.Children.Count == _conf.PARENTHESES 
                     => DispatchExpression(himeNode.Children[1]),
-                "(" when himeNode.Children.Count == GRAPH
+                "(" when himeNode.Children.Count == _conf.GRAPH
                     => GetGraph(himeNode),
                 "|" => new AbsoluteValueExpression(DispatchExpression(himeNode.Children[1]),
                                                   himeNode.Children[0].Position.Line,
@@ -325,7 +320,7 @@ namespace LexParserLib
 
         public SetExpression GetSetBuilder(ASTNode himeNode)
         {
-            ExpressionNode predicate = (himeNode.Children.Count == SET_WITH_PREDICATE) ?
+            ExpressionNode predicate = (himeNode.Children.Count == _conf.SET_WITH_PREDICATE) ?
                                         DispatchExpression(himeNode.Children[5]) : new BooleanLiteralExpression(true, 0, 0);
             ElementNode element = GetElementNode(himeNode.Children[1]);
             List<BoundNode> bounds = VisitBounds(himeNode.Children[3]);
@@ -369,7 +364,7 @@ namespace LexParserLib
         public BoundNode CreateBoundNode(ASTNode himeNode)
         {
             TextPosition position;
-            if (himeNode.Children.Count == DOUBLE_BOUNDS)
+            if (himeNode.Children.Count == _conf.DOUBLE_BOUNDS)
             {
                 position = himeNode.Children[3].Position;
                 return new BoundNode(himeNode.Children[3].Value,
@@ -400,8 +395,8 @@ namespace LexParserLib
         {
             List<ExpressionNode> expressions = new List<ExpressionNode>();
 
-            if (himeNode.Children.Count != CONSTANT_FUNCTION_CALL)
-                VisitExpressions(himeNode.Children[EXPRESSIONS_POS], expressions);
+            if (himeNode.Children.Count != _conf.CONSTANT_FUNCTION_CALL)
+                VisitExpressions(himeNode.Children[_conf.EXPRESSIONS_POS], expressions);
             return new FunctionCallExpression(himeNode.Children[0].Value, expressions,
                                               himeNode.Children[0].Position.Line,
                                               himeNode.Children[0].Position.Column);

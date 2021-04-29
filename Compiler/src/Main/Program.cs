@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ASTLib.Exceptions.Component;
+using ASTLib.Objects;
 using FileGeneratorLib.Interfaces;
 using FileUtilities;
 using FileUtilities.Interfaces;
@@ -21,6 +22,8 @@ using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 using TypeCheckerLib.Interfaces;
 using InterpreterLib.Interfaces;
+using LexParserLib.ASTBuilding;
+using LexParserLib.Hime;
 using Microsoft.Extensions.Configuration;
 
 namespace Main
@@ -54,9 +57,7 @@ namespace Main
 
         public Program(string[] args)
         {
-            config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
+            config = GetConfig();
             ParseArgs(args);
             _lexParse = new LexParser(new ASTBuilder(new ExpressionHelper()));
             _referenceHandler = new ReferenceHandler(new ReferenceHelper(), !_shouldThrowExceptions);
@@ -125,7 +126,7 @@ namespace Main
                 AST ast = _lexParse.Run(input, _printParseTree);
                 _referenceHandler.InsertReferences(ast);
                 _typeChecker.CheckTypes(ast);
-                var output = _interpreter.Interpret(ast);
+                List<LabelGraph> output = _interpreter.Interpret(ast);
                 List<ExtensionalGraph> gmlGraphs = _gmlGenerator.Generate(output);
                 _fileGenerator.Export(gmlGraphs, _printOutput, _saveOutput, _projectFolder);
             }
@@ -167,7 +168,7 @@ namespace Main
 
         private void PrintHelp()
         {
-            Console.WriteLine( config["Application:HelpTextHeader"] );
+            Console.WriteLine( config["Main:HelpTextHeader"] );
             Console.WriteLine( GetArgStr("help") );
             Console.WriteLine( GetArgStr("throw") );
             Console.WriteLine( GetArgStr("parseTree") );
@@ -184,12 +185,19 @@ namespace Main
 
         private string GetArgStrName(string arg)
         {
-            return config[$"Application:Arguments:{arg}:Name"];
+            return config[$"Main:Arguments:{arg}:Name"];
         }
         
         private string GetArgStrDesc(string arg)
         {
-            return config[$"Application:Arguments:{arg}:Desc"];
+            return config[$"Main:Arguments:{arg}:Desc"];
+        }
+
+        private IConfiguration GetConfig()
+        {
+            return new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
         }
     }
 }

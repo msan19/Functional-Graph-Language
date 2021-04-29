@@ -5,6 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using LexParserLib.ASTBuilding;
+using LexParserLib.Hime;
+using ASTBuilder = LexParserLib.ASTBuilding.ASTBuilder;
+
 
 namespace LexParserLib.Tests
 {
@@ -17,7 +21,7 @@ namespace LexParserLib.Tests
         {
             string input = "export 5.5 + 33.3 {\"\"}";
 
-            AST ast = new LexParser(new ASTBuilder(new ExpressionHelper())).Run(input, false);
+            AST ast = new LexParser(new ASTBuilding.ASTBuilder(new ExpressionHelper())).Run(input, false);
 
             RealLiteralExpression node = (RealLiteralExpression)ast.Exports[0].ExportValue.Children[1];
             Assert.AreEqual(14, node.LetterNumber);

@@ -1,21 +1,22 @@
-using ASTLib.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using FileGeneratorLib.Interfaces;
 using FileUtilities.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace FileGeneratorLib
 {
     public class FileGenerator : IFileGenerator
     {
-        private const string OUTPUT_FOLDER_NAME = "OutputFiles";
+        private readonly Settings _conf;
+
         private readonly IFileHelper _helper;
 
         public FileGenerator(IFileHelper helper)
         {
             _helper = helper;
+            _conf = GetConfig();
         }
 
         public void Export(List<ExtensionalGraph> gmlGraphs, bool writeToConsole, bool writeToFiles, bool useProjectFolder)
@@ -26,10 +27,10 @@ namespace FileGeneratorLib
                 if (writeToFiles)
                 {
                     string path = useProjectFolder ? 
-                                  _helper.GetPathWith(OUTPUT_FOLDER_NAME, extensionalGraph.FileName + ".gml") : 
-                                  extensionalGraph.FileName + ".gml";
+                                  _helper.GetPathWith(_conf.OutputFolderName, extensionalGraph.FileName + _conf.GmlFileExtension) : 
+                                  extensionalGraph.FileName + _conf.GmlFileExtension;
                     if (useProjectFolder)
-                        _helper.EnsureOutputDirectoryCreated(OUTPUT_FOLDER_NAME);
+                        _helper.EnsureOutputDirectoryCreated(_conf.OutputFolderName);
                     File.WriteAllText(path, extensionalGraph.GraphString);
                 }
                 if (writeToConsole)
@@ -40,6 +41,15 @@ namespace FileGeneratorLib
                     Console.WriteLine(extensionalGraph.GraphString);
                 }
             }
+        }
+        
+        private Settings GetConfig()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            var section = config.GetSection("FileGenerator").Get<Settings>();
+            return section;
         }
     }
 }

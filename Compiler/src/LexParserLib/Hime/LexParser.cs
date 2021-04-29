@@ -1,17 +1,17 @@
 using System;
-using ASTLib;
-using Hime.Redist;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using ASTLib;
 using ASTLib.Exceptions;
+using Hime.Redist;
 
-namespace LexParserLib
+namespace LexParserLib.Hime
 {
     public class LexParser : ILexParser
     {
-        private ASTBuilder _astBuilder;
+        private ASTBuilding.ASTBuilder _astBuilder;
 
-        public LexParser(ASTBuilder astBuilder)
+        public LexParser(ASTBuilding.ASTBuilder astBuilder)
         {
             _astBuilder = astBuilder;
         }
