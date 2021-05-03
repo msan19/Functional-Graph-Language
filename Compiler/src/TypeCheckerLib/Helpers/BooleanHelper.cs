@@ -29,7 +29,7 @@ namespace TypeCheckerLib.Helpers
 
             if (!IsBool(notNode.Type))
             {
-                throw new Exception();
+                throw new UnmatchableTypesException((Node)node, notNode.Type, TypeEnum.Boolean);
             }
             return new TypeNode(TypeEnum.Boolean, 0, 0);
         }
