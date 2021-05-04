@@ -7,10 +7,12 @@ namespace Main
 {
     public class ExceptionPrinter : IExceptionPrinter
     {
-        private List<string> _lines;
+        private string[][] _lines;
+        private string[] _files;
 
-        public void SetLines(List<string> lines)
+        public void SetLines(string[][] lines, string[] files)
         {
+            _files = files;
             _lines = lines;
         }
 
@@ -21,7 +23,7 @@ namespace Main
                 PrintError(e.Node.LineNumber,
                                     e.Node.LetterNumber,
                                     e.Message,
-                                    _lines[e.Node.LineNumber - 1]);
+                                    GetLine(e.Node.LineNumber - 1));
             }
             else
                 Console.WriteLine($"\nAn error was detected:\n{e.Message}");
@@ -34,27 +36,54 @@ namespace Main
                 PrintError(e.Lines[i],
                                     e.Letters[i],
                                     e.Messages[i],
-                                    _lines[e.Lines[i] - 1]);
+                                    GetLine(e.Lines[i] - 1));
             }
         }
 
         private void PrintError(int line, int letter, string message, string code)
         {
             string s = letter <= 0 ? "" : new string(' ', letter - 1) + "\u2191";
-            PrintLine($"\nAn error was detected on line {line}:\n{message}", ConsoleColor.Red);
+            PrintLine($"\nAn error was detected on line {GetLineNumber(line)} in {GetFileName(line)}:\n{message}", ConsoleColor.Red);
             PrintLine(code);
             PrintLine(s, ConsoleColor.Red);
         }
 
-        private void PrintLine(string message, ConsoleColor red)
+        private void PrintLine(string message, ConsoleColor c)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = c;
             Console.WriteLine(message);
             Console.ResetColor();
         }
+
         private void PrintLine(string message)
         {
             Console.WriteLine(message);
+        }
+
+        private string GetLine(int line)
+        {
+            return GetGeneric(line, (i, ii) => _lines[ii][i]);
+        }
+
+        private int GetLineNumber(int line)
+        {
+            return GetGeneric(line, (i, ii) => i);
+        }
+
+        private string GetFileName(int line)
+        {
+            return GetGeneric(line, (i, ii) => _files[ii]);
+        }
+
+        private T GetGeneric<T>(int line, Func<int, int, T> func)
+        {
+            int i = line;
+            for (int ii = 0; ii < _lines.Length; ii++)
+                if (i < _lines[ii].Length)
+                    return func(i, ii);
+                else
+                    i -= _lines[ii].Length;
+            return default;
         }
     }
 }

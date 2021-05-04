@@ -145,15 +145,7 @@ namespace InterpreterLib.Helpers
             return res;
         }
 
-        private bool EquivalentSets(Set a, Set b)
-        {
-            if (a.Elements.Count != b.Elements.Count)
-                return false;
-            for (int i = 0; i < a.Elements.Count; i++)
-                if (!a.Elements[i].Equals(b.Elements[i]))
-                    return false;
-            return true;
-        }
+        private bool EquivalentSets(Set a, Set b) => a.Elements.SetEquals(b.Elements);
 
         public bool InBoolean(InExpression node, List<object> parameters)
         {
@@ -165,32 +157,15 @@ namespace InterpreterLib.Helpers
             return rhsValue.Elements.Contains(lhsValue);
         }
 
+
         public bool SubsetBoolean(SubsetExpression node, List<object> parameters)
         {
             ExpressionNode lhs = node.Children[0];
             ExpressionNode rhs = node.Children[1];
             Set subset      = _interpreter.DispatchSet(lhs, parameters);
             Set superset    = _interpreter.DispatchSet(rhs, parameters);
-            int i = 0;
-            int j = 0;
-            
-            while (i < subset.Elements.Count)
-            {
-                if (j >= superset.Elements.Count)
-                    return false;
-                int res = subset.Elements[i].CompareTo(superset.Elements[j]);
-                if (res == 0)
-                {
-                    i++;
-                    j++;
-                }
-                else if(res == -1)
-                    return false;
-                else
-                    j++;
-            }
 
-            return true;
+            return subset.Elements.IsSubsetOf(superset.Elements);
         }
     }
 }

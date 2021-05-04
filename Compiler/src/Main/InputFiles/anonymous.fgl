@@ -1,10 +1,18 @@
-﻿export createGraph(17) {"anonymous"}
+﻿export createGraph(17) {"anonymous"} { (element e) => label(e, "vertex") } { (element e) => label(e, "edge") }
 
 createGraph:(integer) -> graph
-createGraph(n) = ({element[func(z), n]}, {element[0]}, (element e) => element[0, n], (element e) => element[0, n])
+createGraph(n) = ({element[func(z), n]}, Set(), (element e) => element[0, n], (element e) => element[0, n])
 
 func:(() -> integer) -> integer
 func(f) = f()
 
+Set:() -> set
+Set() = (Ø - Ø) union {element[27], element[17]} - (Ø intersection {element[17]})
+
 z:() -> integer
 z() = 0
+
+label:(element, string) -> string
+label(e, s) =
+ | e[i] = "Index: " + i
+ | _ = s

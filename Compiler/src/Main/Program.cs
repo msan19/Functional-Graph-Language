@@ -117,12 +117,11 @@ namespace Main
 
         public void Run()
         {
-            string input = GetInput();
-
-            if (input == "")
+            if (_fileNames.Count == 0)
                 Console.WriteLine("No input files have been given!");
             else
             {
+                string input = GetInput();
                 AST ast = _lexParse.Run(input, _printParseTree);
                 _referenceHandler.InsertReferences(ast);
                 _typeChecker.CheckTypes(ast);
@@ -134,16 +133,20 @@ namespace Main
 
         private string GetInput()
         {
-            string input = _fileReader.Read(_fileNames, _projectFolder);
-            input = input.Replace('\t', ' ');
-            _exceptionPrinter.SetLines(input.Split("\n").ToList());
-            if (_printCode) Console.WriteLine(input);
-            return input;
+            List<string> input = _fileReader.Read(_fileNames, _projectFolder);
+            string[][] lines = new string[_fileNames.Count][];
+            for (int i = 0; i < _fileNames.Count; i++)
+            {
+                lines[i] = input[i].Split("\n");
+                if (_printCode) Console.WriteLine($"\n//File: {_fileNames[i]}\n{input[i]}\n\n");
+            }
+            _exceptionPrinter.SetLines(lines, _fileNames.ToArray());
+            return input.Aggregate((a, s) => a + "\n" + s);
         }
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "Cycle.fgl" };
+            _fileNames = new List<string>(); //"{ "Cycle.fgl", "Anonymous.fgl" };
             _saveOutput = true;
             foreach (string s in args)
             {
