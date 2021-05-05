@@ -179,7 +179,7 @@ namespace LexParserLib.ASTBuilding
             }            
         }
 
-        public List<ElementNode> VisitElements(ASTNode himeNode)
+        private List<ElementNode> VisitElements(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 1)
             {
