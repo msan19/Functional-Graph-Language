@@ -1123,6 +1123,34 @@ namespace TypeCheckerLib.Tests.HelperTests
             helper.VisitGraph(input, null);
         }
         
+        [TestMethod]
+        public void VisitGraph_EdgeFunctionWithNoParameter_ThrowsCorrectExceptionMessage()
+        {
+            ExpressionNode vertices = Utilities.GetSet();
+            ExpressionNode edges = Utilities.GetSet();
+            ExpressionNode src = new IdentifierExpression("f", 2, 2);
+            ExpressionNode dst = new IdentifierExpression("f", 2, 2);
+
+            GraphExpression input = new GraphExpression(vertices, edges, src, dst, 2, 2);
+            string expectedMsg = "dst function must take a single parameter";
+
+            ITypeChecker parent = Substitute.For<ITypeChecker>();
+            parent.Dispatch(Arg.Any<SetExpression>(), Arg.Any<List<TypeNode>>()).Returns(new TypeNode(TypeEnum.Set, 1, 1));
+            parent.Dispatch(src, Arg.Any<List<TypeNode>>()).Returns(Utilities.GetOkEdgeFunctionTypeNode());
+            parent.Dispatch(dst, Arg.Any<List<TypeNode>>()).Returns(Utilities.GetInvalidEdgeFunctionTypeNode_noParameters());
+            CommonOperatorHelper helper = Utilities.GetHelper<CommonOperatorHelper>(parent);
+
+            try
+            {
+                helper.VisitGraph(input, null);
+                Assert.Fail();
+            }
+            catch(Exception e)
+            {
+                Assert.AreEqual(expectedMsg, e.Message);
+            }
+        }
+        
         [DataRow(TypeEnum.Element, TypeEnum.Boolean)] 
         [DataRow(TypeEnum.Integer, TypeEnum.Element)]  
         [ExpectedException(typeof(UnmatchableTypesException))]

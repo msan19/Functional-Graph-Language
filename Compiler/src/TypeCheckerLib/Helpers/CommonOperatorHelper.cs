@@ -224,18 +224,18 @@ namespace TypeCheckerLib.Helpers
                 throw new UnmatchableTypesException(node, vertexSet.Type, TypeEnum.Set);
             if (edgeSet.Type != TypeEnum.Set)
                 throw new UnmatchableTypesException(node, edgeSet.Type, TypeEnum.Set);
-            CheckEdgeFunction(src, node);
-            CheckEdgeFunction(dst, node);
+            CheckEdgeFunction(src, nameof(src), node);
+            CheckEdgeFunction(dst, nameof(dst), node);
 
             return new TypeNode(TypeEnum.Graph, 0, 0);
         }
 
-        private void CheckEdgeFunction(FunctionTypeNode funcTypeNode, GraphExpression parent)
+        private void CheckEdgeFunction(FunctionTypeNode funcTypeNode, string name, GraphExpression parent)
         {
             if (funcTypeNode.Type != TypeEnum.Function)
                 throw new UnmatchableTypesException(parent, funcTypeNode.Type, TypeEnum.Function);
             if (funcTypeNode.ParameterTypes.Count != 1)
-                throw new Exception($"{nameof(funcTypeNode)} function must take a single parameter");
+                throw new Exception($"{name} function must take a single parameter");
             if (funcTypeNode.ParameterTypes[0].Type != TypeEnum.Element)
                 throw new UnmatchableTypesException(parent, funcTypeNode.ParameterTypes[0].Type, TypeEnum.Element);
             if (funcTypeNode.ReturnType.Type != TypeEnum.Element)
