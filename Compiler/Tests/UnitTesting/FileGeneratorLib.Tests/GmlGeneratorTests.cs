@@ -18,11 +18,11 @@ namespace FileGeneratorLib.Tests
         public void Generate_SingleWithoutAdditionalLabels_DstSrcEvenNumber_()
         {
             LabelGraph labelGraph = GetStr1LabelGraph("test1");
-
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str1;
 
             string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
+            
             actual.Should().BeEquivalentTo(expected);
         }
 
@@ -55,7 +55,6 @@ namespace FileGeneratorLib.Tests
         {
             LabelGraph l1 = GetStr1LabelGraph("l1");
             List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1};
-            
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str1;
 
@@ -65,12 +64,24 @@ namespace FileGeneratorLib.Tests
         }
         
         [TestMethod]
+        public void Generate_MultipleWithOne_AssertCorrectCount()
+        {
+            LabelGraph l1 = GetStr1LabelGraph("l1");
+            List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1};
+            GmlGenerator gmlGenerator = new GmlGenerator();
+            int expectedCount = 1;
+
+            List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
+            
+            Assert.AreEqual(expectedCount, extensionalGraphs.Count);
+        }
+        
+        [TestMethod]
         public void Generate_MultipleWithTwo_()
         {
             LabelGraph l1 = GetStr1LabelGraph("l1");
             LabelGraph l2 = GetStr1LabelGraph("l2");
             List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1, l2};
-            
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str1;
 
@@ -78,6 +89,20 @@ namespace FileGeneratorLib.Tests
             
             expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString);
             expected.Should().BeEquivalentTo(extensionalGraphs[1].GraphString);
+        }
+        
+        [TestMethod]
+        public void Generate_MultipleWithTwo_AssertCorrectCount()
+        {
+            LabelGraph l1 = GetStr1LabelGraph("l1");
+            LabelGraph l2 = GetStr1LabelGraph("l2");
+            List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1, l2};
+            GmlGenerator gmlGenerator = new GmlGenerator();
+            int expectedCount = 2;
+
+            List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
+            
+            Assert.AreEqual(expectedCount, extensionalGraphs.Count);
         }
 
         private LabelGraph GetStr1LabelGraph(string fileName)
