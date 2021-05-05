@@ -414,5 +414,20 @@ namespace TypeCheckerLib.Tests
             IdentifierExpression dstExpr = new IdentifierExpression(null, 1, 1);
             return new GraphExpression(verticesExpr, edgesExpr, srcExpr, dstExpr, 1, 1);
         }
+
+        internal static FunctionTypeNode GetOkEdgeFunctionTypeNode()
+        {
+            return GetFunctionType(TypeEnum.Element, new List<TypeEnum>(){TypeEnum.Element});
+        }
+        
+        internal static FunctionTypeNode GetEdgeFunctionTypeNode(TypeEnum returnType, TypeEnum inputType)
+        {
+            return GetFunctionType(returnType, new List<TypeEnum>(){ inputType });
+        }
+        
+        internal static FunctionTypeNode GetInvalidEdgeFunctionTypeNode_noParameters()
+        {
+            return GetFunctionType(TypeEnum.Element, new List<TypeEnum>());
+        }
     }
 }

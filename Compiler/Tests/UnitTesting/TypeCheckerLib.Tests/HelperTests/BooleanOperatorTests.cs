@@ -43,7 +43,7 @@ namespace TypeCheckerLib.Tests.HelperTests
 
         #region VisitNot
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitNot_IntChild_ThrowsException()
         {
             NotExpression input1 = GetNotExpression(TypeEnum.Integer);
@@ -53,7 +53,7 @@ namespace TypeCheckerLib.Tests.HelperTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(UnmatchableTypesException))]
         public void VisitNot_RealChild_ThrowsException()
         {
             NotExpression input1 = GetNotExpression(TypeEnum.Real);

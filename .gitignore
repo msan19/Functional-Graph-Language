@@ -266,3 +266,5 @@ backend/docs/latex/*.md5
 
 # Ignore hime folder
 hime-3.5.1
+
+visualize
