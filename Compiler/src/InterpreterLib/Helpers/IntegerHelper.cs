@@ -82,7 +82,7 @@ namespace InterpreterLib.Helpers
             else if (node.Type == TypeEnum.Set)
             {
                 Set operand = _interpreter.DispatchSet(node.Children[0], parameters);
-                return operand.Elements.Count;
+                return operand.List.Count;
             }
             else
                 throw new InvalidAbsoluteIntegerException(node);

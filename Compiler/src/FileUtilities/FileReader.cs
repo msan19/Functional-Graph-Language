@@ -17,11 +17,11 @@ namespace FileUtilities
             _conf = GetConfig();
         }
         
-        public string Read(List<string> fileNames, bool useProjectFolder)
+        public List<string> Read(List<string> fileNames, bool useProjectFolder)
         {
-            string s = "";
+            List<string> s = new List<string>();
             foreach (string f in fileNames)
-                s += "\n//File: " + f + "\n" + Read(f, useProjectFolder) + "\n\n";
+                s.Add(Read(f, useProjectFolder).Replace('\t', ' '));
             return s;
         }
 

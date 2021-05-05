@@ -35,10 +35,12 @@ namespace InterpreterLib.Helpers
             List<int> dst = new List<int>();
 
             ElementComparer comparer = new ElementComparer();
+            List<Element> vertices = graph.Vertices.List;
+            vertices.Sort(comparer);
             foreach (Element e in graph.Edges.Elements)
             {
-                src.Add(GetElementIndex(node, graph.Src, e, graph, comparer));
-                dst.Add(GetElementIndex(node, graph.Dst, e, graph, comparer));
+                src.Add(GetElementIndex(node, graph.Src, e, vertices, comparer));
+                dst.Add(GetElementIndex(node, graph.Dst, e, vertices, comparer));
             }
 
             string[,] edgeLabels = GetLabels(node.EdgeLabels, graph.Edges);
@@ -52,21 +54,22 @@ namespace InterpreterLib.Helpers
             List<Object> parameters = new List<Object>();
             List<FunctionNode> nodes = functions.ConvertAll(x => _interpreter.DispatchFunction(x, parameters)).
                                                  ConvertAll(x => _functions[x.Reference]);
-            string[,] labels = new string[functions.Count, set.Elements.Count];
+            string[,] labels = new string[functions.Count, set.List.Count];
             for (int i = 0; i < functions.Count; i++)
                 for (int ii = 0; ii < set.Elements.Count; ii++)
-                    labels[i,ii] = _interpreter.Function<string>(nodes[i], new List<Object> { set.Elements[ii] });
+                    labels[i,ii] = _interpreter.Function<string>(nodes[i], new List<Object> { set.List[ii] });
 
             return labels;
         }
 
-        private int GetElementIndex(ExportNode node, Function function, Element input, Graph graph, ElementComparer comparer)
+        private int GetElementIndex(ExportNode node, Function function, Element input, 
+                                    List<Element> vertices, ElementComparer comparer)
         {
             FunctionNode functionNode = _functions[function.Reference];
             List<Object> parameters = function.Scope.ToList();
             parameters.Add(input);
             Element element = _interpreter.Function<Element>(functionNode, parameters);
-            int index = graph.Vertices.Elements.BinarySearch(element, comparer);
+            int index = vertices.BinarySearch(element, comparer);
             if (index < 0)
                 throw new InvalidElementException(node, element);
             return index;

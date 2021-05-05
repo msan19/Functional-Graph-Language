@@ -78,28 +78,9 @@ namespace InterpreterLib.Helpers
             Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
             Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
 
-            int i = 0;
-            int j = 0;
-            List<Element> onlyInLeftSet = new List<Element>();
-
-            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
-            {
-                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
-                if (res == 0)
-                {
-                    i++; j++;
-                }
-                else if (res == -1)
-                {
-                    onlyInLeftSet.Add(leftSet.Elements[i]);
-                    i++;
-                }
-                else
-                {
-                    j++;
-                }
-            }
-            return new Set(onlyInLeftSet);
+            HashSet<Element> set = leftSet.SetCopy;
+            set.ExceptWith(rightSet.Elements);
+            return new Set(set);
         }
 
         public Set IntersectionSet(IntersectionExpression node, List<object> parameters)
@@ -107,26 +88,9 @@ namespace InterpreterLib.Helpers
             Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
             Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
 
-            int i = 0;
-            int j = 0;
-            List<Element> duplicates = new List<Element>();
-
-            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
-            {
-                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
-                if (res == 0)
-                {
-                    duplicates.Add(leftSet.Elements[i]);
-                    i++;
-                    j++;
-                }
-                else if (res == -1)
-                    i++;
-                else
-                    j++;
-            }
-
-            return new Set(duplicates);
+            HashSet<Element> set = leftSet.SetCopy;
+            set.IntersectWith(rightSet.Elements);
+            return new Set(set);
         }
         
         public Set UnionSet(UnionExpression node, List<object> parameters)
@@ -134,37 +98,9 @@ namespace InterpreterLib.Helpers
             Set leftSet = _interpreter.DispatchSet(node.Children[0], parameters);
             Set rightSet = _interpreter.DispatchSet(node.Children[1], parameters);
 
-            int i = 0;
-            int j = 0;
-            List<Element> union = new List<Element>();
-
-            while (i < leftSet.Elements.Count && j < rightSet.Elements.Count)
-            {
-                int res = leftSet.Elements[i].CompareTo(rightSet.Elements[j]);
-                if (res == 0)
-                {
-                    union.Add(leftSet.Elements[i]);
-                    i++;
-                    j++;
-                }
-                else if (res == -1)
-                {
-                    union.Add(leftSet.Elements[i]);
-                    i++;
-                }
-                else
-                {
-                    union.Add(rightSet.Elements[j]);
-                    j++;
-                }
-            }
-
-            if (ContainsMoreElements(leftSet.Elements, i))
-                AddRemainingElements(union, leftSet.Elements, i);
-            else if (ContainsMoreElements(rightSet.Elements, j)) 
-                AddRemainingElements(union, rightSet.Elements, j);
-            
-            return new Set(union);
+            HashSet<Element> set = leftSet.SetCopy;
+            set.UnionWith(rightSet.Elements);
+            return new Set(set);
         }
 
         public Set VerticesField(VerticesGraphField node, List<Object> parameters)
@@ -179,16 +115,6 @@ namespace InterpreterLib.Helpers
             Graph graph = _interpreter.DispatchGraph(node.Children[0], parameters);
 
             return graph.Edges;
-        }
-
-        private void AddRemainingElements(List<Element> union, List<Element> elements, int i)
-        {
-            union.AddRange(elements.GetRange(i, (elements.Count - i)));
-        }
-
-        private bool ContainsMoreElements(List<Element> elements, int i)
-        {
-            return !(i >= elements.Count);
         }
 
         public Set EmptySetLiteral(EmptySetLiteralExpression e, List<object> parameters)

@@ -17,8 +17,7 @@ namespace InterpreterLib.Helpers
     public class GenericHelper : IGenericHelper
     {
         private IInterpreterGeneric _interpreter;
-        private AST _root;
-        private List<FunctionNode> _functions => _root.Functions;
+        private List<FunctionNode> _functions;
 
         public void SetInterpreter(IInterpreterGeneric interpreter)
         {
@@ -27,7 +26,7 @@ namespace InterpreterLib.Helpers
 
         public void SetASTRoot(AST root)
         {
-            _root = root;
+            _functions = root.Functions;
         }
 
         public T Identifier<T>(IdentifierExpression node, List<object> parameters)
