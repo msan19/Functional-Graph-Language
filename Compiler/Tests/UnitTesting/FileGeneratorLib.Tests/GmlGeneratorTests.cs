@@ -15,13 +15,9 @@ namespace FileGeneratorLib.Tests
         ExpectedGmlStrings expectedGmlStrings = new ExpectedGmlStrings();
         
         [TestMethod]
-        public void HandleLabelGraph_WithoutAdditionalLabels_DstSrcEvenNumber_()
+        public void Generate_SingleWithoutAdditionalLabels_DstSrcEvenNumber_()
         {
-            List<int> srcList = new List<int>() { 1, 2 };
-            List<int> dstList = new List<int>() { 3, 4 };
-            string[,] vertexLabels = new string[,] { };
-            string[,] edgeLabels = new string[,] { };
-            LabelGraph labelGraph = new LabelGraph("test1", srcList, dstList, vertexLabels, edgeLabels, 4);
+            LabelGraph labelGraph = GetStr1LabelGraph("test1");
 
             GmlGenerator gmlGenerator = new GmlGenerator();
             string expected = expectedGmlStrings.Str1;
@@ -31,7 +27,7 @@ namespace FileGeneratorLib.Tests
         }
 
         [TestMethod]
-        public void HandleLabelGraph_WithAdditionalLabels_()
+        public void Generate_SingleWithAdditionalLabels_()
         {
             List<int> srcList = new List<int>() { 1, 2 };
             List<int> dstList = new List<int>() { 3, 4 };
@@ -52,6 +48,45 @@ namespace FileGeneratorLib.Tests
             string actual = gmlGenerator.Generate(labelGraph).Replace("\r", "");
             
             expected.Should().BeEquivalentTo(actual);
+        }
+        
+        [TestMethod]
+        public void Generate_MultipleWithOne_()
+        {
+            LabelGraph l1 = GetStr1LabelGraph("l1");
+            List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1};
+            
+            GmlGenerator gmlGenerator = new GmlGenerator();
+            string expected = expectedGmlStrings.Str1;
+
+            List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
+            
+            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString);
+        }
+        
+        [TestMethod]
+        public void Generate_MultipleWithTwo_()
+        {
+            LabelGraph l1 = GetStr1LabelGraph("l1");
+            LabelGraph l2 = GetStr1LabelGraph("l2");
+            List<LabelGraph> labelGraphs = new List<LabelGraph>() {l1, l2};
+            
+            GmlGenerator gmlGenerator = new GmlGenerator();
+            string expected = expectedGmlStrings.Str1;
+
+            List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
+            
+            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString);
+            expected.Should().BeEquivalentTo(extensionalGraphs[1].GraphString);
+        }
+
+        private LabelGraph GetStr1LabelGraph(string fileName)
+        {
+            List<int> srcList = new List<int>() { 1, 2 };
+            List<int> dstList = new List<int>() { 3, 4 };
+            string[,] vertexLabels = new string[,] { };
+            string[,] edgeLabels = new string[,] { };
+            return new LabelGraph(fileName, srcList, dstList, vertexLabels, edgeLabels, 4);
         }
     }
 }
