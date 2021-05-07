@@ -53,7 +53,13 @@ namespace SingleCompReferenceHandlerLib.Tests
             return new FunctionNode(id, condition, parameters, functionTypeNode, 0, 0);
         }
 
-        private static FunctionTypeNode GetFunctionTypeNode(int count, TypeEnum type)
+        internal static FunctionNode GetFunctionNode(string id, ConditionNode condition)
+        {
+            FunctionTypeNode functionTypeNode = GetFunctionTypeNode();
+            return new FunctionNode(id, condition, new List<string>(), functionTypeNode, 0, 0);
+        }
+
+        internal static FunctionTypeNode GetFunctionTypeNode(int count, TypeEnum type)
         {
             var types = new List<TypeNode>();
             for (int i = 0; i < count; i++)
@@ -61,12 +67,12 @@ namespace SingleCompReferenceHandlerLib.Tests
             return new FunctionTypeNode(GetTypeNode(), types, 0, 0);
         }
 
-        private static TypeNode GetTypeNode(TypeEnum type)
+        internal static TypeNode GetTypeNode(TypeEnum type)
         {
             return new TypeNode(type, 0, 0);
         }
 
-        private static FunctionTypeNode GetFunctionTypeNode()
+        internal static FunctionTypeNode GetFunctionTypeNode()
         {
             return new FunctionTypeNode(GetTypeNode(), new List<TypeNode>(), 0, 0);
         }
@@ -81,7 +87,12 @@ namespace SingleCompReferenceHandlerLib.Tests
             return new ConditionNode(exprNode, 0, 0);
         }
 
-        public static FunctionCallExpression GetFunctionCallExpression(string id)
+        internal static ConditionNode GetConditionNode(SetExpression setExpr, IdentifierExpression returnExpr)
+        {
+            return new ConditionNode(setExpr, returnExpr, 0, 0);
+        }
+
+        internal static FunctionCallExpression GetFunctionCallExpression(string id)
         {
             return new FunctionCallExpression(id, new List<ExpressionNode>(), 0, 0);
         }
@@ -102,7 +113,7 @@ namespace SingleCompReferenceHandlerLib.Tests
             return new ConditionNode(GetElements(elements), GetIdentifierExpr(id), GetIntLit(), 0, 0);
         }
 
-        private static List<ElementNode> GetElements(string[] elements)
+        internal static List<ElementNode> GetElements(string[] elements)
         {
             var res = new List<ElementNode>();
             foreach (var e in elements)
@@ -110,27 +121,72 @@ namespace SingleCompReferenceHandlerLib.Tests
             return res;
         }
 
-        private static ElementNode GetElementNode(string name)
+        internal static ElementNode GetElementNode(string name)
         {
             return new ElementNode(name, new List<string>(), 0, 0);
         }
 
-        private static ExpressionNode GetBoolLit(bool value)
+        internal static ExpressionNode GetBoolLit(bool value)
         {
             return new BooleanLiteralExpression(value, 0, 0);
         }
 
-        private static ExpressionNode GetIntLit()
+        internal static ExpressionNode GetIntLit()
         {
             return new IntegerLiteralExpression(1, 0, 0);
         }
 
-        private static IdentifierExpression GetIdentifierExpr(string id)
+        internal static ExpressionNode GetIntLit(int v)
+        {
+            return new IntegerLiteralExpression(v, 0, 0);
+        }
+
+
+        internal static IdentifierExpression GetIdentifierExpr(string id)
         {
             return new IdentifierExpression(id, 0, 0);
         }
+
+        internal static SetExpression GetSetExpr(string elementId, List<string> indecies, List<string> bounds)
+        {
+            return new SetExpression(GetElementNode(elementId, indecies), GetBounds(bounds), GetBoolLit(true), 0, 0);
+        }
+
+        internal static SetExpression GetSetExpr(List<string> indecies, List<string> bounds)
+        {
+            return new SetExpression(GetElementNode(indecies), GetBounds(bounds), GetBoolLit(true), 0, 0);
+        }
+
+        internal static SetExpression GetSetExpr(string elementId, List<string> indecies, List<string> bounds, ExpressionNode predicate)
+        {
+            return new SetExpression(GetElementNode(elementId, indecies), GetBounds(bounds), predicate, 0, 0);
+        }
+
+        internal static List<BoundNode> GetBounds(List<string> bounds)
+        {
+            var res = new List<BoundNode>();
+            foreach (var bound in bounds)
+            {
+                res.Add(GetBound(bound));
+            }
+            return res;
+        }
+
+        internal static BoundNode GetBound(string bound)
+        {
+            return new BoundNode(bound, GetIntLit(0), GetIntLit(10), 0, 0);
+        }
+        internal static ElementNode GetElementNode(List<string> indecies)
+        {
+            return new ElementNode("elementNode", indecies, 0, 0);
+        }
+
+        internal static ElementNode GetElementNode(string elementId, List<string> indecies)
+        {
+            return new ElementNode(elementId, indecies, 0, 0);
+        }
     }
-    
+
     [TestClass]
     public class ReferenceHandlerTests
     {
@@ -183,7 +239,59 @@ namespace SingleCompReferenceHandlerLib.Tests
 
          */
 
+        #region Set
+        [DataRow(new string[] { "i", "j" }, new string[] { "j", "i" }, true)]
+        [DataRow(new string[] { "i", "j", "k" }, new string[] { "j", "k", "i" }, true)]
+        [TestMethod]
+        public void Set_xBounds_SortBounds(string[] indecies, string[] bounds, bool doNotUse)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var setExpr = Utilities.GetSetExpr(indecies.ToList(), bounds.ToList());
+            var condition = Utilities.GetConditionNode(setExpr);
+            Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", condition));
 
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = setExpr.Bounds;
+
+            for (int i = 0; i < indecies.Length; i++)
+                Assert.AreEqual(indecies[i], res[i].Identifier);
+        }
+        [DataRow("e", new string[] { "i", "j" }, "i", 1)]
+        [DataRow("e", new string[] { "i", "j" }, "e", 0)]
+        [TestMethod]
+        public void Set_xBounds_AccesibleInPredicate(string elementId, string[] indecies, string id, int expected)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var predicate = Utilities.GetIdentifierExpr(id);
+            var setExpr = Utilities.GetSetExpr(elementId, indecies.ToList(), indecies.ToList(), predicate);
+            var condition = Utilities.GetConditionNode(setExpr);
+            Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", condition));
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (IdentifierExpression)setExpr.Predicate;
+
+            Assert.AreEqual(expected, res.Reference);
+        }
+        //[DataRow("e", new string[] { "i", "j" }, "i", 1)]
+        //[DataRow("e", new string[] { "i", "j" }, "e", 0)]
+        //[TestMethod]
+        //public void Set_xBounds_AccesibleInReturnExpr(string elementId, string[] indecies, string id, int expected)
+        //{
+        //    AST ast = Utilities.GetAstSkeleton();
+        //    var setExpr = Utilities.GetSetExpr(elementId, indecies.ToList(), indecies.ToList());
+        //    var returnExpr = Utilities.GetIdentifierExpr(id);
+        //    var condition = Utilities.GetConditionNode(setExpr, returnExpr);
+        //    Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", condition));
+
+        //    ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+        //    referenceHandler.InsertReferences(ast);
+        //    var res = (IdentifierExpression)condition.ReturnExpression;
+
+        //    Assert.AreEqual(expected, res.Reference);
+        //}
+        #endregion
 
         #region Condition
         [DataRow(new string[] { "f" })]
