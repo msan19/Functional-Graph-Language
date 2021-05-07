@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ASTLib;
 using ASTLib.Exceptions;
 using ASTLib.Nodes;
@@ -45,6 +46,25 @@ namespace SingleCompReferenceHandlerLib.Tests
             List<string> paramIDs = new List<string>();
             return new FunctionNode(id, conditionNode, paramIDs, functionTypeNode, 0, 0);
         }
+        public static FunctionNode GetFunctionNode(string id, List<string> parameters, ConditionNode condition)
+        {
+
+            FunctionTypeNode functionTypeNode = GetFunctionTypeNode(parameters.Count, TypeEnum.Function);
+            return new FunctionNode(id, condition, parameters, functionTypeNode, 0, 0);
+        }
+
+        private static FunctionTypeNode GetFunctionTypeNode(int count, TypeEnum type)
+        {
+            var types = new List<TypeNode>();
+            for (int i = 0; i < count; i++)
+                types.Add(GetTypeNode(type));
+            return new FunctionTypeNode(GetTypeNode(), types, 0, 0);
+        }
+
+        private static TypeNode GetTypeNode(TypeEnum type)
+        {
+            return new TypeNode(type, 0, 0);
+        }
 
         private static FunctionTypeNode GetFunctionTypeNode()
         {
@@ -56,7 +76,7 @@ namespace SingleCompReferenceHandlerLib.Tests
             return new TypeNode(TypeEnum.Integer, 0, 0);
         }
 
-        private static ConditionNode GetConditionNode(ExpressionNode exprNode)
+        internal static ConditionNode GetConditionNode(ExpressionNode exprNode)
         {
             return new ConditionNode(exprNode, 0, 0);
         }
@@ -124,7 +144,8 @@ namespace SingleCompReferenceHandlerLib.Tests
               old scope: outer scope (the parameterIdentifiers in the function in which the given anonymous functions is declared/defined)
 
          */
-        
+
+        #region Function Call & Identifiers
         [DataRow(new string[]{"f"}, "f", 0)]
         [DataRow(new string[]{"f", "g"}, "f", 0)]
         [DataRow(new string[]{"f", "g", "a", "b"}, "a", 2)]
@@ -143,5 +164,103 @@ namespace SingleCompReferenceHandlerLib.Tests
             Assert.AreEqual(1, funcCallExpr.GlobalReferences.Count);
             Assert.AreEqual(index, funcCallExpr.GlobalReferences[0]);
         }
+        [DataRow(new string[] { "f" }, "f", 1)]
+        [DataRow(new string[] { "f", "f", "f" }, "f", 3)]
+        [DataRow(new string[] { "f", "g" }, "f", 1)]
+        [DataRow(new string[] { "f", "g", "a", "b" }, "a", 1)]
+        [DataRow(new string[] { "f", "a", "a", "b" }, "a", 2)]
+        [TestMethod]
+        public void FunctionCall_VariableNumberOfGlobalReferencesWithSameName_CorrectIndexing(string[] functionNames, string functionId, int expected)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            FunctionCallExpression funcCallExpr = Utilities.GetFunctionCallExpression(functionId);
+            Utilities.AddExportNode(ast, Utilities.GetExportNode(funcCallExpr));
+            foreach (var functionName in functionNames)
+                Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode(functionName));
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+
+            Assert.AreEqual(expected, funcCallExpr.GlobalReferences.Count);
+        }
+
+        [DataRow(new string[] { "f" }, "f", 0)]
+        [DataRow(new string[] { "f", "g" }, "f", 0)]
+        [DataRow(new string[] { "f", "g", "a", "b" }, "a", 2)]
+        [TestMethod]
+        public void FunctionCall_VariableNumberOfLocalReferences_CorrectIndexing(string[] functionNames, string functionId, int index)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var condition = Utilities.GetConditionNode(Utilities.GetFunctionCallExpression(functionId));
+            var func = Utilities.GetFunctionNode("Global", functionNames.ToList(), condition);
+            Utilities.AddFunctionNode(ast, func);
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (FunctionCallExpression)condition.ReturnExpression;
+
+            Assert.AreEqual(index, res.LocalReference);
+            Assert.AreEqual(0, res.GlobalReferences.Count);
+        }
+
+        [DataRow(new string[] { "f" }, "f", 0)]
+        [DataRow(new string[] { "f", "g" }, "f", 0)]
+        [DataRow(new string[] { "f", "g", "a", "b" }, "a", 2)]
+        [TestMethod]
+        public void FunctionCall_VariableNumberOfBothReferences_CorrectLocalIndexing(string[] functionNames, string functionId, int index)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var condition = Utilities.GetConditionNode(Utilities.GetFunctionCallExpression(functionId));
+            var func = Utilities.GetFunctionNode("Global", functionNames.ToList(), condition);
+            Utilities.AddFunctionNode(ast, func);
+            foreach (var functionName in functionNames)
+                Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode(functionName));
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (FunctionCallExpression)condition.ReturnExpression;
+
+            Assert.AreEqual(index, res.LocalReference);
+        }
+        [DataRow(new string[] { "f" }, "f", 0)]
+        [DataRow(new string[] { "f", "g" }, "f", 0)]
+        [DataRow(new string[] { "f", "g", "a", "b" }, "a", 2)]
+        [TestMethod]
+        public void FunctionCall_VariableNumberOfBothReferences_CorrectGlobalIndexing(string[] functionNames, string functionId, int index)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            foreach (var functionName in functionNames)
+                Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode(functionName));
+            var condition = Utilities.GetConditionNode(Utilities.GetFunctionCallExpression(functionId));
+            var func = Utilities.GetFunctionNode("Global", functionNames.ToList(), condition);
+            Utilities.AddFunctionNode(ast, func);
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (FunctionCallExpression)condition.ReturnExpression;
+
+            Assert.AreEqual(index, res.GlobalReferences[0]);
+        }
+        [DataRow(new string[] { "f", "f", "f" }, new string[] { "f" }, "f", 3, true)]
+        [DataRow(new string[] { "f", "g", "g" }, new string[] { "f", "a" }, "g", 2, false)]
+        [DataRow(new string[] { "f", "a", "g", "a", "b" }, new string[] { "f", "g", "a", "b" }, "a", 2, true)]
+        [TestMethod]
+        public void FunctionCall_VariableNumberOfBothReferences_CorrectCountIndexing(string[] global, string[] local, string functionId, int globalCount, bool hasLocal)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            foreach (var functionName in global)
+                Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode(functionName));
+            var condition = Utilities.GetConditionNode(Utilities.GetFunctionCallExpression(functionId));
+            var func = Utilities.GetFunctionNode("Global", local.ToList(), condition);
+            Utilities.AddFunctionNode(ast, func);
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (FunctionCallExpression)condition.ReturnExpression;
+
+            Assert.AreEqual(globalCount, res.GlobalReferences.Count);
+            Assert.AreEqual(hasLocal, res.LocalReference != FunctionCallExpression.NO_LOCAL_REF);
+        }
+        #endregion
     }
 }
