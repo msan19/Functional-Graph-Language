@@ -19,7 +19,7 @@ namespace ASTLib.Objects
 
         public int GetHashCode(Element obj)
         {
-            long l = 0;
+            long l = 1;
             foreach (int i in obj.Indices)
                 l *= i;
             return (int)(l % int.MaxValue);
