@@ -91,6 +91,44 @@ namespace SingleCompReferenceHandlerLib.Tests
             ReferenceHelper referenceHelper = new ReferenceHelper();
             return new ReferenceHandler(referenceHelper, false);
         }
+
+        internal static ConditionNode GetConditionNode(string[] elements)
+        {
+            return new ConditionNode(GetElements(elements), GetBoolLit(true), GetIntLit(), 0, 0);
+        }
+
+        internal static ConditionNode GetConditionNode(string[] elements, string id)
+        {
+            return new ConditionNode(GetElements(elements), GetIdentifierExpr(id), GetIntLit(), 0, 0);
+        }
+
+        private static List<ElementNode> GetElements(string[] elements)
+        {
+            var res = new List<ElementNode>();
+            foreach (var e in elements)
+                res.Add(GetElementNode(e));
+            return res;
+        }
+
+        private static ElementNode GetElementNode(string name)
+        {
+            return new ElementNode(name, new List<string>(), 0, 0);
+        }
+
+        private static ExpressionNode GetBoolLit(bool value)
+        {
+            return new BooleanLiteralExpression(value, 0, 0);
+        }
+
+        private static ExpressionNode GetIntLit()
+        {
+            return new IntegerLiteralExpression(1, 0, 0);
+        }
+
+        private static IdentifierExpression GetIdentifierExpr(string id)
+        {
+            return new IdentifierExpression(id, 0, 0);
+        }
     }
     
     [TestClass]
@@ -144,6 +182,43 @@ namespace SingleCompReferenceHandlerLib.Tests
               old scope: outer scope (the parameterIdentifiers in the function in which the given anonymous functions is declared/defined)
 
          */
+
+
+
+        #region Condition
+        [DataRow(new string[] { "f" })]
+        [DataRow(new string[] { "f", "g" })]
+        [DataRow(new string[] { "f", "g", "a", "b" })]
+        [TestMethod]
+        public void Function_xElements_CorrectIndexing(string[] elements)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var condition = Utilities.GetConditionNode(elements);
+            Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", elements.ToList(), condition));
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+
+            for (int i = 0; i < elements.Length; i++)
+                Assert.AreEqual(i, condition.Elements[i].Reference);
+        }
+        [DataRow(new string[] { "f" }, "f", 0)]
+        [DataRow(new string[] { "f", "g" }, "g", 1)]
+        [DataRow(new string[] { "f", "g", "a", "b" }, "a", 2)]
+        [TestMethod]
+        public void Function_xElementsRefernceInPredicate_CorrectIndexing(string[] elements, string id, int expected)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var condition = Utilities.GetConditionNode(elements, id);
+            Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", elements.ToList(), condition));
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+
+            var res = (IdentifierExpression)condition.Condition;
+            Assert.AreEqual(expected, res.Reference);
+        }
+        #endregion
 
         #region Function Call & Identifiers
         [DataRow(new string[]{"f"}, "f", 0)]
@@ -262,5 +337,6 @@ namespace SingleCompReferenceHandlerLib.Tests
             Assert.AreEqual(hasLocal, res.LocalReference != FunctionCallExpression.NO_LOCAL_REF);
         }
         #endregion
+
     }
 }
