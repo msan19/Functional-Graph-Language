@@ -46,6 +46,12 @@ namespace SingleCompReferenceHandlerLib.Tests
             List<string> paramIDs = new List<string>();
             return new FunctionNode(id, conditionNode, paramIDs, functionTypeNode, 0, 0);
         }
+
+        internal static FunctionNode GetFunctionNode(string id, string elementId, ConditionNode condition)
+        {
+            FunctionTypeNode functionTypeNode = GetFunctionTypeNode(1, TypeEnum.Element);
+            return new FunctionNode(id, condition, new List<string>(), functionTypeNode, 0, 0);
+        }
         public static FunctionNode GetFunctionNode(string id, List<string> parameters, ConditionNode condition)
         {
 
@@ -274,23 +280,6 @@ namespace SingleCompReferenceHandlerLib.Tests
 
             Assert.AreEqual(expected, res.Reference);
         }
-        //[DataRow("e", new string[] { "i", "j" }, "i", 1)]
-        //[DataRow("e", new string[] { "i", "j" }, "e", 0)]
-        //[TestMethod]
-        //public void Set_xBounds_AccesibleInReturnExpr(string elementId, string[] indecies, string id, int expected)
-        //{
-        //    AST ast = Utilities.GetAstSkeleton();
-        //    var setExpr = Utilities.GetSetExpr(elementId, indecies.ToList(), indecies.ToList());
-        //    var returnExpr = Utilities.GetIdentifierExpr(id);
-        //    var condition = Utilities.GetConditionNode(setExpr, returnExpr);
-        //    Utilities.AddFunctionNode(ast, Utilities.GetFunctionNode("func", condition));
-
-        //    ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
-        //    referenceHandler.InsertReferences(ast);
-        //    var res = (IdentifierExpression)condition.ReturnExpression;
-
-        //    Assert.AreEqual(expected, res.Reference);
-        //}
         #endregion
 
         #region Condition
