@@ -191,6 +191,19 @@ namespace SingleCompReferenceHandlerLib.Tests
         {
             return new ElementNode(elementId, indecies, 0, 0);
         }
+
+        internal static AnonymousFunctionExpression GetAnonymousFunction(string[] anonymIds, string id)
+        {
+            return new AnonymousFunctionExpression(anonymIds.ToList(), GetTypeNode(anonymIds.Length, TypeEnum.Integer), GetIdentifierExpr(id), 0, 0);
+        }
+
+        private static List<TypeNode> GetTypeNode(int num, TypeEnum type)
+        {
+            var res = new List<TypeNode>();
+            for (int i = 0; i < num; i++)
+                res.Add(new TypeNode(type, 0, 0));
+            return res;
+        }
     }
 
     [TestClass]
@@ -244,6 +257,38 @@ namespace SingleCompReferenceHandlerLib.Tests
               old scope: outer scope (the parameterIdentifiers in the function in which the given anonymous functions is declared/defined)
 
          */
+
+        #region Anonymous Functions
+        [DataRow(new string[] { "a", "b" }, new string[] { "j", "i" }, "j", 2)]
+        [DataRow(new string[] { "a", "b" }, new string[] { "j", "i" }, "i", 3)]
+        [TestMethod]
+        public void AnonymousFunctions__AccesToNewScope(string[] parameters, string[] anonymIds, string id, int expected)
+        {
+            AnonymousTests(parameters, anonymIds, id, expected);
+        }
+        [DataRow(new string[] { "a", "b" }, new string[] { "j", "i" }, "b", 1)]
+        [DataRow(new string[] { "a", "b" }, new string[] { "j", "i" }, "a", 0)]
+        [TestMethod]
+        public void AnonymousFunctions__AccesToOldScope(string[] parameters, string[] anonymIds, string id, int expected)
+        {
+            AnonymousTests(parameters, anonymIds, id, expected);
+        }
+
+        private static void AnonymousTests(string[] parameters, string[] anonymIds, string id, int expected)
+        {
+            AST ast = Utilities.GetAstSkeleton();
+            var anonym = Utilities.GetAnonymousFunction(anonymIds, id);
+            var cond = Utilities.GetConditionNode(anonym);
+            var func = Utilities.GetFunctionNode("func", parameters.ToList(), cond);
+            Utilities.AddFunctionNode(ast, func);
+
+            ReferenceHandler referenceHandler = Utilities.GetReferenceHandler();
+            referenceHandler.InsertReferences(ast);
+            var res = (IdentifierExpression)anonym.ReturnValue;
+
+            Assert.AreEqual(expected, res.Reference);
+        }
+        #endregion
 
         #region Set
         [DataRow(new string[] { "i", "j" }, new string[] { "j", "i" }, true)]
