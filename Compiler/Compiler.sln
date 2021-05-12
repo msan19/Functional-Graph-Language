@@ -39,11 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleCompTypeCheckerLib.Tests", "Tests\IntegrationTesting\Single\SingleCompTypeCheckerLib.Tests\SingleCompTypeCheckerLib.Tests.csproj", "{3B692A45-8BCD-43C7-97F1-5203DAE7142E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleCompReferenceHandlerLib.Tests", "Tests\IntegrationTesting\Single\SingleCompReferenceHandlerLib.Tests\SingleCompReferenceHandlerLib.Tests.csproj", "{C203F178-21DF-423D-A84F-BE4158A56256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleCompReferenceHandlerLib.Tests", "Tests\IntegrationTesting\Single\SingleCompReferenceHandlerLib.Tests\SingleCompReferenceHandlerLib.Tests.csproj", "{C203F178-21DF-423D-A84F-BE4158A56256}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleCompIntepreterLib.Tests", "Tests\IntegrationTesting\Single\SingleCompIntepreterLib.Tests\SingleCompIntepreterLib.Tests.csproj", "{87C719CF-3961-4B26-9C40-2D345CB4F3D4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SingleCompGmlGeneratorLib.Tests", "Tests\IntegrationTesting\Single\SingleCompGmlGeneratorLib.Tests\SingleCompGmlGeneratorLib.Tests.csproj", "{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TypeCheckerAndIntepreter.Tests", "Tests\IntegrationTesting\Multiple\TypeCheckerAndIntepreter.Tests\TypeCheckerAndIntepreter.Tests.csproj", "{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}"
 EndProject
@@ -126,10 +124,6 @@ Global
 		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87C719CF-3961-4B26-9C40-2D345CB4F3D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -157,7 +151,6 @@ Global
 		{3B692A45-8BCD-43C7-97F1-5203DAE7142E} = {04FB9FAD-CA17-45CF-8A3D-F1FC0FE89BD6}
 		{C203F178-21DF-423D-A84F-BE4158A56256} = {04FB9FAD-CA17-45CF-8A3D-F1FC0FE89BD6}
 		{87C719CF-3961-4B26-9C40-2D345CB4F3D4} = {04FB9FAD-CA17-45CF-8A3D-F1FC0FE89BD6}
-		{6EF1E831-E2C2-4D58-8E02-DBB32766C97F} = {04FB9FAD-CA17-45CF-8A3D-F1FC0FE89BD6}
 		{BE722365-4C35-4AAD-9CC5-6AFDA732CD38} = {0DEAAF96-C5FE-4B6E-B116-4BA9FF364241}
 		{E675A25F-3A50-40E3-BACD-EDDC457D7C88} = {0DEAAF96-C5FE-4B6E-B116-4BA9FF364241}
 		{7A5C97FA-1CD6-4CEF-B480-C16EED05F488} = {0DEAAF96-C5FE-4B6E-B116-4BA9FF364241}

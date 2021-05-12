@@ -1,4 +1,5 @@
 using ASTLib;
+using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes;
 using ASTLib.Nodes.ExpressionNodes;
 using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
@@ -47,6 +48,10 @@ namespace SingleCompTypeCheckerLib.Tests
         {
             return new FunctionNode("Func", condition, new List<string>(), GetFunctionTypeNode(inputTypes, output), 0, 0);
         }
+        internal static FunctionNode GetFunction(TypeNode output, List<TypeEnum> inputTypes, ConditionNode condition)
+        {
+            return new FunctionNode("Func", condition, new List<string>(), GetFunctionTypeNode(inputTypes, output), 0, 0);
+        }
         internal static FunctionNode GetFunction(TypeEnum output, List<TypeNode> inputTypes, ConditionNode condition)
         {
             return new FunctionNode("Func", condition, new List<string>(), GetFunctionTypeNode(inputTypes, output), 0, 0);
@@ -60,6 +65,10 @@ namespace SingleCompTypeCheckerLib.Tests
         private static FunctionTypeNode GetFunctionTypeNode(List<TypeEnum> inputTypes, TypeEnum output)
         {
             return new FunctionTypeNode(GetTypeNode(output), GetTypeNode(inputTypes), 0, 0);
+        }
+        private static FunctionTypeNode GetFunctionTypeNode(List<TypeEnum> inputTypes, TypeNode output)
+        {
+            return new FunctionTypeNode(output, GetTypeNode(inputTypes), 0, 0);
         }
 
         private static TypeNode GetTypeNode(TypeEnum type)
@@ -169,6 +178,11 @@ namespace SingleCompTypeCheckerLib.Tests
         {
             return new FunctionTypeNode(GetTypeNode(returnType), GetTypeNode(inputs), 0, 0);
         }
+
+        internal static AnonymousFunctionExpression GetAnonymFunction()
+        {
+            return new AnonymousFunctionExpression(new List<string>(), new List<TypeNode>(), GetIntLit(), 0, 0);
+        }
     }
 
     [TestClass]
@@ -181,9 +195,73 @@ namespace SingleCompTypeCheckerLib.Tests
         //  Local
         //  Both
         // Anonymous Function
-        //  Check if it is correct in given context
-        //  Move Anonym to global scope 
+        //  Move Anonym to global scope (functions list)
         // Throw error on invalid Types
+
+        #region Throw Errors 
+        [DataRow(TypeEnum.Real, TypeEnum.String, TypeEnum.Real)]
+        [DataRow(TypeEnum.String, TypeEnum.String, TypeEnum.Real)]
+        [DataRow(TypeEnum.Integer, TypeEnum.Integer, TypeEnum.Boolean)]
+        [DataRow(TypeEnum.Real, TypeEnum.String, TypeEnum.Boolean)]
+        [TestMethod]
+        [ExpectedException(typeof(ASTLib.Exceptions.Invalid.InvalidCastException))]
+        public void BadInput_CastProblem_ThrowError(TypeEnum left, TypeEnum right, TypeEnum output)
+        {
+            string leftId = "a";
+            int leftRef = 0;
+            string rightId = "b";
+            int rightRef = 1;
+            var types = new List<TypeEnum>() { left, right };
+
+            var ast = Utilities.GetAstSkeleton();
+            var expr = Utilities.GetAdditionExpr(leftId, leftRef, rightId, rightRef);
+            var cond = Utilities.GetCondition(expr);
+            var func = Utilities.GetFunction(output, types, cond);
+            Utilities.AddFunctionNode(ast, func);
+
+            var typeChecker = Utilities.GetTypeChecker();
+            typeChecker.CheckTypes(ast);
+        }
+        [DataRow(TypeEnum.Boolean, TypeEnum.Real, TypeEnum.Boolean)]
+        [DataRow(TypeEnum.Boolean, TypeEnum.Integer, TypeEnum.Boolean)]
+        [TestMethod]
+        [ExpectedException(typeof(UnmatchableTypesException))]
+        public void BadInput_WrongInput_ThrowError(TypeEnum left, TypeEnum right, TypeEnum output)
+        {
+            string leftId = "a";
+            int leftRef = 0;
+            string rightId = "b";
+            int rightRef = 1;
+            var types = new List<TypeEnum>() { left, right };
+
+            var ast = Utilities.GetAstSkeleton();
+            var expr = Utilities.GetAdditionExpr(leftId, leftRef, rightId, rightRef);
+            var cond = Utilities.GetCondition(expr);
+            var func = Utilities.GetFunction(output, types, cond);
+            Utilities.AddFunctionNode(ast, func);
+
+            var typeChecker = Utilities.GetTypeChecker();
+            typeChecker.CheckTypes(ast);
+        }
+        #endregion
+
+        #region Anonymous Functions
+        [TestMethod]
+        public void AnonymFunctions__AddToFunctions()
+        {
+            var ast = Utilities.GetAstSkeleton();
+
+            var expr = Utilities.GetAnonymFunction();
+            var cond = Utilities.GetCondition(expr);
+            var func = Utilities.GetFunction(Utilities.GetFunctionType(TypeEnum.Integer, new List<TypeEnum>()), new List<TypeEnum>(), cond);
+            Utilities.AddFunctionNode(ast, func);
+
+            var typeChecker = Utilities.GetTypeChecker();
+            typeChecker.CheckTypes(ast);
+
+            Assert.AreEqual(2, ast.Functions.Count);
+        }
+        #endregion
 
         #region Irrelevant Function References 
         [DataRow(new TypeEnum[] { TypeEnum.Integer }, new TypeEnum[] { TypeEnum.Boolean })]
