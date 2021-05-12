@@ -1,10 +1,10 @@
-﻿export tree(5) {"tree"}
+﻿export tree(4) {"BinaryTree"}
 
 tree:(integer) -> graph
 tree(n) = (treeElements(n, 0), treeElements(n, 1), treeSrc, treeDst)
 
 treeElements:(integer, integer) -> set
-treeElements(n, m) = { e[i,j] | m<=[i]<n, 0<=[j]<2^n, j<2^i}
+treeElements(n, m) = { e[i,j] | m<=[i]<=n, 0<=[j]<=2^n, j<2^i}
 
 treeSrc:(element) -> element
 treeSrc(e) =

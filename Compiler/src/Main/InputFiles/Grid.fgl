@@ -1,7 +1,9 @@
-﻿export Grid(n()) {"Grid"}
+﻿//Grid
+
+export Grid(n()) {"Grid"}
 
 n: () -> integer
-n() = 1
+n() = 3
 
 Grid: (integer) -> graph
 Grid(n) = ({v[i] | 0 <= [i] <= n * (n + 2)}, {e[i] | 0 <= [i] < n * (2 * n + 2)}, src, dst)
