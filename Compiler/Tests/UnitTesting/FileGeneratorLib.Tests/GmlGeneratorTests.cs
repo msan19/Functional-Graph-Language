@@ -60,7 +60,7 @@ namespace FileGeneratorLib.Tests
 
             List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
             
-            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString);
+            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString.Replace("\r", ""));
         }
         
         [TestMethod]
@@ -87,8 +87,8 @@ namespace FileGeneratorLib.Tests
 
             List<ExtensionalGraph> extensionalGraphs = gmlGenerator.Generate(labelGraphs);
             
-            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString);
-            expected.Should().BeEquivalentTo(extensionalGraphs[1].GraphString);
+            expected.Should().BeEquivalentTo(extensionalGraphs[0].GraphString.Replace("\r", ""));
+            expected.Should().BeEquivalentTo(extensionalGraphs[1].GraphString.Replace("\r", ""));
         }
         
         [TestMethod]
