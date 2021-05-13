@@ -146,7 +146,7 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "grid.fgl" };
+            _fileNames = new List<string>() { "MultiIntegrationTest.fgl" };
             _saveOutput = true;
             foreach (string s in args)
             {
