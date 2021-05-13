@@ -31,8 +31,8 @@ namespace ReferenceHandlerAndTypeChecker.Tests
 
             var add = GetAddNode(GetIdentifierExpr(id), GetIntLit(1));
             var mod = GetModExpr(add, GetIdentifierExpr(nId));
-            var dst = GetFunctionNode("dst", GetElementNode(elementId, id), GetElementExpr(mod), new List<string>() { "e", "n" }, new List<TypeEnum>() { TypeEnum.Element, TypeEnum.Integer }, TypeEnum.Element );
-            var src = GetFunctionNode("src", GetIdentifierExpr(elementId), "e", TypeEnum.Element, TypeEnum.Element);
+            var dst = GetFunctionNode("edgeFunc", GetElementNode(elementId, id), GetElementExpr(mod), new List<string>() { "e", "n" }, new List<TypeEnum>() { TypeEnum.Element, TypeEnum.Integer }, TypeEnum.Element );
+            var src = GetFunctionNode("edgeFunc", GetIdentifierExpr(elementId), "e", TypeEnum.Element, TypeEnum.Element);
             AddFunctionNode(ast, dst);
             AddFunctionNode(ast, src);
 
@@ -42,8 +42,9 @@ namespace ReferenceHandlerAndTypeChecker.Tests
             AddFunctionNode(ast, vLabel);
             AddFunctionNode(ast, eLabel);
 
-            var anonym = GetAnonymFunc(GetFunctionCall("dst", new List<string>() { "e", "n" }), "e", TypeEnum.Element);
-            var graph = GetGraphExpr(GetFunctionCall("vertexSet", "n"), edgeSet, GetIdentifierExpr("src"), anonym);
+            var anonymSrc = GetAnonymFunc(GetFunctionCall("edgeFunc", new List<string>() { "e" }), "e", TypeEnum.Element);
+            var anonymDst = GetAnonymFunc(GetFunctionCall("edgeFunc", new List<string>() { "e", "n" }), "e", TypeEnum.Element);
+            var graph = GetGraphExpr(GetFunctionCall("vertexSet", "n"), edgeSet, anonymSrc, anonymDst);
             var graphFunc = GetFunctionNode("graphFunc", graph, "n", TypeEnum.Integer, TypeEnum.Graph);
             AddFunctionNode(ast, graphFunc);
             
