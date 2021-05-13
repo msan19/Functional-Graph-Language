@@ -5,8 +5,13 @@ using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.OperationNodes;
 using ASTLib.Nodes.TypeNodes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ReferenceHandlerLib;
 using System;
 using System.Collections.Generic;
+using TypeCheckerLib;
+using TypeCheckerLib.Helpers;
+using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
+using TypeSetHelper = TypeCheckerLib.Helpers.SetHelper;
 
 namespace ReferenceHandlerAndTypeChecker.Tests
 {
@@ -32,8 +37,8 @@ namespace ReferenceHandlerAndTypeChecker.Tests
             AddFunctionNode(ast, src);
 
 
-            var vLabel = GetFunctionNode("vLabel", GetAddNode(GetStringLit("Vertex: "), GetIdentifierExpr(id)), "e", TypeEnum.Element, TypeEnum.String);
-            var eLabel = GetFunctionNode("eLabel", GetAddNode(GetStringLit("Edge: "), GetIdentifierExpr(id)), "e", TypeEnum.Element, TypeEnum.String);
+            var vLabel = GetFunctionNode("vLabel", GetElementNode(elementId, id), GetAddNode(GetStringLit("Vertex: "), GetIdentifierExpr(id)), "e", TypeEnum.Element, TypeEnum.String);
+            var eLabel = GetFunctionNode("eLabel", GetElementNode(elementId, id), GetAddNode(GetStringLit("Edge: "), GetIdentifierExpr(id)), "e", TypeEnum.Element, TypeEnum.String);
             AddFunctionNode(ast, vLabel);
             AddFunctionNode(ast, eLabel);
 
@@ -42,7 +47,7 @@ namespace ReferenceHandlerAndTypeChecker.Tests
             var graphFunc = GetFunctionNode("graphFunc", graph, "n", TypeEnum.Integer, TypeEnum.Graph);
             AddFunctionNode(ast, graphFunc);
             
-            var export = GetExportNode(GetFunctionCall("graphFunc", "n"), GetStringLit("MultiIntegration"), GetIdentifierExpr("vLabel"), GetIdentifierExpr("eLabel"));
+            var export = GetExportNode(GetFunctionCall("graphFunc", GetIntLit(n)), GetStringLit("MultiIntegration"), GetIdentifierExpr("vLabel"), GetIdentifierExpr("eLabel"));
             AddExportNode(ast, export);
             return ast;
         }
@@ -66,6 +71,12 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         {
             return new FunctionCallExpression(funcId, parameters.ConvertAll<ExpressionNode>(x => GetIdentifierExpr(x)), 0, 0);
         }
+
+        private static ExpressionNode GetFunctionCall(string funcId, ExpressionNode input)
+        {
+            return new FunctionCallExpression(funcId, new List<ExpressionNode>() { input }, 0, 0);
+        }
+
         private static FunctionCallExpression GetFunctionCall(string funcId, string parameter)
         {
             return new FunctionCallExpression(funcId, new List<ExpressionNode>() { GetIdentifierExpr(parameter) }, 0, 0);
@@ -84,6 +95,11 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         private static FunctionNode GetFunctionNode(string name, ExpressionNode expr, List<string> parameters, List<TypeEnum> inputTypes, TypeEnum returnType)
         {
             return new FunctionNode(name, GetCondition(expr), parameters, GetFunctionTypeNode(inputTypes, returnType), 0, 0);
+        }
+
+        private static FunctionNode GetFunctionNode(string name, ElementNode elementNode, ExpressionNode expr, string parameter, TypeEnum inputType, TypeEnum returnType)
+        {
+            return GetFunctionNode(name, elementNode, expr, new List<string>() { parameter }, new List<TypeEnum>() { inputType }, returnType);
         }
 
         private static FunctionNode GetFunctionNode(string name, ElementNode elementNode, ExpressionNode expr, List<string> parameters, List<TypeEnum> inputTypes, TypeEnum returnType)
@@ -109,6 +125,11 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         private static ConditionNode GetCondition(ElementNode elementNode, ExpressionNode expr)
         {
             return new ConditionNode(new List<ElementNode> { elementNode }, null, expr, 0, 0);
+        }
+
+        private static BooleanLiteralExpression GetBoolLit(bool v)
+        {
+            return new BooleanLiteralExpression(v, 0, 0);
         }
 
         private static ExpressionNode GetModExpr(AdditionExpression dividend, IdentifierExpression divisor)
@@ -143,7 +164,7 @@ namespace ReferenceHandlerAndTypeChecker.Tests
 
         private static SetExpression GetSetExpr(int n)
         {
-            return new SetExpression(GetElementNode("x", "i"), new List<BoundNode>() { GetBound("i", 0, n) }, null, 0, 0);
+            return new SetExpression(GetElementNode("x", "i"), new List<BoundNode>() { GetBound("i", 0, n) }, GetBoolLit(true), 0, 0);
         }
 
         private static BoundNode GetBound(string id, int start, int end)
@@ -169,6 +190,21 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         {
             ast.Exports.Add(exportNode);
         }
+
+        internal static ReferenceHandler GetReferenceHandler()
+        {
+            ReferenceHelper referenceHelper = new ReferenceHelper();
+            return new ReferenceHandler(referenceHelper, false);
+        }
+
+        internal static TypeChecker GetTypeChecker()
+        {
+            return new TypeChecker(new DeclarationHelper(),
+                                           new NumberHelper(),
+                                           new CommonOperatorHelper(),
+                                           new TypeBooleanHelper(),
+                                           new TypeSetHelper());
+        }
     }
 
     [TestClass]
@@ -179,10 +215,18 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         // Anonym Function
 
         [TestMethod]
-        public void TestMethod1()
+        public void ParameterRef_src_e()
         {
             var ast = Utilities.GetMultiGraphExample(2);
-            Assert.IsTrue(false);
+
+            var refHandler = Utilities.GetReferenceHandler();
+            var typeChecker = Utilities.GetTypeChecker();
+            refHandler.InsertReferences(ast);
+            typeChecker.CheckTypes(ast);
+         
+            var res = (IdentifierExpression)ast.Functions[2].Conditions[0].ReturnExpression;
+            Assert.IsTrue(res.IsLocal);
+            Assert.AreEqual(0, res.Reference);
         }
     }
 }
