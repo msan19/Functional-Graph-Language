@@ -212,8 +212,14 @@ namespace ReferenceHandlerAndTypeChecker.Tests
     public class ReferenceHandlerToTypeCheckerTests
     {
         // Function Ref
+        //  - Only one reference exists for edgefunc
         // Parameter Ref
+        //  - Check that e and n is refernce correct
         // Anonym Function
+        //  - Moved to global Funcs
+        //  - Refernce to new func is created on Anonym Func
+        // Casting
+        //  - Int -> String
 
         [TestMethod]
         public void ParameterRef_src_e()

@@ -191,6 +191,13 @@ namespace TypeCheckerAndIntepreter.Tests
     [TestClass]
     public class TypeCheckerToInterpreterTests
     {
+        // Casting
+        //  - "Vertex: 1" exists in Label Graph
+        // Correct edgeFunc is Called
+        //  - Check that src -> dst list match 
+        //      - dst = (src + 1) mod 2
+        //      - And not (1,1)(0,0)
+
         [TestMethod]
         public void TestMethod1()
         {

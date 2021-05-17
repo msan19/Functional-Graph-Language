@@ -17,7 +17,14 @@ namespace IntepreterAndGmlGenerator.Tests
     [TestClass]
     public class InterpreterToGmlTests
     {
-        // Everything
+        // File Name is correct
+        // Check First node for
+        //  - Label
+        //  - id
+        // Check First Edge for 
+        //  - Label
+        //  - src
+        //  - dst
 
         [TestMethod]
         public void TestMethod1()
