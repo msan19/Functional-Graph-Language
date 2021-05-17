@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReferenceHandlerLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TypeCheckerLib;
 using TypeCheckerLib.Helpers;
 using TypeBooleanHelper = TypeCheckerLib.Helpers.BooleanHelper;
@@ -220,6 +221,118 @@ namespace ReferenceHandlerAndTypeChecker.Tests
         //  - Refernce to new func is created on Anonym Func
         // Casting
         //  - Int -> String
+
+        #region Function References
+        [TestMethod]
+        public void FuncRef_Anonym_src()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var func = ast.Functions[6];
+            var functionCall = (FunctionCallExpression)func.Conditions[0].ReturnExpression;
+
+            Assert.AreEqual(FunctionCallExpression.NO_LOCAL_REF, functionCall.LocalReference);
+            Assert.AreEqual(1, functionCall.GlobalReferences.Count);
+            Assert.AreEqual(2, functionCall.GlobalReferences[0]);
+        }
+        [TestMethod]
+        public void FuncRef_Anonym_dst()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var func = ast.Functions[7];
+            var functionCall = (FunctionCallExpression)func.Conditions[0].ReturnExpression;
+
+            Assert.AreEqual(FunctionCallExpression.NO_LOCAL_REF, functionCall.LocalReference);
+            Assert.AreEqual(1, functionCall.GlobalReferences.Count);
+            Assert.AreEqual(1, functionCall.GlobalReferences[0]);
+        }
+        #endregion
+        #region Parameter References
+        [TestMethod]
+        public void ParamRef_EdgeFunc_e()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var func = GetFunc(ast, "edgeFunc")[0];
+            var element = func.Conditions[0].Elements[0];
+
+            Assert.AreEqual(0, element.Reference);
+        }
+        [TestMethod]
+        public void ParamRef_EdgeFunc_n()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var func = GetFunc(ast, "edgeFunc")[0];
+            var n = (IdentifierExpression) func.Conditions[0].ReturnExpression.Children[0].Children[1];
+
+            Assert.AreEqual(1, n.Reference);
+        }
+        #endregion
+        #region Casting
+        [TestMethod]
+        public void Casting_Vertex_Correct()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var func = GetFunc(ast, "vLabel").FirstOrDefault();
+            var castNode = func.Conditions[0].ReturnExpression.Children[1];
+
+            Assert.AreEqual(typeof(CastFromIntegerExpression), castNode.GetType());
+        }
+        #endregion
+        #region Anonym
+        [TestMethod]
+        public void AnonymFunc_Src_CorrectRef()
+        {
+            AST ast = GetEvaluatedAst();
+
+            var graph = GetGraphExpr(ast);
+            var src = (AnonymousFunctionExpression)graph.Src;
+
+            Assert.AreEqual(6, src.Reference);
+        }
+        [TestMethod]
+        public void AnonymFunc_SrcAndDst_MovedToGlobalRef()
+        {
+            AST ast = GetEvaluatedAst();
+
+            Assert.AreEqual(8, ast.Functions.Count);
+        }
+        #endregion
+
+        private GraphExpression GetGraphExpr(AST ast)
+        {
+            foreach (var func in ast.Functions)
+            {
+                var returnExpr = func.Conditions[0].ReturnExpression;
+                if (returnExpr.GetType() == typeof(GraphExpression))
+                    return (GraphExpression)returnExpr;
+            }
+            return null;
+        }
+
+        private List<FunctionNode> GetFunc(AST ast, string name)
+        {
+            return ast.Functions.Where(x => x.Identifier.Equals(name)).ToList();
+        }
+
+        private static AST GetEvaluatedAst()
+        {
+            var ast = Utilities.GetMultiGraphExample(2);
+
+            var refHandler = Utilities.GetReferenceHandler();
+            var typeChecker = Utilities.GetTypeChecker();
+            refHandler.InsertReferences(ast);
+            typeChecker.CheckTypes(ast);
+            return ast;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
 
         [TestMethod]
         public void ParameterRef_src_e()
