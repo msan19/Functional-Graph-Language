@@ -9,6 +9,7 @@ using NSubstitute;
 using System;
 using System.Collections.Generic;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 
 namespace InterpreterLib.Tests
 {

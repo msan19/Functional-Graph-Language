@@ -18,6 +18,7 @@ using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes.GraphFields;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
 using TypeCheckerLib.Helpers;
 using TypeCheckerLib.Interfaces;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 
 namespace TypeCheckerLib.Tests.HelperTests
 {
