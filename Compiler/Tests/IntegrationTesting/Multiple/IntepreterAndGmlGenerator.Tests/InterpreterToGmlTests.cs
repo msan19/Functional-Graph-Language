@@ -8,7 +8,9 @@ using FileGeneratorLib;
 using InterpreterLib;
 using InterpreterLib.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using InterpBooleanHelper = InterpreterLib.Helpers.BooleanHelper;
 using InterpreterSetHelper = InterpreterLib.Helpers.SetHelper;
 
@@ -27,7 +29,72 @@ namespace IntepreterAndGmlGenerator.Tests
         //  - dst
 
         [TestMethod]
-        public void TestMethod1()
+        public void FileName()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+
+            Assert.AreEqual("MultiIntegration", gml.FileName);
+        }
+
+        [TestMethod]
+        public void FistNode_Id()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+            var firstNode = GetFirstNode(gml);
+
+            Assert.AreEqual("id 0", firstNode[0]);
+        }
+        [TestMethod]
+        public void FistNode_Label()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+            var firstNode = GetFirstNode(gml);
+
+            Assert.AreEqual("Vertex: 0", firstNode[1]);
+        }
+
+        [TestMethod]
+        public void FistEdge_Src()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+            var firstNode = GetFirstEdge(gml);
+
+            Assert.AreEqual("source 0", firstNode[0]);
+        }
+        [TestMethod]
+        public void FistEdge_Dst()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+            var firstNode = GetFirstEdge(gml);
+
+            Assert.AreEqual("target 1", firstNode[1]);
+        }
+        [TestMethod]
+        public void FistEdge_Label()
+        {
+            ExtensionalGraph gml = GetGmlObject();
+            var firstNode = GetFirstEdge(gml);
+
+            Assert.AreEqual("Edge: 0", firstNode[2]);
+        }
+
+        private static List<string> GetFirstEdge(ExtensionalGraph gml)
+        {
+            var lines = gml.GraphString.Split(Environment.NewLine);
+            for (int i = 0; i < lines.Length; i++)
+                lines[i] = lines[i].Trim();
+            return lines.Skip(11).Take(3).ToList();
+        }
+
+        private static List<string> GetFirstNode(ExtensionalGraph gml)
+        {
+            var lines = gml.GraphString.Split(Environment.NewLine);
+            for (int i = 0; i < lines.Length; i++)
+                lines[i] = lines[i].Trim();
+            return lines.Skip(3).Take(2).ToList();
+        }
+
+        private static ExtensionalGraph GetGmlObject()
         {
             var ast = Utilities.GetMultiGraphExample(2);
 
@@ -35,8 +102,7 @@ namespace IntepreterAndGmlGenerator.Tests
             var gmlGenerator = Utilities.GetGmlGenerator();
             var interpretRes = interpreter.Interpret(ast);
             var gml = gmlGenerator.Generate(interpretRes)[0];
-
-            Assert.AreEqual("MultiIntegration", gml.FileName);
+            return gml;
         }
     }
 
