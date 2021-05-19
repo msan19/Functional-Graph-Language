@@ -11,6 +11,7 @@ using ASTLib.Exceptions;
 using ASTLib.Exceptions.NotMatching;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 
 namespace TypeCheckerLib.Helpers
 {

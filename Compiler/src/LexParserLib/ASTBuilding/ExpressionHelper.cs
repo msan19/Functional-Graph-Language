@@ -50,7 +50,7 @@ namespace LexParserLib.ASTBuilding
             };
         }
 
-        public ExpressionNode GetAnonymousFunction(ASTNode himeNode)
+        private ExpressionNode GetAnonymousFunction(ASTNode himeNode)
         {
 
             List<string> identifiers = new List<string>();
@@ -70,7 +70,7 @@ namespace LexParserLib.ASTBuilding
                                                    position.Line, position.Column);
         }
 
-        public void VisitPairs(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
+        private void VisitPairs(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
         {
             if (himeNode.Children.Count == 1)
                 VisitPair(himeNode.Children[0], identifiers, types);
@@ -81,7 +81,7 @@ namespace LexParserLib.ASTBuilding
             }
         }
 
-        public void VisitPair(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
+        private void VisitPair(ASTNode himeNode, List<string> identifiers, List<TypeNode> types)
         {
             types.Add(CreateTypeNode(himeNode.Children[0]));
             identifiers.Add(himeNode.Children[1].Value);
@@ -106,7 +106,7 @@ namespace LexParserLib.ASTBuilding
             return new FunctionTypeNode(returnType, parameterTypes, position.Line, position.Column);
         }
 
-        public TypeNode CreateTypeNode(ASTNode himeNode)
+        private TypeNode CreateTypeNode(ASTNode himeNode)
         {
             TextPosition position = himeNode.Children[0].Position;
             return himeNode.Children[0].Symbol.Name switch
@@ -123,7 +123,7 @@ namespace LexParserLib.ASTBuilding
             };
         }
 
-        public List<TypeNode> VisitTypes(ASTNode himeNode)
+        private List<TypeNode> VisitTypes(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 1)
             {
@@ -137,7 +137,7 @@ namespace LexParserLib.ASTBuilding
             }
         }
 
-        public ExpressionNode VisitExpression(ASTNode himeNode)
+        private ExpressionNode VisitExpression(ASTNode himeNode)
         {
             return himeNode.Children.Count switch
             {
@@ -147,7 +147,7 @@ namespace LexParserLib.ASTBuilding
             };
         }
 
-        public ExpressionNode VisitExpressionWithTwoChildren(ASTNode himeNode)
+        private ExpressionNode VisitExpressionWithTwoChildren(ASTNode himeNode)
         {
             NegativeExpression negativeExpression = new NegativeExpression(new List<ExpressionNode>(),
                                                                     himeNode.Children[0].Position.Line,
@@ -158,7 +158,7 @@ namespace LexParserLib.ASTBuilding
             return negativeExpression;
         }
 
-        public ExpressionNode VisitExpressionWithThreeChildren(ASTNode himeNode)
+        private ExpressionNode VisitExpressionWithThreeChildren(ASTNode himeNode)
         {
             ExpressionNode leftOperant = DispatchExpression(himeNode.Children[0]);
             ExpressionNode rightOperant = DispatchExpression(himeNode.Children[2]);
@@ -212,7 +212,7 @@ namespace LexParserLib.ASTBuilding
             };
         }
 
-        public ExpressionNode VisitLogicTerm(ASTNode himeNode)
+        private ExpressionNode VisitLogicTerm(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 2)
             {
@@ -255,7 +255,7 @@ namespace LexParserLib.ASTBuilding
 
         }
 
-        public ExpressionNode VisitExponent(ASTNode himeNode)
+        private ExpressionNode VisitExponent(ASTNode himeNode)
         {
             return himeNode.Children[0].Symbol.Name switch
             {
@@ -284,7 +284,7 @@ namespace LexParserLib.ASTBuilding
             return new SetExpression(expressions, position.Line, position.Column);
         }
 
-        public ExpressionNode GetField(ASTNode himeNode)
+        private ExpressionNode GetField(ASTNode himeNode)
         {
             ExpressionNode graph = DispatchExpression(himeNode.Children[0]);
             TextPosition position = himeNode.Children[1].Position;
@@ -298,7 +298,7 @@ namespace LexParserLib.ASTBuilding
             };
         }
 
-        public ExpressionNode GetGraph(ASTNode himeNode)
+        private ExpressionNode GetGraph(ASTNode himeNode)
         {
             ExpressionNode vertices = DispatchExpression(himeNode.Children[1]);
             ExpressionNode edges = DispatchExpression(himeNode.Children[3]);
@@ -309,7 +309,7 @@ namespace LexParserLib.ASTBuilding
             return new GraphExpression(vertices, edges, src, dst, position.Line, position.Column);
         }
 
-        public ExpressionNode GetElementExpression(ASTNode himeNode)
+        private ExpressionNode GetElementExpression(ASTNode himeNode)
         {
             List<ExpressionNode> children = new List<ExpressionNode>();
             VisitExpressions(himeNode.Children[2], children);
@@ -318,7 +318,7 @@ namespace LexParserLib.ASTBuilding
                                          himeNode.Children[0].Position.Column);
         }
 
-        public SetExpression GetSetBuilder(ASTNode himeNode)
+        private SetExpression GetSetBuilder(ASTNode himeNode)
         {
             ExpressionNode predicate = (himeNode.Children.Count == _conf.SET_WITH_PREDICATE) ?
                                         DispatchExpression(himeNode.Children[5]) : new BooleanLiteralExpression(true, 0, 0);
@@ -349,7 +349,7 @@ namespace LexParserLib.ASTBuilding
             }
         }
 
-        public List<BoundNode> VisitBounds(ASTNode himeNode)
+        private List<BoundNode> VisitBounds(ASTNode himeNode)
         {
             if (himeNode.Children.Count == 1)
                 return new List<BoundNode> { CreateBoundNode(himeNode.Children[0]) };
@@ -361,7 +361,7 @@ namespace LexParserLib.ASTBuilding
             }
         }
 
-        public BoundNode CreateBoundNode(ASTNode himeNode)
+        private BoundNode CreateBoundNode(ASTNode himeNode)
         {
             TextPosition position;
             if (himeNode.Children.Count == _conf.DOUBLE_BOUNDS)
@@ -381,7 +381,7 @@ namespace LexParserLib.ASTBuilding
 
         }
 
-        public ExpressionNode GetLimit(ASTNode himeNode, string comp, int adjustment)
+        private ExpressionNode GetLimit(ASTNode himeNode, string comp, int adjustment)
         {
             ExpressionNode value = DispatchExpression(himeNode);
             int line = value.LineNumber;
@@ -391,7 +391,7 @@ namespace LexParserLib.ASTBuilding
             return value;
         }
 
-        public ExpressionNode GetFunctionCall(ASTNode himeNode)
+        private ExpressionNode GetFunctionCall(ASTNode himeNode)
         {
             List<ExpressionNode> expressions = new List<ExpressionNode>();
 
@@ -413,7 +413,7 @@ namespace LexParserLib.ASTBuilding
             }
         }
 
-        public ExpressionNode VisitLiteral(ASTNode himeNode)
+        private ExpressionNode VisitLiteral(ASTNode himeNode)
         {
             return himeNode.Symbol.Name switch
             {

@@ -1,0 +1,22 @@
+﻿export graphFunc(2) {"MultiIntegration"} {vLabel} {eLabel}
+ 
+graphFunc: (integer) -> graph
+graphFunc(n) = (vertexSet(n), { x[i] | 0 <= [i] < n }, (element e) => edgeFunc(e), (element e) => edgeFunc(e, n))
+ 
+vertexSet: (integer) -> set 
+vertexSet(n) = { x[i] | 0 <= [i] < n }
+ 
+edgeFunc: (element) -> element
+edgeFunc(e) = e
+
+edgeFunc: (element, integer) -> element 
+edgeFunc(e, n) = 
+    | e[i] = element[(i+1) mod n]
+  
+vLabel: (element) -> string
+vLabel(e) = 
+    | e[i] = "Vertex: " + i
+
+eLabel: (element) -> string
+eLabel(e) = 
+    | e[i] = "Edge: " + i

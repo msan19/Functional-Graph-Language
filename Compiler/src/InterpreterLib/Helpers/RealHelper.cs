@@ -10,6 +10,7 @@ using ASTLib.Nodes.TypeNodes;
 using ASTLib.Exceptions;
 using ASTLib.Nodes.ExpressionNodes.CommonOperationNodes;
 using ASTLib.Nodes.ExpressionNodes.NumberOperationNodes;
+using ASTLib.Nodes.ExpressionNodes.CastExpressionNodes;
 
 namespace InterpreterLib.Helpers
 {

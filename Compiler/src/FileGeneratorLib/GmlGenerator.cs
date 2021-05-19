@@ -24,7 +24,13 @@ namespace FileGeneratorLib
             string s = "";
             s += GetVerticesAsString(graph);
             s += GetEdgesAsString(graph);
-            return "graph [ \n\tdirected 1\n" + s + "]\n";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("graph [ ");
+            sb.AppendLine("\tdirected 1");
+            sb.Append(s);
+            sb.AppendLine("]");
+            return sb.ToString();
         }
 
         private string GetVerticesAsString(LabelGraph graph)
@@ -37,10 +43,11 @@ namespace FileGeneratorLib
 
         private string GetVertexString(LabelGraph graph, int i)
         {
-            StringBuilder sb = new StringBuilder("\tnode [ ");
-            sb.AppendLine($"\n\t\tid {i}");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("\tnode [ ");
+            sb.AppendLine($"\t\tid {i}");
             AddAdditionalVertexLabels(sb, graph, i);
-            sb.Append("\t]\n");
+            sb.AppendLine("\t]");
             return sb.ToString();
         }
 
@@ -66,11 +73,12 @@ namespace FileGeneratorLib
 
         private string GetEdgeAsString(LabelGraph graph, int i)
         {
-            StringBuilder sb = new StringBuilder("\tedge [ \n");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("\tedge [ ");
             sb.AppendLine($"\t\tsource {graph.SrcList[i]}");
             sb.AppendLine($"\t\ttarget {graph.DstList[i]}");
             AddAdditionalEdgeLabels(sb, graph, i);
-            sb.Append("\t]\n");
+            sb.AppendLine("\t]");
             return sb.ToString();
         }
 
