@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ASTLib.Interfaces;
 
-namespace ASTLib.Nodes.ExpressionNodes.NumberOperationNodes
+namespace ASTLib.Nodes.ExpressionNodes.CastExpressionNodes
 {
     public class CastFromIntegerExpression : ExpressionNode, INonIdentifierExpression
     {
