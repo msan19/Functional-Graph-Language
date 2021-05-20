@@ -30,7 +30,7 @@ namespace Main
 {
     public class Program
     {
-        private List<string> _fileNames;
+        private List<string> _fileNames = new List<string>();
         private bool _shouldThrowExceptions;
         private bool _printCode;
         private bool _printParseTree;
@@ -146,7 +146,7 @@ namespace Main
 
         private void ParseArgs(string[] args)
         {
-            _fileNames = new List<string>() { "StarLabel.fgl" };
+            //_fileNames = new List<string>() { "StarLabel.fgl" };
             _saveOutput = true;
             foreach (string s in args)
             {
