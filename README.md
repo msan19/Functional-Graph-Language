@@ -10,13 +10,13 @@ An FGL file is compiled to GML code, and because of the compiler's component arc
 Opening the _Compiler.sln_ file in the folder _Compiler_ will result in all projects being opened. 
 When opened the startup project should be set to _Main_.
 
-The flg. file which is parsed is specified in the function `ParseArgs` found in _Compiler/src/Main/Program.cs_.
-The file which is specified here is found in _Compiler/src/Main/InputFiles. 
+The .flg file which is parsed is specified in the function `ParseArgs` found in _Compiler/src/Main/Program.cs_.
+The file which is specified here is found in _Compiler/src/Main/InputFiles_. 
 It is possible to add new .fgl files here and reference them in `ParseArgs`.
 
 If the .sln file is open using Visual Studio 2019, two debug profiles will be available, `Main` and `Exception Catched`.
  - `Main` runs the compiler with the following arguments: _throw_ and _project_.
- - `Expectation Catched` runs the compiler with the following arguments: _help_, _code_, _project_, and  _output_.
+ - `Exception Catched` runs the compiler with the following arguments: _help_, _code_, _project_, and  _output_.
 
 ## Compiler Arguments
 - `help`          shows all possible compiler arguments with a short description
@@ -30,7 +30,7 @@ If the .sln file is open using Visual Studio 2019, two debug profiles will be av
 ## Folder Structure
 The following folder structure is founder the folder _Compiler_.
 
-All source code is found in the folder _src_ where each subfolder is a .NET 5 project. 
+All source code is found in the folder _src_ where each subfolder is a .NET Core 3.1 project. 
 All Testing is found in the folder _Tests_ which is split up into Unit- and Integration Tests.
 
 - [src](./Compiler/src)
