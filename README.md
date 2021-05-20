@@ -30,7 +30,7 @@ If the .sln file is open using Visual Studio 2019, two debug profiles will be av
 ## Folder Structure
 The following folder structure is founder the folder _Compiler_.
 
-All source code is found in the folder _src_ where each subfolder is a .NET 5 project. 
+All source code is found in the folder _src_ where each subfolder is a .NET Core 3.1 project. 
 All Testing is found in the folder _Tests_ which is split up into Unit- and Integration Tests.
 
 - [src](./Compiler/src)
