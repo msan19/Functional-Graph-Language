@@ -43,7 +43,7 @@ All Testing is found in the folder _Tests_ which is split up into Unit- and Inte
     - ReferenceHandlerLib
     - TypeCheckerLIb
 - Tests
-    - [UnitTesting](./Compiler/Tests/UnitTesting)
+    - [Unit Testing](./Compiler/Tests/UnitTesting)
         - ASTLib.Tests
         - FileGeneratorLib.Tests
         - FileUtilities.Tests
