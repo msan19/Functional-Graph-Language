@@ -65,9 +65,7 @@ namespace FileGeneratorLib
         {
             string s = "";
             for (int i = 0; i < graph.SrcList.Count; i++)
-            {
                 s += GetEdgeAsString(graph, i);
-            }
             return s;
         }
 
