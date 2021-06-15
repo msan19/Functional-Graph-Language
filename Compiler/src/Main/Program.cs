@@ -37,6 +37,7 @@ namespace Main
         private bool _printOutput;
         private bool _saveOutput;
         private bool _projectFolder;
+        private OutputLanguage _output;
 
         private readonly ILexParser _lexParse;
         private readonly IReferenceHandler _referenceHandler;
@@ -45,7 +46,7 @@ namespace Main
         private readonly IFileGenerator _fileGenerator;
         private readonly IExceptionPrinter _exceptionPrinter;
         private readonly IFileReader _fileReader;
-        private readonly GmlGenerator _gmlGenerator;
+        private readonly IOutputGenerator _outputGenerator;
 
         private IConfiguration config;
 
@@ -76,7 +77,8 @@ namespace Main
                                            new StringHelper(),
                                            new GraphHelper(),
                                            !_shouldThrowExceptions);
-            _gmlGenerator = new GmlGenerator();
+            _outputGenerator = _output == OutputLanguage.DOT ? (IOutputGenerator) new DotGenerator() : 
+                                                               (IOutputGenerator) new GmlGenerator();
             _fileGenerator = new FileGenerator(new FileHelper());
             _exceptionPrinter = new ExceptionPrinter();
             _fileReader = new FileReader(new FileHelper());
@@ -126,8 +128,8 @@ namespace Main
                 _referenceHandler.InsertReferences(ast);
                 _typeChecker.CheckTypes(ast);
                 List<LabelGraph> output = _interpreter.Interpret(ast);
-                List<ExtensionalGraph> gmlGraphs = _gmlGenerator.Generate(output);
-                _fileGenerator.Export(gmlGraphs, _printOutput, _saveOutput, _projectFolder);
+                List<ExtensionalGraph> gmlGraphs = _outputGenerator.Generate(output);
+                _fileGenerator.Export(gmlGraphs, _output, _printOutput, _saveOutput, _projectFolder);
             }
         }
 
@@ -164,6 +166,8 @@ namespace Main
                     _projectFolder = true;
                 else if (s == "help")
                     PrintHelp();
+                else if (s == "dot")
+                    _output = OutputLanguage.DOT;
                 else
                     _fileNames.Add(s);
             }

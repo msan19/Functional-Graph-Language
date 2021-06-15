@@ -10,5 +10,8 @@ namespace FileGeneratorLib
         
         [JsonProperty("gmlFileExtension")]
         public string GmlFileExtension {get;set;}
+
+        [JsonProperty("dotFileExtension")]
+        public string DotFileExtension { get; set; }
     }
 }
