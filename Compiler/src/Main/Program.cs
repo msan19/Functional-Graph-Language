@@ -30,7 +30,7 @@ namespace Main
 {
     public class Program
     {
-        private List<string> _fileNames = new List<string>();
+        private List<string> _fileNames = new List<string>() { "Cycle.fgl" };
         private bool _shouldThrowExceptions;
         private bool _printCode;
         private bool _printParseTree;

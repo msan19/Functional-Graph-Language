@@ -71,13 +71,17 @@ namespace TypeCheckerLib.Helpers
                 CastToReal(n, right, 1);
                 return new TypeNode(TypeEnum.Real, 0, 0);
             }
+            else if (left.Type == TypeEnum.Real && right.Type == TypeEnum.Real)
+            {
+                return new TypeNode(TypeEnum.Real, 0, 0);
+            }
             else if (left.Type == TypeEnum.Integer && right.Type == TypeEnum.Integer)
                 return new TypeNode(left.Type, 0, 0);
             else if (left.Type == TypeEnum.Set && right.Type == TypeEnum.Set)
                 return new TypeNode(TypeEnum.Set, 0, 0);
             else
                 throw new UnmatchableTypesException(n, left.Type, right.Type, "Unmatchable types for subtraction");
-            }
+        }
 
         public TypeNode VisitAbsoluteValue(AbsoluteValueExpression n, List<TypeNode> parameterTypes)
         {
